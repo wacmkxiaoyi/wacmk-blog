@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Login" %} | Wacmk Authenticator{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="auth-layout">
+    <div class="auth-toolbar">
+        <form action="{% url 'set_language' %}" method="post" class="language-switcher">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" name="language" value="zh-hans" class="language-option{% if LANGUAGE_CODE == 'zh-hans' %} is-active{% endif %}">中文</button>
+            <span class="language-divider" aria-hidden="true">|</span>
+            <button type="submit" name="language" value="en" class="language-option{% if LANGUAGE_CODE == 'en' %} is-active{% endif %}">EN</button>
+        </form>
+    </div>
+    <section class="auth-card">
+        <span class="card-spark" aria-hidden="true"></span>
+        <span class="card-heart" aria-hidden="true"></span>
+        <div class="auth-panel">
+            <div class="auth-panel-header">
+                <div class="auth-title-wrap">
+                    <div class="auth-title-decor" aria-hidden="true">
+                        <span class="decor-dot decor-dot-pink"></span>
+                        <span class="decor-star"></span>
+                        <span class="decor-dot decor-dot-blue"></span>
+                    </div>
+                    <h1>{% trans "Welcome back" %}</h1>
+                    {% if register_available %}
+                    <div class="auth-side-link-wrap auth-side-link-wrap-right">
+                        <a href="{% url 'register' %}" class="auth-side-link">{% trans "No account? Sign up" %}</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="form-alert{% if message.tags == 'success' %} form-alert-success{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+            <div class="form-alert" role="alert">
+                {{ form.non_field_errors|striptags }}
+            </div>
+            {% endif %}
+
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                {% if next_url %}
+                <input type="hidden" name="next" value="{{ next_url }}">
+                {% endif %}
+                <div class="field-group">
+                    <label for="id_username">{{ form.username.label }}</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="field-group">
+                    <label for="id_password">{{ form.password.label }}</label>
+                    <div class="password-field">
+                        {{ form.password }}
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            data-password-toggle
+                            data-target="#id_password"
+                            data-show-label="{% trans 'Show password' %}"
+                            data-hide-label="{% trans 'Hide password' %}"
+                            aria-label="{% trans 'Show password' %}"
+                            aria-pressed="false"
+                        >
+                            <svg class="password-icon password-icon-show" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M1.5 12s3.8-6 10.5-6 10.5 6 10.5 6-3.8 6-10.5 6S1.5 12 1.5 12Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+                                <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8" />
+                            </svg>
+                            <svg class="password-icon password-icon-hide" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+                                <path d="M10.6 5.2A12 12 0 0 1 12 5.1c6.7 0 10.5 6 10.5 6a17 17 0 0 1-3.8 4.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+                                <path d="M6.2 6.3C3.6 8 1.5 12 1.5 12s3.8 6 10.5 6c1.8 0 3.3-.4 4.7-1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+                                <path d="M9.9 9.9a3.2 3.2 0 0 0 4.2 4.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+                            </svg>
+                            <span class="sr-only">{% trans "Show password" %}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label class="checkbox-label" for="id_remember_me">
+                        {{ form.remember_me }}
+                        <span>{{ form.remember_me.label }}</span>
+                    </label>
+                    {% if password_reset_available %}
+                    <button
+                        type="button"
+                        class="auth-side-link auth-inline-link-button"
+                        data-forgot-password
+                        data-url="{% url 'forgot-password' %}"
+                        data-username-input="#id_username"
+                        data-success-title="{% trans 'Password Reset' %}"
+                        data-success-message="{% trans 'Password reset successful. Please check your email.' %}"
+                        data-error-title="{% trans 'Password Reset Unavailable' %}"
+                        data-fallback-error="{% trans 'Password reset is currently unavailable.' %}"
+                        data-confirm-text="{% trans 'OK' %}"
+                    >
+                        {% trans "Forgot password" %}
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div class="auth-actions">
+                    <button type="submit" class="primary-button auth-submit">{% trans "Sign in" %}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock %}

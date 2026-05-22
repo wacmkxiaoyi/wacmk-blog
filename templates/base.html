@@ -1,0 +1,40 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Wacmk Authenticator{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="app-shell {% block body_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+    <div class="app-modal" data-app-modal hidden>
+        <div class="app-modal-backdrop" data-app-modal-close></div>
+        <div class="app-modal-shell">
+            <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="app-modal-title" aria-describedby="app-modal-message" tabindex="-1" data-app-modal-dialog>
+                <div class="app-modal-header">
+                    <div class="app-modal-kicker" data-app-modal-kicker></div>
+                    <button type="button" class="app-modal-close" aria-label="{% trans 'Close' %}" data-app-modal-close>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="app-modal-body">
+                    <h2 id="app-modal-title" class="app-modal-title" data-app-modal-title></h2>
+                    <p id="app-modal-message" class="app-modal-message" data-app-modal-message></p>
+                </div>
+                <div class="app-modal-actions">
+                    <div class="app-modal-actions-left" data-app-modal-cancel-slot></div>
+                    <div class="app-modal-actions-right" data-app-modal-confirm-slot></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/auth.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

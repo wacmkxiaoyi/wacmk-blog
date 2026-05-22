@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Wacmk Authenticator{% endblock %}
+
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="dashboard-copy">
+            <span class="brand-pill">Welcome Back</span>
+            <h1>Hello, {{ request.user.username }}</h1>
+            <p>
+                Your adorable control room is ready. This is the starter dashboard area,
+                prepared for the next business modules you want to add.
+            </p>
+            <div class="dashboard-actions">
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="primary-button">Logout / 退出登录</button>
+                </form>
+            </div>
+        </div>
+        <div class="dashboard-card-stack" aria-hidden="true">
+            <article class="mini-card">
+                <h2>Runtime</h2>
+                <p>Django Template</p>
+            </article>
+            <article class="mini-card">
+                <h2>Database</h2>
+                <p>MySQL + PyMySQL</p>
+            </article>
+            <article class="mini-card">
+                <h2>Logs</h2>
+                <p>stdout / standard output</p>
+            </article>
+        </div>
+    </section>
+</main>
+{% endblock %}
