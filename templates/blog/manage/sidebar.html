@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<aside class="manage-sidebar section-panel">
+    <span class="section-kicker">{% trans "Workspace" %}</span>
+    <h2>{% trans "Website management" %}</h2>
+    <nav class="manage-sidebar-nav">
+        <a href="{% url 'manage-site-settings' %}" class="{% if section == 'basic' %}is-active{% endif %}">{% trans "Basic" %}</a>
+        <a href="{% url 'manage-users' %}" class="{% if section == 'users' %}is-active{% endif %}">{% trans "Users" %}</a>
+        <a href="{% url 'manage-posts' %}" class="{% if section == 'posts' %}is-active{% endif %}">{% trans "Posts" %}</a>
+        <a href="{% url 'manage-books' %}" class="{% if section == 'books' %}is-active{% endif %}">{% trans "Books" %}</a>
+        <a href="{% url 'manage-audit' %}" class="{% if section == 'audit' %}is-active{% endif %}">{% trans "Audit" %}</a>
+    </nav>
+</aside>

@@ -1,10 +1,15 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 
 class EmailVerificationCode(models.Model):
     PURPOSE_REGISTER = "register"
-    PURPOSE_CHOICES = [(PURPOSE_REGISTER, "register")]
+    PURPOSE_EMAIL_CHANGE = "email_change"
+    PURPOSE_CHOICES = [
+        (PURPOSE_REGISTER, "register"),
+        (PURPOSE_EMAIL_CHANGE, "email_change"),
+    ]
 
     email = models.EmailField()
     code = models.CharField(max_length=6)
@@ -22,3 +27,17 @@ class EmailVerificationCode(models.Model):
 
     def is_available(self):
         return self.consumed_at is None and not self.is_expired()
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    avatar = models.ImageField(upload_to="avatars/", blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return ""

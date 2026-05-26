@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Import from existing post" %}{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page">
+    {% include 'blog/manage/sidebar.html' with section='posts' %}
+    <section class="manage-content">
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Import" %}</span>
+                    <h1>{% trans "Import from existing post" %}</h1>
+                </div>
+                <a href="{{ back_url }}" class="secondary-button">{% trans "Back to posts" %}</a>
+            </div>
+            <form method="get" class="inline-search-form">
+                <input type="search" name="q" value="{{ query }}" class="input-control" placeholder="{% trans 'Search posts to import...' %}" aria-label="{% trans 'Search posts to import' %}">
+                {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+                <button type="submit" class="secondary-button">{% trans "Search" %}</button>
+            </form>
+            <div class="post-grid import-post-grid">
+                {% for post in posts %}
+                <form method="post" class="import-post-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="source_post_id" value="{{ post.pk }}">
+                    {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+                    <button type="submit" class="import-post-card-submit post-card compact-card" aria-label="{% blocktrans with title=post.title %}Import {{ title }} as draft{% endblocktrans %}">
+                        <span class="post-card-body">
+                            <span class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
+                                <span class="card-meta-row card-meta-row-soft">
+                                    <span>{{ post.author.first_name|default:post.author.username }}</span>
+                                    <span>{{ post.published_at|default:post.updated_at|date:"DATE_FORMAT" }}</span>
+                                </span>
+                                <h3>{{ post.title }}</h3>
+                                <p>{{ post.summary|default:post.content|truncatechars:140 }}</p>
+                            </span>
+                            <span class="tag-row">
+                                {% if post.visibility == 'public' %}
+                                <span class="soft-tag soft-tag-visibility">
+                                    <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+                                    {{ post.get_visibility_display }}
+                                </span>
+                                {% elif post.visibility == 'book_only' %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-book-only">
+                                    <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+                                    {{ post.get_visibility_display }}
+                                </span>
+                                {% elif post.visibility == 'encrypted' %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
+                                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                                    {{ post.get_visibility_display }}
+                                </span>
+                                {% else %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-private">
+                                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+                                    {{ post.get_visibility_display }}
+                                </span>
+                                {% endif %}
+                            </span>
+                            <span class="tag-row">
+                                {% for tag in post.tags.all %}
+                                <span class="soft-tag">#{{ tag.name }}</span>
+                                {% empty %}
+                                <span class="soft-tag soft-tag-muted">{% trans "No tags" %}</span>
+                                {% endfor %}
+                            </span>
+                        </span>
+                    </button>
+                </form>
+                {% empty %}
+                <div class="empty-panel">
+                    <p>{% trans "No published posts available to import." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% include 'blog/includes/pagination.html' with pagination_input_id='id_manage_post_import_page_jump' %}
+        </div>
+    </section>
+</main>
+{% endblock %}

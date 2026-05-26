@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Tags" %}{% endblock %}
+
+{% block content %}
+<main class="site-page search-page tags-page">
+    <section class="section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Tags" %}</span>
+                <h1>{% trans "All tags" %}</h1>
+                <p class="search-subtitle">{% trans "Browse every tag that currently has visible posts." %}</p>
+            </div>
+        </div>
+        <div class="tag-directory-grid">
+            {% for tag in tags %}
+            <a href="{{ tag.get_absolute_url }}" class="soft-tag soft-tag-directory soft-tag-directory-link" style="{{ tag.color_style }}">#{{ tag.name }}</a>
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No tags yet" %}</h3>
+                <p>{% trans "Tags with visible posts will appear here once content is categorized." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

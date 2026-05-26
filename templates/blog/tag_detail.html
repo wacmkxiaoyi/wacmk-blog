@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}#{{ tag.name }}{% endblock %}
+
+{% block content %}
+<main class="site-page search-page tags-page">
+    <section class="section-panel">
+        <div class="tag-detail-header">
+            <span class="section-kicker">{% trans "Tag" %}</span>
+            <h1>#{{ tag.name }}</h1>
+            <div class="tag-detail-summary">
+                <span class="soft-tag soft-tag-directory" style="{{ tag.color_style }}">#{{ tag.name }}</span>
+                <span class="tag-directory-count">
+                    {% blocktrans count total=tag.post_count %}{{ total }} post{% plural %}{{ total }} posts{% endblocktrans %}
+                </span>
+            </div>
+        </div>
+        <div class="post-grid">
+            {% for post in posts %}
+            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=True %}
+            {% else %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=False %}
+            {% endif %}
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No posts found for this tag" %}</h3>
+                <p>{% trans "Posts assigned to this tag will appear here once they are visible to you." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'blog/includes/pagination.html' with pagination_input_id='id_tag_page_jump' %}
+    </section>
+</main>
+{% endblock %}

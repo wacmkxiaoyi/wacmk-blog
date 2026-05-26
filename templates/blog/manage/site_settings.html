@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Basic settings" %}{% endif %}{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page">
+    {% include 'blog/manage/sidebar.html' with section='basic' %}
+    <section class="manage-content">
+        <form method="post" enctype="multipart/form-data" class="section-panel panel-form site-settings-form" data-unsaved-guard>
+            {% csrf_token %}
+            <div class="site-settings-shell">
+                <div class="section-heading-row site-settings-heading">
+                    <div>
+                        <span class="section-kicker">{% trans "Website" %}</span>
+                        <h1>{% if page_title %}{{ page_title }}{% else %}{% trans "Basic settings" %}{% endif %}</h1>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">{{ form.non_field_errors|striptags }}</div>
+                {% endif %}
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Basic information" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.site_title.id_for_label }}">{{ form.site_title.label }}</label>
+                            {% if form.site_title.help_text %}<div class="field-help">{{ form.site_title.help_text }}</div>{% endif %}
+                            {{ form.site_title }}
+                            {% if form.site_title.errors %}<div class="field-error">{{ form.site_title.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Appearance assets" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field site-settings-asset-field">
+                            <label for="{{ form.site_icon.id_for_label }}">{{ form.site_icon.label }}</label>
+                            {% if form.site_icon.help_text %}<div class="field-help">{{ form.site_icon.help_text }}</div>{% endif %}
+                            <input type="hidden" name="remove_site_icon" value="0" data-site-setting-remove-input="site_icon">
+                            <div class="site-settings-asset-layout">
+                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.site_icon %} is-empty{% endif %}" data-site-setting-preview-wrapper="site_icon"{% if not site_setting.site_icon %} hidden{% endif %}>
+                                    <div class="site-settings-asset-card site-settings-asset-card-icon">
+                                        <div class="site-settings-asset-preview-row">
+                                            <img src="{% if site_setting.site_icon %}{{ site_setting.site_icon.url }}{% endif %}" alt="{% trans 'Website icon preview' %}" class="site-settings-icon-preview" data-site-setting-preview-image="site_icon">
+                                            <div class="site-settings-asset-actions">
+                                                <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="site_icon">{% trans "Remove icon" %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="site-settings-upload-row{% if site_setting.site_icon %} is-hidden{% endif %}" data-site-setting-upload-row="site_icon">
+                                    {{ form.site_icon }}
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.site_icon %} is-hidden{% endif %}" data-site-setting-undo="site_icon">{% trans "Undo remove" %}</button>
+                                </div>
+                            </div>
+                            {% if form.site_icon.errors %}<div class="field-error">{{ form.site_icon.errors|striptags }}</div>{% endif %}
+                        </div>
+
+                        <div class="field-group site-settings-field site-settings-asset-field">
+                            <label for="{{ form.auth_background.id_for_label }}">{{ form.auth_background.label }}</label>
+                            {% if form.auth_background.help_text %}<div class="field-help">{{ form.auth_background.help_text }}</div>{% endif %}
+                            <input type="hidden" name="remove_auth_background" value="0" data-site-setting-remove-input="auth_background">
+                            <div class="site-settings-asset-layout">
+                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.auth_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="auth_background"{% if not site_setting.auth_background %} hidden{% endif %}>
+                                    <div class="site-settings-asset-card">
+                                        <div class="site-settings-asset-preview-row site-settings-background-row">
+                                            <img src="{% if site_setting.auth_background %}{{ site_setting.auth_background.url }}{% endif %}" alt="{% trans 'Login page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="auth_background">
+                                            <div class="site-settings-asset-actions">
+                                                <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="auth_background">{% trans "Remove background" %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="site-settings-upload-row{% if site_setting.auth_background %} is-hidden{% endif %}" data-site-setting-upload-row="auth_background">
+                                    {{ form.auth_background }}
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.auth_background %} is-hidden{% endif %}" data-site-setting-undo="auth_background">{% trans "Undo remove" %}</button>
+                                </div>
+                            </div>
+                            {% if form.auth_background.errors %}<div class="field-error">{{ form.auth_background.errors|striptags }}</div>{% endif %}
+                        </div>
+
+                        <div class="field-group site-settings-field site-settings-asset-field">
+                            <label for="{{ form.app_background.id_for_label }}">{{ form.app_background.label }}</label>
+                            {% if form.app_background.help_text %}<div class="field-help">{{ form.app_background.help_text }}</div>{% endif %}
+                            <input type="hidden" name="remove_app_background" value="0" data-site-setting-remove-input="app_background">
+                            <div class="site-settings-asset-layout">
+                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.app_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="app_background"{% if not site_setting.app_background %} hidden{% endif %}>
+                                    <div class="site-settings-asset-card">
+                                        <div class="site-settings-asset-preview-row site-settings-background-row">
+                                            <img src="{% if site_setting.app_background %}{{ site_setting.app_background.url }}{% endif %}" alt="{% trans 'Authenticated page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="app_background">
+                                            <div class="site-settings-asset-actions">
+                                                <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="app_background">{% trans "Remove background" %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="site-settings-upload-row{% if site_setting.app_background %} is-hidden{% endif %}" data-site-setting-upload-row="app_background">
+                                    {{ form.app_background }}
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.app_background %} is-hidden{% endif %}" data-site-setting-undo="app_background">{% trans "Undo remove" %}</button>
+                                </div>
+                            </div>
+                            {% if form.app_background.errors %}<div class="field-error">{{ form.app_background.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Audit logs" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.audit_log_cleanup_enabled.id_for_label }}">{{ form.audit_log_cleanup_enabled.label }}</label>
+                                {{ form.audit_log_cleanup_enabled }}
+                            </div>
+                            {% if form.audit_log_cleanup_enabled.help_text %}<div class="field-help">{{ form.audit_log_cleanup_enabled.help_text }}</div>{% endif %}
+                            {% if form.audit_log_cleanup_enabled.errors %}<div class="field-error">{{ form.audit_log_cleanup_enabled.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.audit_log_retention_days.id_for_label }}">{{ form.audit_log_retention_days.label }}</label>
+                            {% if form.audit_log_retention_days.help_text %}<div class="field-help">{{ form.audit_log_retention_days.help_text }}</div>{% endif %}
+                            {{ form.audit_log_retention_days }}
+                            {% if form.audit_log_retention_days.errors %}<div class="field-error">{{ form.audit_log_retention_days.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Dashboard" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.dashboard_visit_trend_days.id_for_label }}">{{ form.dashboard_visit_trend_days.label }}</label>
+                            {% if form.dashboard_visit_trend_days.help_text %}<div class="field-help">{{ form.dashboard_visit_trend_days.help_text }}</div>{% endif %}
+                            {{ form.dashboard_visit_trend_days }}
+                            {% if form.dashboard_visit_trend_days.errors %}<div class="field-error">{{ form.dashboard_visit_trend_days.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Article editor" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.post_editor_autosave_enabled.id_for_label }}">{{ form.post_editor_autosave_enabled.label }}</label>
+                                {{ form.post_editor_autosave_enabled }}
+                            </div>
+                            {% if form.post_editor_autosave_enabled.help_text %}<div class="field-help">{{ form.post_editor_autosave_enabled.help_text }}</div>{% endif %}
+                            {% if form.post_editor_autosave_enabled.errors %}<div class="field-error">{{ form.post_editor_autosave_enabled.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.post_editor_autosave_interval_minutes.id_for_label }}">{{ form.post_editor_autosave_interval_minutes.label }}</label>
+                            {% if form.post_editor_autosave_interval_minutes.help_text %}<div class="field-help">{{ form.post_editor_autosave_interval_minutes.help_text }}</div>{% endif %}
+                            {{ form.post_editor_autosave_interval_minutes }}
+                            {% if form.post_editor_autosave_interval_minutes.errors %}<div class="field-error">{{ form.post_editor_autosave_interval_minutes.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <div class="panel-actions site-settings-actions">
+                    <div class="site-settings-actions-right">
+                        <button type="submit" class="primary-button">{% trans "Save" %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    (function () {
+        var assetKeys = ['site_icon', 'auth_background', 'app_background'];
+
+        assetKeys.forEach(function (assetKey) {
+            var removeInput = document.querySelector('[data-site-setting-remove-input="' + assetKey + '"]');
+            var previewWrapper = document.querySelector('[data-site-setting-preview-wrapper="' + assetKey + '"]');
+            var previewImage = document.querySelector('[data-site-setting-preview-image="' + assetKey + '"]');
+            var uploadRow = document.querySelector('[data-site-setting-upload-row="' + assetKey + '"]');
+            var removeButton = document.querySelector('[data-site-setting-remove-toggle="' + assetKey + '"]');
+            var undoButton = document.querySelector('[data-site-setting-undo="' + assetKey + '"]');
+            var fileInput = document.getElementById('id_' + assetKey);
+            var existingSrc = previewImage ? previewImage.getAttribute('src') || '' : '';
+            var objectUrl = null;
+
+            function revokeObjectUrl() {
+                if (objectUrl) {
+                    URL.revokeObjectURL(objectUrl);
+                    objectUrl = null;
+                }
+            }
+
+            function hasExistingPreview() {
+                return !!existingSrc;
+            }
+
+            function setMarkedForRemoval(marked) {
+                var hasUpload = !!(fileInput && fileInput.files && fileInput.files.length);
+                var hasExisting = hasExistingPreview();
+
+                if (!removeInput) {
+                    return;
+                }
+                removeInput.value = marked ? '1' : '0';
+                if (previewWrapper) {
+                    previewWrapper.hidden = marked || !hasExisting;
+                }
+                if (uploadRow) {
+                    uploadRow.classList.toggle('is-hidden', !marked && hasExisting && !hasUpload);
+                }
+                if (undoButton) {
+                    undoButton.classList.toggle('is-hidden', !marked || !hasExisting);
+                }
+            }
+
+            if (removeButton) {
+                removeButton.addEventListener('click', function () {
+                    if (fileInput) {
+                        fileInput.value = '';
+                    }
+                    revokeObjectUrl();
+                    if (previewImage) {
+                        previewImage.setAttribute('src', existingSrc);
+                    }
+                    setMarkedForRemoval(true);
+                });
+            }
+
+            if (undoButton) {
+                undoButton.addEventListener('click', function () {
+                    setMarkedForRemoval(false);
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function () {
+                    revokeObjectUrl();
+                    var file = fileInput.files && fileInput.files[0];
+                    if (!file || (file.type && file.type.indexOf('image/') !== 0)) {
+                        if (!hasExistingPreview()) {
+                            if (previewWrapper) {
+                                previewWrapper.hidden = true;
+                            }
+                            if (uploadRow) {
+                                uploadRow.classList.remove('is-hidden');
+                            }
+                        }
+                        return;
+                    }
+
+                    objectUrl = URL.createObjectURL(file);
+                    if (previewImage) {
+                        previewImage.setAttribute('src', objectUrl);
+                    }
+                    if (previewWrapper) {
+                        previewWrapper.hidden = false;
+                    }
+                    if (uploadRow) {
+                        uploadRow.classList.add('is-hidden');
+                    }
+                    if (undoButton) {
+                        undoButton.classList.add('is-hidden');
+                    }
+                    if (removeInput) {
+                        removeInput.value = '0';
+                    }
+                });
+            }
+
+            setMarkedForRemoval(false);
+
+            window.addEventListener('beforeunload', revokeObjectUrl);
+        });
+    })();
+</script>
+{% endblock %}

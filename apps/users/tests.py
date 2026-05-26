@@ -249,3 +249,84 @@ class RegistrationTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
+
+    @override_settings(**REGISTER_SETTINGS)
+    def test_send_profile_email_change_code_successfully(self):
+        user = User.objects.create_user(username="tester", email="tester@example.com", password="StrongPass123")
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("profile-email-send-code"),
+            {"email": "new@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(EmailVerificationCode.objects.count(), 1)
+        self.assertEqual(EmailVerificationCode.objects.first().purpose, EmailVerificationCode.PURPOSE_EMAIL_CHANGE)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "[WACMK] Your email verification code")
+        self.assertIn("new@example.com", mail.outbox[0].to)
+        self.assertIn("confirm your new email address", mail.outbox[0].body)
+
+    @override_settings(**REGISTER_SETTINGS)
+    def test_send_profile_email_change_code_rejects_same_email(self):
+        user = User.objects.create_user(username="tester", email="tester@example.com", password="StrongPass123")
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("profile-email-send-code"),
+            {"email": "tester@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(EmailVerificationCode.objects.count(), 0)
+
+    @override_settings(**REGISTER_SETTINGS)
+    def test_send_profile_email_change_code_rejects_registered_email(self):
+        user = User.objects.create_user(username="tester", email="tester@example.com", password="StrongPass123")
+        User.objects.create_user(username="other", email="used@example.com", password="StrongPass123")
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("profile-email-send-code"),
+            {"email": "used@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(EmailVerificationCode.objects.count(), 0)
+
+    @override_settings(**REGISTER_SETTINGS)
+    def test_send_profile_email_change_code_enforces_resend_interval(self):
+        user = User.objects.create_user(username="tester", email="tester@example.com", password="StrongPass123")
+        self.client.force_login(user)
+        EmailVerificationCode.objects.create(
+            email="wait@example.com",
+            code="123456",
+            purpose=EmailVerificationCode.PURPOSE_EMAIL_CHANGE,
+            expires_at=timezone.now() + timedelta(minutes=10),
+        )
+
+        response = self.client.post(
+            reverse("profile-email-send-code"),
+            {"email": "wait@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 429)
+        self.assertEqual(EmailVerificationCode.objects.count(), 1)
+
+    @override_settings(EMAIL_DELIVERY_READY=False)
+    def test_send_profile_email_change_code_returns_404_when_unavailable(self):
+        user = User.objects.create_user(username="tester", email="tester@example.com", password="StrongPass123")
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("profile-email-send-code"),
+            {"email": "new@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 404)

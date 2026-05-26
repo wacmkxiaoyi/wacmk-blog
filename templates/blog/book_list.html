@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Books" %}{% endblock %}
+
+{% block content %}
+<main class="site-page books-page">
+    <section class="section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Library" %}</span>
+                <h1>{% trans "Books" %}</h1>
+            </div>
+        </div>
+        <div class="book-listing">
+            {% for book in books %}
+            <article class="book-list-card">
+                <a href="{{ book.get_absolute_url }}" class="book-list-cover-shell" aria-label="{{ book.name }}">
+                    {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.name }}" class="book-list-cover">
+                    {% else %}
+                    <div class="book-list-cover book-list-cover-placeholder">
+                        <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                    </div>
+                    {% endif %}
+                </a>
+                <div class="book-list-body">
+                    <div class="book-list-title-row">
+                        <div class="book-list-title-main">
+                            <h2>{{ book.name }}</h2>
+                            {% if book.visibility == 'public' %}
+                            <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
+                            {% elif book.visibility == 'encrypted' %}
+                            <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
+                            {% else %}
+                            <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
+                            {% endif %}
+                            <span class="soft-tag">{% blocktrans count total=book.post_count %}{{ total }} article{% plural %}{{ total }} articles{% endblocktrans %}</span>
+                        </div>
+                        <span class="book-list-date">{{ book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                    </div>
+                    <div class="book-list-divider" aria-hidden="true"></div>
+                    <p>{{ book.summary|default:_('No summary yet.') }}</p>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No books yet" %}</h3>
+                <p>{% trans "Books will appear here after editors create and publish them." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'blog/includes/pagination.html' with pagination_input_id='id_books_page_jump' %}
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% load i18n %}
+{% for comment in comments %}
+<div class="comment-thread">
+    <article id="comment-{{ comment.pk }}" class="comment-card" data-comment-card tabindex="0">
+        <div class="comment-card-header">
+            <div class="comment-header-main">
+                <div class="comment-author-row{% if comment.is_reply %} comment-author-row-reply{% endif %}">
+                    <strong>{{ comment.author.first_name|default:comment.author.username }}</strong>
+                    {% if comment.is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
+                    {% if comment.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                    {% if comment.is_reply and comment.reply_target %}
+                    <span class="comment-reply-label">回复</span>
+                    <strong>{{ comment.reply_target.author.first_name|default:comment.reply_target.author.username }}</strong>
+                    {% if comment.reply_target_is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
+                    {% if comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="comment-meta-actions">
+                <div class="comment-date">{{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
+                {% if can_interact %}
+                <div class="comment-actions">
+                    <button type="button" class="secondary-button comment-compact-button comment-reply-toggle" data-reply-toggle data-comment-id="{{ comment.pk }}" aria-expanded="{% if reply_parent_id == comment.pk|stringformat:'s' %}true{% else %}false{% endif %}">
+                        {% trans "Reply" %}
+                    </button>
+                    {% if comment.can_edit %}
+                    <button type="button" class="secondary-button comment-compact-button comment-edit-toggle" data-comment-edit-toggle data-comment-id="{{ comment.pk }}" aria-expanded="{% if edit_comment_id == comment.pk|stringformat:'s' %}true{% else %}false{% endif %}">
+                        {% trans "Edit" %}
+                    </button>
+                    {% endif %}
+                    {% if comment.can_delete %}
+                    <form method="post" action="{% url 'comment-delete' comment.pk %}?next={{ request.get_full_path|urlencode }}" data-delete-confirm-form>
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="secondary-button destructive-button comment-compact-button"
+                            data-delete-confirm-trigger
+                            data-delete-confirm-title="{% trans 'Delete comment' %}"
+                            data-delete-confirm-message="{% trans 'Are you sure you want to delete this comment? This action cannot be undone.' %}"
+                            data-delete-confirm-button="{% trans 'Delete' %}"
+                            data-delete-cancel-button="{% trans 'Cancel' %}"
+                        >{% trans "Delete" %}</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div
+            class="blog-markdown-content comment-markdown-content"
+            data-code-copy-enabled="true"
+            data-code-copy-label="{% trans 'Copy' %}"
+            data-code-copied-label="{% trans 'Copied' %}"
+            data-code-copy-failed-label="{% trans 'Failed' %}"
+        >
+            {{ comment.rendered_content|safe }}
+        </div>
+        {% if can_interact and comment.can_edit %}
+        <div class="comment-edit-panel" data-comment-edit-panel="{{ comment.pk }}"{% if edit_comment_id != comment.pk|stringformat:'s' %} hidden{% endif %}>
+            <form method="post" action="{% url 'comment-update' comment.pk %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
+                {% csrf_token %}
+                <div class="field-group">
+                    <label for="{{ comment.edit_form.content.id_for_label }}">{{ comment.edit_form.content.label }}</label>
+                    {{ comment.edit_form.content }}
+                    <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                    {% if comment.edit_form.content.errors %}<div class="field-error">{{ comment.edit_form.content.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="panel-actions comment-form-actions">
+                    <button type="submit" class="primary-button">{% trans "Save" %}</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        {% if can_interact %}
+        <div class="comment-reply-panel" data-reply-panel="{{ comment.pk }}"{% if reply_parent_id != comment.pk|stringformat:'s' %} hidden{% endif %}>
+            <form method="post" action="{% url 'comment-create' post.slug %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
+                {% csrf_token %}
+                <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+                <div class="field-group">
+                    <label for="{{ comment.reply_form.content.id_for_label }}">{{ comment.reply_form.content.label }}</label>
+                    {{ comment.reply_form.content }}
+                    <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                    {% if comment.reply_form.content.errors %}<div class="field-error">{{ comment.reply_form.content.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="panel-actions comment-form-actions">
+                    <button type="submit" class="primary-button">{% trans "Post reply" %}</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        {% if comment.replies_list %}
+        <div class="comment-thread-footer">
+            <div class="feedback-actions comment-feedback-actions"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'comment-feedback-toggle' comment.pk %}"{% endif %}>
+                <button type="button" class="feedback-button feedback-button-compact{% if comment.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if comment.feedback_value == 1 %}true{% else %}false{% endif %}" title="{% trans 'Like' %}">
+                    <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                    <span class="feedback-count" data-feedback-count="up">{{ comment.up_count }}</span>
+                </button>
+                <button type="button" class="feedback-button feedback-button-compact{% if comment.feedback_value == -1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="-1"{% else %}disabled{% endif %} aria-pressed="{% if comment.feedback_value == -1 %}true{% else %}false{% endif %}" title="{% trans 'Dislike' %}">
+                    <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                    <span class="feedback-count" data-feedback-count="down">{{ comment.down_count }}</span>
+                </button>
+            </div>
+            <button
+                type="button"
+                class="secondary-button comment-compact-button comment-thread-toggle"
+                data-thread-toggle
+                aria-expanded="{% if comment.thread_is_expanded %}true{% else %}false{% endif %}"
+                data-expand-text="展开 {{ comment.reply_count }} 条回复"
+                data-collapse-text="收起回复"
+            >{% if comment.thread_is_expanded %}收起回复{% else %}展开 {{ comment.reply_count }} 条回复{% endif %}</button>
+        </div>
+        {% endif %}
+    </article>
+    {% if comment.replies_list %}
+    <div class="reply-list" data-thread-replies{% if not comment.thread_is_expanded %} hidden{% endif %}>
+        {% for reply in comment.replies_list %}
+        <article id="comment-{{ reply.pk }}" class="comment-card comment-card-reply" data-comment-card tabindex="0">
+            <div class="comment-card-header">
+                <div class="comment-header-main">
+                    <div class="comment-author-row comment-author-row-reply">
+                        <strong>{{ reply.author.first_name|default:reply.author.username }}</strong>
+                        {% if reply.is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
+                        {% if reply.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                        {% if reply.reply_target %}
+                        <span class="comment-reply-label">回复</span>
+                        <strong>{{ reply.reply_target.author.first_name|default:reply.reply_target.author.username }}</strong>
+                        {% if reply.reply_target_is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
+                        {% if reply.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="comment-meta-actions">
+                    <div class="comment-date">{{ reply.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
+                    {% if can_interact %}
+                    <div class="comment-actions">
+                        <button type="button" class="secondary-button comment-compact-button comment-reply-toggle" data-reply-toggle data-comment-id="{{ reply.pk }}" aria-expanded="{% if reply_parent_id == reply.pk|stringformat:'s' %}true{% else %}false{% endif %}">
+                            {% trans "Reply" %}
+                        </button>
+                        {% if reply.can_edit %}
+                        <button type="button" class="secondary-button comment-compact-button comment-edit-toggle" data-comment-edit-toggle data-comment-id="{{ reply.pk }}" aria-expanded="{% if edit_comment_id == reply.pk|stringformat:'s' %}true{% else %}false{% endif %}">
+                            {% trans "Edit" %}
+                        </button>
+                        {% endif %}
+                        {% if reply.can_delete %}
+                        <form method="post" action="{% url 'comment-delete' reply.pk %}?next={{ request.get_full_path|urlencode }}" data-delete-confirm-form>
+                            {% csrf_token %}
+                            <button
+                                type="submit"
+                                class="secondary-button destructive-button comment-compact-button"
+                                data-delete-confirm-trigger
+                                data-delete-confirm-title="{% trans 'Delete comment' %}"
+                                data-delete-confirm-message="{% trans 'Are you sure you want to delete this comment? This action cannot be undone.' %}"
+                                data-delete-confirm-button="{% trans 'Delete' %}"
+                                data-delete-cancel-button="{% trans 'Cancel' %}"
+                            >{% trans "Delete" %}</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div
+                class="blog-markdown-content comment-markdown-content"
+                data-code-copy-enabled="true"
+                data-code-copy-label="{% trans 'Copy' %}"
+                data-code-copied-label="{% trans 'Copied' %}"
+                data-code-copy-failed-label="{% trans 'Failed' %}"
+            >
+                {{ reply.rendered_content|safe }}
+            </div>
+            {% if can_interact and reply.can_edit %}
+            <div class="comment-edit-panel" data-comment-edit-panel="{{ reply.pk }}"{% if edit_comment_id != reply.pk|stringformat:'s' %} hidden{% endif %}>
+                <form method="post" action="{% url 'comment-update' reply.pk %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
+                    {% csrf_token %}
+                    <div class="field-group">
+                        <label for="{{ reply.edit_form.content.id_for_label }}">{{ reply.edit_form.content.label }}</label>
+                        {{ reply.edit_form.content }}
+                        <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                        {% if reply.edit_form.content.errors %}<div class="field-error">{{ reply.edit_form.content.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="panel-actions comment-form-actions">
+                        <button type="submit" class="primary-button">{% trans "Save" %}</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            <div class="comment-feedback-row">
+                <div class="feedback-actions comment-feedback-actions"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'comment-feedback-toggle' reply.pk %}"{% endif %}>
+                    <button type="button" class="feedback-button feedback-button-compact{% if reply.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if reply.feedback_value == 1 %}true{% else %}false{% endif %}" title="{% trans 'Like' %}">
+                        <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                        <span class="feedback-count" data-feedback-count="up">{{ reply.up_count }}</span>
+                    </button>
+                    <button type="button" class="feedback-button feedback-button-compact{% if reply.feedback_value == -1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="-1"{% else %}disabled{% endif %} aria-pressed="{% if reply.feedback_value == -1 %}true{% else %}false{% endif %}" title="{% trans 'Dislike' %}">
+                        <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                        <span class="feedback-count" data-feedback-count="down">{{ reply.down_count }}</span>
+                    </button>
+                </div>
+            </div>
+            {% if can_interact %}
+            <div class="comment-reply-panel" data-reply-panel="{{ reply.pk }}"{% if reply_parent_id != reply.pk|stringformat:'s' %} hidden{% endif %}>
+                <form method="post" action="{% url 'comment-create' post.slug %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ reply.pk }}">
+                    <div class="field-group">
+                        <label for="{{ reply.reply_form.content.id_for_label }}">{{ reply.reply_form.content.label }}</label>
+                        {{ reply.reply_form.content }}
+                        <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                        {% if reply.reply_form.content.errors %}<div class="field-error">{{ reply.reply_form.content.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="panel-actions comment-form-actions">
+                        <button type="submit" class="primary-button">{% trans "Post reply" %}</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% empty %}
+<div class="empty-panel">
+    <p>{% trans "No comments yet." %}</p>
+</div>
+{% endfor %}

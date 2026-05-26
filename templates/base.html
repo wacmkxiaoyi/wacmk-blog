@@ -4,16 +4,129 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Wacmk Authenticator{% endblock %}</title>
+    <title>{% block title %}{% endblock %}{% if site_display_title %} - {{ site_display_title }}{% endif %}</title>
+    {% if site_setting and site_setting.site_icon %}
+    <link rel="icon" href="{{ site_setting.site_icon.url }}">
+    {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="app-shell {% block body_class %}{% endblock %}">
+<body class="app-shell {% block body_class %}{% endblock %}"{% if request.user.is_authenticated and site_setting and site_setting.app_background %} style="--custom-app-background: url('{{ site_setting.app_background.url }}');"{% endif %}>
+    {% if request.user.is_authenticated and not request.resolver_match.url_name == 'login' and not request.resolver_match.url_name == 'register' %}
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div class="site-nav-shortcuts" aria-label="{% trans 'Primary navigation' %}">
+                <a href="{% url 'blog-home' %}" class="site-home-link" aria-label="{% trans 'Home' %}">
+                    <span class="site-home-link-icon" aria-hidden="true"><i class="fa-solid fa-house"></i></span>
+                    <span class="site-home-link-label">{% trans "Home" %}</span>
+                </a>
+                <a href="{% url 'article-list' %}" class="site-home-link" aria-label="{% trans 'Articles' %}">
+                    <span class="site-home-link-icon" aria-hidden="true"><i class="fa-solid fa-file-lines"></i></span>
+                    <span class="site-home-link-label">{% trans "Articles" %}</span>
+                </a>
+                <a href="{% url 'book-list' %}" class="site-home-link" aria-label="{% trans 'Books' %}">
+                    <span class="site-home-link-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
+                    <span class="site-home-link-label">{% trans "Books" %}</span>
+                </a>
+                <a href="{% url 'blog-tags' %}" class="site-home-link" aria-label="{% trans 'Tags' %}">
+                    <span class="site-home-link-icon" aria-hidden="true"><i class="fa-solid fa-tags"></i></span>
+                    <span class="site-home-link-label">{% trans "Tags" %}</span>
+                </a>
+            </div>
+            {% if request.resolver_match.url_name == 'blog-home' %}
+            <a
+                href="https://github.com/wacmkxiaoyi/wacmk-blog"
+                class="nav-home-repo-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="wacmk-blog@wacmkxiaoyi GitHub repository"
+            >
+                <span class="nav-home-repo-icon" aria-hidden="true"><i class="fa-brands fa-github"></i></span>
+                <span class="nav-home-repo-title">wacmk-blog@wacmkxiaoyi</span>
+            </a>
+            {% else %}
+            <form
+                action="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% url 'book-list' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% url 'blog-tags' %}{% else %}{% url 'article-list' %}{% endif %}"
+                method="get"
+                class="nav-search-form"
+                data-global-search-form
+            >
+                <label class="sr-only" for="id_global_search">{% trans "Search" %}</label>
+                <input
+                    id="id_global_search"
+                    type="search"
+                    name="q"
+                    class="nav-search-input"
+                    value="{{ request.GET.q|default:'' }}"
+                    placeholder="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% trans 'Search books...' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% trans 'Search tags...' %}{% else %}{% trans 'Search articles...' %}{% endif %}"
+                >
+                <button type="submit" class="nav-search-button" aria-label="{% trans 'Search' %}">🔍</button>
+            </form>
+            {% endif %}
+            <div class="user-menu" data-user-menu>
+                <button type="button" class="user-menu-trigger" data-user-menu-trigger aria-expanded="false" aria-label="{% trans 'Open user menu' %}">
+                    {% if site_user_profile and site_user_profile.avatar %}
+                    <img src="{{ site_user_profile.avatar.url }}" alt="{{ request.user.username }}" class="user-menu-avatar">
+                    {% else %}
+                    <span class="user-menu-fallback">👤</span>
+                    {% endif %}
+                </button>
+                <div class="user-menu-dropdown" data-user-menu-dropdown hidden>
+                    <div class="user-menu-summary">
+                        {% if site_user_profile and site_user_profile.avatar %}
+                        <img src="{{ site_user_profile.avatar.url }}" alt="{{ request.user.username }}" class="user-menu-avatar user-menu-avatar-large">
+                        {% else %}
+                        <span class="user-menu-fallback user-menu-avatar-large">👤</span>
+                        {% endif %}
+                        <div>
+                            <strong>{{ request.user.first_name|default:request.user.username }}</strong>
+                            <p>{{ request.user.username }}</p>
+                        </div>
+                    </div>
+                    <nav class="user-menu-links">
+                        {% if request.user.is_staff or request.user.is_superuser %}
+                        <a href="{% url 'manage-site-settings' %}">{% trans "Website management" %}</a>
+                        {% endif %}
+                        <a href="{% url 'profile' %}">{% trans "Profile settings" %}</a>
+                    </nav>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="user-menu-logout">{% trans "Sign out" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    {% endif %}
+    <section class="site-flash-stack" aria-label="Notifications" data-flash-stack>
+        {% if messages and request.user.is_authenticated and not request.resolver_match.url_name == 'login' and not request.resolver_match.url_name == 'register' %}
+            {% for message in messages %}
+            <div class="form-alert{% if message.tags == 'success' %} form-alert-success{% endif %}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </section>
     {% block content %}{% endblock %}
-    <div class="app-modal" data-app-modal hidden>
+    <div
+        class="app-modal"
+        data-app-modal
+        data-delete-default-title="{% trans 'Delete item' %}"
+        data-remove-default-title="{% trans 'Remove item' %}"
+        data-delete-default-message="{% trans 'Are you sure you want to continue? This action cannot be undone.' %}"
+        data-delete-default-confirm="{% trans 'Delete' %}"
+        data-remove-default-confirm="{% trans 'Remove' %}"
+        data-delete-default-cancel="{% trans 'Cancel' %}"
+        data-unsaved-default-kicker="{% trans 'Unsaved changes' %}"
+        data-unsaved-default-title="{% trans 'Discard unsaved changes?' %}"
+        data-unsaved-default-message="{% trans 'Your changes have not been saved yet. If you leave this page now, those changes will be lost.' %}"
+        data-unsaved-default-confirm="{% trans 'Leave page' %}"
+        data-unsaved-default-cancel="{% trans 'Keep editing' %}"
+        hidden
+    >
         <div class="app-modal-backdrop" data-app-modal-close></div>
         <div class="app-modal-shell">
             <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="app-modal-title" aria-describedby="app-modal-message" tabindex="-1" data-app-modal-dialog>
@@ -25,7 +138,7 @@
                 </div>
                 <div class="app-modal-body">
                     <h2 id="app-modal-title" class="app-modal-title" data-app-modal-title></h2>
-                    <p id="app-modal-message" class="app-modal-message" data-app-modal-message></p>
+                    <div id="app-modal-message" class="app-modal-message" data-app-modal-message></div>
                 </div>
                 <div class="app-modal-actions">
                     <div class="app-modal-actions-left" data-app-modal-cancel-slot></div>
@@ -34,6 +147,7 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
     <script src="{% static 'js/auth.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>

@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Edit User" %}{% endif %}{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page">
+    {% include 'blog/manage/sidebar.html' with section='users' %}
+    <section class="manage-content">
+        <form method="post" class="section-panel panel-form user-manage-form" data-unsaved-guard>
+            {% csrf_token %}
+            <input type="hidden" name="remove_avatar" value="{% if remove_avatar_pending %}1{% else %}0{% endif %}" data-manage-user-avatar-remove-flag>
+            <div class="user-manage-shell">
+                <div class="section-heading-row user-manage-heading">
+                    <div>
+                        <span class="section-kicker">{% trans "Manage" %}</span>
+                        <h1>{% if page_title %}{{ page_title }}{% else %}{% trans "Edit User" %}{% endif %}</h1>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                <div class="form-alert" role="alert">{{ form.non_field_errors|striptags }}</div>
+                {% endif %}
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "Basic information" %}</h2>
+                    </div>
+                    <div class="user-manage-fields">
+                        <div class="user-manage-avatar-row">
+                            <div class="user-manage-avatar-display">
+                                {% if profile.avatar and not remove_avatar_pending %}
+                                <img src="{{ profile.avatar.url }}" alt="{{ object.username }}" class="profile-avatar-large" data-manage-user-avatar-image>
+                                {% else %}
+                                <div class="profile-avatar-large profile-avatar-fallback" data-manage-user-avatar-fallback>👤</div>
+                                {% endif %}
+                            </div>
+                            <div class="user-manage-avatar-actions">
+                                <button type="button" class="secondary-button destructive-button{% if not profile.avatar or remove_avatar_pending %} is-hidden{% endif %}" data-manage-user-avatar-remove>{% trans "Delete avatar" %}</button>
+                                <button type="button" class="secondary-button post-cover-undo-button{% if not profile.avatar or not remove_avatar_pending %} is-hidden{% endif %}" data-manage-user-avatar-undo>{% trans "Undo" %}</button>
+                            </div>
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}<div class="field-error">{{ form.username.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<div class="field-error">{{ form.email.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                            {{ form.password1 }}
+                            {% if form.password1.help_text %}<div class="field-help">{{ form.password1.help_text }}</div>{% endif %}
+                            {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-toggle-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                                {{ form.is_active }}
+                            </div>
+                            {% if form.is_active.errors %}<div class="field-error">{{ form.is_active.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "User groups" %}</h2>
+                    </div>
+                    <div class="user-manage-fields">
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.role_type.id_for_label }}">{{ form.role_type.label }}</label>
+                            {{ form.role_type }}
+                            {% if form.role_type.errors %}<div class="field-error">{{ form.role_type.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="user-manage-divider"></div>
+                        {% with current_role=form.role_type.value|default:form.role_type.field.initial %}
+                        <div class="user-manage-subsection" data-role-admin-section{% if current_role != 'admin' %} hidden{% endif %}>
+                            <div class="user-manage-subsection-title">{% trans "Administrator permissions" %}</div>
+                            <div class="field-group user-manage-toggle-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.is_staff.id_for_label }}">{{ form.is_staff.label }}</label>
+                                    {{ form.is_staff }}
+                                </div>
+                                {% if form.is_staff.errors %}<div class="field-error">{{ form.is_staff.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-toggle-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.is_superuser.id_for_label }}">{{ form.is_superuser.label }}</label>
+                                    {{ form.is_superuser }}
+                                </div>
+                                {% if form.is_superuser.errors %}<div class="field-error">{{ form.is_superuser.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="user-manage-divider" data-role-admin-divider{% if current_role != 'admin' %} hidden{% endif %}></div>
+                        {% endwith %}
+                        <div class="user-manage-subsection" data-role-member-section>
+                            <div class="user-manage-subsection-title">{% trans "Business groups" %}</div>
+                            <div class="user-manage-group-list">
+                                {% for option in form.business_group_options %}
+                                <div class="field-group user-manage-toggle-field">
+                                    <div class="user-manage-toggle-row">
+                                        <label for="{{ option.id }}">{{ option.label }}</label>
+                                        <input
+                                            type="checkbox"
+                                            name="groups"
+                                            value="{{ option.value }}"
+                                            id="{{ option.id }}"
+                                            {% if option.checked %}checked{% endif %}
+                                            data-business-group-checkbox="true"
+                                            data-group-name="{{ option.name }}"
+                                        >
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="field-help">{% trans "No user groups available." %}</div>
+                                {% endfor %}
+                            </div>
+                            {% if form.groups.errors %}<div class="field-error">{{ form.groups.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <div class="panel-actions user-manage-actions">
+                    <div class="user-manage-actions-left">
+                        {% if can_delete_user %}
+                        <button
+                            type="submit"
+                            class="secondary-button destructive-button"
+                            formaction="{% url 'manage-user-delete' object.pk %}"
+                            data-delete-confirm-trigger
+                            data-delete-confirm-title="{% trans 'Delete user' %}"
+                            data-delete-confirm-message="{% blocktrans with username=object.username %}Are you sure you want to delete user \"{{ username }}\"? This action cannot be undone.{% endblocktrans %}"
+                            data-delete-confirm-button="{% trans 'Delete' %}"
+                            data-delete-cancel-button="{% trans 'Cancel' %}"
+                        >{% trans "Delete" %}</button>
+                        {% endif %}
+                    </div>
+                    <div class="user-manage-actions-right">
+                        <button type="submit" class="primary-button">{% trans "Save" %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    (function () {
+        var roleSelect = document.querySelector('[data-role-type-select="true"]');
+        var adminSection = document.querySelector('[data-role-admin-section]');
+        var adminDivider = document.querySelector('[data-role-admin-divider]');
+        var memberSection = document.querySelector('[data-role-member-section]');
+        var staffCheckbox = document.getElementById('{{ form.is_staff.id_for_label }}');
+        var superuserCheckbox = document.getElementById('{{ form.is_superuser.id_for_label }}');
+        var businessGroupCheckboxes = document.querySelectorAll('[data-business-group-checkbox="true"]');
+        var defaultBusinessGroupValue = '{{ form.default_business_group_value|default:""|escapejs }}';
+        var avatarDisplay = document.querySelector('.user-manage-avatar-display');
+        var avatarRemoveButton = document.querySelector('[data-manage-user-avatar-remove]');
+        var avatarUndoButton = document.querySelector('[data-manage-user-avatar-undo]');
+        var avatarRemoveFlag = document.querySelector('[data-manage-user-avatar-remove-flag]');
+        var existingAvatarSrc = '{% if profile.avatar %}{{ profile.avatar.url|escapejs }}{% endif %}';
+
+        function ensureAvatarFallback() {
+            var fallback = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-fallback]') : null;
+            var image = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-image]') : null;
+
+            if (fallback || !avatarDisplay) {
+                return fallback;
+            }
+
+            fallback = document.createElement('div');
+            fallback.className = 'profile-avatar-large profile-avatar-fallback';
+            fallback.setAttribute('data-manage-user-avatar-fallback', 'true');
+            fallback.textContent = '👤';
+            if (image) {
+                image.replaceWith(fallback);
+            } else {
+                avatarDisplay.appendChild(fallback);
+            }
+            return fallback;
+        }
+
+        function ensureAvatarImage() {
+            var image = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-image]') : null;
+            var fallback = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-fallback]') : null;
+
+            if (image || !avatarDisplay) {
+                return image;
+            }
+
+            image = document.createElement('img');
+            image.alt = '{{ object.username|escapejs }}';
+            image.className = 'profile-avatar-large';
+            image.setAttribute('data-manage-user-avatar-image', 'true');
+            if (fallback) {
+                fallback.replaceWith(image);
+            } else {
+                avatarDisplay.appendChild(image);
+            }
+            return image;
+        }
+
+        function setAvatarPreview(src) {
+            var image = null;
+
+            if (!avatarDisplay) {
+                return;
+            }
+
+            if (src) {
+                image = ensureAvatarImage();
+                if (image) {
+                    image.src = src;
+                }
+                return;
+            }
+
+            ensureAvatarFallback();
+        }
+
+        function setAvatarMarkedForRemoval(marked) {
+            var hasExistingAvatar = !!existingAvatarSrc;
+
+            if (avatarRemoveFlag) {
+                avatarRemoveFlag.value = marked ? '1' : '0';
+            }
+            if (marked) {
+                setAvatarPreview('');
+            } else {
+                setAvatarPreview(existingAvatarSrc);
+            }
+            if (avatarRemoveButton) {
+                avatarRemoveButton.classList.toggle('is-hidden', marked || !hasExistingAvatar);
+            }
+            if (avatarUndoButton) {
+                avatarUndoButton.classList.toggle('is-hidden', !marked || !hasExistingAvatar);
+            }
+        }
+
+        if (avatarDisplay && avatarRemoveFlag) {
+            if (avatarRemoveButton) {
+                avatarRemoveButton.addEventListener('click', function () {
+                    setAvatarMarkedForRemoval(true);
+                });
+            }
+            if (avatarUndoButton) {
+                avatarUndoButton.addEventListener('click', function () {
+                    setAvatarMarkedForRemoval(false);
+                });
+            }
+            setAvatarMarkedForRemoval(avatarRemoveFlag.value === '1');
+        }
+
+        if (!roleSelect) {
+            return;
+        }
+
+        function syncRoleState(applyDefaults) {
+            var isAdmin = roleSelect.value === 'admin';
+            if (adminSection) {
+                adminSection.hidden = !isAdmin;
+            }
+            if (adminDivider) {
+                adminDivider.hidden = !isAdmin;
+            }
+            if (memberSection) {
+                memberSection.hidden = false;
+            }
+
+            if (applyDefaults && isAdmin) {
+                if (staffCheckbox) {
+                    staffCheckbox.checked = true;
+                }
+                if (superuserCheckbox) {
+                    superuserCheckbox.checked = true;
+                }
+            }
+
+            if (applyDefaults && !isAdmin) {
+                if (staffCheckbox) {
+                    staffCheckbox.checked = false;
+                }
+                if (superuserCheckbox) {
+                    superuserCheckbox.checked = false;
+                }
+                businessGroupCheckboxes.forEach(function (checkbox) {
+                    if (checkbox.value === defaultBusinessGroupValue) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+        }
+
+        roleSelect.addEventListener('change', function () {
+            syncRoleState(true);
+        });
+
+        syncRoleState(false);
+    })();
+</script>
+{% endblock %}

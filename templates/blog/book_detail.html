@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% if post %}{{ post.title }} · {{ current_book.name }}{% else %}{{ current_book.name }}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+{% endblock %}
+
+{% block content %}
+<main id="top" class="site-page post-detail-page book-detail-page">
+    <div class="post-detail-floating-outline book-detail-floating-outline" data-book-outline-root>
+        <button
+            type="button"
+            class="post-outline-floating-toggle"
+            data-book-outline-toggle
+            aria-expanded="false"
+            aria-controls="book-outline-floating-panel"
+            hidden
+        >
+            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+            <span class="sr-only">{% trans "Chapters" %}</span>
+        </button>
+        <div class="post-outline-card post-outline-floating-panel" id="book-outline-floating-panel" data-book-outline-panel data-open-direction="right" hidden>
+            <div class="post-outline-heading-row">
+                <strong>{% trans "Chapters" %}</strong>
+            </div>
+            <nav class="post-outline-nav" aria-label="{% trans 'Book chapters' %}" data-book-outline-nav></nav>
+        </div>
+    </div>
+    {% if post and not requires_password and not requires_post_password %}
+    <div class="post-detail-floating-outline book-post-outline" data-post-outline-root data-post-outline-hide-narrow data-post-outline-always-expanded>
+        <button
+            type="button"
+            class="post-outline-floating-toggle"
+            data-post-outline-toggle
+            aria-expanded="false"
+            aria-controls="book-post-outline-panel"
+            hidden
+        >
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+            <span class="sr-only">{% trans "目录" %}</span>
+        </button>
+        <div class="post-outline-card post-outline-floating-panel" id="book-post-outline-panel" data-post-outline-panel data-open-direction="left" hidden>
+            <div class="post-outline-heading-row">
+                <strong>{% trans "目录" %}</strong>
+                <a class="post-outline-back-to-top" href="#top">{% trans "回到顶部" %}</a>
+            </div>
+            <nav class="post-outline-nav" aria-label="{% trans 'Article outline' %}" data-post-outline-nav></nav>
+        </div>
+    </div>
+    {% endif %}
+    <div class="book-detail-layout" data-book-outline-scope>
+        <div class="book-detail-content" data-post-outline-scope>
+            {% if requires_password %}
+            <article class="post-detail-shell">
+                <header class="post-detail-header">
+                    <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
+                        <div class="tag-row post-detail-tag-row">
+                            <div class="post-detail-tag-row-main">
+                                {% if current_book.visibility == 'public' %}
+                                <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i></span>
+                                {% elif current_book.visibility == 'encrypted' %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                                {% else %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h1>{{ current_book.name }}</h1>
+                        <div class="card-meta-row card-meta-row-soft">
+                            <span>{{ current_book.created_by.first_name|default:current_book.created_by.username }}</span>
+                            <span>{{ current_book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        </div>
+                        {% if current_book.summary %}
+                        <p class="post-detail-summary">{{ current_book.summary }}</p>
+                        {% endif %}
+                    </div>
+                </header>
+            </article>
+            {% else %}
+            <article class="post-detail-shell">
+                <header class="post-detail-header">
+                    {% if post %}
+                    <div class="post-detail-hero{% if post.cover_image %} post-detail-hero-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
+                        <div class="tag-row post-detail-tag-row" aria-hidden="true"></div>
+                        <div class="post-detail-title-row">
+                            <h1>{{ post.title }}</h1>
+                            {% if post.visibility == 'book_only' %}
+                            <span class="soft-tag soft-tag-visibility soft-tag-book-only">
+                                <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+                            </span>
+                            {% elif post.visibility == 'encrypted' %}
+                            <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
+                                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                            </span>
+                            {% elif post.visibility != 'public' %}
+                            <span class="soft-tag soft-tag-visibility soft-tag-private">
+                                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="card-meta-row card-meta-row-soft">
+                            <span>{{ post.author.first_name|default:post.author.username }}</span>
+                            <span>{% if detail_timestamp_label %}{{ detail_timestamp_label }}: {% endif %}{{ detail_timestamp|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        </div>
+                        {% if post.summary %}
+                        <p class="post-detail-summary">{{ post.summary }}</p>
+                        {% elif current_book.summary %}
+                        <p class="post-detail-summary">{{ current_book.summary }}</p>
+                        {% endif %}
+                        {% if post.display_tags|default:post.tags.all %}
+                        <div class="tag-row">
+                            {% for tag in post.display_tags|default:post.tags.all %}
+                            {% if detail_tags_clickable %}
+                            <a href="{{ tag.get_absolute_url }}" class="soft-tag soft-tag-directory soft-tag-directory-link post-detail-tag-link" style="{{ tag.color_style }}">#{{ tag.name }}</a>
+                            {% else %}
+                            <span class="soft-tag soft-tag-directory post-detail-tag-link" style="{{ tag.color_style }}">#{{ tag.name }}</span>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
+                        <div class="tag-row post-detail-tag-row">
+                            <div class="post-detail-tag-row-main">
+                                {% if current_book.visibility == 'public' %}
+                                <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i></span>
+                                {% elif current_book.visibility == 'encrypted' %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                                {% else %}
+                                <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h1>{{ current_book.name }}</h1>
+                        <div class="card-meta-row card-meta-row-soft">
+                            <span>{{ current_book.created_by.first_name|default:current_book.created_by.username }}</span>
+                            <span>{{ current_book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        </div>
+                        {% if current_book.summary %}
+                        <p class="post-detail-summary">{{ current_book.summary }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </header>
+                {% if post and not requires_post_password %}
+                <section
+                    class="markdown-body blog-markdown-content"
+                    data-post-content
+                    data-code-copy-enabled="true"
+                    data-code-copy-label="{% trans 'Copy' %}"
+                    data-code-copied-label="{% trans 'Copied' %}"
+                    data-code-copy-failed-label="{% trans 'Failed' %}"
+                >
+                    {{ rendered_content|safe }}
+                </section>
+                <div class="post-feedback-bar"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'blog-feedback-toggle' post.slug %}"{% endif %}>
+                    <div class="feedback-actions">
+                        <button type="button" class="feedback-button{% if post.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if post.feedback_value == 1 %}true{% else %}false{% endif %}">
+                            <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                            <span class="feedback-count" data-feedback-count="up">{{ post.up_count }}</span>
+                        </button>
+                        <button type="button" class="feedback-button{% if post.feedback_value == -1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="-1"{% else %}disabled{% endif %} aria-pressed="{% if post.feedback_value == -1 %}true{% else %}false{% endif %}">
+                            <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                            <span class="feedback-count" data-feedback-count="down">{{ post.down_count }}</span>
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                {% if not post %}
+                <section class="empty-panel book-empty-panel">
+                    <h2>{% trans "No accessible articles yet" %}</h2>
+                    <p>{{ empty_book_message }}</p>
+                </section>
+                {% endif %}
+            </article>
+            {% endif %}
+
+            {% if not requires_password and not requires_post_password %}
+            <section id="comments" class="section-panel comment-section" tabindex="-1">
+                <div class="section-heading-row">
+                    <div>
+                        <span class="section-kicker">{% trans "Discussion" %}</span>
+                        <h2>{% blocktrans count total=comment_count %}{{ total }} Comment{% plural %}{{ total }} Comments{% endblocktrans %}</h2>
+                    </div>
+                </div>
+                {% if can_interact %}
+                <div class="comment-entry-divider-shell">
+                    <div class="comment-entry-divider"></div>
+                    <div class="comment-entry-actions">
+                        <button
+                            type="button"
+                            class="secondary-button comment-compact-button"
+                            data-comment-entry-toggle
+                            aria-expanded="{% if comment_form.errors or comment_form.non_field_errors %}true{% else %}false{% endif %}"
+                        >
+                            {% trans "Post comment" %}
+                        </button>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'comment-create' post.slug %}?next={{ request.get_full_path|urlencode }}" class="panel-form comment-form-card" data-comment-entry-panel{% if not comment_form.errors and not comment_form.non_field_errors %} hidden{% endif %}>
+                    {% csrf_token %}
+                    {% if comment_form.non_field_errors %}
+                    <div class="form-alert" role="alert">{{ comment_form.non_field_errors|striptags }}</div>
+                    {% endif %}
+                    <div class="field-group">
+                        <label for="{{ comment_form.content.id_for_label }}">{{ comment_form.content.label }}</label>
+                        {{ comment_form.content }}
+                        <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                        {% if comment_form.content.errors %}<div class="field-error">{{ comment_form.content.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="panel-actions comment-form-actions">
+                        <button type="submit" class="primary-button">{% trans "Post comment" %}</button>
+                    </div>
+                </form>
+                {% endif %}
+
+                <div class="comment-list">
+                    {% include 'blog/includes/comment_threads.html' %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% if requires_password %}
+<div
+    hidden
+    data-encrypted-post-modal
+    data-encrypted-post-url="{{ password_submit_url }}"
+    data-encrypted-post-title="{{ password_modal_title }}"
+    data-encrypted-post-kicker="{{ password_modal_kicker }}"
+    data-encrypted-post-confirm="{{ password_modal_confirm }}"
+    data-encrypted-post-cancel="{{ password_modal_cancel }}"
+    data-encrypted-post-error="{% if access_form.password.errors %}{{ access_form.password.errors|striptags }}{% endif %}"
+    data-encrypted-post-direct="true"
+></div>
+{% endif %}
+{% if requires_post_password %}
+<div
+    hidden
+    data-encrypted-post-modal
+    data-encrypted-post-url="{{ password_submit_url }}"
+    data-encrypted-post-title="{{ password_modal_title }}"
+    data-encrypted-post-kicker="{{ password_modal_kicker }}"
+    data-encrypted-post-confirm="{{ password_modal_confirm }}"
+    data-encrypted-post-cancel="{{ password_modal_cancel }}"
+    data-encrypted-post-direct="true"
+></div>
+{% endif %}
+{% if not requires_password %}
+<script type="application/json" data-book-outline-data>{{ book_navigation_json|safe }}</script>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+{% endblock %}

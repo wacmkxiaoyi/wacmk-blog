@@ -1,0 +1,32 @@
+{% load i18n %}
+{% if is_paginated %}
+<div class="pagination-panel">
+    <div class="pagination-status">
+        {% blocktrans with current=page_obj.number total=page_obj.paginator.num_pages %}Page: {{ current }} / {{ total }}{% endblocktrans %}
+    </div>
+    <div class="pagination-actions">
+        {% if page_obj.has_previous %}
+        <a href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" class="secondary-button pagination-button">{% trans "Previous" %}</a>
+        {% else %}
+        <span class="secondary-button pagination-button is-disabled" aria-disabled="true">{% trans "Previous" %}</span>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <a href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.next_page_number }}" class="secondary-button pagination-button">{% trans "Next" %}</a>
+        {% else %}
+        <span class="secondary-button pagination-button is-disabled" aria-disabled="true">{% trans "Next" %}</span>
+        {% endif %}
+        <form method="get" class="pagination-jump-form">
+            {% if query %}
+            <input type="hidden" name="q" value="{{ query }}">
+            {% endif %}
+            {% if current_sort %}
+            <input type="hidden" name="sort" value="{{ current_sort }}">
+            <input type="hidden" name="dir" value="{{ current_sort_direction }}">
+            {% endif %}
+            <label for="{{ pagination_input_id|default:'id_page_jump' }}" class="sr-only">{% trans "Jump to page" %}</label>
+            <input id="{{ pagination_input_id|default:'id_page_jump' }}" type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}" class="input-control pagination-input" aria-label="{% trans 'Jump to page' %}">
+            <button type="submit" class="secondary-button pagination-button">{% trans "Go" %}</button>
+        </form>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,11 @@
+{% load i18n %}
+{% blocktrans with app_name=app_name %}[{{ app_name }}] Your email address was updated{% endblocktrans %}
+
+{% trans "Your account email address has been updated by an administrator." %}
+
+{% blocktrans with username=username %}This change was applied to the account for {{ username }}.{% endblocktrans %}
+{% trans "New email address" %}: {{ new_email }}
+
+{% trans "If you did not expect this change, please contact an administrator immediately." %}
+
+{% blocktrans with app_name=app_name %}This is an automated email from {{ app_name }}. Please do not reply directly to this message.{% endblocktrans %}

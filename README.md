@@ -1,6 +1,6 @@
-# Wacmk Server Authenticator
+# Wacmk Blog
 
-A lightweight Django website scaffold with MySQL support, environment-based configuration, stdout logging, and a cute anime-inspired login experience.
+A lightweight Django website scaffold with MySQL support, environment-based configuration, stdout logging, a cute anime-inspired login experience, and a built-in blog workspace.
 
 ## Stack
 
@@ -8,6 +8,8 @@ A lightweight Django website scaffold with MySQL support, environment-based conf
 - MySQL via PyMySQL
 - Environment variables for runtime configuration
 - Standard output logging for Docker-friendly deployment
+- Markdown-powered blog publishing with image upload
+- Independent profile and management pages
 
 ## Quick Start
 
@@ -42,7 +44,13 @@ python manage.py runserver 0.0.0.0:8000
 
 - `/login/` login page
 - `/register/` registration page when enabled
-- `/` authenticated dashboard page
+- `/` authenticated blog home page
+- `/blog/<slug>/` article details
+- `/search/` article search
+- `/profile/` personal settings
+- `/manage/` article management
+- `/manage/users/` user management
+- `/manage/audit/` access audit logs
 - `/admin/` Django admin
 
 ## Configuration
@@ -77,6 +85,35 @@ Registration is available only when `ENABLE_REGISTER=true` and the required emai
 When the required email settings are configured, the login page also provides a forgot-password action. It resets the account password to a strong random temporary password and sends it to the user's registered email address without revealing whether the username exists.
 
 The project also includes a reusable global modal layer with tone-specific stacking levels for notice, attention, warning, and error states. Confirm actions are aligned to the right and cancel actions to the left to keep interactions consistent across the site.
+
+## Blog Workspace
+
+After login, users land on a themed blog homepage instead of the old placeholder dashboard.
+
+- Top navigation: home icon, centered search, avatar dropdown
+- Personal settings: nickname, email, avatar, password update
+- Post management: create, edit, publish, delete posts
+- Markdown editor: EasyMDE with side-by-side preview and image upload support
+- User management: edit account state and staff permissions
+- Audit logs: login/logout, profile updates, post changes, and user maintenance actions
+
+## Audit Log Cleanup
+
+Website management -> Basic settings now includes audit log cleanup controls.
+
+- Enabled by default
+- Default retention is 30 days
+- Cleanup is executed by the Django management command `python manage.py cleanup_audit_logs`
+
+Recommended scheduling: run the command once per day from your operating system scheduler.
+
+- Linux cron example: `0 3 * * * /path/to/venv/bin/python /path/to/project/manage.py cleanup_audit_logs`
+- Windows Task Scheduler example: run `python manage.py cleanup_audit_logs` daily
+
+## Additional Dependencies
+
+- `Markdown` for server-side Markdown rendering
+- `Pillow` for avatar and cover image handling
 
 ## Logging
 

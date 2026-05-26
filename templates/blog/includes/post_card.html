@@ -1,0 +1,62 @@
+{% load i18n %}
+<article class="post-card{% if card_class %} {{ card_class }}{% endif %}">
+    <div class="post-card-body">
+        {% if post_card_button %}
+        <button type="button" class="post-card-link-overlay post-card-button-overlay{% if post_requires_password %} encrypted-post-link{% endif %}" aria-label="{{ post.title }}" data-post-card-select{% if post_card_url %} data-post-card-url="{{ post_card_url }}"{% endif %} data-post-card-title="{{ post.title }}"{% if post_requires_password %} data-encrypted-post-trigger data-encrypted-post-url="{{ post.get_absolute_url }}" data-encrypted-post-title="{% trans 'Enter password to view this article' %}" data-encrypted-post-kicker="{% trans 'Encrypted' %}" data-encrypted-post-confirm="{% trans 'Unlock article' %}" data-encrypted-post-cancel="{% trans 'Cancel' %}"{% endif %}></button>
+        {% else %}
+        <a href="{{ post.get_absolute_url }}" class="post-card-link-overlay{% if post_requires_password %} encrypted-post-link{% endif %}" aria-label="{{ post.title }}"{% if post_requires_password %} data-encrypted-post-trigger data-encrypted-post-url="{{ post.get_absolute_url }}" data-encrypted-post-title="{% trans 'Enter password to view this article' %}" data-encrypted-post-kicker="{% trans 'Encrypted' %}" data-encrypted-post-confirm="{% trans 'Unlock article' %}" data-encrypted-post-cancel="{% trans 'Cancel' %}"{% endif %}></a>
+        {% endif %}
+        <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
+            <div class="card-meta-row card-meta-row-soft">
+                <span>{{ post.author.first_name|default:post.author.username }}</span>
+                <span>{{ post.published_at|default:post.updated_at|date:"DATE_FORMAT" }}</span>
+            </div>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.summary|default:post.content|truncatechars:summary_length }}</p>
+        </div>
+        {% if show_visibility|default:False %}
+        <div class="tag-row post-card-feedback-row">
+            {% if post.visibility == 'public' %}
+            <span class="soft-tag soft-tag-visibility">
+                <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+                {{ post.get_visibility_display }}
+            </span>
+            {% elif post.visibility == 'book_only' %}
+            <span class="soft-tag soft-tag-visibility soft-tag-book-only">
+                <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+                {{ post.get_visibility_display }}
+            </span>
+            {% elif post.visibility == 'encrypted' %}
+            <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                {{ post.get_visibility_display }}
+            </span>
+            {% else %}
+            <span class="soft-tag soft-tag-visibility soft-tag-private">
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
+                {{ post.get_visibility_display }}
+            </span>
+            {% endif %}
+            <span class="post-card-feedback-summary" aria-label="Likes {{ post.up_count|default:0 }}, dislikes {{ post.down_count|default:0 }}">
+                <span class="post-card-feedback-stat">
+                    <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                    <span>{{ post.up_count|default:0 }}</span>
+                </span>
+                <span class="post-card-feedback-stat">
+                    <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                    <span>{{ post.down_count|default:0 }}</span>
+                </span>
+            </span>
+        </div>
+        {% endif %}
+        {% if show_tags|default:False %}
+        <div class="tag-row">
+            {% for tag in post.display_tags|default:post.tags.all %}
+            <a href="{{ tag.get_absolute_url }}" class="soft-tag soft-tag-directory soft-tag-directory-link post-card-tag-link" style="{{ tag.color_style }}">#{{ tag.name }}</a>
+            {% empty %}
+            <span class="soft-tag soft-tag-muted">{% trans "No tags" %}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</article>

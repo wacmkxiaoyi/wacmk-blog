@@ -6,6 +6,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
@@ -28,6 +29,10 @@ User = get_user_model()
 
 def get_register_code_expire_minutes():
     return max(1, ceil(settings.REGISTER_CODE_EXPIRE_SECONDS / 60))
+
+
+def get_verification_code_expire_minutes():
+    return get_register_code_expire_minutes()
 
 
 def generate_temporary_password(length=16):
@@ -59,6 +64,39 @@ def build_email_message(subject, text_template, html_template, context, recipien
     )
     message.attach_alternative(html_body, "text/html")
     return message
+
+
+def send_verification_code_email(email, purpose, text_template, html_template, subject_text, intro_context=None):
+    latest_code = (
+        EmailVerificationCode.objects.filter(email__iexact=email, purpose=purpose)
+        .order_by("-created_at")
+        .first()
+    )
+    if latest_code and timezone.now() < latest_code.created_at + timedelta(seconds=settings.REGISTER_CODE_RESEND_SECONDS):
+        return {
+            "ok": False,
+            "message": str(_("Please wait before requesting another verification code.")),
+            "status": 429,
+        }
+
+    code = f"{random.randint(0, 999999):06d}"
+    EmailVerificationCode.objects.create(
+        email=email,
+        code=code,
+        purpose=purpose,
+        expires_at=timezone.now() + timedelta(seconds=settings.REGISTER_CODE_EXPIRE_SECONDS),
+    )
+    context = {
+        "app_name": settings.APP_NAME,
+        "code": code,
+        "expire_minutes": get_verification_code_expire_minutes(),
+    }
+    if intro_context:
+        context.update(intro_context)
+    subject = str(subject_text) % {"app_name": settings.APP_NAME}
+    message = build_email_message(subject, text_template, html_template, context, email)
+    message.send(fail_silently=False)
+    return {"ok": True, "message": str(_("Verification code sent.")), "status": 200}
 
 
 class RegisterAvailabilityMixin:
@@ -136,46 +174,51 @@ class SendRegisterCodeView(RegisterAvailabilityMixin, View):
         if User.objects.filter(email__iexact=email).exists():
             return JsonResponse({"ok": False, "message": str(_("This email is already registered."))}, status=400)
 
-        latest_code = (
-            EmailVerificationCode.objects.filter(
-                email__iexact=email,
-                purpose=EmailVerificationCode.PURPOSE_REGISTER,
-            )
-            .order_by("-created_at")
-            .first()
+        result = send_verification_code_email(
+            email=email,
+            purpose=EmailVerificationCode.PURPOSE_REGISTER,
+            text_template="emails/register_code.txt",
+            html_template="emails/register_code.html",
+            subject_text=_("[%(app_name)s] Your verification code"),
         )
-        if latest_code and timezone.now() < latest_code.created_at + timedelta(seconds=settings.REGISTER_CODE_RESEND_SECONDS):
+        return JsonResponse({"ok": result["ok"], "message": result["message"]}, status=result["status"])
+
+
+class SendEmailChangeCodeView(LoginRequiredMixin, View):
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        if not settings.EMAIL_DELIVERY_READY:
             return JsonResponse(
-                {
-                    "ok": False,
-                    "message": str(_("Please wait before requesting another verification code.")),
-                },
-                status=429,
+                {"ok": False, "message": str(_("Email verification is currently unavailable."))},
+                status=404,
             )
 
-        code = f"{random.randint(0, 999999):06d}"
-        EmailVerificationCode.objects.create(
+        email = (request.POST.get("email") or "").strip().lower()
+        if not email:
+            return JsonResponse({"ok": False, "message": str(_("Email is required."))}, status=400)
+
+        email_field = RegistrationForm.base_fields["email"]
+        try:
+            email = email_field.clean(email)
+        except ValidationError:
+            return JsonResponse({"ok": False, "message": str(_("Enter a valid email address."))}, status=400)
+
+        if email == (request.user.email or "").strip().lower():
+            return JsonResponse({"ok": False, "message": str(_("Please enter a different email address."))}, status=400)
+
+        if User.objects.exclude(pk=request.user.pk).filter(email__iexact=email).exists():
+            return JsonResponse({"ok": False, "message": str(_("This email is already registered."))}, status=400)
+
+        result = send_verification_code_email(
             email=email,
-            code=code,
-            purpose=EmailVerificationCode.PURPOSE_REGISTER,
-            expires_at=timezone.now() + timedelta(seconds=settings.REGISTER_CODE_EXPIRE_SECONDS),
+            purpose=EmailVerificationCode.PURPOSE_EMAIL_CHANGE,
+            text_template="emails/email_change_code.txt",
+            html_template="emails/email_change_code.html",
+            subject_text=_("[%(app_name)s] Your email verification code"),
+            intro_context={"username": request.user.username},
         )
-        expire_minutes = get_register_code_expire_minutes()
-        context = {
-            "app_name": settings.APP_NAME,
-            "code": code,
-            "expire_minutes": expire_minutes,
-        }
-        subject = str(_("[%(app_name)s] Your verification code")) % {"app_name": settings.APP_NAME}
-        message = build_email_message(
-            subject,
-            "emails/register_code.txt",
-            "emails/register_code.html",
-            context,
-            email,
-        )
-        message.send(fail_silently=False)
-        return JsonResponse({"ok": True, "message": str(_("Verification code sent."))})
+        return JsonResponse({"ok": result["ok"], "message": result["message"]}, status=result["status"])
 
 
 class ForgotPasswordView(View):

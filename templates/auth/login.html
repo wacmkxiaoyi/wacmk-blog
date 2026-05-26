@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
-{% block title %}{% trans "Login" %} | Wacmk Authenticator{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
 {% block body_class %}auth-page{% endblock %}
 
 {% block extra_css %}
@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<main class="auth-layout">
+<main class="auth-layout"{% if site_setting and site_setting.auth_background %} style="--custom-auth-background: url('{{ site_setting.auth_background.url }}');"{% endif %}>
     <div class="auth-toolbar">
         <form action="{% url 'set_language' %}" method="post" class="language-switcher">
             {% csrf_token %}

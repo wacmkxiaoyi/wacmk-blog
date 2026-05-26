@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Audit Logs" %}{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page">
+    {% include 'blog/manage/sidebar.html' with section='audit' %}
+    <section class="manage-content">
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Manage" %}</span>
+                    <h1>{% trans "Access audit" %}</h1>
+                </div>
+                <form
+                    method="post"
+                    action="{% url 'manage-audit-clear' %}"
+                    data-delete-confirm-form
+                    data-delete-confirm-title="{% trans 'Clear audit logs' %}"
+                    data-delete-confirm-message="{% trans 'Are you sure you want to clear all audit logs? This action cannot be undone.' %}"
+                    data-delete-confirm-button="{% trans 'Clear' %}"
+                    data-delete-cancel-button="{% trans 'Cancel' %}"
+                >
+                    {% csrf_token %}
+                    <button type="submit" class="secondary-button destructive-button">{% trans "Clear" %}</button>
+                </form>
+            </div>
+            <form method="get" class="inline-search-form">
+                <input type="search" name="q" value="{{ query }}" class="input-control" placeholder="{% trans 'Search audit logs...' %}" aria-label="{% trans 'Search audit logs' %}">
+                {% if current_sort %}
+                <input type="hidden" name="sort" value="{{ current_sort }}">
+                <input type="hidden" name="dir" value="{{ current_sort_direction }}">
+                {% endif %}
+                <button type="submit" class="secondary-button">{% trans "Search" %}</button>
+            </form>
+            <div class="data-table-shell">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th><a href="{{ sort_headers.action.url }}" class="table-sort-link{% if sort_headers.action.is_active %} is-active{% endif %}">{% trans "Action" %}{% if sort_headers.action.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.action.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
+                            <th>{% trans "Message" %}</th>
+                            <th><a href="{{ sort_headers.user.url }}" class="table-sort-link{% if sort_headers.user.is_active %} is-active{% endif %}">{% trans "User" %}{% if sort_headers.user.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.user.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
+                            <th>{% trans "IP" %}</th>
+                            <th><a href="{{ sort_headers.time.url }}" class="table-sort-link{% if sort_headers.time.is_active %} is-active{% endif %}">{% trans "Time" %}{% if sort_headers.time.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.time.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td><span class="soft-tag">{{ log.get_action_display }}</span></td>
+                            <td>{{ log.message }}</td>
+                            <td>{% if log.user %}{{ log.user.first_name|default:log.user.username }}{% else %}{% trans "Anonymous" %}{% endif %}</td>
+                            <td>{{ log.ip_address|default:'-' }}</td>
+                            <td>{{ log.created_at|date:"SHORT_DATETIME_FORMAT" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-cell">{% trans "No audit logs yet" %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% include 'blog/includes/pagination.html' with pagination_input_id='id_manage_audit_page_jump' %}
+        </div>
+    </section>
+</main>
+{% endblock %}

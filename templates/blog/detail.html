@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+{% endblock %}
+
+{% block content %}
+<main id="top" class="site-page post-detail-page">
+    <div class="post-detail-floating-outline" data-post-outline-root>
+        <button
+            type="button"
+            class="post-outline-floating-toggle"
+            data-post-outline-toggle
+            aria-expanded="false"
+            aria-controls="post-outline-floating-panel"
+            hidden
+        >
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+            <span class="sr-only">{% trans "目录" %}</span>
+        </button>
+        <div class="post-outline-card post-outline-floating-panel" id="post-outline-floating-panel" data-post-outline-panel data-open-direction="left" hidden>
+            <div class="post-outline-heading-row">
+                <strong>{% trans "目录" %}</strong>
+                <a class="post-outline-back-to-top" href="#top">{% trans "回到顶部" %}</a>
+            </div>
+            <nav class="post-outline-nav" aria-label="{% trans 'Article outline' %}" data-post-outline-nav></nav>
+        </div>
+    </div>
+    <div class="post-detail-layout" data-post-outline-scope>
+        <article class="post-detail-shell">
+            <header class="post-detail-header">
+                <div class="post-detail-hero{% if post.cover_image %} post-detail-hero-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
+                    <div class="post-detail-title-row">
+                        <h1>{{ post.title }}</h1>
+                        {% if post.visibility == 'book_only' %}
+                        <span class="soft-tag soft-tag-visibility soft-tag-book-only">
+                            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+                        </span>
+                        {% elif post.visibility == 'encrypted' %}
+                        <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
+                            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        </span>
+                        {% elif post.visibility != 'public' %}
+                        <span class="soft-tag soft-tag-visibility soft-tag-private">
+                            <i class="fa-solid fa-user" aria-hidden="true"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="card-meta-row card-meta-row-soft">
+                        <span>{{ post.author.first_name|default:post.author.username }}</span>
+                        <span>{% if detail_timestamp_label %}{{ detail_timestamp_label }}: {% endif %}{{ detail_timestamp|date:"SHORT_DATETIME_FORMAT" }}</span>
+                    </div>
+                    {% if post.summary %}
+                    <p class="post-detail-summary">{{ post.summary }}</p>
+                    {% endif %}
+                    {% if post.display_tags|default:post.tags.all %}
+                    <div class="tag-row">
+                        {% for tag in post.display_tags|default:post.tags.all %}
+                        {% if detail_tags_clickable %}
+                        <a href="{{ tag.get_absolute_url }}" class="soft-tag soft-tag-directory soft-tag-directory-link post-detail-tag-link" style="{{ tag.color_style }}">#{{ tag.name }}</a>
+                        {% else %}
+                        <span class="soft-tag soft-tag-directory post-detail-tag-link" style="{{ tag.color_style }}">#{{ tag.name }}</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </header>
+            {% if not requires_password %}
+            <section
+                class="markdown-body blog-markdown-content"
+                data-post-content
+                data-code-copy-enabled="true"
+                data-code-copy-label="{% trans 'Copy' %}"
+                data-code-copied-label="{% trans 'Copied' %}"
+                data-code-copy-failed-label="{% trans 'Failed' %}"
+            >
+                {{ rendered_content|safe }}
+            </section>
+            <div class="post-feedback-bar"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'blog-feedback-toggle' post.slug %}"{% endif %}>
+                <div class="feedback-actions">
+                    <button type="button" class="feedback-button{% if post.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if post.feedback_value == 1 %}true{% else %}false{% endif %}">
+                        <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                        <span class="feedback-count" data-feedback-count="up">{{ post.up_count }}</span>
+                    </button>
+                    <button type="button" class="feedback-button{% if post.feedback_value == -1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="-1"{% else %}disabled{% endif %} aria-pressed="{% if post.feedback_value == -1 %}true{% else %}false{% endif %}">
+                        <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                        <span class="feedback-count" data-feedback-count="down">{{ post.down_count }}</span>
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        </article>
+    </div>
+
+    {% if not requires_password %}
+    <section id="comments" class="section-panel comment-section" tabindex="-1">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Discussion" %}</span>
+                <h2>{% blocktrans count total=comment_count %}{{ total }} Comment{% plural %}{{ total }} Comments{% endblocktrans %}</h2>
+            </div>
+        </div>
+        {% if can_interact %}
+        <div class="comment-entry-divider-shell">
+            <div class="comment-entry-divider"></div>
+            <div class="comment-entry-actions">
+                <button
+                    type="button"
+                    class="secondary-button comment-compact-button"
+                    data-comment-entry-toggle
+                    aria-expanded="{% if comment_form.errors or comment_form.non_field_errors %}true{% else %}false{% endif %}"
+                >
+                    {% trans "Post comment" %}
+                </button>
+            </div>
+        </div>
+        <form method="post" action="{% url 'comment-create' post.slug %}" class="panel-form comment-form-card" data-comment-entry-panel{% if not comment_form.errors and not comment_form.non_field_errors %} hidden{% endif %}>
+            {% csrf_token %}
+            {% if comment_form.non_field_errors %}
+            <div class="form-alert" role="alert">{{ comment_form.non_field_errors|striptags }}</div>
+            {% endif %}
+            <div class="field-group">
+                <label for="{{ comment_form.content.id_for_label }}">{{ comment_form.content.label }}</label>
+                {{ comment_form.content }}
+                <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                {% if comment_form.content.errors %}<div class="field-error">{{ comment_form.content.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="panel-actions comment-form-actions">
+                <button type="submit" class="primary-button">{% trans "Post comment" %}</button>
+            </div>
+        </form>
+        {% endif %}
+
+        <div class="comment-list">
+            {% include 'blog/includes/comment_threads.html' %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if show_related_posts %}
+    <section class="section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "More" %}</span>
+                <h2>{% trans "Related posts" %}</h2>
+            </div>
+        </div>
+        <div class="post-grid post-grid-compact">
+            {% for post in related_posts %}
+            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=True %}
+            {% else %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=False %}
+            {% endif %}
+            {% empty %}
+            <div class="empty-panel">
+                <p>{% trans "No related posts yet." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</main>
+{% if can_generate_share_link %}
+<div hidden>
+    {% for option in share_expiry_options %}
+    <span data-share-expiry-option="{{ option.value }}">{{ option.label }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+{% if requires_password %}
+<div
+    hidden
+    data-encrypted-post-modal
+    data-encrypted-post-url="{{ password_submit_url }}"
+    data-encrypted-post-title="{{ password_modal_title }}"
+    data-encrypted-post-kicker="{{ password_modal_kicker }}"
+    data-encrypted-post-confirm="{{ password_modal_confirm }}"
+    data-encrypted-post-cancel="{{ password_modal_cancel }}"
+    data-encrypted-post-error="{% if access_form.password.errors %}{{ access_form.password.errors|striptags }}{% endif %}"
+    data-encrypted-post-direct="true"
+></div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+{% endblock %}

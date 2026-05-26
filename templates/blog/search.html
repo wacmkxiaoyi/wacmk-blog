@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Search" %}{% endblock %}
+
+{% block content %}
+<main class="site-page search-page">
+    <section class="section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Search" %}</span>
+                <h1>{% trans "Search results" %}</h1>
+                <p class="search-subtitle">
+                    {% if query %}
+                        {% blocktrans with query=query %}Results for "{{ query }}"{% endblocktrans %}
+                    {% else %}
+                        {% trans "Enter a keyword from the top search bar." %}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="post-grid">
+            {% for post in posts %}
+            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=True %}
+            {% else %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=False %}
+            {% endif %}
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No results found" %}</h3>
+                <p>{% trans "Try another keyword, book, tag, or author name." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'blog/includes/pagination.html' with pagination_input_id='id_search_page_jump' %}
+    </section>
+</main>
+{% endblock %}

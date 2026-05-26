@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps.core",
+    "apps.blog",
     "apps.users",
 ]
 
@@ -66,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.blog.context_processors.global_site_context",
             ],
         },
     },
@@ -135,11 +136,12 @@ REGISTER_AVAILABLE = ENABLE_REGISTER and REGISTER_EMAIL_SETTINGS_READY
 REGISTER_DEFAULT_GROUP_NAME = "normal_user"
 REGISTER_CODE_EXPIRE_SECONDS = int(get_env("REGISTER_CODE_EXPIRE_SECONDS", 600))
 REGISTER_CODE_RESEND_SECONDS = int(get_env("REGISTER_CODE_RESEND_SECONDS", 60))
+COMMENT_RATE_LIMIT_PER_MINUTE = int(get_env("COMMENT_RATE_LIMIT_PER_MINUTE", 1))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "blog-home"
 LOGOUT_REDIRECT_URL = "login"
 
 MESSAGE_TAGS = {

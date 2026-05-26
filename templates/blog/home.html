@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Blog" %}{% endblock %}
+
+{% block content %}
+<main class="site-page blog-home-page dashboard-page">
+    <section class="dashboard-hero">
+        <div class="dashboard-copy">
+            <span class="section-kicker">{% trans "Overview" %}</span>
+            <h1>{% trans "Blog performance dashboard" %}</h1>
+            <p>{% trans "Track publishing cadence, editorial activity, and the latest content updates from one place." %}</p>
+            <div class="dashboard-actions panel-actions">
+                <a href="#latest-published-posts" class="secondary-button">{% trans "Explore posts" %}</a>
+                {% if request.user.is_staff or request.user.is_superuser %}
+                <a href="{% url 'manage-post-create' %}" class="primary-button">{% trans "Write a new post" %}</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="dashboard-card-stack">
+            <article class="mini-card mini-card-highlight">
+                <div class="mini-card-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></div>
+                <h2>{% trans "Article views in the last 7 days" %}</h2>
+                <strong class="mini-card-value">{{ stats.article_views_last_7_days }}</strong>
+                <p>{% trans "Independent article page visits recorded this week." %}</p>
+            </article>
+            <article class="mini-card">
+                <div class="mini-card-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></div>
+                <h2>{% trans "Book views in the last 7 days" %}</h2>
+                <strong class="mini-card-value">{{ stats.book_views_last_7_days }}</strong>
+                <p>{% trans "Independent book page visits recorded this week." %}</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Highlights" %}</span>
+                <h2>{% trans "Content snapshot" %}</h2>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-pink"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Total posts" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.total_posts }}</strong>
+                <p>{% trans "All articles currently stored in the blog." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-green"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Published" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.published_posts }}</strong>
+                <p>{% trans "Posts that are visible to readers right now." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-gold"><i class="fa-solid fa-pen-ruler" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Drafts" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.draft_posts }}</strong>
+                <p>{% trans "Articles still in progress and not yet published." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-blue"><i class="fa-solid fa-tags" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Tags" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.tag_count }}</strong>
+                <p>{% trans "Topic labels used to organize the content library." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-purple"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Books" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.book_count }}</strong>
+                <p>{% trans "Books used to organize related articles." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-purple"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Authors" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.author_count }}</strong>
+                <p>{% trans "Contributors who have published or drafted posts." %}</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-grid">
+        <article class="section-panel trend-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Traffic" %}</span>
+                    <h2>{% blocktrans with days=visit_trend_days %}Visits in the last {{ days }} days{% endblocktrans %}</h2>
+                </div>
+            </div>
+            <div class="trend-legend" aria-hidden="true">
+                <span class="trend-legend-item"><span class="trend-legend-swatch trend-legend-swatch-article"></span>{% trans "Articles" %}</span>
+                <span class="trend-legend-item"><span class="trend-legend-swatch trend-legend-swatch-book"></span>{% trans "Books" %}</span>
+            </div>
+            <div class="trend-chart" style="--trend-columns: {{ visit_trend_days }};" role="img" aria-label="{% blocktrans with days=visit_trend_days %}Article and book visit trend in the last {{ days }} days{% endblocktrans %}">
+                {% for item in visit_trend %}
+                <div class="trend-column">
+                    <div class="trend-bar-group">
+                        <span class="trend-bar trend-bar-article" style="height: {{ item.article_height }}%;" title="{{ item.day|date:'DATE_FORMAT' }} · {% trans 'Articles' %}: {{ item.article_total }}"></span>
+                        <span class="trend-bar trend-bar-book" style="height: {{ item.book_height }}%;" title="{{ item.day|date:'DATE_FORMAT' }} · {% trans 'Books' %}: {{ item.book_total }}"></span>
+                    </div>
+                    <span class="trend-total">{{ item.article_total }}/{{ item.book_total }}</span>
+                    <span class="trend-label">{{ item.label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="section-panel dashboard-list-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Drafts" %}</span>
+                    <h2>{% trans "Recently edited drafts and revisions" %}</h2>
+                </div>
+                {% if request.user.is_staff or request.user.is_superuser %}
+                    <a href="{% url 'manage-site-settings' %}" class="secondary-button panel-link">{% trans "Open management" %}</a>
+                {% endif %}
+            </div>
+            <div class="dashboard-list">
+                {% for post in recent_drafts %}
+                <article class="dashboard-list-item">
+                    <div>
+                        <h3>{{ post.title }}</h3>
+                        <p>{% blocktrans with name=post.author.first_name|default:post.author.username updated=post.updated_at|date:"SHORT_DATETIME_FORMAT" %}By {{ name }} · Updated {{ updated }}{% endblocktrans %}</p>
+                    </div>
+                    {% if request.user.is_staff or request.user.is_superuser %}
+                    <a href="{% url 'manage-post-draft-update' post.pk %}" class="secondary-button table-button">{% trans "Edit" %}</a>
+                    {% endif %}
+                </article>
+                {% empty %}
+                <div class="empty-panel dashboard-empty-panel">
+                    <h3>{% trans "No drafts yet" %}</h3>
+                    <p>{% trans "Drafts and revisions will appear here after editors start preparing new articles or updating published ones." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </section>
+
+    <section class="dashboard-grid">
+        <article class="section-panel dashboard-list-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Activity" %}</span>
+                    <h2>{% trans "Latest workspace events" %}</h2>
+                </div>
+            </div>
+            <div class="dashboard-list activity-list">
+                {% for log in recent_audit_logs %}
+                <article class="dashboard-list-item dashboard-list-item-soft">
+                    <div>
+                        <div class="card-meta-row card-meta-row-soft">
+                            <span>{{ log.get_action_display }}</span>
+                            <span>{{ log.created_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        </div>
+                        <h3>{{ log.message }}</h3>
+                        <p>
+                            {% if log.user %}
+                            {% blocktrans with username=log.user.first_name|default:log.user.username %}{% endblocktrans %}
+                            {% else %}
+                            {% trans "System generated event" %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="empty-panel dashboard-empty-panel">
+                    <h3>{% trans "No recent activity" %}</h3>
+                    <p>{% trans "Audit events will appear here after team members interact with the site." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="section-panel dashboard-list-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Contributors" %}</span>
+                    <h2>{% trans "Most active authors" %}</h2>
+                </div>
+            </div>
+            <div class="dashboard-list">
+                {% for author in top_authors %}
+                <article class="dashboard-list-item">
+                    <div>
+                        <h3>{{ author.first_name|default:author.username }}</h3>
+                        <p>{% blocktrans count total=author.post_count %}{{ total }} published post{% plural %}{{ total }} published posts{% endblocktrans %}</p>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="empty-panel dashboard-empty-panel">
+                    <h3>{% trans "No active authors yet" %}</h3>
+                    <p>{% trans "Author insights will appear here once published posts are available." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </section>
+
+    <section id="latest-published-posts" class="section-panel dashboard-section" tabindex="-1">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Posts" %}</span>
+                <h2>{% trans "Latest published posts" %}</h2>
+            </div>
+            {% if request.user.is_staff or request.user.is_superuser %}
+            <a href="{% url 'manage-post-create' %}" class="secondary-button panel-link">{% trans "Write a new post" %}</a>
+            {% endif %}
+        </div>
+
+        <div class="post-grid">
+            {% for post in posts %}
+            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% include 'blog/includes/post_card.html' with card_class='post-card-home' summary_length=140 show_visibility=True show_tags=True post_requires_password=True %}
+            {% else %}
+            {% include 'blog/includes/post_card.html' with card_class='post-card-home' summary_length=140 show_visibility=True show_tags=True post_requires_password=False %}
+            {% endif %}
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No published posts yet" %}</h3>
+                <p>{% trans "Create your first article from the management panel to populate the homepage." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Articles" %}{% endblock %}
+
+{% block content %}
+<main class="site-page search-page articles-page">
+    <section class="section-panel">
+        <div class="section-heading-row">
+            <div>
+                <span class="section-kicker">{% trans "Articles" %}</span>
+                <h1>{% trans "Articles" %}</h1>
+                <p>{% trans "Browse every article you can access, including encrypted ones." %}</p>
+            </div>
+        </div>
+        <div class="post-grid">
+            {% for post in posts %}
+            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=True %}
+            {% else %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=False %}
+            {% endif %}
+            {% empty %}
+            <div class="empty-panel">
+                <h3>{% trans "No accessible articles yet" %}</h3>
+                <p>{% trans "Articles you can access will appear here once they are published." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'blog/includes/pagination.html' with pagination_input_id='id_article_page_jump' %}
+    </section>
+</main>
+{% endblock %}
