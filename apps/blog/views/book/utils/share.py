@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Book
 from apps.blog.utils.site import build_share_expiry_options, format_share_link_expires_display
+from apps.blog.visibility import book_has_any_conditions
 
 
 def build_book_share_editor_context(book, request):
@@ -9,7 +10,7 @@ def build_book_share_editor_context(book, request):
     if getattr(book, "pk", None):
         active_share_link = book.share_links.order_by("-created_at", "-pk").first()
 
-    is_public = getattr(book, "visibility", Book.VISIBILITY_PUBLIC) == Book.VISIBILITY_PUBLIC
+    is_public = getattr(book, "visibility", Book.VISIBILITY_PUBLIC) == Book.VISIBILITY_PUBLIC and not book_has_any_conditions(book)
     is_saved = bool(getattr(book, "pk", None))
     can_generate = bool(is_public and is_saved)
 

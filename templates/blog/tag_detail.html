@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}#{{ tag.name }}{% endblock %}
 
@@ -18,7 +18,7 @@
         </div>
         <div class="post-grid">
             {% for post in posts %}
-            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% if post.has_encrypted_access and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
             {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=True %}
             {% else %}
             {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=False %}
@@ -33,4 +33,8 @@
         {% include 'blog/includes/pagination.html' with pagination_input_id='id_tag_page_jump' %}
     </section>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-content.js' %}"></script>
 {% endblock %}

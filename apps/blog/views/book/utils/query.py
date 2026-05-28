@@ -9,7 +9,7 @@ def get_visible_book_queryset(user):
         return queryset
     if not user.is_authenticated:
         return queryset.filter(visibility=Book.VISIBILITY_PUBLIC)
-    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_ENCRYPTED]) | Q(created_by=user)).distinct()
+    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_CONDITIONAL]) | Q(created_by=user)).distinct()
 
 
 def get_detail_book_queryset(user):
@@ -18,7 +18,7 @@ def get_detail_book_queryset(user):
         return queryset
     if not user.is_authenticated:
         return queryset.filter(visibility=Book.VISIBILITY_PUBLIC)
-    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_ENCRYPTED]) | Q(created_by=user)).distinct()
+    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_CONDITIONAL]) | Q(created_by=user)).distinct()
 
 
 __all__ = ["get_detail_book_queryset", "get_visible_book_queryset"]

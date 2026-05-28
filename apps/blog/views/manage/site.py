@@ -14,8 +14,7 @@ from apps.blog.models import AuditLog, Book, ContentViewLog, Post, PostDraft, Si
 from apps.blog.utils import get_or_create_site_setting, write_audit_log
 from apps.blog.utils.site import build_visit_trend
 from apps.blog.views.manage.base import ManageBaseMixin
-from apps.blog.views.post.utils import get_visible_post_queryset, with_post_feedback_counts
-from apps.blog.views.tag.utils import decorate_post_tags_for_display
+from apps.blog.views.post.utils import get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
 
 
 User = get_user_model()
@@ -33,7 +32,7 @@ class BlogHomeView(LoginRequiredMixin, ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        return decorate_post_tags_for_display(list(with_post_feedback_counts(get_visible_post_queryset(self.request.user)).order_by("-published_at", "-updated_at")))
+        return prepare_post_cards(with_post_feedback_counts(get_visible_post_queryset(self.request.user)).order_by("-published_at", "-updated_at"))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

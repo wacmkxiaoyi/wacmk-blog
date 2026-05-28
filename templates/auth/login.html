@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 {% endblock %}
 
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/users-login.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <main class="auth-layout"{% if site_setting and site_setting.auth_background %} style="--custom-auth-background: url('{{ site_setting.auth_background.url }}');"{% endif %}>
     <div class="auth-toolbar">

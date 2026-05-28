@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Import from existing post" %}{% endblock %}
 
@@ -26,48 +26,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="source_post_id" value="{{ post.pk }}">
                     {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
-                    <button type="submit" class="import-post-card-submit post-card compact-card" aria-label="{% blocktrans with title=post.title %}Import {{ title }} as draft{% endblocktrans %}">
-                        <span class="post-card-body">
-                            <span class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
-                                <span class="card-meta-row card-meta-row-soft">
-                                    <span>{{ post.author.first_name|default:post.author.username }}</span>
-                                    <span>{{ post.published_at|default:post.updated_at|date:"DATE_FORMAT" }}</span>
-                                </span>
-                                <h3>{{ post.title }}</h3>
-                                <p>{{ post.summary|default:post.content|truncatechars:140 }}</p>
-                            </span>
-                            <span class="tag-row">
-                                {% if post.visibility == 'public' %}
-                                <span class="soft-tag soft-tag-visibility">
-                                    <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
-                                    {{ post.get_visibility_display }}
-                                </span>
-                                {% elif post.visibility == 'book_only' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-book-only">
-                                    <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
-                                    {{ post.get_visibility_display }}
-                                </span>
-                                {% elif post.visibility == 'encrypted' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
-                                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
-                                    {{ post.get_visibility_display }}
-                                </span>
-                                {% else %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-private">
-                                    <i class="fa-solid fa-user" aria-hidden="true"></i>
-                                    {{ post.get_visibility_display }}
-                                </span>
-                                {% endif %}
-                            </span>
-                            <span class="tag-row">
-                                {% for tag in post.tags.all %}
-                                <span class="soft-tag">#{{ tag.name }}</span>
-                                {% empty %}
-                                <span class="soft-tag soft-tag-muted">{% trans "No tags" %}</span>
-                                {% endfor %}
-                            </span>
-                        </span>
-                    </button>
+                    {% include 'blog/includes/post_card.html' with card_class='compact-card import-post-card-submit' summary_length=140 show_visibility=True show_tags=True show_tag_links=False post_card_button=True post_card_button_type='submit' post_card_button_label=post.title %}
                 </form>
                 {% empty %}
                 <div class="empty-panel">
@@ -79,4 +38,8 @@
         </div>
     </section>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-content.js' %}"></script>
 {% endblock %}

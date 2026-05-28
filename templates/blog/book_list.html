@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Books" %}{% endblock %}
 
@@ -28,12 +28,10 @@
                     <div class="book-list-title-row">
                         <div class="book-list-title-main">
                             <h2>{{ book.name }}</h2>
-                            {% if book.visibility == 'public' %}
-                            <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
-                            {% elif book.visibility == 'encrypted' %}
-                            <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
+                            {% if book.condition_summary_items %}
+                            {% include 'blog/includes/condition_summary.html' with condition_items=book.condition_summary_items %}
                             {% else %}
-                            <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i>{{ book.get_visibility_display }}</span>
+                            {% include 'blog/includes/access_badge.html' with access=book.visibility_presentation %}
                             {% endif %}
                             <span class="soft-tag">{% blocktrans count total=book.post_count %}{{ total }} article{% plural %}{{ total }} articles{% endblocktrans %}</span>
                         </div>
@@ -53,4 +51,8 @@
         {% include 'blog/includes/pagination.html' with pagination_input_id='id_books_page_jump' %}
     </section>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-content.js' %}"></script>
 {% endblock %}

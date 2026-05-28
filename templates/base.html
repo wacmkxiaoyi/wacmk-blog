@@ -38,36 +38,37 @@
                     <span class="site-home-link-label">{% trans "Tags" %}</span>
                 </a>
             </div>
-            {% if request.resolver_match.url_name == 'blog-home' %}
-            <a
-                href="https://github.com/wacmkxiaoyi/wacmk-blog"
-                class="nav-home-repo-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="wacmk-blog@wacmkxiaoyi GitHub repository"
-            >
-                <span class="nav-home-repo-icon" aria-hidden="true"><i class="fa-brands fa-github"></i></span>
-                <span class="nav-home-repo-title">wacmk-blog@wacmkxiaoyi</span>
-            </a>
-            {% else %}
-            <form
-                action="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% url 'book-list' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% url 'blog-tags' %}{% else %}{% url 'article-list' %}{% endif %}"
-                method="get"
-                class="nav-search-form"
-                data-global-search-form
-            >
-                <label class="sr-only" for="id_global_search">{% trans "Search" %}</label>
-                <input
-                    id="id_global_search"
-                    type="search"
-                    name="q"
-                    class="nav-search-input"
-                    value="{{ request.GET.q|default:'' }}"
-                    placeholder="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% trans 'Search books...' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% trans 'Search tags...' %}{% else %}{% trans 'Search articles...' %}{% endif %}"
+            <div class="site-header-center">
+                {% if not request.resolver_match.url_name == 'blog-home' %}
+                <form
+                    action="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% url 'book-list' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% url 'blog-tags' %}{% else %}{% url 'article-list' %}{% endif %}"
+                    method="get"
+                    class="nav-search-form"
+                    data-global-search-form
                 >
-                <button type="submit" class="nav-search-button" aria-label="{% trans 'Search' %}">🔍</button>
-            </form>
-            {% endif %}
+                    <label class="sr-only" for="id_global_search">{% trans "Search" %}</label>
+                    <input
+                        id="id_global_search"
+                        type="search"
+                        name="q"
+                        class="nav-search-input"
+                        value="{{ request.GET.q|default:'' }}"
+                        placeholder="{% if request.resolver_match.url_name == 'book-list' or request.resolver_match.url_name == 'book-detail' or request.resolver_match.url_name == 'book-share-detail' %}{% trans 'Search books...' %}{% elif request.resolver_match.url_name == 'blog-tags' or request.resolver_match.url_name == 'blog-tag-detail' %}{% trans 'Search tags...' %}{% else %}{% trans 'Search articles...' %}{% endif %}"
+                    >
+                    <button type="submit" class="nav-search-button" aria-label="{% trans 'Search' %}">🔍</button>
+                </form>
+                {% endif %}
+                <a
+                    href="https://github.com/wacmkxiaoyi/wacmk-blog"
+                    class="nav-home-repo-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="wacmk-blog@wacmkxiaoyi GitHub repository"
+                >
+                    <span class="nav-home-repo-icon" aria-hidden="true"><i class="fa-brands fa-github"></i></span>
+                    <span class="nav-home-repo-title">wacmk-blog@wacmkxiaoyi</span>
+                </a>
+            </div>
             <div class="user-menu" data-user-menu>
                 <button type="button" class="user-menu-trigger" data-user-menu-trigger aria-expanded="false" aria-label="{% trans 'Open user menu' %}">
                     {% if site_user_profile and site_user_profile.avatar %}
@@ -148,7 +149,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-    <script src="{% static 'js/auth.js' %}"></script>
+    <script type="module" src="{% static 'js/entrypoints/base.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,7 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.access import ACCESS_STATUS_GRANTED, evaluate_article_access
 from apps.blog.models import Post
+from apps.blog.visibility import post_has_encrypted_access, post_has_value_conditions, post_is_book_only
 
 
 ENCRYPTED_POST_SESSION_KEY = "blog_unlocked_posts"
@@ -39,23 +41,42 @@ def can_access_post(request, post):
         return False
     if can_bypass_post_password(user, post):
         return True
-    if post.visibility == Post.VISIBILITY_PUBLIC:
-        return True
-    if post.visibility == Post.VISIBILITY_BOOK_ONLY:
-        return False
     if post.visibility == Post.VISIBILITY_PRIVATE:
         return False
-    if post.visibility == Post.VISIBILITY_ENCRYPTED:
-        return is_post_unlocked(request, post)
-    return False
+    if post_is_book_only(post):
+        return False
+    is_unlocked = True
+    if post_has_encrypted_access(post):
+        is_unlocked = is_post_unlocked(request, post)
+        if not is_unlocked:
+            return False
+    if post_has_value_conditions(post):
+        return evaluate_article_access(user, post)["status"] == ACCESS_STATUS_GRANTED
+    if post_has_encrypted_access(post):
+        return is_unlocked
+    return post.visibility == Post.VISIBILITY_PUBLIC
 
 
 def post_requires_password(request, post):
     return bool(
-        post.visibility == Post.VISIBILITY_ENCRYPTED
+        post_has_encrypted_access(post)
         and not can_bypass_post_password(request.user, post)
         and not is_post_unlocked(request, post)
     )
+
+
+def post_requires_condition(request, post):
+    return bool(
+        not post_requires_password(request, post)
+        and post_has_value_conditions(post)
+        and get_post_condition_access_state(request, post)["status"] != ACCESS_STATUS_GRANTED
+    )
+
+
+def get_post_condition_access_state(request, post):
+    if not post_has_value_conditions(post) or can_bypass_post_password(request.user, post):
+        return {"status": ACCESS_STATUS_GRANTED, "money_required": None, "points_required": None, "has_purchase": False}
+    return evaluate_article_access(request.user, post)
 
 
 class PostAccessForm(forms.Form):

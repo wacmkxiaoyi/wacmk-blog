@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if post %}{{ post.title }} · {{ current_book.name }}{% else %}{{ current_book.name }}{% endif %}{% endblock %}
 
@@ -28,7 +28,7 @@
             <nav class="post-outline-nav" aria-label="{% trans 'Book chapters' %}" data-book-outline-nav></nav>
         </div>
     </div>
-    {% if post and not requires_password and not requires_post_password %}
+    {% if post and not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
     <div class="post-detail-floating-outline book-post-outline" data-post-outline-root data-post-outline-hide-narrow data-post-outline-always-expanded>
         <button
             type="button"
@@ -58,12 +58,10 @@
                     <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
                         <div class="tag-row post-detail-tag-row">
                             <div class="post-detail-tag-row-main">
-                                {% if current_book.visibility == 'public' %}
-                                <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i></span>
-                                {% elif current_book.visibility == 'encrypted' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                                {% if book_condition_summary_items %}
+                                {% include 'blog/includes/condition_badges.html' with condition_items=book_condition_summary_items icon_only=True %}
                                 {% else %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                                {% include 'blog/includes/access_badge.html' with access=book_access_icon_presentation show_label=False %}
                                 {% endif %}
                             </div>
                         </div>
@@ -86,18 +84,10 @@
                         <div class="tag-row post-detail-tag-row" aria-hidden="true"></div>
                         <div class="post-detail-title-row">
                             <h1>{{ post.title }}</h1>
-                            {% if post.visibility == 'book_only' %}
-                            <span class="soft-tag soft-tag-visibility soft-tag-book-only">
-                                <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
-                            </span>
-                            {% elif post.visibility == 'encrypted' %}
-                            <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
-                                <i class="fa-solid fa-lock" aria-hidden="true"></i>
-                            </span>
-                            {% elif post.visibility != 'public' %}
-                            <span class="soft-tag soft-tag-visibility soft-tag-private">
-                                <i class="fa-solid fa-user" aria-hidden="true"></i>
-                            </span>
+                            {% if condition_summary_items %}
+                            {% include 'blog/includes/condition_badges.html' with condition_items=condition_summary_items icon_only=True %}
+                            {% elif access_icon_presentation.type != 'public' %}
+                            {% include 'blog/includes/access_icon.html' with access=access_icon_presentation %}
                             {% endif %}
                         </div>
                         <div class="card-meta-row card-meta-row-soft">
@@ -125,12 +115,10 @@
                     <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
                         <div class="tag-row post-detail-tag-row">
                             <div class="post-detail-tag-row-main">
-                                {% if current_book.visibility == 'public' %}
-                                <span class="soft-tag soft-tag-visibility"><i class="fa-solid fa-lock-open" aria-hidden="true"></i></span>
-                                {% elif current_book.visibility == 'encrypted' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+                                {% if book_condition_summary_items %}
+                                {% include 'blog/includes/condition_badges.html' with condition_items=book_condition_summary_items icon_only=True %}
                                 {% else %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-private"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                                {% include 'blog/includes/access_badge.html' with access=book_access_icon_presentation show_label=False %}
                                 {% endif %}
                             </div>
                         </div>
@@ -145,7 +133,7 @@
                     </div>
                     {% endif %}
                 </header>
-                {% if post and not requires_post_password %}
+                {% if post and not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
                 <section
                     class="markdown-body blog-markdown-content"
                     data-post-content
@@ -153,6 +141,10 @@
                     data-code-copy-label="{% trans 'Copy' %}"
                     data-code-copied-label="{% trans 'Copied' %}"
                     data-code-copy-failed-label="{% trans 'Failed' %}"
+                    data-overflow-code-lines="12"
+                    data-overflow-table-rows="6"
+                    data-overflow-hint="{% trans 'Hidden %count% more lines' %}"
+                    data-overflow-expand-label="{% trans 'Show all' %}"
                 >
                     {{ rendered_content|safe }}
                 </section>
@@ -178,7 +170,7 @@
             </article>
             {% endif %}
 
-            {% if not requires_password and not requires_post_password %}
+            {% if not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
             <section id="comments" class="section-panel comment-section" tabindex="-1">
                 <div class="section-heading-row">
                     <div>
@@ -237,8 +229,23 @@
     data-encrypted-post-error="{% if access_form.password.errors %}{{ access_form.password.errors|striptags }}{% endif %}"
     data-encrypted-post-direct="true"
 ></div>
-{% endif %}
-{% if requires_post_password %}
+{% elif requires_condition %}
+<div
+    hidden
+    data-conditional-access-modal
+    data-conditional-access-url="{{ condition_submit_url }}"
+    data-conditional-access-title="{{ condition_modal_title }}"
+    data-conditional-access-kicker="{{ condition_modal_kicker }}"
+    data-conditional-access-confirm="{{ condition_modal_confirm }}"
+    data-conditional-access-cancel="{{ condition_modal_cancel }}"
+    data-conditional-access-status="{{ condition_access.status }}"
+    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
+    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
+    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
+    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
+    data-conditional-access-return-url="{{ condition_return_url }}"
+></div>
+{% elif requires_post_password %}
 <div
     hidden
     data-encrypted-post-modal
@@ -249,8 +256,24 @@
     data-encrypted-post-cancel="{{ password_modal_cancel }}"
     data-encrypted-post-direct="true"
 ></div>
+{% elif requires_post_condition %}
+<div
+    hidden
+    data-conditional-access-modal
+    data-conditional-access-url="{{ condition_submit_url }}"
+    data-conditional-access-title="{{ condition_modal_title }}"
+    data-conditional-access-kicker="{{ condition_modal_kicker }}"
+    data-conditional-access-confirm="{{ condition_modal_confirm }}"
+    data-conditional-access-cancel="{{ condition_modal_cancel }}"
+    data-conditional-access-status="{{ condition_access.status }}"
+    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
+    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
+    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
+    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
+    data-conditional-access-return-url="{{ condition_return_url }}"
+></div>
 {% endif %}
-{% if not requires_password %}
+{% if not requires_password and not requires_condition %}
 <script type="application/json" data-book-outline-data>{{ book_navigation_json|safe }}</script>
 {% endif %}
 {% endblock %}
@@ -258,4 +281,5 @@
 {% block extra_js %}
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script type="module" src="{% static 'js/entrypoints/blog-book-detail.js' %}"></script>
 {% endblock %}

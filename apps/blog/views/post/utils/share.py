@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Post, PostDraft
 from apps.blog.utils.site import build_share_expiry_options, format_share_link_expires_display
+from apps.blog.visibility import post_has_any_conditions
 
 
 def build_post_share_editor_context(post, user, request):
@@ -17,7 +18,7 @@ def build_post_share_editor_context(post, user, request):
 
     visibility = getattr(post, "visibility", Post.VISIBILITY_PUBLIC) if post is not None else Post.VISIBILITY_PUBLIC
     status = getattr(post, "status", Post.STATUS_DRAFT) if post is not None else Post.STATUS_DRAFT
-    is_public = visibility == Post.VISIBILITY_PUBLIC
+    is_public = bool(post is None or (visibility == Post.VISIBILITY_PUBLIC and not post_has_any_conditions(post)))
     is_published = bool(source_post and source_post.status == Post.STATUS_PUBLISHED)
     is_original_author = bool(source_post and source_post.author_id == getattr(user, "pk", None))
     can_generate = bool(is_public and is_published and is_original_author)

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.db import transaction
 from django.db.models import Case, CharField, F, IntegerField, ProtectedError, Q, Value, When
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -74,14 +75,33 @@ class ManageUserUpdateView(ManageBaseMixin, UpdateView):
         password_changed = bool(form.cleaned_data.get("password1"))
         remove_avatar = (self.request.POST.get("remove_avatar") or "0").strip() == "1"
         profile = UserProfile.objects.get_or_create(user=self.get_object())[0]
+        previous_money = profile.money
+        previous_points = profile.points
         response = super().form_valid(form)
         if remove_avatar and profile.avatar:
             profile.avatar.delete(save=False)
             profile.avatar = ""
             profile.save(update_fields=["avatar"])
+        profile.money = max(form.cleaned_data.get("money", 0), 0)
+        profile.points = max(form.cleaned_data.get("points", 0), 0)
+        profile.save(update_fields=["money", "points"])
         if password_changed and self.object.pk == self.request.user.pk:
             update_session_auth_hash(self.request, self.object)
         write_audit_log(self.request, AuditLog.ACTION_USER_UPDATE, str(_("User updated: %(username)s")) % {"username": self.object.username}, user=self.request.user)
+        if previous_money != profile.money:
+            write_audit_log(
+                self.request,
+                AuditLog.ACTION_USER_ASSET_UPDATE,
+                str(_("Money updated for %(username)s: %(before)s -> %(after)s")) % {"username": self.object.username, "before": previous_money, "after": profile.money},
+                user=self.request.user,
+            )
+        if previous_points != profile.points:
+            write_audit_log(
+                self.request,
+                AuditLog.ACTION_USER_ASSET_UPDATE,
+                str(_("Points updated for %(username)s: %(before)s -> %(after)s")) % {"username": self.object.username, "before": previous_points, "after": profile.points},
+                user=self.request.user,
+            )
         if settings.EMAIL_DELIVERY_READY and password_changed and self.object.email:
             try:
                 context = {

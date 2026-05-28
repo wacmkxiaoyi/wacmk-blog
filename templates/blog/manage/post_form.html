@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Post Editor" %}{% endif %}{% endblock %}
 
@@ -49,8 +49,31 @@
                 <div class="field-group post-visibility-field editor-access-layout-visibility" data-post-visibility-field>
                     <label for="id_visibility">{{ form.visibility.label }}</label>
                     {{ form.visibility }}
+                    {{ form.condition_rules }}
                     {% if form.visibility.help_text %}<div class="field-help">{{ form.visibility.help_text }}</div>{% endif %}
                     {% if form.visibility.errors %}<div class="field-error">{{ form.visibility.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group editor-access-layout-conditions" data-condition-editor-field hidden>
+                    <label>{% trans "Conditions" %}</label>
+                    <div
+                        class="condition-editor"
+                        data-condition-editor
+                        data-condition-input-id="{{ form.condition_rules.id_for_label }}"
+                        data-condition-initial="{{ form.condition_rules.value|default:'[]'|escapejs }}"
+                        data-condition-existing-password-types="{{ form.existing_password_rule_types|join:',' }}"
+                        data-condition-max-message="{% trans 'Condition types are full' %}"
+                        data-condition-value-placeholder="{% trans 'Value' %}"
+                        data-condition-password-placeholder="{% trans 'Enter password' %}"
+                        data-condition-password-existing-placeholder="{% trans 'Leave blank to keep current password' %}"
+                        data-condition-money-label="{% trans 'Money' %}"
+                        data-condition-points-label="{% trans 'Points' %}"
+                        data-condition-encrypted-label="{% trans 'Encrypted' %}"
+                        data-condition-book-only-label="{% trans 'Book only' %}"
+                        data-condition-types="money,points,encrypted,book_only"
+                        data-condition-password-types="encrypted"
+                        data-condition-disabled-value-types="book_only"
+                    ></div>
+                    {% if form.condition_rules.errors %}<div class="field-error">{{ form.condition_rules.errors|striptags }}</div>{% endif %}
                 </div>
                 <div class="field-group editor-access-layout-share" data-post-share-field {% if not post_share_is_public %}hidden{% endif %}>
                     <label for="post-share-expiry">{% trans "External link" %}</label>
@@ -93,11 +116,6 @@
                         <input type="text" class="input-control editor-share-result-input" value="{{ post_share_current_url }}" readonly data-share-inline-url>
                         <button type="button" class="secondary-button inline-action-button editor-share-copy-button" data-share-inline-copy{% if not post_share_active_link %} disabled{% endif %}>{% trans "Copy link" %}</button>
                     </div>
-                </div>
-                <div class="field-group" data-post-password-field hidden>
-                    <label for="id_access_password">{{ form.access_password.label }}</label>
-                    {{ form.access_password }}
-                    {% if form.access_password.errors %}<div class="field-error">{{ form.access_password.errors|striptags }}</div>{% endif %}
                 </div>
             </div>
             <div class="field-group">
@@ -144,4 +162,5 @@
 {% block extra_js %}
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script type="module" src="{% static 'js/entrypoints/blog-manage-post-form.js' %}"></script>
 {% endblock %}

@@ -53,6 +53,7 @@ class AuditLog(TimeStampedModel):
     ACTION_PROFILE_UPDATE = "profile_update"
     ACTION_USER_UPDATE = "user_update"
     ACTION_USER_DELETE = "user_delete"
+    ACTION_USER_ASSET_UPDATE = "user_asset_update"
     ACTION_CHOICES = [
         (ACTION_LOGIN, _("Login")),
         (ACTION_LOGOUT, _("Logout")),
@@ -65,6 +66,7 @@ class AuditLog(TimeStampedModel):
         (ACTION_PROFILE_UPDATE, _("Update profile")),
         (ACTION_USER_UPDATE, _("Update user")),
         (ACTION_USER_DELETE, _("Delete user")),
+        (ACTION_USER_ASSET_UPDATE, _("Update user assets")),
     ]
 
     user = models.ForeignKey(

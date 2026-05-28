@@ -19,6 +19,57 @@ ADMONITION_RE = re.compile(r'^\s*\?\?\?(\+)?\s+(note|tip|warning)(?:\s+"([^"]+)"
 FENCED_CODE_BLOCK_RE = re.compile(r"^\s*(```+|~~~+)")
 
 
+def is_loose_block_boundary(previous_line, current_line):
+    previous = (previous_line or "").strip()
+    current = (current_line or "").strip()
+
+    if not previous or not current:
+        return False
+    if re.match(r"^<[^>]+>", previous) or re.match(r"^<[^>]+>", current):
+        return True
+    if re.match(r"^(?:[*_]{1,3}|~~|`)", previous) or re.match(r"^(?:[*_]{1,3}|~~|`)", current):
+        return True
+    if re.match(r"^\[[^\]]+\]\([^\)]+\)", previous) or re.match(r"^\[[^\]]+\]\([^\)]+\)", current):
+        return True
+    return False
+
+
+def split_loose_markdown_blocks(value):
+    lines = (value or "").splitlines()
+    blocks = []
+    current_block = []
+    active_fence = None
+
+    def flush_current_block():
+        if current_block:
+            blocks.append("\n".join(current_block))
+            current_block.clear()
+
+    for index, line in enumerate(lines):
+        previous_line = lines[index - 1] if index > 0 else ""
+        fence_match = FENCED_CODE_BLOCK_RE.match(line)
+
+        if fence_match is not None:
+            current_block.append(line)
+            fence_marker = fence_match.group(1)[0]
+            active_fence = None if active_fence == fence_marker else fence_marker
+            continue
+
+        if active_fence is not None:
+            current_block.append(line)
+            continue
+
+        if not line.strip():
+            flush_current_block()
+            continue
+        if current_block and is_loose_block_boundary(previous_line, line):
+            flush_current_block()
+        current_block.append(line)
+
+    flush_current_block()
+    return blocks
+
+
 def render_list_blocks(value):
     lines = value.splitlines()
     rendered_lines = []
@@ -157,7 +208,12 @@ def render_markdown_fragment(value):
     def flush_markdown_buffer():
         if not markdown_buffer:
             return
-        chunks.append(render_markdown_html(normalize_indented_tables("\n".join(markdown_buffer))))
+        normalized = normalize_indented_tables("\n".join(markdown_buffer))
+        loose_blocks = split_loose_markdown_blocks(normalized)
+        if len(loose_blocks) > 1:
+            chunks.extend(render_markdown_html(block) for block in loose_blocks)
+        else:
+            chunks.append(render_markdown_html(normalized))
         markdown_buffer.clear()
 
     while index < len(lines):

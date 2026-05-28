@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Manage Books" %}{% endblock %}
 
@@ -29,6 +29,7 @@
                         <tr>
                             <th><a href="{{ sort_headers.name.url }}" class="table-sort-link{% if sort_headers.name.is_active %} is-active{% endif %}">{% trans "Name" %}{% if sort_headers.name.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.name.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
                             <th><a href="{{ sort_headers.post_count.url }}" class="table-sort-link{% if sort_headers.post_count.is_active %} is-active{% endif %}">{% trans "Posts" %}{% if sort_headers.post_count.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.post_count.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
+                            <th>{% trans "Access permission" %}</th>
                             <th><a href="{{ sort_headers.updated_at.url }}" class="table-sort-link{% if sort_headers.updated_at.is_active %} is-active{% endif %}">{% trans "Updated" %}{% if sort_headers.updated_at.is_active %}<span class="table-sort-indicator" aria-hidden="true">{% if sort_headers.updated_at.direction == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}</a></th>
                             <th>{% trans "Actions" %}</th>
                         </tr>
@@ -38,6 +39,13 @@
                         <tr>
                             <td>{{ book.name }}</td>
                             <td>{{ book.post_count }}</td>
+                            <td>
+                                {% if book.condition_summary_items %}
+                                {% include 'blog/includes/condition_summary.html' with condition_items=book.condition_summary_items %}
+                                {% else %}
+                                {% include 'blog/includes/access_badge.html' with access=book.visibility_presentation %}
+                                {% endif %}
+                            </td>
                             <td>{{ book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</td>
                             <td>
                                 <div class="table-actions">
@@ -60,7 +68,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="empty-cell">{% trans "No books found." %}</td>
+                            <td colspan="5" class="empty-cell">{% trans "No books found." %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -70,4 +78,8 @@
         </div>
     </section>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
 {% endblock %}

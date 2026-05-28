@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.hashers import check_password, identify_hasher, make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -20,14 +19,12 @@ class Post(TimeStampedModel):
     ]
 
     VISIBILITY_PUBLIC = "public"
-    VISIBILITY_BOOK_ONLY = "book_only"
     VISIBILITY_PRIVATE = "private"
-    VISIBILITY_ENCRYPTED = "encrypted"
+    VISIBILITY_CONDITIONAL = "conditional"
     VISIBILITY_CHOICES = [
         (VISIBILITY_PUBLIC, _("Public")),
-        (VISIBILITY_BOOK_ONLY, _("Book only")),
         (VISIBILITY_PRIVATE, _("Private")),
-        (VISIBILITY_ENCRYPTED, _("Encrypted")),
+        (VISIBILITY_CONDITIONAL, _("Conditional")),
     ]
 
     title = models.CharField(max_length=200)
@@ -37,7 +34,7 @@ class Post(TimeStampedModel):
     cover_image = models.ImageField(upload_to="blog/covers/", blank=True)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_DRAFT)
     visibility = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
-    access_password = models.CharField(max_length=128, blank=True)
+    condition_rules = models.JSONField(default=list, blank=True)
     published_at = models.DateTimeField(blank=True, null=True)
     view_count = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="posts")
@@ -57,11 +54,6 @@ class Post(TimeStampedModel):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        if self.access_password:
-            try:
-                identify_hasher(self.access_password)
-            except ValueError:
-                self.access_password = make_password(self.access_password)
         if self.status == self.STATUS_PUBLISHED and self.published_at is None:
             self.published_at = timezone.now()
         if self.status == self.STATUS_DRAFT:
@@ -74,12 +66,6 @@ class Post(TimeStampedModel):
     @property
     def has_revision_draft(self):
         return getattr(self, "revision_draft", None) is not None
-
-    def check_access_password(self, raw_password):
-        if not self.access_password:
-            return False
-        return check_password(raw_password or "", self.access_password)
-
 
 class PostDraft(TimeStampedModel):
     DRAFT_KIND_DRAFT = "draft"
@@ -98,7 +84,7 @@ class PostDraft(TimeStampedModel):
     content = models.TextField()
     cover_image = models.ImageField(upload_to="blog/covers/", blank=True)
     visibility = models.CharField(max_length=16, choices=Post.VISIBILITY_CHOICES, default=Post.VISIBILITY_PUBLIC)
-    access_password = models.CharField(max_length=128, blank=True)
+    condition_rules = models.JSONField(default=list, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="post_drafts")
     tags = models.ManyToManyField("blog.Tag", blank=True, related_name="post_drafts")
     books = models.ManyToManyField("blog.Book", blank=True, related_name="post_drafts")
@@ -117,11 +103,6 @@ class PostDraft(TimeStampedModel):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        if self.access_password:
-            try:
-                identify_hasher(self.access_password)
-            except ValueError:
-                self.access_password = make_password(self.access_password)
         super().save(*args, **kwargs)
 
     @property
@@ -133,12 +114,6 @@ class PostDraft(TimeStampedModel):
     @property
     def is_revision(self):
         return self.source_post_id is not None
-
-    def check_access_password(self, raw_password):
-        if not self.access_password:
-            return False
-        return check_password(raw_password or "", self.access_password)
-
 
 class PostShareLink(TimeStampedModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="share_links")
@@ -162,6 +137,25 @@ class PostShareLink(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("blog-share-detail", kwargs={"token": self.token})
+
+
+class ArticlePurchaseRecord(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="article_purchase_records")
+    article = models.ForeignKey(Post, on_delete=models.PROTECT, related_name="purchase_records")
+    cost_money = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "article"], name="blog_articlepurchase_user_article_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["user", "article"]),
+            models.Index(fields=["article", "created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Article purchase {self.article_id} by {self.user_id}"
 
 
 class PostFeedback(TimeStampedModel):

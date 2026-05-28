@@ -9,6 +9,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 from apps.blog.forms import BookForm
 from apps.blog.models import AuditLog, Book, BookShareLink
 from apps.blog.utils import write_audit_log
+from apps.blog.visibility import book_has_any_conditions, book_has_encrypted_access, get_book_condition_summary_items, get_book_visibility_presentation
 from apps.blog.views.book.utils import build_book_share_editor_context
 from apps.blog.views.manage.base import ManageBaseMixin
 
@@ -29,7 +30,12 @@ class ManageBookListView(ManageBaseMixin, ListView):
         queryset = Book.objects.annotate(post_count=Count("posts", distinct=True))
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(slug__icontains=query))
-        return self.apply_sort(queryset)
+        books = list(self.apply_sort(queryset))
+        for book in books:
+            book.condition_summary_items = get_book_condition_summary_items(book)
+            book.visibility_presentation = get_book_visibility_presentation(book)
+            book.has_encrypted_access = book_has_encrypted_access(book)
+        return books
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,7 +80,7 @@ class ManageBookUpdateView(ManageBaseMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        if self.object.visibility != Book.VISIBILITY_PUBLIC:
+        if self.object.visibility != Book.VISIBILITY_PUBLIC or book_has_any_conditions(self.object):
             BookShareLink.objects.filter(book=self.object).delete()
         write_audit_log(
             self.request,

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Profile" %}{% endblock %}
 
@@ -47,7 +47,7 @@
                         <div class="user-manage-fields">
                             <div class="user-manage-avatar-row">
                                 <div class="user-manage-avatar-display">
-                                    <label for="id_avatar" class="profile-avatar-upload-trigger" data-profile-avatar-preview>
+                                    <label for="id_avatar" class="profile-avatar-upload-trigger" data-profile-avatar-preview data-profile-avatar-alt="{{ request.user.username|escape }}">
                                         {% if profile.avatar %}
                                         <img src="{{ profile.avatar.url }}" alt="{{ request.user.username }}" class="profile-avatar-large" data-profile-avatar-image>
                                         {% else %}
@@ -83,7 +83,7 @@
                 {% endif %}
 
                 {% if current_section == 'security' %}
-                <form method="post" class="profile-section-form" data-profile-email-form="true" data-unsaved-guard>
+                <form method="post" class="profile-section-form" data-profile-email-form="true" data-current-email="{{ current_email|default:''|escape }}" data-unsaved-guard>
                     {% csrf_token %}
                     <input type="hidden" name="action" value="profile">
                     <input type="hidden" name="section" value="security">
@@ -170,190 +170,6 @@
 {% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
-<script>
-    (function () {
-        var form = document.querySelector('[data-profile-email-form="true"]');
-        var emailInput = document.getElementById('id_email');
-        var verificationField = document.querySelector('[data-profile-email-verification]');
-        var verificationInput = document.getElementById('id_verification_code');
-        var avatarInput = document.getElementById('id_avatar');
-        var avatarPreview = document.querySelector('[data-profile-avatar-preview]');
-        var avatarImage = document.querySelector('[data-profile-avatar-image]');
-        var avatarFallback = document.querySelector('[data-profile-avatar-fallback]');
-        var avatarRemoveButton = document.querySelector('[data-profile-avatar-remove]');
-        var avatarUndoButton = document.querySelector('[data-profile-avatar-undo]');
-        var avatarRemoveFlag = document.querySelector('[data-profile-avatar-remove-flag]');
-        var initialEmail = '{{ current_email|default:""|escapejs }}';
-        var existingAvatarSrc = avatarImage ? avatarImage.getAttribute('src') || '' : '';
-        var previewObjectUrl = null;
-
-        function syncVerificationState() {
-            if (!form || !emailInput || !verificationField) {
-                return;
-            }
-
-            var nextEmail = (emailInput.value || '').trim().toLowerCase();
-            var shouldShow = nextEmail !== initialEmail;
-            verificationField.hidden = !shouldShow;
-            if (verificationInput) {
-                verificationInput.required = shouldShow;
-                if (!shouldShow) {
-                    verificationInput.value = '';
-                }
-            }
-        }
-
-        function revokeAvatarPreviewUrl() {
-            if (previewObjectUrl) {
-                URL.revokeObjectURL(previewObjectUrl);
-                previewObjectUrl = null;
-            }
-        }
-
-        function ensureAvatarImage() {
-            var image = avatarPreview ? avatarPreview.querySelector('[data-profile-avatar-image]') : null;
-            var fallback = avatarPreview ? avatarPreview.querySelector('[data-profile-avatar-fallback]') : null;
-
-            if (image || !avatarPreview) {
-                return image;
-            }
-
-            image = document.createElement('img');
-            image.alt = '{{ request.user.username|escapejs }}';
-            image.className = 'profile-avatar-large';
-            image.setAttribute('data-profile-avatar-image', 'true');
-            if (fallback) {
-                fallback.replaceWith(image);
-            } else {
-                avatarPreview.insertBefore(image, avatarPreview.firstChild);
-            }
-            return image;
-        }
-
-        function ensureAvatarFallback() {
-            var fallback = avatarPreview ? avatarPreview.querySelector('[data-profile-avatar-fallback]') : null;
-            var image = avatarPreview ? avatarPreview.querySelector('[data-profile-avatar-image]') : null;
-
-            if (fallback || !avatarPreview) {
-                return fallback;
-            }
-
-            fallback = document.createElement('div');
-            fallback.className = 'profile-avatar-large profile-avatar-fallback';
-            fallback.setAttribute('data-profile-avatar-fallback', 'true');
-            fallback.textContent = '👤';
-            if (image) {
-                image.replaceWith(fallback);
-            } else {
-                avatarPreview.insertBefore(fallback, avatarPreview.firstChild);
-            }
-            return fallback;
-        }
-
-        function setAvatarPreview(src) {
-            var image = null;
-
-            if (!avatarPreview) {
-                return;
-            }
-
-            if (src) {
-                image = ensureAvatarImage();
-                if (image) {
-                    image.src = src;
-                }
-                return;
-            }
-
-            ensureAvatarFallback();
-        }
-
-        function setAvatarMarkedForRemoval(marked) {
-            var hasUpload = !!(avatarInput && avatarInput.files && avatarInput.files.length);
-            var hasExistingAvatar = !!existingAvatarSrc;
-
-            if (avatarRemoveFlag) {
-                avatarRemoveFlag.value = marked ? '1' : '0';
-            }
-            if (marked) {
-                setAvatarPreview('');
-            } else if (!hasUpload) {
-                setAvatarPreview(existingAvatarSrc);
-            }
-            if (avatarRemoveButton) {
-                avatarRemoveButton.classList.toggle('is-hidden', marked || (!hasExistingAvatar && !hasUpload));
-            }
-            if (avatarUndoButton) {
-                avatarUndoButton.classList.toggle('is-hidden', !marked || !hasExistingAvatar);
-            }
-        }
-
-        function syncAvatarPreview() {
-            var file = null;
-
-            if (!avatarInput || !avatarPreview) {
-                return;
-            }
-
-            file = avatarInput.files && avatarInput.files[0];
-
-            revokeAvatarPreviewUrl();
-            if (!file || (file.type && file.type.indexOf('image/') !== 0)) {
-                if (avatarRemoveFlag && avatarRemoveFlag.value === '1') {
-                    setAvatarMarkedForRemoval(true);
-                } else {
-                    setAvatarPreview(existingAvatarSrc);
-                    if (avatarRemoveButton) {
-                        avatarRemoveButton.classList.toggle('is-hidden', !existingAvatarSrc);
-                    }
-                    if (avatarUndoButton) {
-                        avatarUndoButton.classList.add('is-hidden');
-                    }
-                }
-                return;
-            }
-
-            previewObjectUrl = URL.createObjectURL(file);
-            setAvatarPreview(previewObjectUrl);
-            if (avatarRemoveFlag) {
-                avatarRemoveFlag.value = '0';
-            }
-            if (avatarRemoveButton) {
-                avatarRemoveButton.classList.remove('is-hidden');
-            }
-            if (avatarUndoButton) {
-                avatarUndoButton.classList.add('is-hidden');
-            }
-        }
-
-        if (emailInput && form && verificationField) {
-            emailInput.addEventListener('input', syncVerificationState);
-            syncVerificationState();
-        }
-
-        if (avatarInput && avatarPreview) {
-            avatarInput.addEventListener('change', syncAvatarPreview);
-            if (avatarRemoveButton) {
-                avatarRemoveButton.addEventListener('click', function () {
-                    revokeAvatarPreviewUrl();
-                    if (avatarInput) {
-                        avatarInput.value = '';
-                    }
-                    setAvatarMarkedForRemoval(true);
-                });
-            }
-            if (avatarUndoButton) {
-                avatarUndoButton.addEventListener('click', function () {
-                    setAvatarMarkedForRemoval(false);
-                });
-            }
-            setAvatarMarkedForRemoval(false);
-        }
-
-        window.addEventListener('beforeunload', function () {
-            revokeAvatarPreviewUrl();
-        });
-    })();
-</script>
+<script type="module" src="{% static 'js/entrypoints/users-profile.js' %}"></script>
 {% endblock %}
+

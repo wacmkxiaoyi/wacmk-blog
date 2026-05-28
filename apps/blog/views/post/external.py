@@ -11,8 +11,9 @@ from django.views import View
 from django.views.generic import DetailView
 
 from apps.blog.models import AuditLog, Post, PostShareLink
-from apps.blog.utils import write_audit_log
+from apps.blog.utils import record_post_view, write_audit_log
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
+from apps.blog.visibility import post_has_any_conditions
 from apps.blog.views.manage.base import ManageBaseMixin, get_manage_home_url
 from apps.blog.views.post.context import build_post_detail_context
 
@@ -26,13 +27,17 @@ class PostShareDetailView(DetailView):
         if share_link.is_expired:
             raise Http404
         post = share_link.post
-        if post.status != Post.STATUS_PUBLISHED or post.visibility != Post.VISIBILITY_PUBLIC:
+        if post.status != Post.STATUS_PUBLISHED or post.visibility != Post.VISIBILITY_PUBLIC or post_has_any_conditions(post):
             raise Http404
         self.share_link = share_link
         return post
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if not getattr(self, "_view_recorded", False):
+            record_post_view(self.request, self.object)
+            self.object.refresh_from_db(fields=["view_count"])
+            self._view_recorded = True
         context.update(build_post_detail_context(self.object, self.request.user, is_share_view=True, request=self.request))
         context["active_share_link"] = self.share_link
         context.setdefault("detail_timestamp", self.object.published_at)
@@ -47,7 +52,7 @@ class PostShareLinkCreateView(LoginRequiredMixin, View):
         post = get_object_or_404(Post.objects.select_related("author"), slug=kwargs["slug"])
         if post.author_id != request.user.pk:
             return JsonResponse({"ok": False, "message": str(_("You do not have permission to generate a share link."))}, status=403)
-        if post.status != Post.STATUS_PUBLISHED or post.visibility != Post.VISIBILITY_PUBLIC:
+        if post.status != Post.STATUS_PUBLISHED or post.visibility != Post.VISIBILITY_PUBLIC or post_has_any_conditions(post):
             return JsonResponse({"ok": False, "message": str(_("Only published public posts can generate share links."))}, status=400)
 
         expiry_key = (request.POST.get("expiry") or "7d").strip()

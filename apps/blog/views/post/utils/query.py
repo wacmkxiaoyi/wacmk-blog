@@ -1,6 +1,9 @@
 from django.db.models import Case, CharField, Count, F, Q, When
 
 from apps.blog.models import Post
+from apps.blog.presentation import decorate_post_tags_for_display
+from apps.blog.permissions import CONDITION_TYPE_BOOK_ONLY, has_condition_rule
+from apps.blog.visibility import get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access
 
 
 def get_visible_post_queryset(user):
@@ -9,9 +12,14 @@ def get_visible_post_queryset(user):
         return queryset
     if not user.is_authenticated:
         return queryset.filter(status=Post.STATUS_PUBLISHED, visibility=Post.VISIBILITY_PUBLIC)
-    return queryset.filter(status=Post.STATUS_PUBLISHED).filter(
-        Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_ENCRYPTED]) | Q(author=user)
-    )
+    posts = list(queryset.filter(status=Post.STATUS_PUBLISHED).filter(Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_CONDITIONAL]) | Q(author=user)).distinct())
+    visible_ids = []
+    for post in posts:
+        if has_condition_rule(post.condition_rules, CONDITION_TYPE_BOOK_ONLY):
+            if post.author_id != getattr(user, "pk", None):
+                continue
+        visible_ids.append(post.pk)
+    return queryset.filter(pk__in=visible_ids)
 
 
 def with_post_feedback_counts(queryset):
@@ -21,6 +29,15 @@ def with_post_feedback_counts(queryset):
     )
 
 
+def prepare_post_cards(posts):
+    prepared_posts = decorate_post_tags_for_display(list(posts))
+    for post in prepared_posts:
+        post.condition_summary_items = get_post_condition_summary_items(post)
+        post.visibility_presentation = get_post_visibility_presentation(post)
+        post.has_encrypted_access = post_has_encrypted_access(post)
+    return prepared_posts
+
+
 def get_detail_post_queryset(user):
     queryset = Post.objects.select_related("author").prefetch_related("tags", "books")
     if user.is_staff or user.is_superuser:
@@ -28,8 +45,8 @@ def get_detail_post_queryset(user):
     if not user.is_authenticated:
         return queryset.filter(status=Post.STATUS_PUBLISHED, visibility=Post.VISIBILITY_PUBLIC)
     return queryset.filter(status=Post.STATUS_PUBLISHED).filter(
-        Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_BOOK_ONLY, Post.VISIBILITY_PRIVATE, Post.VISIBILITY_ENCRYPTED], author=user)
-        | Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_ENCRYPTED])
+        Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_PRIVATE, Post.VISIBILITY_CONDITIONAL], author=user)
+        | Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_CONDITIONAL])
     ).distinct()
 
 
@@ -41,4 +58,4 @@ def get_author_display_name_sort_expression(prefix="author__"):
     )
 
 
-__all__ = ["get_author_display_name_sort_expression", "get_detail_post_queryset", "get_visible_post_queryset", "with_post_feedback_counts"]
+__all__ = ["get_author_display_name_sort_expression", "get_detail_post_queryset", "get_visible_post_queryset", "prepare_post_cards", "with_post_feedback_counts"]

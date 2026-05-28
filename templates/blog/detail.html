@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -35,18 +35,10 @@
                 <div class="post-detail-hero{% if post.cover_image %} post-detail-hero-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
                     <div class="post-detail-title-row">
                         <h1>{{ post.title }}</h1>
-                        {% if post.visibility == 'book_only' %}
-                        <span class="soft-tag soft-tag-visibility soft-tag-book-only">
-                            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
-                        </span>
-                        {% elif post.visibility == 'encrypted' %}
-                        <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
-                            <i class="fa-solid fa-lock" aria-hidden="true"></i>
-                        </span>
-                        {% elif post.visibility != 'public' %}
-                        <span class="soft-tag soft-tag-visibility soft-tag-private">
-                            <i class="fa-solid fa-user" aria-hidden="true"></i>
-                        </span>
+                        {% if condition_summary_items %}
+                        {% include 'blog/includes/condition_badges.html' with condition_items=condition_summary_items icon_only=True %}
+                        {% elif access_icon_presentation.type != 'public' %}
+                        {% include 'blog/includes/access_icon.html' with access=access_icon_presentation %}
                         {% endif %}
                     </div>
                     <div class="card-meta-row card-meta-row-soft">
@@ -77,6 +69,10 @@
                 data-code-copy-label="{% trans 'Copy' %}"
                 data-code-copied-label="{% trans 'Copied' %}"
                 data-code-copy-failed-label="{% trans 'Failed' %}"
+                data-overflow-code-lines="12"
+                data-overflow-table-rows="6"
+                data-overflow-hint="{% trans 'Hidden %count% more lines' %}"
+                data-overflow-expand-label="{% trans 'Show all' %}"
             >
                 {{ rendered_content|safe }}
             </section>
@@ -151,7 +147,7 @@
         </div>
         <div class="post-grid post-grid-compact">
             {% for post in related_posts %}
-            {% if post.visibility == 'encrypted' and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+            {% if post.has_encrypted_access and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
             {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=True %}
             {% else %}
             {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=False %}
@@ -185,9 +181,27 @@
     data-encrypted-post-direct="true"
 ></div>
 {% endif %}
+{% if requires_condition %}
+<div
+    hidden
+    data-conditional-access-modal
+    data-conditional-access-url="{{ post.get_absolute_url }}"
+    data-conditional-access-title="{{ condition_modal_title }}"
+    data-conditional-access-kicker="{{ condition_modal_kicker }}"
+    data-conditional-access-confirm="{{ condition_modal_confirm }}"
+    data-conditional-access-cancel="{{ condition_modal_cancel }}"
+    data-conditional-access-status="{{ condition_access.status }}"
+    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
+    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
+    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
+    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
+    data-conditional-access-return-url="{{ condition_return_url }}"
+></div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script type="module" src="{% static 'js/entrypoints/blog-detail.js' %}"></script>
 {% endblock %}

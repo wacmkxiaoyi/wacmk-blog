@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Book, ContentViewLog, Post, SiteSetting
-from apps.blog.utils.request import ensure_session_key, get_client_ip
+from apps.blog.utils.request import get_client_ip
 
 
 SHARE_LINK_EXPIRY_OPTIONS = {
@@ -25,20 +25,19 @@ def get_view_count_window_start():
 
 
 def record_content_view(request, *, content_type, object_id, model):
-    session_key = ensure_session_key(request)
     ip_address = get_client_ip(request)
     user = request.user if request.user.is_authenticated else None
     window_start = get_view_count_window_start()
+
+    if not ip_address:
+        return False
 
     existing_views = ContentViewLog.objects.filter(
         content_type=content_type,
         object_id=object_id,
         viewed_at__gte=window_start,
+        ip_address=ip_address,
     )
-    if user is not None:
-        existing_views = existing_views.filter(user=user)
-    else:
-        existing_views = existing_views.filter(session_key=session_key, ip_address=ip_address)
 
     if existing_views.exists():
         return False
@@ -48,11 +47,8 @@ def record_content_view(request, *, content_type, object_id, model):
             content_type=content_type,
             object_id=object_id,
             viewed_at__gte=window_start,
+            ip_address=ip_address,
         )
-        if user is not None:
-            locked_views = locked_views.filter(user=user)
-        else:
-            locked_views = locked_views.filter(session_key=session_key, ip_address=ip_address)
         if locked_views.exists():
             return False
 
@@ -61,7 +57,7 @@ def record_content_view(request, *, content_type, object_id, model):
             object_id=object_id,
             user=user,
             ip_address=ip_address,
-            session_key=session_key,
+            session_key="",
         )
         model.objects.filter(pk=object_id).update(view_count=F("view_count") + 1)
 

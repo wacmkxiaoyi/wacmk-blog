@@ -1,0 +1,11 @@
+{% load i18n %}
+{% if condition_items %}
+<span class="condition-badge-group{% if icon_only %} condition-badge-group-icon-only{% endif %}{% if inline %} condition-badge-group-inline{% endif %}">
+    {% for item in condition_items %}
+    <span class="condition-badge access-tone-{{ item.tone }} condition-badge-{{ item.type }}"{% if icon_only %} title="{% if item.value %}{{ item.label }} {{ item.value }}{% else %}{{ item.label }}{% endif %}"{% endif %}>
+        <i class="fa-solid fa-{{ item.icon }}" aria-hidden="true"></i>
+        {% if not icon_only %}<span>{% if item.value %}{% if show_label %}{{ item.label }} {{ item.value }}{% else %}{{ item.value }}{% endif %}{% else %}{{ item.label }}{% endif %}</span>{% endif %}
+    </span>
+    {% endfor %}
+</span>
+{% endif %}

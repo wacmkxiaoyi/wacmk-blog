@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Edit User" %}{% endif %}{% endblock %}
 
@@ -9,6 +9,7 @@
     <section class="manage-content">
         <form method="post" class="section-panel panel-form user-manage-form" data-unsaved-guard>
             {% csrf_token %}
+            <input type="hidden" value="{{ form.default_business_group_value|default:''|escape }}" data-default-business-group-value="{{ form.default_business_group_value|default:''|escape }}">
             <input type="hidden" name="remove_avatar" value="{% if remove_avatar_pending %}1{% else %}0{% endif %}" data-manage-user-avatar-remove-flag>
             <div class="user-manage-shell">
                 <div class="section-heading-row user-manage-heading">
@@ -26,7 +27,7 @@
                     </div>
                     <div class="user-manage-fields">
                         <div class="user-manage-avatar-row">
-                            <div class="user-manage-avatar-display">
+                            <div class="user-manage-avatar-display" data-manage-user-avatar-src="{% if profile.avatar %}{{ profile.avatar.url|escape }}{% endif %}" data-manage-user-avatar-alt="{{ object.username|escape }}">
                                 {% if profile.avatar and not remove_avatar_pending %}
                                 <img src="{{ profile.avatar.url }}" alt="{{ object.username }}" class="profile-avatar-large" data-manage-user-avatar-image>
                                 {% else %}
@@ -70,6 +71,23 @@
                                 {{ form.is_active }}
                             </div>
                             {% if form.is_active.errors %}<div class="field-error">{{ form.is_active.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "Virtual assets" %}</h2>
+                    </div>
+                    <div class="user-manage-fields user-manage-assets-grid">
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.money.id_for_label }}">{{ form.money.label }}</label>
+                            {{ form.money }}
+                            {% if form.money.errors %}<div class="field-error">{{ form.money.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.points.id_for_label }}">{{ form.points.label }}</label>
+                            {{ form.points }}
+                            {% if form.points.errors %}<div class="field-error">{{ form.points.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
@@ -156,159 +174,6 @@
 {% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
-<script>
-    (function () {
-        var roleSelect = document.querySelector('[data-role-type-select="true"]');
-        var adminSection = document.querySelector('[data-role-admin-section]');
-        var adminDivider = document.querySelector('[data-role-admin-divider]');
-        var memberSection = document.querySelector('[data-role-member-section]');
-        var staffCheckbox = document.getElementById('{{ form.is_staff.id_for_label }}');
-        var superuserCheckbox = document.getElementById('{{ form.is_superuser.id_for_label }}');
-        var businessGroupCheckboxes = document.querySelectorAll('[data-business-group-checkbox="true"]');
-        var defaultBusinessGroupValue = '{{ form.default_business_group_value|default:""|escapejs }}';
-        var avatarDisplay = document.querySelector('.user-manage-avatar-display');
-        var avatarRemoveButton = document.querySelector('[data-manage-user-avatar-remove]');
-        var avatarUndoButton = document.querySelector('[data-manage-user-avatar-undo]');
-        var avatarRemoveFlag = document.querySelector('[data-manage-user-avatar-remove-flag]');
-        var existingAvatarSrc = '{% if profile.avatar %}{{ profile.avatar.url|escapejs }}{% endif %}';
-
-        function ensureAvatarFallback() {
-            var fallback = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-fallback]') : null;
-            var image = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-image]') : null;
-
-            if (fallback || !avatarDisplay) {
-                return fallback;
-            }
-
-            fallback = document.createElement('div');
-            fallback.className = 'profile-avatar-large profile-avatar-fallback';
-            fallback.setAttribute('data-manage-user-avatar-fallback', 'true');
-            fallback.textContent = '👤';
-            if (image) {
-                image.replaceWith(fallback);
-            } else {
-                avatarDisplay.appendChild(fallback);
-            }
-            return fallback;
-        }
-
-        function ensureAvatarImage() {
-            var image = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-image]') : null;
-            var fallback = avatarDisplay ? avatarDisplay.querySelector('[data-manage-user-avatar-fallback]') : null;
-
-            if (image || !avatarDisplay) {
-                return image;
-            }
-
-            image = document.createElement('img');
-            image.alt = '{{ object.username|escapejs }}';
-            image.className = 'profile-avatar-large';
-            image.setAttribute('data-manage-user-avatar-image', 'true');
-            if (fallback) {
-                fallback.replaceWith(image);
-            } else {
-                avatarDisplay.appendChild(image);
-            }
-            return image;
-        }
-
-        function setAvatarPreview(src) {
-            var image = null;
-
-            if (!avatarDisplay) {
-                return;
-            }
-
-            if (src) {
-                image = ensureAvatarImage();
-                if (image) {
-                    image.src = src;
-                }
-                return;
-            }
-
-            ensureAvatarFallback();
-        }
-
-        function setAvatarMarkedForRemoval(marked) {
-            var hasExistingAvatar = !!existingAvatarSrc;
-
-            if (avatarRemoveFlag) {
-                avatarRemoveFlag.value = marked ? '1' : '0';
-            }
-            if (marked) {
-                setAvatarPreview('');
-            } else {
-                setAvatarPreview(existingAvatarSrc);
-            }
-            if (avatarRemoveButton) {
-                avatarRemoveButton.classList.toggle('is-hidden', marked || !hasExistingAvatar);
-            }
-            if (avatarUndoButton) {
-                avatarUndoButton.classList.toggle('is-hidden', !marked || !hasExistingAvatar);
-            }
-        }
-
-        if (avatarDisplay && avatarRemoveFlag) {
-            if (avatarRemoveButton) {
-                avatarRemoveButton.addEventListener('click', function () {
-                    setAvatarMarkedForRemoval(true);
-                });
-            }
-            if (avatarUndoButton) {
-                avatarUndoButton.addEventListener('click', function () {
-                    setAvatarMarkedForRemoval(false);
-                });
-            }
-            setAvatarMarkedForRemoval(avatarRemoveFlag.value === '1');
-        }
-
-        if (!roleSelect) {
-            return;
-        }
-
-        function syncRoleState(applyDefaults) {
-            var isAdmin = roleSelect.value === 'admin';
-            if (adminSection) {
-                adminSection.hidden = !isAdmin;
-            }
-            if (adminDivider) {
-                adminDivider.hidden = !isAdmin;
-            }
-            if (memberSection) {
-                memberSection.hidden = false;
-            }
-
-            if (applyDefaults && isAdmin) {
-                if (staffCheckbox) {
-                    staffCheckbox.checked = true;
-                }
-                if (superuserCheckbox) {
-                    superuserCheckbox.checked = true;
-                }
-            }
-
-            if (applyDefaults && !isAdmin) {
-                if (staffCheckbox) {
-                    staffCheckbox.checked = false;
-                }
-                if (superuserCheckbox) {
-                    superuserCheckbox.checked = false;
-                }
-                businessGroupCheckboxes.forEach(function (checkbox) {
-                    if (checkbox.value === defaultBusinessGroupValue) {
-                        checkbox.checked = true;
-                    }
-                });
-            }
-        }
-
-        roleSelect.addEventListener('change', function () {
-            syncRoleState(true);
-        });
-
-        syncRoleState(false);
-    })();
-</script>
+<script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
 {% endblock %}
+

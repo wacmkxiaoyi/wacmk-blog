@@ -3,11 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.forms import CommentForm
 from apps.blog.models import Post
+from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import build_share_expiry_options
+from apps.blog.visibility import get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation
 from apps.blog.views.comment.utils import build_comment_tree
 from apps.blog.views.post.utils import get_visible_post_queryset
-from apps.blog.views.tag.utils import decorate_post_tags_for_display
 
 
 def annotate_post_feedback(post, user):
@@ -97,6 +98,9 @@ def build_post_detail_context(
 
     return {
         "rendered_content": render_markdown(post.content),
+        "condition_summary_items": get_post_condition_summary_items(post),
+        "access_icon_presentation": get_post_access_icon_presentation(post),
+        "visibility_presentation": get_post_visibility_presentation(post),
         "related_posts": (
             decorate_post_tags_for_display(list(get_visible_post_queryset(user).filter(status=Post.STATUS_PUBLISHED).exclude(pk=post.pk).order_by("-published_at")[:3]))
             if not is_share_view and getattr(user, "is_authenticated", False)

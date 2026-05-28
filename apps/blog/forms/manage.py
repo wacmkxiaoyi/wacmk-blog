@@ -56,12 +56,26 @@ class UserManageForm(forms.ModelForm):
         queryset=Group.objects.none(),
         widget=forms.CheckboxSelectMultiple,
     )
+    money = forms.IntegerField(
+        required=False,
+        min_value=0,
+        label=_("Money"),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": "0", "step": "1"}),
+    )
+    points = forms.IntegerField(
+        required=False,
+        min_value=0,
+        label=_("Points"),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": "0", "step": "1"}),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].disabled = True
         self.fields["groups"].queryset = Group.objects.order_by("name")
         self.fields["role_type"].initial = self._get_initial_role_type()
+        self.fields["money"].initial = getattr(getattr(self.instance, "profile", None), "money", 0)
+        self.fields["points"].initial = getattr(getattr(self.instance, "profile", None), "points", 0)
         selected_group_values = {str(value) for value in (self["groups"].value() or [])}
         self.default_business_group_value = ""
         self.business_group_options = []
@@ -116,5 +130,9 @@ class UserManageForm(forms.ModelForm):
         if role_type == self.ROLE_MEMBER:
             cleaned_data["is_staff"] = False
             cleaned_data["is_superuser"] = False
+
+        for field_name in ("money", "points"):
+            if cleaned_data.get(field_name) is None:
+                cleaned_data[field_name] = getattr(getattr(self.instance, "profile", None), field_name, 0)
 
         return cleaned_data

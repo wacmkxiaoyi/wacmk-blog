@@ -1,0 +1,13 @@
+{% load i18n %}
+{% if condition_items %}
+    {% if condition_items|length == 1 %}
+        {% include 'blog/includes/condition_badges.html' with condition_items=condition_items inline=True %}
+    {% else %}
+    <span class="soft-tag soft-tag-conditional-summary" data-condition-tooltip-trigger tabindex="0">
+        {% blocktrans count counter=condition_items|length context "conditional summary" %}{{ counter }} condition{% plural %}{{ counter }} conditions{% endblocktrans %}
+    </span>
+    <div data-condition-tooltip-template hidden>
+        {% include 'blog/includes/condition_badges.html' with condition_items=condition_items inline=True show_label=True %}
+    </div>
+    {% endif %}
+{% endif %}

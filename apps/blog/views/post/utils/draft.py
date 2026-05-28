@@ -14,7 +14,7 @@ def apply_editor_payload(instance, cleaned_data):
     instance.summary = cleaned_data.get("summary", "")
     instance.content = cleaned_data["content"]
     instance.visibility = cleaned_data["visibility"]
-    instance.access_password = cleaned_data.get("access_password", "")
+    instance.condition_rules = cleaned_data.get("condition_rules", [])
 
 
 def clone_post_to_draft(post, author):
@@ -25,7 +25,7 @@ def clone_post_to_draft(post, author):
         summary=post.summary,
         content=post.content,
         visibility=post.visibility,
-        access_password=post.access_password,
+        condition_rules=post.condition_rules,
         author=author,
     )
     if post.cover_image:
@@ -50,13 +50,14 @@ def publish_post_draft(draft):
             "summary": draft.summary,
             "content": draft.content,
             "visibility": draft.visibility,
-            "access_password": draft.access_password,
+            "condition_rules": draft.condition_rules,
         },
     )
     post.status = Post.STATUS_PUBLISHED
     post.save()
     post.tags.set(draft.tags.all())
-    post.books.set(draft.books.all())
+    if draft.source_post_id:
+        post.books.set(draft.books.all())
 
     if draft.cover_image:
         post.cover_image = draft.cover_image.name

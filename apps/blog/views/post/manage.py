@@ -18,13 +18,20 @@ from django.views.generic import CreateView, DetailView, TemplateView, UpdateVie
 
 from apps.blog.forms import PostDraftForm, PostForm, PostMarkdownImportForm
 from apps.blog.models import AuditLog, Book, BookShareLink, Post, PostDraft, PostShareLink
+from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils import get_or_create_site_setting, is_ajax_request, write_audit_log
 from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
+from apps.blog.visibility import get_post_access_display, get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access
 from apps.blog.views.manage.base import ManageBaseMixin, StaffRequiredMixin, get_manage_home_url
-from apps.blog.views.book.utils import can_access_book, can_display_post_in_book_navigation, get_book_structure_post_ids, get_detail_book_queryset
+from apps.blog.views.book.utils import (
+    can_access_book,
+    can_display_post_in_book_navigation,
+    get_book_structure_post_ids,
+    get_detail_book_queryset,
+    remove_post_from_book_structure,
+)
 from apps.blog.views.post.context import build_post_detail_context
-from apps.blog.views.tag.utils import decorate_post_tags_for_display
 from apps.blog.views.post.utils import (
     build_draft_preview_context,
     build_post_share_editor_context,
@@ -35,6 +42,7 @@ from apps.blog.views.post.utils import (
     get_detail_post_queryset,
     get_unique_post_slug,
     get_visible_post_queryset,
+    prepare_post_cards,
     publish_post_draft,
     post_requires_password,
     with_post_feedback_counts,
@@ -62,7 +70,7 @@ class ManagePostReferenceSearchView(StaffRequiredMixin, View):
             page_obj = paginator.page(page_number)
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages or 1)
-        decorate_post_tags_for_display(list(page_obj.object_list))
+        posts = prepare_post_cards(page_obj.object_list)
         return JsonResponse(
             {
                 "ok": True,
@@ -80,22 +88,27 @@ class ManagePostReferenceSearchView(StaffRequiredMixin, View):
                         "title": post.title,
                         "url": post.get_absolute_url(),
                         "author": post.author.first_name or post.author.username,
+                        "accessDisplay": get_post_access_display(post),
                         "visibility": post.visibility,
+                        "visibilityPresentation": get_post_access_icon_presentation(post),
                         "html": render_to_string(
                             "blog/includes/post_card.html",
-                            {
-                                "post": post,
-                                "card_class": "compact-card reference-post-card",
-                                "summary_length": 110,
-                                "show_visibility": True,
-                                "post_card_button": True,
-                                "post_card_url": post.get_absolute_url(),
-                                "disable_encrypted_modal": True,
-                            },
+                        {
+                            "post": post,
+                            "card_class": "compact-card reference-post-card",
+                            "summary_length": 110,
+                            "show_visibility": True,
+                            "show_tags": True,
+                            "post_card_button": True,
+                            "post_card_url": post.get_absolute_url(),
+                            "show_tag_links": False,
+                            "disable_encrypted_modal": True,
+                            "post_requires_password": post.has_encrypted_access,
+                        },
                             request=request,
                         ),
                     }
-                    for post in page_obj.object_list
+                    for post in posts
                 ],
             }
         )
@@ -271,6 +284,11 @@ class ManagePostListView(ManageBaseMixin, TemplateView):
         context.update(self.get_manage_context(section="posts", query=query, active_tab=active_tab))
         context["site_setting"] = get_or_create_site_setting()
         context["items"] = page_obj.object_list
+        if active_tab == "published":
+            for item in context["items"]:
+                item.condition_summary_items = get_post_condition_summary_items(item)
+                item.visibility_presentation = get_post_visibility_presentation(item)
+                item.has_encrypted_access = post_has_encrypted_access(item)
         context["page_obj"] = page_obj
         context["paginator"] = paginator
         context["is_paginated"] = paginator.num_pages > 1
@@ -350,7 +368,7 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        if self.object.visibility != Post.VISIBILITY_PUBLIC:
+        if self.object.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(self.object) or self.object.condition_rules:
             PostShareLink.objects.filter(post=self.object).delete()
         write_audit_log(self.request, AuditLog.ACTION_POST_UPDATE, str(_("Post updated: %(title)s")) % {"title": self.object.title}, user=self.request.user)
         messages.success(self.request, _("Post updated successfully."))
@@ -381,7 +399,7 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
         if (self.request.POST.get("status") or "").strip() == Post.STATUS_PUBLISHED:
             source_post_id = self.object.source_post_id
             published_post = publish_post_draft(self.object)
-            if published_post.visibility != Post.VISIBILITY_PUBLIC:
+            if published_post.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(published_post) or published_post.condition_rules:
                 PostShareLink.objects.filter(post=published_post).delete()
             action = AuditLog.ACTION_POST_UPDATE if source_post_id else AuditLog.ACTION_POST_CREATE
             write_audit_log(self.request, action, str(_("Post published: %(title)s")) % {"title": published_post.title}, user=self.request.user)
@@ -417,7 +435,7 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
 
     def get_queryset(self):
         query = (self.request.GET.get("q") or "").strip()
-        queryset = get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED).select_related("author").prefetch_related("tags", "books")
+        queryset = with_post_feedback_counts(get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED).select_related("author").prefetch_related("tags", "books"))
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query)
@@ -438,14 +456,13 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
             summary=source_post.summary,
             content=source_post.content,
             visibility=source_post.visibility,
-            access_password=source_post.access_password,
+            condition_rules=source_post.condition_rules,
             author=request.user,
         )
         if source_post.cover_image:
             draft.cover_image = source_post.cover_image.name
             draft.save(update_fields=["cover_image", "updated_at"])
         draft.tags.set(source_post.tags.all())
-        draft.books.set(source_post.books.all())
         write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from post: %(title)s")) % {"title": source_post.title}, user=request.user)
         messages.success(request, _("Post imported as draft successfully."))
         edit_url = reverse("manage-post-draft-update", args=[draft.pk])
@@ -464,7 +481,7 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages or 1)
         context.update(self.get_manage_context(section="posts", page_title=_("Import from existing post"), query=query))
-        context["posts"] = page_obj.object_list
+        context["posts"] = prepare_post_cards(page_obj.object_list)
         context["page_obj"] = page_obj
         context["is_paginated"] = paginator.num_pages > 1
         context["paginator"] = paginator
@@ -476,17 +493,36 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
 
 
 class ManagePostMarkdownImportView(ManageBaseMixin, TemplateView):
-    template_name = "blog/manage/post_import_markdown.html"
+    def get_error_message(self, form):
+        if form.non_field_errors():
+            return str(form.non_field_errors()[0])
+        if form.errors.get("markdown_file"):
+            return str(form.errors["markdown_file"][0])
+        return str(_("Unable to import the selected markdown file."))
+
+    def get_list_redirect_url(self):
+        list_url = reverse("manage-posts")
+        next_url = self.get_next_url()
+        if next_url:
+            return f"{list_url}?{urlencode({'next': next_url})}"
+        return list_url
 
     def get_form(self):
         if self.request.method == "POST":
             return PostMarkdownImportForm(self.request.POST, self.request.FILES)
         return PostMarkdownImportForm()
 
+    def get(self, request, *args, **kwargs):
+        return redirect(self.get_list_redirect_url())
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if not form.is_valid():
-            return self.render_to_response(self.get_context_data(form=form))
+            error_message = self.get_error_message(form)
+            if is_ajax_request(request):
+                return JsonResponse({"ok": False, "message": error_message}, status=400)
+            messages.error(request, error_message)
+            return redirect(self.get_list_redirect_url())
 
         draft = create_markdown_import_draft(
             form.cleaned_data["markdown_text"],
@@ -494,20 +530,15 @@ class ManagePostMarkdownImportView(ManageBaseMixin, TemplateView):
             request.user,
         )
         write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from markdown file: %(title)s")) % {"title": draft.title}, user=request.user)
-        messages.success(request, _("Post imported from .md successfully."))
+        success_message = str(_("Post imported from .md successfully."))
+        messages.success(request, success_message)
         edit_url = reverse("manage-post-draft-update", args=[draft.pk])
         next_url = self.get_next_url()
         if next_url:
-            return redirect(f"{edit_url}?{urlencode({'next': next_url})}")
+            edit_url = f"{edit_url}?{urlencode({'next': next_url})}"
+        if is_ajax_request(request):
+            return JsonResponse({"ok": True, "redirect_url": edit_url, "message": success_message})
         return redirect(edit_url)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(self.get_manage_context(section="posts", page_title=_("Import from .md file")))
-        context["form"] = kwargs.get("form") or self.get_form()
-        context["next_url"] = self.get_next_url()
-        context["back_url"] = context["next_url"] or self.request.META.get("HTTP_REFERER") or context["manage_nav"][0]["url"]
-        return context
 
 
 class ManagePostDraftPreviewView(ManageBaseMixin, DetailView):
@@ -587,6 +618,12 @@ class ManagePostDeleteView(ManageBaseMixin, View):
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=kwargs["pk"])
         title = post.title
+        related_books = list(post.books.all())
+        for book in related_books:
+            pruned_structure, structure_changed = remove_post_from_book_structure(book.structure, post.pk)
+            if structure_changed:
+                book.structure = pruned_structure
+                book.save(update_fields=["structure", "updated_at"])
         post.delete()
         write_audit_log(request, AuditLog.ACTION_POST_DELETE, str(_("Post deleted: %(title)s")) % {"title": title}, user=request.user)
         messages.success(request, _("Post deleted successfully."))

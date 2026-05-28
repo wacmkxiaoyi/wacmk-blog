@@ -10,7 +10,9 @@ from django.views import View
 from django.views.generic import DetailView
 
 from apps.blog.models import Book, BookShareLink, Post
+from apps.blog.utils import record_book_view
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
+from apps.blog.visibility import book_has_any_conditions, get_book_access_icon_presentation, get_book_visibility_presentation, post_is_book_only
 from apps.blog.views.book.utils import (
     build_book_navigation_tree,
     dump_book_navigation_tree,
@@ -30,23 +32,28 @@ class BookShareDetailView(DetailView):
         if share_link.is_expired:
             raise Http404
         book = share_link.book
-        if book.visibility != Book.VISIBILITY_PUBLIC:
+        if book.visibility != Book.VISIBILITY_PUBLIC or book_has_any_conditions(book):
             raise Http404
         self.share_link = share_link
         return book
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if not getattr(self, "_view_recorded", False):
+            record_book_view(self.request, self.object)
+            self.object.refresh_from_db(fields=["view_count"])
+            self._view_recorded = True
         requested_slug = (self.request.GET.get("post") or "").strip()
         current_post = None
         structure_post_ids = get_book_structure_post_ids(self.object.structure)
         available_posts = Post.objects.filter(
             pk__in=structure_post_ids,
             status=Post.STATUS_PUBLISHED,
-            visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_BOOK_ONLY],
+            visibility=Post.VISIBILITY_PUBLIC,
         ).select_related("author").prefetch_related("tags", "books")
+        available_posts = [post for post in available_posts if not post_is_book_only(post)]
         if requested_slug:
-            current_post = available_posts.filter(slug=requested_slug).first()
+            current_post = next((post for post in available_posts if post.slug == requested_slug), None)
             if current_post is None:
                 raise Http404
         if current_post is None:
@@ -73,6 +80,8 @@ class BookShareDetailView(DetailView):
         context["post"] = current_post
         context["current_book"] = self.object
         context["is_book_view"] = True
+        context["book_access_icon_presentation"] = get_book_access_icon_presentation(self.object)
+        context["book_visibility_presentation"] = get_book_visibility_presentation(self.object)
         context["book_navigation"] = build_book_navigation_tree(
             self.object,
             self.request,
@@ -95,7 +104,7 @@ class BookShareLinkCreateView(LoginRequiredMixin, View):
         book = get_object_or_404(Book.objects.select_related("created_by"), slug=kwargs["slug"])
         if not (request.user.is_staff or request.user.is_superuser or book.created_by_id == request.user.pk):
             return JsonResponse({"ok": False, "message": str(_("You do not have permission to generate a share link."))}, status=403)
-        if book.visibility != Book.VISIBILITY_PUBLIC:
+        if book.visibility != Book.VISIBILITY_PUBLIC or book_has_any_conditions(book):
             return JsonResponse({"ok": False, "message": str(_("Only public books can generate share links."))}, status=400)
 
         expiry_key = (request.POST.get("expiry") or "7d").strip()

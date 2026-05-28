@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Manage Posts" %}{% endblock %}
 
@@ -18,7 +18,21 @@
                     <a href="{% url 'manage-post-create' %}?next={{ request.get_full_path|urlencode }}" class="primary-button">{% trans "New post" %}</a>
                     <div class="editor-entry-popover">
                         <a href="{% url 'manage-post-import' %}?next={{ request.get_full_path|urlencode }}" class="secondary-button panel-link">{% trans "Import from existing post" %}</a>
-                        <a href="{% url 'manage-post-import-markdown' %}?next={{ request.get_full_path|urlencode }}" class="secondary-button panel-link">{% trans "Import from .md file" %}</a>
+                        <button
+                            type="button"
+                            class="secondary-button panel-link"
+                            data-markdown-import-trigger
+                            data-markdown-import-url="{% url 'manage-post-import-markdown' %}"
+                            data-markdown-import-invalid-type-message="{% trans 'Only .md files are supported.' %}"
+                            data-markdown-import-empty-message="{% trans 'Please choose a markdown file to import.' %}"
+                            data-markdown-import-request-error="{% trans 'Unable to import the selected markdown file right now.' %}"
+                            data-markdown-import-uploading-label="{% trans 'Importing...' %}"
+                        >{% trans "Import from .md file" %}</button>
+                        <form method="post" class="sr-only" data-markdown-import-form>
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <input type="file" name="markdown_file" accept=".md,text/markdown,text/plain" data-markdown-import-input>
+                        </form>
                     </div>
                 </div>
                 {% endif %}
@@ -79,26 +93,10 @@
                             <td>{{ item.title }}</td>
                             {% if active_tab == 'published' %}
                             <td>
-                                {% if item.visibility == 'public' %}
-                                <span class="soft-tag soft-tag-visibility">
-                                    <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
-                                    {{ item.get_visibility_display }}
-                                </span>
-                                {% elif item.visibility == 'book_only' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-book-only">
-                                    <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
-                                    {{ item.get_visibility_display }}
-                                </span>
-                                {% elif item.visibility == 'encrypted' %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-encrypted">
-                                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
-                                    {{ item.get_visibility_display }}
-                                </span>
+                                {% if item.condition_summary_items %}
+                                {% include 'blog/includes/condition_summary.html' with condition_items=item.condition_summary_items %}
                                 {% else %}
-                                <span class="soft-tag soft-tag-visibility soft-tag-private">
-                                    <i class="fa-solid fa-user" aria-hidden="true"></i>
-                                    {{ item.get_visibility_display }}
-                                </span>
+                                {% include 'blog/includes/access_badge.html' with access=item.visibility_presentation %}
                                 {% endif %}
                             </td>
                             {% else %}
@@ -217,4 +215,8 @@
     {% endfor %}
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-manage-post-list.js' %}"></script>
 {% endblock %}

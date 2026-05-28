@@ -1,0 +1,6 @@
+{% if access %}
+<span class="soft-tag soft-tag-visibility soft-tag-access access-tone-{{ access.tone }}{% if extra_classes %} {{ extra_classes }}{% endif %}">
+    <i class="fa-solid fa-{{ access.icon }}" aria-hidden="true"></i>
+    {% if show_label|default:True %}{{ access.label }}{% endif %}
+</span>
+{% endif %}

@@ -52,6 +52,10 @@
             data-code-copy-label="{% trans 'Copy' %}"
             data-code-copied-label="{% trans 'Copied' %}"
             data-code-copy-failed-label="{% trans 'Failed' %}"
+            data-overflow-code-lines="12"
+            data-overflow-table-rows="6"
+            data-overflow-hint="{% trans 'Hidden %count% more lines' %}"
+            data-overflow-expand-label="{% trans 'Show all' %}"
         >
             {{ comment.rendered_content|safe }}
         </div>
@@ -165,6 +169,10 @@
                 data-code-copy-label="{% trans 'Copy' %}"
                 data-code-copied-label="{% trans 'Copied' %}"
                 data-code-copy-failed-label="{% trans 'Failed' %}"
+                data-overflow-code-lines="12"
+                data-overflow-table-rows="6"
+                data-overflow-hint="{% trans 'Hidden %count% more lines' %}"
+                data-overflow-expand-label="{% trans 'Show all' %}"
             >
                 {{ reply.rendered_content|safe }}
             </div>

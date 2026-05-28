@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Basic settings" %}{% endif %}{% endblock %}
 
@@ -180,110 +180,6 @@
 {% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
-<script>
-    (function () {
-        var assetKeys = ['site_icon', 'auth_background', 'app_background'];
-
-        assetKeys.forEach(function (assetKey) {
-            var removeInput = document.querySelector('[data-site-setting-remove-input="' + assetKey + '"]');
-            var previewWrapper = document.querySelector('[data-site-setting-preview-wrapper="' + assetKey + '"]');
-            var previewImage = document.querySelector('[data-site-setting-preview-image="' + assetKey + '"]');
-            var uploadRow = document.querySelector('[data-site-setting-upload-row="' + assetKey + '"]');
-            var removeButton = document.querySelector('[data-site-setting-remove-toggle="' + assetKey + '"]');
-            var undoButton = document.querySelector('[data-site-setting-undo="' + assetKey + '"]');
-            var fileInput = document.getElementById('id_' + assetKey);
-            var existingSrc = previewImage ? previewImage.getAttribute('src') || '' : '';
-            var objectUrl = null;
-
-            function revokeObjectUrl() {
-                if (objectUrl) {
-                    URL.revokeObjectURL(objectUrl);
-                    objectUrl = null;
-                }
-            }
-
-            function hasExistingPreview() {
-                return !!existingSrc;
-            }
-
-            function setMarkedForRemoval(marked) {
-                var hasUpload = !!(fileInput && fileInput.files && fileInput.files.length);
-                var hasExisting = hasExistingPreview();
-
-                if (!removeInput) {
-                    return;
-                }
-                removeInput.value = marked ? '1' : '0';
-                if (previewWrapper) {
-                    previewWrapper.hidden = marked || !hasExisting;
-                }
-                if (uploadRow) {
-                    uploadRow.classList.toggle('is-hidden', !marked && hasExisting && !hasUpload);
-                }
-                if (undoButton) {
-                    undoButton.classList.toggle('is-hidden', !marked || !hasExisting);
-                }
-            }
-
-            if (removeButton) {
-                removeButton.addEventListener('click', function () {
-                    if (fileInput) {
-                        fileInput.value = '';
-                    }
-                    revokeObjectUrl();
-                    if (previewImage) {
-                        previewImage.setAttribute('src', existingSrc);
-                    }
-                    setMarkedForRemoval(true);
-                });
-            }
-
-            if (undoButton) {
-                undoButton.addEventListener('click', function () {
-                    setMarkedForRemoval(false);
-                });
-            }
-
-            if (fileInput) {
-                fileInput.addEventListener('change', function () {
-                    revokeObjectUrl();
-                    var file = fileInput.files && fileInput.files[0];
-                    if (!file || (file.type && file.type.indexOf('image/') !== 0)) {
-                        if (!hasExistingPreview()) {
-                            if (previewWrapper) {
-                                previewWrapper.hidden = true;
-                            }
-                            if (uploadRow) {
-                                uploadRow.classList.remove('is-hidden');
-                            }
-                        }
-                        return;
-                    }
-
-                    objectUrl = URL.createObjectURL(file);
-                    if (previewImage) {
-                        previewImage.setAttribute('src', objectUrl);
-                    }
-                    if (previewWrapper) {
-                        previewWrapper.hidden = false;
-                    }
-                    if (uploadRow) {
-                        uploadRow.classList.add('is-hidden');
-                    }
-                    if (undoButton) {
-                        undoButton.classList.add('is-hidden');
-                    }
-                    if (removeInput) {
-                        removeInput.value = '0';
-                    }
-                });
-            }
-
-            setMarkedForRemoval(false);
-
-            window.addEventListener('beforeunload', revokeObjectUrl);
-        });
-    })();
-</script>
+<script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
 {% endblock %}
+
