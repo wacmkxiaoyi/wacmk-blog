@@ -77,8 +77,8 @@ Important settings are read from environment variables:
 - `EMAIL_HOST_PASSWORD`
 - `EMAIL_USE_TLS`
 - `DEFAULT_FROM_EMAIL`
-- `REGISTER_CODE_EXPIRE_SECONDS`
-- `REGISTER_CODE_RESEND_SECONDS`
+- `CODE_EXPIRE_SECONDS`
+- `CODE_RESEND_SECONDS`
 
 Registration is available only when `ENABLE_REGISTER=true` and the required email settings are configured. Verification emails use the `APP_NAME` branding value, send both plain text and HTML content, and new users are added to the `normal_user` group after they verify their email code.
 

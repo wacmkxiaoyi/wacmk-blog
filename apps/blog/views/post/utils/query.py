@@ -22,6 +22,17 @@ def get_visible_post_queryset(user):
     return queryset.filter(pk__in=visible_ids)
 
 
+def get_reference_post_queryset(user):
+    queryset = Post.objects.select_related("author").prefetch_related("tags", "books")
+    if user.is_staff or user.is_superuser:
+        return queryset
+    if not user.is_authenticated:
+        return queryset.none()
+    return queryset.filter(status=Post.STATUS_PUBLISHED).filter(
+        Q(visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_CONDITIONAL]) | Q(author=user)
+    ).distinct()
+
+
 def with_post_feedback_counts(queryset):
     return queryset.annotate(
         up_count=Count("feedback_entries", filter=Q(feedback_entries__value=1), distinct=True),
@@ -58,4 +69,4 @@ def get_author_display_name_sort_expression(prefix="author__"):
     )
 
 
-__all__ = ["get_author_display_name_sort_expression", "get_detail_post_queryset", "get_visible_post_queryset", "prepare_post_cards", "with_post_feedback_counts"]
+__all__ = ["get_author_display_name_sort_expression", "get_detail_post_queryset", "get_reference_post_queryset", "get_visible_post_queryset", "prepare_post_cards", "with_post_feedback_counts"]

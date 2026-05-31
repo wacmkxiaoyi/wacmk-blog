@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wacmk-blog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-23 00:00+0800\n"
+"POT-Creation-Date: 2026-05-30 20:27+0800\n"
 "PO-Revision-Date: 2026-05-23 00:00+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,440 +12,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Simplified Chinese"
-msgstr "简体中文"
+msgid "Insufficient balance."
+msgstr ""
 
-msgid "English"
-msgstr "英文"
+msgid "Public"
+msgstr "公开"
 
-msgid "Home"
-msgstr "主页"
+msgid "Private"
+msgstr "私密"
 
-msgid "Login"
-msgstr "登录"
+msgid "Conditional"
+msgstr ""
 
-msgid "Show"
-msgstr "显示"
+msgid "Book name"
+msgstr "图书名称"
 
-msgid "Hide"
-msgstr "隐藏"
+msgid "Enter book name"
+msgstr "输入图书名称"
 
-msgid "Sign in"
-msgstr "登录"
+msgid "Slug"
+msgstr "别名"
 
-msgid "Welcome back"
-msgstr "欢迎回来"
+msgid "Book slug"
+msgstr "图书别名"
 
-msgid "Enter your account details to continue your cute adventure."
-msgstr "输入账号信息，继续你的可爱冒险。"
+msgid "Summary"
+msgstr "摘要"
 
-msgid "Username"
-msgstr "用户名"
+msgid "Short summary shown on the books page."
+msgstr "显示在图书列表页的简要摘要。"
 
-msgid "Enter your username"
-msgstr "请输入用户名"
+msgid "Cover image"
+msgstr "封面图"
 
-msgid "Password"
-msgstr "密码"
+msgid "Access permission"
+msgstr "访问权限"
 
-msgid "Enter your password"
-msgstr "请输入密码"
+msgid "Articles"
+msgstr "文章"
 
-msgid "Remember me"
-msgstr "记住我"
+#, fuzzy
+#| msgid "Invalid book structure data."
+msgid "Invalid condition data."
+msgstr "图书结构数据无效。"
 
-msgid "Username or password is incorrect."
-msgstr "用户名或密码不正确。"
+msgid "Invalid book structure data."
+msgstr "图书结构数据无效。"
 
-msgid "This account is inactive."
-msgstr "当前账号不可用。"
+msgid "Book structure must be a list."
+msgstr "图书结构必须是一个列表。"
 
-msgid "Show password"
-msgstr "显示密码"
+msgid "At least one complete condition is required."
+msgstr ""
 
-msgid "Hide password"
-msgstr "隐藏密码"
+msgid "Password cannot be empty for encrypted books."
+msgstr "加密图书的密码不能为空。"
 
-msgid "No account? Sign up"
-msgstr "还没有账号？去注册"
+msgid "Selected articles must match the book structure."
+msgstr "所选文章必须与图书结构保持一致。"
 
-msgid "Register"
-msgstr "注册"
+msgid "Each book structure node must be an object."
+msgstr "每个图书结构节点都必须是一个对象。"
 
-msgid "Create account"
-msgstr "创建账号"
+msgid "Article nodes must include a post id."
+msgstr "文章节点必须包含文章 ID。"
 
-msgid "Already has account? Sign in"
-msgstr "已有账号？去登录"
+msgid "Group nodes must include a title."
+msgstr "分组节点必须包含标题。"
 
-msgid "Email"
-msgstr "邮箱"
+msgid "Unknown book structure node type."
+msgstr "未知的图书结构节点类型。"
 
-msgid "Enter your email"
-msgstr "请输入邮箱"
+msgid "Comment"
+msgstr "评论"
 
-msgid "Verification code"
-msgstr "验证码"
-
-msgid "Enter verification code"
-msgstr "请输入验证码"
-
-msgid "Send code"
-msgstr "发送验证码"
-
-msgid "Resend in %(seconds)s s"
-msgstr "%(seconds)s 秒后重发"
-
-msgid "Confirm password"
-msgstr "确认密码"
-
-msgid "Enter your password again"
-msgstr "请再次输入密码"
-
-msgid "This username is already taken."
-msgstr "该用户名已被占用。"
-
-msgid "This email is already registered."
-msgstr "该邮箱已被注册。"
-
-msgid "Enter a valid 6-digit verification code."
-msgstr "请输入有效的 6 位验证码。"
-
-msgid "The two passwords do not match."
-msgstr "两次输入的密码不一致。"
-
-msgid "The verification code is invalid or expired."
-msgstr "验证码无效或已过期。"
-
-msgid "Registration is currently unavailable."
-msgstr "当前暂不支持注册。"
-
-msgid "Registration successful. Please sign in."
-msgstr "注册成功，请登录。"
-
-msgid "Email is required."
-msgstr "请输入邮箱。"
-
-msgid "Enter a valid email address."
-msgstr "请输入有效的邮箱地址。"
-
-msgid "Please wait before requesting another verification code."
-msgstr "请稍后再请求新的验证码。"
-
-msgid "Your registration verification code"
-msgstr "注册验证码"
-
-msgid "Your verification code is %(code)s. It will expire in %(minutes)s minutes."
-msgstr "您的验证码是 %(code)s，将在 %(minutes)s 分钟后过期。"
-
-msgid "[%(app_name)s] Your verification code"
-msgstr "【%(app_name)s】验证码"
-
-msgid "Verification Code"
-msgstr "验证码"
-
-msgid "Use the verification code below to complete your registration."
-msgstr "请使用下方验证码完成注册。"
-
-msgid "You are receiving this email because a registration verification code was requested for %(app_name)s."
-msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了注册验证码。"
-
-msgid "One-time code"
-msgstr "一次性验证码"
-
-msgid "This code will expire in %(minutes)s minutes."
-msgstr "该验证码将在 %(minutes)s 分钟后失效。"
-
-msgid "For your security, do not forward this email or share the code with anyone."
-msgstr "为保障您的账号安全，请勿转发此邮件或向任何人透露验证码。"
-
-msgid "If you did not request this email, you can safely ignore it."
-msgstr "如果这不是您的操作，您可以直接忽略这封邮件。"
-
-msgid "This is an automated email from %(app_name)s. Please do not reply directly to this message."
-msgstr "这是一封由 %(app_name)s 自动发送的邮件，请勿直接回复。"
-
-msgid "%(app_name)s verification code"
-msgstr "%(app_name)s 验证码"
-
-msgid "Verification code sent."
-msgstr "验证码已发送。"
-
-msgid "Request failed."
-msgstr "请求失败。"
-
-msgid "Forgot password"
-msgstr "忘记密码"
-
-msgid "Password reset successful. Please check your email."
-msgstr "密码重置成功，请检查邮箱。"
-
-msgid "Password reset is currently unavailable."
-msgstr "当前暂不支持密码重置。"
-
-msgid "[%(app_name)s] Your temporary password"
-msgstr "【%(app_name)s】临时密码"
-
-msgid "Temporary Password"
-msgstr "临时密码"
-
-msgid "Use the temporary password below to sign in to your account."
-msgstr "请使用下方临时密码登录您的账号。"
-
-msgid "A password reset request was processed for your %(app_name)s account."
-msgstr "系统已为您的 %(app_name)s 账号处理了一次密码重置请求。"
-
-msgid "Temporary password"
-msgstr "临时密码"
-
-msgid "For security, please sign in as soon as possible and change this password immediately."
-msgstr "为了您的账号安全，请尽快登录并立即修改该密码。"
-
-msgid "If you did not request this reset, please contact an administrator after signing in."
-msgstr "如果这不是您的操作，请在登录后尽快联系管理员。"
-
-msgid "%(app_name)s temporary password"
-msgstr "%(app_name)s 临时密码"
-
-msgid "Close"
-msgstr "关闭"
-
-msgid "Public sharing"
-msgstr "公开分享"
-
-msgid "Create an anonymous access link for this public post. After generation, you can copy the link and send it to others."
-msgstr "为这篇公开文章生成匿名访问链接。生成后，你可以复制该链接并发送给其他人。"
-
-msgid "Anyone with this link can view the post and its comments without signing in, but cannot interact."
-msgstr "任何持有此链接的人都可以在不登录的情况下查看文章及评论，但无法进行交互。"
-
-msgid "Generating..."
-msgstr "生成中..."
-
-msgid "Generate share link"
-msgstr "生成外链"
-
-msgid "Copy link"
-msgstr "复制链接"
-
-msgid "Generate link"
-msgstr "生成链接"
-
-msgid "Link validity"
-msgstr "链接有效期"
-
-msgid "Share link"
-msgstr "分享链接"
-
-msgid "Expires at"
-msgstr "过期时间"
-
-msgid "Never expires"
-msgstr "永不过期"
-
-msgid "Share link copied."
-msgstr "分享链接已复制。"
-
-msgid "Unable to generate share link right now."
-msgstr "暂时无法生成外链。"
-
-msgid "Like"
-msgstr "点赞"
-
-msgid "Dislike"
-msgstr "点踩"
-
-msgid "Password Reset"
-msgstr "密码重置"
-
-msgid "Password Reset Unavailable"
-msgstr "密码重置不可用"
-
-msgid "OK"
-msgstr "确定"
-
-msgid "Website management"
-msgstr "网站管理"
-
-msgid "Profile settings"
-msgstr "个人设置"
-
-msgid "Sign out"
-msgstr "退出"
-
-msgid "Search posts"
-msgstr "搜索文章"
-
-msgid "Search posts, books, tags, authors..."
-msgstr "搜索文章、图书、标签、作者..."
-
-msgid "Search users"
-msgstr "搜索用户"
-
-msgid "Search audit logs"
-msgstr "搜索审计日志"
-
-msgid "Search posts..."
-msgstr "搜索文章..."
-
-msgid "Search users..."
-msgstr "搜索用户..."
-
-msgid "Try another keyword, book, tag, or author name."
-msgstr "试试其他关键词、图书、标签或作者名。"
-
-msgid "Search audit logs..."
-msgstr "搜索审计日志..."
-
-msgid "Supports Markdown, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts."
-msgstr "支持 Markdown、并排预览、直接上传图片、插入表格，以及 GitHub 风格的提示块。"
-
-msgid "Superuser"
-msgstr "超级管理员"
-
-msgid "Staff"
-msgstr "工作人员"
-
-msgid "Dreamy Notes"
-msgstr "梦幻手记"
-
-msgid "A pastel blog space after login"
-msgstr "登录后的粉彩博客空间"
-
-msgid "Publish essays, product notes, and visual diaries with the same soft style as your current login page."
-msgstr "用与当前登录页一致的柔和风格，发布随笔、产品笔记和视觉日记。"
-
-msgid "Latest published posts"
-msgstr "最新发布文章"
-
-msgid "Write a new post"
-msgstr "写一篇新文章"
-
-msgid "No published posts yet"
-msgstr "还没有已发布的文章"
-
-msgid "Create your first article from the management panel to populate the homepage."
-msgstr "从管理面板创建你的第一篇文章，为首页填充内容。"
-
-msgid "Access audit"
-msgstr "访问审计"
-
-msgid "Clear"
-msgstr "清理"
-
-msgid "Clear audit logs"
-msgstr "清理审计日志"
-
-msgid "Are you sure you want to clear all audit logs? This action cannot be undone."
-msgstr "确定要清理所有审计日志吗？此操作无法撤销。"
-
-msgid "Audit logs cleared successfully."
-msgstr "审计日志已清理。"
-
-msgid "Workspace"
-msgstr "工作区"
-
-msgid "Post slug"
-msgstr "文章别名"
-
-msgid "Password changed"
-msgstr "密码已修改"
-
-msgid "Profile updated"
-msgstr "个人资料已更新"
-
-msgid "Post created: %(title)s"
-msgstr "文章已创建：%(title)s"
-
-msgid "Post updated: %(title)s"
-msgstr "文章已更新：%(title)s"
-
-msgid "Post deleted: %(title)s"
-msgstr "文章已删除：%(title)s"
-
-msgid "User updated: %(username)s"
-msgstr "用户已更新：%(username)s"
-
-msgid "User signed in: %(username)s"
-msgstr "用户已登录：%(username)s"
-
-msgid "User signed out: %(username)s"
-msgstr "用户已退出：%(username)s"
-
-msgid "anonymous user"
-msgstr "匿名用户"
-
-msgid "Editor"
-msgstr "编辑器"
-
-msgid "Create post"
-msgstr "创建文章"
-
-msgid "Import from existing post"
-msgstr "从已有文章导入"
-
-msgid "Import"
-msgstr "导入"
-
-msgid "Back to posts"
-msgstr "返回文章管理"
-
-msgid "Search posts to import..."
-msgstr "搜索要导入的文章..."
-
-msgid "Search posts to import"
-msgstr "搜索要导入的文章"
-
-msgid "Import as draft"
-msgstr "导入为草稿"
-
-msgid "No published posts available to import."
-msgstr "暂无可导入的已发布文章。"
-
-msgid "%(title)s (Copy)"
-msgstr "%(title)s（副本）"
-
-msgid "Draft imported from post: %(title)s"
-msgstr "已从文章导入草稿：%(title)s"
-
-msgid "Post imported as draft successfully."
-msgstr "文章已成功导入为草稿。"
-
-msgid "Import from .md file"
-msgstr "从 .md 中导入"
-
-msgid "Markdown file"
-msgstr "Markdown 文件"
-
-msgid "Supports .md files with optional front matter fields: title, summary, tags, and slug."
-msgstr "支持 .md 文件，可选解析 front matter 中的 title、summary、tags 和 slug。"
-
-msgid "Only .md files are supported."
-msgstr "仅支持 .md 文件。"
-
-msgid "The uploaded file is empty."
-msgstr "上传文件不能为空。"
-
-msgid "The uploaded file must be a UTF-8 encoded .md file."
-msgstr "上传文件必须是 UTF-8 编码的 .md 文件。"
-
-msgid "Imported post"
-msgstr "导入的文章"
-
-msgid "Draft imported from markdown file: %(title)s"
-msgstr "已从 Markdown 文件导入草稿：%(title)s"
-
-msgid "Post imported from .md successfully."
-msgstr "文章已成功从 .md 导入。"
-
-msgid "Post Editor"
-msgstr "文章编辑器"
+msgid "Write a comment"
+msgstr "写下评论"
 
 msgid "Insert link"
 msgstr "插入链接"
 
 msgid "Markdown"
 msgstr "Markdown"
+
+msgid "Display name"
+msgstr "显示名称"
 
 msgid "URL"
 msgstr "URL"
@@ -456,24 +107,89 @@ msgstr "输入显示名称和目标 URL。"
 msgid "Insert"
 msgstr "插入"
 
+msgid "Cancel"
+msgstr "取消"
+
+#, fuzzy
+#| msgid "Reference internal article"
 msgid "Reference internal post"
 msgstr "引用内部文章"
 
+#, fuzzy
+#| msgid "Posts"
+msgid "Posts"
+msgstr "文章"
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search posts"
+msgstr "搜索文章"
+
+#, fuzzy
+#| msgid "No books found."
+msgid "No posts found."
+msgstr "暂无图书。"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "Selected"
+msgstr "已选择"
+
+#, fuzzy
+#| msgid "Add selected"
+msgid "Insert selected"
+msgstr "添加所选"
+
+#, fuzzy
+#| msgid "Insert table"
+msgid "Insert image"
+msgstr "插入表格"
+
+msgid "Prompt"
+msgstr ""
+
+msgid "Image URL"
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter display text and the target URL."
+msgid "Enter image prompt text and the image URL."
+msgstr "输入显示名称和目标 URL。"
+
+msgid "Upload image"
+msgstr "上传图片"
 
 msgid "Insert table"
 msgstr "插入表格"
+
+msgid "Choose table size"
+msgstr "选择表格尺寸"
+
+#, fuzzy
+#| msgid "Import from .md file"
+msgid "Import from .csv"
+msgstr "从 .md 中导入"
+
+#, fuzzy
+#| msgid "Import from .md file"
+msgid "Import from .tsv"
+msgstr "从 .md 中导入"
+
+msgid "Table import failed"
+msgstr ""
+
+msgid "Please choose a valid CSV or TSV file and try again."
+msgstr ""
+
+msgid "The selected file does not contain any table data."
+msgstr ""
 
 msgid "Right-click a cell to insert or remove rows and columns."
 msgstr "右键单击单元格可插入或删除行列。"
 
 msgid "Use tabs or | to paste cells, one row per line."
 msgstr "可用 Tab 或 | 粘贴单元格内容，每行代表表格中的一行。"
-
-msgid "Upload image"
-msgstr "上传图片"
-
-msgid "Choose table size"
-msgstr "选择表格尺寸"
 
 msgid "Insert row above"
 msgstr "在上方插入行"
@@ -493,263 +209,162 @@ msgstr "删除行"
 msgid "Remove column"
 msgstr "删除列"
 
+msgid "Comment content cannot be empty."
+msgstr "评论内容不能为空。"
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search"
+msgstr "搜索文章"
+
+msgid "Search posts, books, tags, authors..."
+msgstr "搜索文章、图书、标签、作者..."
+
+msgid "Administrator"
+msgstr "管理员"
+
+msgid "Normal user"
+msgstr "普通用户"
+
+msgid "Nickname"
+msgstr "名称"
+
+#, fuzzy
+#| msgid "Personal settings"
+msgid "Personal introduction"
+msgstr "个人设置"
+
+msgid "Email"
+msgstr "邮箱"
+
+#, fuzzy
+#| msgid "New email address"
+msgid "Email address"
+msgstr "新邮箱地址"
+
+msgid "New password"
+msgstr "新密码"
+
+msgid "Leave blank to keep the current password."
+msgstr "留空则保持当前密码不变。"
+
+msgid "Confirm new password"
+msgstr "确认新密码"
+
+msgid "User role"
+msgstr "用户角色"
+
+msgid "Business identity"
+msgstr ""
+
+msgid "Active"
+msgstr "启用"
+
+msgid "Staff"
+msgstr "工作人员"
+
+msgid "Superuser"
+msgstr "超级管理员"
+
+msgid "Groups"
+msgstr "分组"
+
+msgid "Money"
+msgstr ""
+
+msgid "Points"
+msgstr ""
+
+#, python-format
+msgid ""
+"Current business identity %(identity)s is preserved until you manually "
+"choose a new one."
+msgstr ""
+
+#, fuzzy
+#| msgid "This email is already registered."
+msgid "This email is already in use."
+msgstr "该邮箱已被注册。"
+
+msgid "The two passwords do not match."
+msgstr "两次输入的密码不一致。"
+
+msgid "Choose a valid business identity."
+msgstr ""
+
 msgid "Title"
 msgstr "标题"
 
-msgid "Post title"
+msgid "Article title"
 msgstr "文章标题"
 
-msgid "Slug"
-msgstr "别名"
-
-msgid "Summary"
-msgstr "摘要"
+msgid "Article slug"
+msgstr "文章别名"
 
 msgid "Short summary shown on the homepage."
 msgstr "显示在首页上的简短摘要。"
 
-msgid "Cover image"
-msgstr "封面图"
+msgid "Content"
+msgstr "正文"
 
 msgid "Status"
 msgstr "状态"
 
-msgid "Draft"
-msgstr "草稿"
-
-msgid "Published"
-msgstr "已发布"
-
 msgid "Tags"
 msgstr "标签"
-
-msgid "Example: Django, Diary, Update"
-msgstr "例如：Django、日记、更新"
 
 msgid "Separate tags with commas."
 msgstr "使用逗号分隔多个标签。"
 
-msgid "Content"
-msgstr "正文"
+msgid "Example: Django, Diary, Update"
+msgstr "例如：Django、日记、更新"
 
-msgid "Supports Markdown, side-by-side preview, and image insertion."
-msgstr "支持 Markdown、分栏预览和图片插入。"
+msgid "Reference internal article"
+msgstr "引用内部文章"
 
-msgid "Publish post"
-msgstr "发布文章"
+msgid "Search articles"
+msgstr "搜索文章"
 
-msgid "Remove cover image"
-msgstr "移除封面图"
-
-msgid "Delete cover image"
-msgstr "删除封面图"
-
-msgid "Set as draft"
-msgstr "设为草稿"
-
-msgid "Save draft"
-msgstr "保存草稿"
-
-msgid "Save revision"
-msgstr "保存修订版"
-
-msgid "Published posts"
-msgstr "已发布文章"
-
-msgid "Drafts / Revisions"
-msgstr "草稿 / 修订版"
-
-msgid "External links"
-msgstr "外链管理"
-
-msgid "Post lists"
-msgstr "文章列表"
-
-msgid "Revision"
-msgstr "修订版"
-
-msgid "Type"
-msgstr "类型"
-
-msgid "Has revision"
-msgstr "有修订版"
-
-msgid "No revision"
-msgstr "无修订版"
-
-msgid "Existing revision"
-msgstr "已有修订版"
-
-msgid "The published post \"%(title)s\" already has a saved revision. You can continue editing the existing revision or start over from the published version. Starting over will delete the current revision."
-msgstr "已发布文章\"%(title)s\"已经有一份修订版。你可以继续编辑现有修订版，或从当前已发布内容重新开始。重新开始会删除当前修订版。"
-
-msgid "Start a new revision"
-msgstr "从已发布版本新建修订版"
-
-msgid "Open"
-msgstr "读取"
-
-msgid "Discard"
-msgstr "遗弃"
-
-msgid "Delete revision"
-msgstr "删除修订版"
-
-msgid "Delete draft"
-msgstr "删除草稿"
-
-msgid "No published posts found."
-msgstr "暂无已发布文章。"
-
-msgid "No drafts or revisions found."
-msgstr "暂无草稿或修订版。"
-
-msgid "Created by"
-msgstr "创建人"
-
-msgid "Expired"
-msgstr "已过期"
-
-msgid "Edit validity"
-msgstr "编辑有效期"
-
-msgid "Delete external link"
-msgstr "删除外链"
-
-msgid "Are you sure you want to delete the external link for \"%(title)s\"? This action cannot be undone."
-msgstr "确定要删除“%(title)s”的外链吗？此操作不可恢复。"
-
-msgid "No external links found."
-msgstr "暂无外链。"
-
-msgid "Search external links..."
-msgstr "搜索外链..."
-
-msgid "Search external links"
-msgstr "搜索外链"
-
-msgid "Published with revision"
-msgstr "已发布（有修订版）"
-
-msgid "Recently edited drafts and revisions"
-msgstr "最近编辑的草稿与修订版"
-
-msgid "Drafts and revisions will appear here after editors start preparing new articles or updating published ones."
-msgstr "编辑开始准备新文章或更新已发布文章后，草稿与修订版会显示在这里。"
-
-msgid "A published post already uses this slug."
-msgstr "已有已发布文章使用了这个别名。"
-
-msgid "Draft created: %(title)s"
-msgstr "草稿已创建：%(title)s"
-
-msgid "Draft saved: %(title)s"
-msgstr "草稿已保存：%(title)s"
-
-msgid "Revision saved: %(title)s"
-msgstr "修订版已保存：%(title)s"
-
-msgid "Post published: %(title)s"
-msgstr "文章已发布：%(title)s"
-
-msgid "Draft deleted: %(title)s"
-msgstr "草稿已删除：%(title)s"
-
-msgid "Draft saved successfully."
-msgstr "草稿保存成功。"
-
-msgid "Revision saved successfully."
-msgstr "修订版保存成功。"
-
-msgid "Post published successfully."
-msgstr "文章发布成功。"
-
-msgid "Draft deleted successfully."
-msgstr "草稿删除成功。"
-
-msgid "External link updated: %(title)s"
-msgstr "外链已更新：%(title)s"
-
-msgid "External link deleted: %(title)s"
-msgstr "外链已删除：%(title)s"
-
-msgid "External link validity updated successfully."
-msgstr "外链有效期更新成功。"
-
-msgid "External link deleted successfully."
-msgstr "外链删除成功。"
-
-msgid "Edit external link"
-msgstr "编辑外链"
-
-msgid "View or update the external link for \"%(title)s\"."
-msgstr "查看或更新“%(title)s”的外链。"
-
-msgid "Update link"
-msgstr "更新外链"
-
-msgid "Updating..."
-msgstr "更新中..."
-
-msgid "Unable to update share link right now."
-msgstr "暂时无法更新外链。"
-
-msgid "Edit draft"
-msgstr "编辑草稿"
-
-msgid "Edit revision"
-msgstr "编辑修订版"
-
-msgid "Are you sure you want to delete revision \"%(title)s\"? This action cannot be undone."
-msgstr "确定要删除修订版\"%(title)s\"吗？此操作不可恢复。"
-
-msgid "Are you sure you want to delete draft \"%(title)s\"? This action cannot be undone."
-msgstr "确定要删除草稿\"%(title)s\"吗？此操作不可恢复。"
-
-msgid "Browse"
-msgstr "浏览"
-
-msgid "Manage"
-msgstr "管理"
-
-msgid "Manage Posts"
-msgstr "文章管理"
-
-msgid "Posts"
-msgstr "文章"
-
-msgid "New post"
-msgstr "新建文章"
-
-msgid "Author"
-msgstr "作者"
-
-msgid "Updated"
-msgstr "更新时间"
-
-msgid "Actions"
-msgstr "操作"
-
-msgid "No posts found."
+msgid "No articles found."
 msgstr "暂无文章。"
 
-msgid "Audit"
-msgstr "审计"
+#, fuzzy
+#| msgid "Password cannot be empty for encrypted books."
+msgid "Password cannot be empty for encrypted articles."
+msgstr "加密文章不可使用空密码。"
 
-msgid "Basic"
-msgstr "基础"
+msgid "A published article already uses this slug."
+msgstr "已有已发布文章使用了这个别名。"
 
-msgid "Website"
-msgstr "网站"
+msgid "Markdown file"
+msgstr "Markdown 文件"
 
-msgid "Basic settings"
-msgstr "基础设置"
+msgid ""
+"Supports .md files with optional front matter fields: title, summary, tags, "
+"and slug."
+msgstr ""
+"支持 .md 文件，可选解析 front matter 中的 title、summary、tags 和 slug。"
 
-msgid "Appearance assets"
-msgstr "外观资源"
+msgid "Description"
+msgstr "个人简介"
 
-msgid "Article editor"
-msgstr "文章编辑器"
+msgid "Write a brief introduction about yourself"
+msgstr "写一段简短的自我介绍"
+
+msgid "Verification code"
+msgstr "验证码"
+
+msgid "Enter verification code"
+msgstr "请输入验证码"
+
+msgid "Enter a valid 6-digit verification code."
+msgstr "请输入有效的 6 位验证码。"
+
+msgid "Verification code is required when changing email."
+msgstr "修改邮箱时必须填写验证码。"
+
+msgid "The verification code is invalid or expired."
+msgstr "验证码无效或已过期。"
 
 msgid "Website title"
 msgstr "网站标题"
@@ -763,7 +378,9 @@ msgstr "用于浏览器标签页标题，并在适用的站点头部场景中显
 msgid "Website icon"
 msgstr "网站图标"
 
-msgid "Used as the browser tab icon. Leave empty to keep the current icon or use the default."
+msgid ""
+"Used as the browser tab icon. Leave empty to keep the current icon or use "
+"the default."
 msgstr "用作浏览器标签页图标。留空则保留当前图标或使用默认图标。"
 
 msgid "Login page background"
@@ -787,59 +404,149 @@ msgstr "在编辑文章时，自动在当前浏览器中保存本地恢复草稿
 msgid "Draft autosave interval (minutes)"
 msgstr "草稿自动保存间隔（分钟）"
 
-msgid "How often the editor should save a local recovery draft. Enter a value between 1 and 60 minutes."
+msgid ""
+"How often the editor should save a local recovery draft. Enter a value "
+"between 1 and 60 minutes."
 msgstr "设置编辑器保存本地恢复草稿的频率。请输入 1 到 60 分钟之间的数值。"
 
-msgid "Website icon preview"
-msgstr "网站图标预览"
+msgid "Enable scheduled audit log cleanup"
+msgstr ""
 
-msgid "Login page background preview"
-msgstr "登录页背景预览"
+msgid "Allow the system task to automatically delete expired audit logs."
+msgstr ""
 
-msgid "Authenticated page background preview"
-msgstr "登录后页面背景预览"
+msgid "Audit log retention (days)"
+msgstr ""
 
-msgid "Remove icon"
-msgstr "移除图标"
+msgid ""
+"Audit logs older than this number of days will be removed when the cleanup "
+"task runs."
+msgstr ""
 
-msgid "Remove background"
-msgstr "移除背景"
+msgid "Maximum VIP level"
+msgstr ""
 
-msgid "Website icon removed successfully."
-msgstr "网站图标删除成功。"
+#, python-format
+msgid "Set to 0 to disable VIP support. Choose up to %(max_level)s levels."
+msgstr ""
 
-msgid "Website icon removed"
-msgstr "已删除网站图标"
+msgid "Homepage visit trend range"
+msgstr ""
 
-msgid "Login page background removed successfully."
-msgstr "登录页背景删除成功。"
+msgid "Choose how many recent days to show in the homepage visit chart."
+msgstr ""
 
-msgid "Login page background removed"
-msgstr "已删除登录页背景"
+#, fuzzy
+#| msgid "Books used to organize related articles."
+msgid "Allow users to create articles"
+msgstr "用于整理相关文章的图书数量。"
 
-msgid "Authenticated page background removed successfully."
-msgstr "登录后页面背景删除成功。"
+msgid ""
+"When enabled, non-admin users can create draft articles from their profile. "
+"When disabled, article creation is hidden for everyone."
+msgstr ""
 
-msgid "Authenticated page background removed"
-msgstr "已删除登录后页面背景"
+#, python-format
+msgid "VIP %(level)s display name"
+msgstr ""
 
-msgid "Undo remove"
-msgstr "撤销删除"
+#, fuzzy
+#| msgid "Leave blank to use the default site title"
+msgid "Leave blank to use the default name."
+msgstr "留空则使用默认网站标题"
 
-msgid "Undo"
-msgstr "撤销"
+#, fuzzy
+#| msgid "Posts"
+msgid "Post"
+msgstr "文章"
 
-msgid "Nothing to remove."
-msgstr "当前没有可移除的内容。"
+msgid "Book"
+msgstr "图书"
 
-msgid "Pending removals were applied when saving."
-msgstr "已在保存时应用待移除内容。"
+msgid "Login"
+msgstr "登录"
 
-msgid "Basic site settings updated"
-msgstr "站点基础设置已更新"
+msgid "Logout"
+msgstr ""
 
-msgid "Basic settings updated successfully."
-msgstr "基础设置更新成功。"
+msgid "Create post"
+msgstr "创建文章"
+
+msgid "Update post"
+msgstr "更新文章"
+
+msgid "Delete post"
+msgstr "删除文章"
+
+msgid "Create comment"
+msgstr "创建评论"
+
+#, fuzzy
+#| msgid "Create comment"
+msgid "Update comment"
+msgstr "创建评论"
+
+msgid "Delete comment"
+msgstr "删除评论"
+
+#, fuzzy
+#| msgid "Update post"
+msgid "Update profile"
+msgstr "更新文章"
+
+msgid "Update user"
+msgstr "更新用户"
+
+msgid "Delete user"
+msgstr "删除用户"
+
+#, fuzzy
+#| msgid "Update user"
+msgid "Update user assets"
+msgstr "更新用户"
+
+#, fuzzy
+#| msgid "Only top-level comments can be replied to."
+msgid "Top-level comments cannot reply to another comment."
+msgstr "只能回复一级评论。"
+
+msgid "Comment parent must belong to the same post."
+msgstr "回复目标必须属于同一篇文章。"
+
+#, fuzzy
+#| msgid "You can only reply to top-level comments."
+msgid "Replies must stay under a top-level comment."
+msgstr "只能回复一级评论。"
+
+msgid "Replies must target a comment."
+msgstr ""
+
+#, fuzzy
+#| msgid "Comment parent must belong to the same post."
+msgid "Reply target must belong to the same post."
+msgstr "回复目标必须属于同一篇文章。"
+
+msgid ""
+"Replies can only target the top-level comment or one of its direct replies."
+msgstr ""
+
+msgid "Feedback value must be either 1 or -1."
+msgstr ""
+
+msgid "Draft"
+msgstr "草稿"
+
+msgid "Published"
+msgstr "已发布"
+
+msgid "7 days"
+msgstr ""
+
+msgid "14 days"
+msgstr ""
+
+msgid "30 days"
+msgstr ""
 
 msgid "Site setting"
 msgstr "站点设置"
@@ -847,174 +554,651 @@ msgstr "站点设置"
 msgid "Site settings"
 msgstr "站点设置"
 
-msgid "Manage Users"
-msgstr "用户管理"
+msgid "Encrypted"
+msgstr "加密"
+
+msgid "Book only"
+msgstr "仅图书"
+
+#, fuzzy
+#| msgid "Book structure must be a list."
+msgid "Condition data must be a list."
+msgstr "图书结构必须是一个列表。"
+
+#, fuzzy
+#| msgid "Each book structure node must be an object."
+msgid "Each condition must be an object."
+msgstr "每个图书结构节点都必须是一个对象。"
+
+#, fuzzy
+#| msgid "Unknown book structure node type."
+msgid "Unknown condition type."
+msgstr "未知的图书结构节点类型。"
+
+msgid "Each condition type can only be used once."
+msgstr ""
+
+msgid "Condition value must be a positive integer."
+msgstr ""
+
+msgid "At least one condition is required."
+msgstr ""
+
+#, python-format
+msgid "User signed in: %(username)s"
+msgstr "用户已登录：%(username)s"
+
+msgid "anonymous user"
+msgstr "匿名用户"
+
+#, python-format
+msgid "User signed out: %(username)s"
+msgstr "用户已退出：%(username)s"
+
+msgid "1 day"
+msgstr ""
+
+msgid "Never expires"
+msgstr "永不过期"
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to generate a share link."
+msgstr "您没有权限删除这条评论。"
+
+msgid "Only public books can generate share links."
+msgstr "只有公开图书可以生成外链。"
+
+msgid "Invalid expiry option."
+msgstr ""
+
+#, python-format
+msgid "Book created: %(name)s"
+msgstr "图书已创建：%(name)s"
+
+msgid "Book created successfully."
+msgstr "图书创建成功。"
+
+msgid "Create book"
+msgstr "创建图书"
+
+#, python-format
+msgid "Book updated: %(name)s"
+msgstr "图书已更新：%(name)s"
+
+msgid "Book updated successfully."
+msgstr "图书更新成功。"
+
+#, python-format
+msgid "Book deleted: %(name)s"
+msgstr "图书已删除：%(name)s"
+
+msgid "Book deleted successfully."
+msgstr "图书删除成功。"
+
+#, fuzzy
+#| msgid "Enter password to view this book"
+msgid "Enter password to view this article"
+msgstr "输入密码以查看该图书"
+
+#, fuzzy
+#| msgid "Select articles"
+msgid "Unlock article"
+msgstr "选择文章"
+
+#, fuzzy
+#| msgid "Content snapshot"
+msgid "Content access check"
+msgstr "内容快照"
+
+msgid "Purchase now"
+msgstr ""
+
+msgid "Insufficient balance"
+msgstr ""
+
+msgid "Insufficient points"
+msgstr ""
+
+msgid "No accessible articles in this book yet."
+msgstr "这本图书暂时还没有可访问的文章。"
+
+msgid "Enter password to view this book"
+msgstr "输入密码以查看该图书"
+
+msgid "Unlock book"
+msgstr "解锁图书"
+
+#, fuzzy
+#| msgid "Email is required."
+msgid "Password is required."
+msgstr "请输入邮箱。"
+
+#, fuzzy
+#| msgid "Forgot password"
+msgid "Incorrect password."
+msgstr "忘记密码"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Enter book password"
+msgstr "请输入图书密码"
+
+msgid "Save this book before generating an external link."
+msgstr "请先保存图书，再生成外链。"
+
+msgid "You are commenting too frequently. Please try again later."
+msgstr "评论过于频繁，请稍后再试。"
+
+msgid ""
+"Replies can only target a top-level comment or one of its direct replies."
+msgstr ""
+
+msgid "Reply posted successfully."
+msgstr "回复发表成功。"
+
+msgid "Comment posted successfully."
+msgstr "评论发表成功。"
+
+#, python-format
+msgid "Comment created on %(title)s"
+msgstr "已在 %(title)s 下创建评论"
+
+msgid "You do not have permission to delete this comment."
+msgstr "您没有权限删除这条评论。"
+
+#, python-format
+msgid "Comment deleted on %(title)s"
+msgstr "已删除 %(title)s 下的评论"
+
+msgid "Comment deleted successfully."
+msgstr "评论删除成功。"
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to edit this comment."
+msgstr "您没有权限删除这条评论。"
+
+#, fuzzy, python-format
+#| msgid "Comment created on %(title)s"
+msgid "Comment updated on %(title)s"
+msgstr "已在 %(title)s 下创建评论"
+
+#, fuzzy
+#| msgid "Comment posted successfully."
+msgid "Comment updated successfully."
+msgstr "评论发表成功。"
+
+msgid "Audit logs cleared successfully."
+msgstr "审计日志已清理。"
+
+msgid "Basic"
+msgstr "基础"
 
 msgid "Users"
 msgstr "用户"
 
-msgid "Roles"
-msgstr "角色"
+msgid "Books"
+msgstr "图书"
 
-msgid "State"
-msgstr "状态"
+#, fuzzy
+#| msgid "Comment"
+msgid "Comments"
+msgstr "评论"
 
-msgid "Active"
-msgstr "启用"
+msgid "Audit"
+msgstr "审计"
 
-msgid "Disabled"
-msgstr "禁用"
+#, fuzzy
+#| msgid "Search users..."
+msgid "Search dashboard..."
+msgstr "搜索用户..."
 
-msgid "No users found."
-msgstr "暂无用户。"
+msgid "Basic settings"
+msgstr "基础设置"
 
-msgid "Delete"
-msgstr "删除"
+msgid "Basic site settings updated"
+msgstr "站点基础设置已更新"
 
-msgid "Remove"
-msgstr "移除"
+msgid "Pending removals were applied when saving."
+msgstr "已在保存时应用待移除内容。"
 
-msgid "Cancel"
-msgstr "取消"
+msgid "Basic site settings restored to defaults."
+msgstr "站点基础设置已恢复默认。"
 
-msgid "Audit Logs"
-msgstr "审计日志"
+msgid "Basic settings restored to defaults."
+msgstr "基础设置已恢复默认。"
 
-msgid "Anonymous"
-msgstr "匿名"
+msgid "Basic settings updated successfully."
+msgstr "基础设置更新成功。"
 
-msgid "No audit logs yet"
-msgstr "暂无审计日志"
+#, python-format
+msgid "User updated: %(username)s"
+msgstr "用户已更新：%(username)s"
 
-msgid "Update user"
-msgstr "更新用户"
+#, python-format
+msgid "Money updated for %(username)s: %(before)s -> %(after)s"
+msgstr ""
 
-msgid "Update password"
-msgstr "更新密码"
+#, python-format
+msgid "Points updated for %(username)s: %(before)s -> %(after)s"
+msgstr ""
 
-msgid "More"
-msgstr "更多"
+#, python-format
+msgid "[%(app_name)s] Your password was updated"
+msgstr "【%(app_name)s】密码已更新"
 
-msgid "Related posts"
-msgstr "相关文章"
+msgid "User password was updated, but the password email could not be sent."
+msgstr "用户密码已更新，但密码通知邮件发送失败。"
 
-msgid "Overview"
-msgstr "概览"
+#, python-format
+msgid "[%(app_name)s] Your email address was updated"
+msgstr "【%(app_name)s】邮箱地址已更新"
 
-msgid "Blog performance dashboard"
-msgstr "博客数据看板"
+msgid "User was updated, but the email notification could not be sent."
+msgstr "用户已更新，但通知邮件发送失败。"
 
-msgid "Track publishing cadence, editorial activity, and the latest content updates from one place."
-msgstr "在一个页面中查看发文节奏、编辑活动和最新内容动态。"
-
-msgid "Explore posts"
-msgstr "浏览文章"
-
-msgid "Published in the last 7 days"
-msgstr "近 7 天发布"
-
-msgid "Fresh articles released this week."
-msgstr "本周新发布的文章数量。"
-
-msgid "Activity in the last 30 days"
-msgstr "近 30 天活动"
-
-msgid "Recent audit events across the site workspace."
-msgstr "站点工作区最近的审计事件数量。"
-
-msgid "Highlights"
-msgstr "亮点"
-
-msgid "Content snapshot"
-msgstr "内容快照"
-
-msgid "Total posts"
-msgstr "文章总数"
-
-msgid "All articles currently stored in the blog."
-msgstr "当前博客中已存储的全部文章。"
-
-msgid "Posts that are visible to readers right now."
-msgstr "当前对读者可见的文章数量。"
-
-msgid "Articles still in progress and not yet published."
-msgstr "仍在编辑中、尚未发布的文章。"
-
-msgid "Topic labels used to organize the content library."
-msgstr "用于整理内容库的主题标签数量。"
-
-msgid "Authors"
-msgstr "作者"
-
-msgid "Contributors who have published or drafted posts."
-msgstr "已发布或创建过草稿的作者数量。"
-
-msgid "Trend"
-msgstr "趋势"
-
-msgid "Publishing in the last 30 days"
-msgstr "近 30 天发文趋势"
-
-msgid "Post publishing trend in the last 30 days"
-msgstr "近 30 天文章发布趋势"
-
-msgid "Recently edited drafts"
-msgstr "最近编辑的草稿"
-
-msgid "Open management"
-msgstr "打开管理页"
-
-msgid "By %(name)s · Updated %(updated)s"
-msgstr "作者：%(name)s · 更新于 %(updated)s"
-
-msgid "No drafts yet"
-msgstr "暂无草稿"
-
-msgid "Drafts"
-msgstr "草稿"
-
-msgid "Draft posts will appear here after editors start preparing new articles."
-msgstr "编辑开始准备新文章后，草稿会显示在这里。"
-
-msgid "Activity"
-msgstr "活动"
-
-msgid "Latest workspace events"
-msgstr "最近站点活动"
-
-msgid "System generated event"
-msgstr "系统生成的事件"
-
-msgid "Contributors"
-msgstr "作者"
-
-msgid "Most active authors"
-msgstr "最活跃作者"
-
-msgid "%(total)s published post"
-msgid_plural "%(total)s published posts"
-msgstr[0] "已发布 %(total)s 篇文章"
-
-msgid "No active authors yet"
-msgstr "暂无活跃作者"
-
-msgid "Author insights will appear here once published posts are available."
-msgstr "有已发布文章后，这里会显示作者活跃度信息。"
-
-msgid "Edit post"
-msgstr "文章编辑"
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "User updated successfully."
+msgstr "文章更新成功。"
 
 msgid "Edit user"
 msgstr "用户编辑"
 
-msgid "Save"
-msgstr "保存"
+msgid "You cannot delete your own account."
+msgstr "不能删除自己的账号。"
 
-msgid "Delete user"
-msgstr "删除用户"
+msgid "This user cannot be deleted because related data still exists."
+msgstr "该用户存在关联数据，无法删除。"
 
-msgid "Are you sure you want to delete user \"%(username)s\"? This action cannot be undone."
-msgstr "确定要删除用户\"%(username)s\"吗？此操作不可恢复。"
+#, python-format
+msgid "User deleted: %(username)s"
+msgstr "用户已删除：%(username)s"
+
+msgid "User deleted successfully."
+msgstr "用户删除成功。"
+
+#, fuzzy
+#| msgid "Basic information"
+msgid "Basic Information"
+msgstr "基本信息"
+
+msgid "Recent Posts"
+msgstr ""
+
+#, fuzzy
+#| msgid "Select books"
+msgid "Recent Books"
+msgstr "选择图书"
+
+#, fuzzy
+#| msgid "Delete comment"
+msgid "Recent Comments"
+msgstr "删除评论"
+
+msgid "Reply"
+msgstr "回复"
+
+msgid "Write a reply"
+msgstr "写下回复"
+
+#, fuzzy
+#| msgid "Post comment"
+msgid "Edit comment"
+msgstr "发表评论"
+
+#, fuzzy
+#| msgid "Create comment"
+msgid "Update your comment"
+msgstr "创建评论"
+
+#, fuzzy
+#| msgid "Only public books can generate share links."
+msgid "Only published public articles can generate share links."
+msgstr "只有已发布的公开文章才能生成外链。"
+
+#, python-format
+msgid "External link updated: %(title)s"
+msgstr "外链已更新：%(title)s"
+
+msgid "External link validity updated successfully."
+msgstr "外链有效期更新成功。"
+
+#, python-format
+msgid "External link deleted: %(title)s"
+msgstr "外链已删除：%(title)s"
+
+msgid "External link deleted successfully."
+msgstr "外链删除成功。"
+
+msgid "Search external links..."
+msgstr "搜索外链..."
+
+msgid "Search external links"
+msgstr "搜索外链"
+
+msgid "Search articles..."
+msgstr "搜索文章..."
+
+#, fuzzy
+#| msgid "Publish article"
+msgid "Published articles"
+msgstr "发布文章"
+
+#, python-format
+msgid "Article created: %(title)s"
+msgstr "文章已创建：%(title)s"
+
+msgid "Article published successfully."
+msgstr "文章发布成功。"
+
+#, python-format
+msgid "Draft created: %(title)s"
+msgstr "草稿已创建：%(title)s"
+
+msgid "Draft saved successfully."
+msgstr "草稿保存成功。"
+
+#, fuzzy
+#| msgid "Related articles"
+msgid "Create article"
+msgstr "相关文章"
+
+#, python-format
+msgid "Revision saved: %(title)s"
+msgstr "修订版已保存：%(title)s"
+
+msgid "Revision saved successfully."
+msgstr "修订版保存成功。"
+
+#, python-format
+msgid "Article updated: %(title)s"
+msgstr "文章已更新：%(title)s"
+
+msgid "Article updated successfully."
+msgstr "文章更新成功。"
+
+msgid "Edit article"
+msgstr "编辑文章"
+
+#, python-format
+msgid "Article published: %(title)s"
+msgstr "文章已发布：%(title)s"
+
+#, python-format
+msgid "Draft saved: %(title)s"
+msgstr "草稿已保存：%(title)s"
+
+msgid "Edit revision"
+msgstr "编辑修订版"
+
+msgid "Edit draft"
+msgstr "编辑草稿"
+
+#, python-format
+msgid "Draft imported from article: %(title)s"
+msgstr "已从文章导入草稿：%(title)s"
+
+msgid "Article imported as draft successfully."
+msgstr "文章已成功导入为草稿。"
+
+msgid "Import from existing article"
+msgstr "从已有文章导入"
+
+msgid "Unable to import the selected markdown file."
+msgstr ""
+
+#, python-format
+msgid "Draft imported from markdown file: %(title)s"
+msgstr "已从 Markdown 文件导入草稿：%(title)s"
+
+msgid "Article imported from .md successfully."
+msgstr "文章已成功从 .md 导入。"
+
+#, python-format
+msgid "Draft deleted: %(title)s"
+msgstr "草稿已删除：%(title)s"
+
+msgid "Draft deleted successfully."
+msgstr "草稿删除成功。"
+
+#, python-format
+msgid "Cover image removed: %(title)s"
+msgstr "已删除封面图：%(title)s"
+
+msgid "Cover image removed successfully."
+msgstr "封面图删除成功。"
+
+#, python-format
+msgid "Article deleted: %(title)s"
+msgstr "文章已删除：%(title)s"
+
+msgid "Article deleted successfully."
+msgstr "文章删除成功。"
+
+msgid "No image uploaded."
+msgstr ""
+
+msgid "Enter article password"
+msgstr "输入密码"
+
+msgid "Updated"
+msgstr "更新时间"
+
+msgid "Imported post"
+msgstr "导入的文章"
+
+msgid ""
+"This article has not been published yet. Publish it before generating an "
+"external link."
+msgstr "这篇文章尚未发布，请先发布后再生成外链。"
+
+msgid ""
+"Only the original author can generate a new external link for this article."
+msgstr "只有原始作者可以为这篇文章生成新的外链。"
+
+msgid "Basic information"
+msgstr "基本信息"
+
+msgid "Account security"
+msgstr "账号安全"
+
+#, fuzzy
+#| msgid "Add articles"
+msgid "My articles"
+msgstr "我的文章"
+
+msgid "My comments"
+msgstr "我的评论"
+
+msgid "Password changed"
+msgstr "密码已修改"
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "Password updated successfully."
+msgstr "文章更新成功。"
+
+msgid "Profile updated"
+msgstr "个人资料已更新"
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "Profile updated successfully."
+msgstr "文章更新成功。"
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to import this article."
+msgstr "您没有权限删除这条评论。"
+
+msgid "Username or email"
+msgstr "用户名或邮箱"
+
+msgid "Enter your username or email"
+msgstr "请输入用户名或邮箱"
+
+msgid "Enter your password"
+msgstr "请输入密码"
+
+msgid "Remember me"
+msgstr "记住我"
+
+msgid "Username/email or password is incorrect."
+msgstr "用户名/邮箱或密码不正确。"
+
+msgid "This account is inactive."
+msgstr "当前账号不可用。"
+
+msgid "Enter your email"
+msgstr "请输入邮箱"
+
+msgid "Confirm password"
+msgstr "确认密码"
+
+msgid "Enter your password again"
+msgstr "请再次输入密码"
+
+msgid "This username is already taken."
+msgstr "该用户名已被占用。"
+
+msgid "This email is already registered."
+msgstr "该邮箱已被注册。"
+
+msgid "Please wait before requesting another verification code."
+msgstr "请稍后再请求新的验证码。"
+
+msgid "Verification code sent."
+msgstr "验证码已发送。"
+
+msgid "Registration is currently unavailable."
+msgstr "当前暂不支持注册。"
+
+msgid "Registration successful. Please sign in."
+msgstr "注册成功，请登录。"
+
+msgid "Email is required."
+msgstr "请输入邮箱。"
+
+msgid "Enter a valid email address."
+msgstr "请输入有效的邮箱地址。"
+
+#, python-format
+msgid "[%(app_name)s] Your verification code"
+msgstr "【%(app_name)s】验证码"
+
+msgid "Email verification is currently unavailable."
+msgstr "当前暂不可进行邮箱验证。"
+
+msgid "Please enter a different email address."
+msgstr "请输入不同的邮箱地址。"
+
+#, python-format
+msgid "[%(app_name)s] Your email verification code"
+msgstr "【%(app_name)s】邮箱验证码"
+
+msgid "Password reset is currently unavailable."
+msgstr "当前暂不支持密码重置。"
+
+msgid "Password reset successful. Please check your email."
+msgstr "密码重置成功，请检查邮箱。"
+
+#, python-format
+msgid "[%(app_name)s] Your temporary password"
+msgstr "【%(app_name)s】临时密码"
+
+msgid "Simplified Chinese"
+msgstr "简体中文"
+
+msgid "English"
+msgstr "英文"
+
+msgid "Welcome back"
+msgstr "欢迎回来"
+
+msgid "No account? Sign up"
+msgstr "还没有账号？去注册"
+
+msgid "Show password"
+msgstr "显示密码"
+
+msgid "Hide password"
+msgstr "隐藏密码"
+
+msgid "Password Reset"
+msgstr "密码重置"
+
+msgid "Password Reset Unavailable"
+msgstr "密码重置不可用"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Forgot password"
+msgstr "忘记密码"
+
+msgid "Sign in"
+msgstr "登录"
+
+msgid "Register"
+msgstr "注册"
+
+msgid "Create account"
+msgstr "创建账号"
+
+msgid "Already has account? Sign in"
+msgstr "已有账号？去登录"
+
+msgid "Send code"
+msgstr "发送验证码"
+
+#, fuzzy, python-format
+#| msgid "Resend in %(seconds)s s"
+msgid "Resend in %%(seconds)s s"
+msgstr "%(seconds)s 秒后重发"
+
+msgid "Request failed."
+msgstr "请求失败。"
+
+msgid "Primary navigation"
+msgstr ""
+
+msgid "Home"
+msgstr "主页"
+
+msgid "Search books..."
+msgstr "搜索图书..."
+
+#, fuzzy
+#| msgid "Search posts..."
+msgid "Search tags..."
+msgstr "搜索文章..."
+
+#, fuzzy
+#| msgid "Open management"
+msgid "Open user menu"
+msgstr "打开管理页"
+
+#, fuzzy
+#| msgid "Account security"
+msgid "Account summary"
+msgstr "账号安全"
+
+msgid "Website management"
+msgstr "网站管理"
+
+msgid "Profile settings"
+msgstr "个人设置"
+
+msgid "Sign out"
+msgstr "退出"
+
+#, fuzzy
+#| msgid "Profile sections"
+msgid "Notifications"
+msgstr "个人设置导航"
 
 msgid "Delete item"
 msgstr "删除项目"
@@ -1025,13 +1209,21 @@ msgstr "移除项目"
 msgid "Are you sure you want to continue? This action cannot be undone."
 msgstr "确定要继续吗？此操作不可恢复。"
 
+msgid "Delete"
+msgstr "删除"
+
+msgid "Remove"
+msgstr "移除"
+
 msgid "Unsaved changes"
 msgstr "未保存的更改"
 
 msgid "Discard unsaved changes?"
 msgstr "放弃未保存的更改？"
 
-msgid "Your changes have not been saved yet. If you leave this page now, those changes will be lost."
+msgid ""
+"Your changes have not been saved yet. If you leave this page now, those "
+"changes will be lost."
 msgstr "你当前的修改尚未保存。离开此页面后，这些更改将会丢失。"
 
 msgid "Leave page"
@@ -1040,202 +1232,17 @@ msgstr "仍要离开"
 msgid "Keep editing"
 msgstr "继续编辑"
 
-msgid "[%(app_name)s] Your email address was updated"
-msgstr "【%(app_name)s】邮箱地址已更新"
+msgid "Close"
+msgstr "关闭"
 
-msgid "Email Address Updated"
-msgstr "邮箱地址已更新"
+msgid "Browse every article you can access, including encrypted ones."
+msgstr "浏览所有你可访问的文章，包括加密文章。"
 
-msgid "Your account email address has been updated by an administrator."
-msgstr "您的账号邮箱地址已被管理员更新。"
+msgid "No accessible articles yet"
+msgstr "暂无可访问文章"
 
-msgid "This change was applied to the account for %(username)s."
-msgstr "此次变更已应用到 %(username)s 账号。"
-
-msgid "New email address"
-msgstr "新邮箱地址"
-
-msgid "If you did not expect this change, please contact an administrator immediately."
-msgstr "如果这不是您预期的操作，请立即联系管理员。"
-
-msgid "User was updated, but the email notification could not be sent."
-msgstr "用户已更新，但通知邮件发送失败。"
-
-msgid "You cannot delete your own account."
-msgstr "不能删除自己的账号。"
-
-msgid "This user cannot be deleted because related data still exists."
-msgstr "该用户存在关联数据，无法删除。"
-
-msgid "User deleted: %(username)s"
-msgstr "用户已删除：%(username)s"
-
-msgid "User deleted successfully."
-msgstr "用户删除成功。"
-
-msgid "New password"
-msgstr "新密码"
-
-msgid "Leave blank to keep the current password."
-msgstr "留空则保持当前密码不变。"
-
-msgid "Confirm new password"
-msgstr "确认新密码"
-
-msgid "Groups"
-msgstr "分组"
-
-msgid "Books"
-msgstr "图书"
-
-msgid "Manage Books"
-msgstr "图书管理"
-
-msgid "Book Editor"
-msgstr "图书编辑器"
-
-msgid "Book"
-msgstr "图书"
-
-msgid "Public"
-msgstr "公开"
-
-msgid "Book only"
-msgstr "仅图书"
-
-msgid "Private"
-msgstr "私密"
-
-msgid "Access permission"
-msgstr "访问权限"
-
-msgid "Book-only articles stay hidden from the homepage and search, but become visible inside books."
-msgstr "仅图书文章不会出现在首页和搜索中，但在被加入图书后会在图书内可见。"
-
-msgid "Select one or more existing books."
-msgstr "选择一个或多个已有图书。"
-
-msgid "Select books"
-msgstr "选择图书"
-
-msgid "Selected %(count)s book"
-msgid_plural "Selected %(count)s books"
-msgstr[0] "已选择 %(count)s 个图书"
-
-msgid "No books available."
-msgstr "暂无可用图书。"
-
-msgid "Book name"
-msgstr "图书名称"
-
-msgid "Enter book name"
-msgstr "输入图书名称"
-
-msgid "Book slug"
-msgstr "图书别名"
-
-msgid "New book"
-msgstr "新建图书"
-
-msgid "Search books"
-msgstr "搜索图书"
-
-msgid "Search books..."
-msgstr "搜索图书..."
-
-msgid "Name"
-msgstr "名称"
-
-msgid "Details"
-msgstr "详情"
-
-msgid "Edit"
-msgstr "编辑"
-
-msgid "Delete book"
-msgstr "删除图书"
-
-msgid "Are you sure you want to delete \"%(title)s\"? Posts in this book will be kept."
-msgstr "确定要删除\"%(title)s\"吗？该图书中的文章会被保留。"
-
-msgid "No books found."
-msgstr "暂无图书。"
-
-msgid "Save book"
-msgstr "保存图书"
-
-msgid "Back to books"
-msgstr "返回图书列表"
-
-msgid "No posts in this book yet."
-msgstr "该图书下还没有文章。"
-
-msgid "Books used to organize related articles."
-msgstr "用于整理相关文章的图书数量。"
-
-msgid "Short summary shown on the books page."
-msgstr "显示在图书列表页的简要摘要。"
-
-msgid "Enter book password"
-msgstr "请输入图书密码"
-
-msgid "Articles"
-msgstr "文章"
-
-msgid "Invalid book structure data."
-msgstr "图书结构数据无效。"
-
-msgid "Book structure must be a list."
-msgstr "图书结构必须是一个列表。"
-
-msgid "Password cannot be empty for encrypted books."
-msgstr "加密图书的密码不能为空。"
-
-msgid "Selected articles must match the book structure."
-msgstr "所选文章必须与图书结构保持一致。"
-
-msgid "Each book structure node must be an object."
-msgstr "每个图书结构节点都必须是一个对象。"
-
-msgid "Article nodes must include a post id."
-msgstr "文章节点必须包含文章 ID。"
-
-msgid "Group nodes must include a title."
-msgstr "分组节点必须包含标题。"
-
-msgid "Unknown book structure node type."
-msgstr "未知的图书结构节点类型。"
-
-msgid "Book updated: %(name)s"
-msgstr "图书已更新：%(name)s"
-
-msgid "Book updated successfully."
-msgstr "图书更新成功。"
-
-msgid "Enter password to view this book"
-msgstr "输入密码以查看该图书"
-
-msgid "Unlock book"
-msgstr "解锁图书"
-
-msgid "Only public books can generate share links."
-msgstr "只有公开图书可以生成外链。"
-
-msgid "Library"
-msgstr "书库"
-
-msgid "No summary yet."
-msgstr "暂无摘要。"
-
-msgid "%(total)s article"
-msgid_plural "%(total)s articles"
-msgstr[0] "%(total)s 篇文章"
-
-msgid "No books yet"
-msgstr "还没有图书"
-
-msgid "Books will appear here after editors create and publish them."
-msgstr "编辑创建并发布图书后，会在这里显示。"
+msgid "Articles you can access will appear here once they are published."
+msgstr "你可访问的文章在发布后会显示在这里。"
 
 msgid "Chapters"
 msgstr "章节"
@@ -1243,17 +1250,346 @@ msgstr "章节"
 msgid "Book chapters"
 msgstr "图书章节"
 
-msgid "回到顶部"
-msgstr "回到顶部"
+msgid "Table of Contents"
+msgstr ""
 
-msgid "Creator"
-msgstr "创建者"
+#, fuzzy
+#| msgid "Back to posts"
+msgid "Back to top"
+msgstr "返回文章管理"
 
-msgid "Access"
-msgstr "访问"
+#, fuzzy
+#| msgid "Article editor"
+msgid "Article outline"
+msgstr "文章编辑器"
 
-msgid "Book visibility"
-msgstr "图书可见性"
+#, fuzzy
+#| msgid "Copy link"
+msgid "Copy"
+msgstr "复制链接"
+
+msgid "Copied"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+#, python-format
+msgid "Hidden %%count%% more lines"
+msgstr ""
+
+#, fuzzy
+#| msgid "Show"
+msgid "Show all"
+msgstr "显示"
+
+msgid "Discussion"
+msgstr "讨论"
+
+#, python-format
+msgid "%(total)s Comment"
+msgid_plural "%(total)s Comments"
+msgstr[0] "%(total)s 条评论"
+
+msgid "Post comment"
+msgstr "发表评论"
+
+#, fuzzy
+#| msgid ""
+#| "Supports Markdown, side-by-side preview, direct image upload, table "
+#| "insertion, and GitHub-style callouts."
+msgid ""
+"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
+"direct image upload, table insertion, and GitHub-style callouts."
+msgstr ""
+"支持 Markdown、并排预览、直接上传图片、插入表格，以及 GitHub 风格的提示块。"
+
+msgid "Library"
+msgstr "书库"
+
+#, python-format
+msgid "%(total)s article"
+msgid_plural "%(total)s articles"
+msgstr[0] "%(total)s 篇文章"
+
+msgid "No summary yet."
+msgstr "暂无摘要。"
+
+msgid "No books yet"
+msgstr "还没有图书"
+
+msgid "Books will appear here after editors create and publish them."
+msgstr "编辑创建并发布图书后，会在这里显示。"
+
+msgid "More"
+msgstr "更多"
+
+msgid "Related articles"
+msgstr "相关文章"
+
+#, fuzzy
+#| msgid "No published posts yet"
+msgid "No Related articles yet."
+msgstr "还没有已发布的文章"
+
+msgid "Blog"
+msgstr ""
+
+msgid "Overview"
+msgstr "概览"
+
+msgid "Blog performance dashboard"
+msgstr "博客数据看板"
+
+msgid ""
+"Track publishing cadence, editorial activity, and the latest content updates "
+"from one place."
+msgstr "在一个页面中查看发文节奏、编辑活动和最新内容动态。"
+
+msgid "Explore articles"
+msgstr "浏览文章"
+
+msgid "Write a new article"
+msgstr "写一篇新文章"
+
+#, fuzzy
+#| msgid "Activity in the last 30 days"
+msgid "Article views in the last 7 days"
+msgstr "近 30 天活动"
+
+#, fuzzy
+#| msgid "Fresh articles released this week."
+msgid "Independent article page visits recorded this week."
+msgstr "本周新发布的文章数量。"
+
+#, fuzzy
+#| msgid "Published in the last 7 days"
+msgid "Book views in the last 7 days"
+msgstr "近 7 天发布"
+
+msgid "Independent book page visits recorded this week."
+msgstr ""
+
+msgid "Highlights"
+msgstr "亮点"
+
+msgid "Content snapshot"
+msgstr "内容快照"
+
+msgid "Total articles"
+msgstr "文章总数"
+
+msgid "All articles currently stored in the blog."
+msgstr "当前博客中已存储的全部文章。"
+
+msgid "Topic labels used to organize the content library."
+msgstr "用于整理内容库的主题标签数量。"
+
+msgid "Books used to organize related articles."
+msgstr "用于整理相关文章的图书数量。"
+
+msgid "Authors"
+msgstr "作者"
+
+msgid "Contributors who have published or drafted articles."
+msgstr "已发布或创建过草稿的作者数量。"
+
+msgid "Traffic"
+msgstr ""
+
+#, fuzzy, python-format
+#| msgid "Activity in the last 30 days"
+msgid "Visits in the last %(days)s days"
+msgstr "近 30 天活动"
+
+#, fuzzy, python-format
+#| msgid "Post publishing trend in the last 30 days"
+msgid "Article and book visit trend in the last %(days)s days"
+msgstr "近 30 天文章发布趋势"
+
+msgid "Latest published articles"
+msgstr "最新发布文章"
+
+#, fuzzy
+#| msgid "Write a new article"
+msgid "Write a new post"
+msgstr "写一篇新文章"
+
+msgid "No published articles yet"
+msgstr "还没有已发布的文章"
+
+msgid ""
+"Create your first article from the management panel to populate the homepage."
+msgstr "从管理面板创建你的第一篇文章，为首页填充内容。"
+
+msgid "Author"
+msgstr "作者"
+
+msgid "Open comment actions"
+msgstr ""
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+msgstr "确定要删除这条评论吗？此操作不可恢复。"
+
+msgid "Confirm"
+msgstr "确认"
+
+msgid "Restore defaults"
+msgstr "恢复默认"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Post reply"
+msgstr "发表回复"
+
+msgid "Like"
+msgstr "点赞"
+
+msgid "Dislike"
+msgstr "点踩"
+
+#, python-format
+msgid "Expand %(count)s replies"
+msgstr ""
+
+msgid "Collapse replies"
+msgstr ""
+
+msgid "No comments yet."
+msgstr "还没有评论。"
+
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr ""
+
+msgid "Previous"
+msgstr "上一页"
+
+msgid "Next"
+msgstr "下一页"
+
+msgid "Jump to page"
+msgstr ""
+
+msgid "Go"
+msgstr "跳转"
+
+#, python-format
+msgctxt "conditional summary"
+msgid "%(counter)s condition"
+msgid_plural "%(counter)s conditions"
+msgstr[0] ""
+
+#, fuzzy
+#| msgid "Article Editor"
+msgid "Article in book"
+msgstr "文章编辑器"
+
+#, fuzzy
+#| msgid "New article"
+msgid "From article"
+msgstr "新建文章"
+
+#, python-format
+msgid "Page: %(current)s / %(total)s"
+msgstr ""
+
+#, python-format
+msgid "Likes %(up)s, dislikes %(down)s"
+msgstr ""
+
+msgid "No tags"
+msgstr ""
+
+msgid "Audit Logs"
+msgstr "审计日志"
+
+msgid "Manage"
+msgstr "管理"
+
+msgid "Access audit"
+msgstr "访问审计"
+
+msgid "Clear audit logs"
+msgstr "清理审计日志"
+
+msgid ""
+"Are you sure you want to clear all audit logs? This action cannot be undone."
+msgstr "确定要清理所有审计日志吗？此操作无法撤销。"
+
+msgid ""
+"Are you sure you want to restore all settings to their defaults?"
+msgstr "确定要恢复所有默认设置吗？"
+
+msgid "Clear"
+msgstr "清理"
+
+msgid "Search audit logs..."
+msgstr "搜索审计日志..."
+
+msgid "Search audit logs"
+msgstr "搜索审计日志"
+
+#, fuzzy
+#| msgid "Actions"
+msgid "Action"
+msgstr "操作"
+
+msgid "Message"
+msgstr ""
+
+#, fuzzy
+#| msgid "Users"
+msgid "User"
+msgstr "用户"
+
+msgid "IP"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Anonymous"
+msgstr "匿名"
+
+msgid "No audit logs yet"
+msgstr "暂无审计日志"
+
+msgid "Book Editor"
+msgstr "图书编辑器"
+
+msgid "Editor"
+msgstr "编辑器"
+
+msgid "Delete cover image"
+msgstr "删除封面图"
+
+msgid "Undo"
+msgstr "撤销"
+
+msgid "Conditions"
+msgstr ""
+
+msgid "Condition types are full"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter your password"
+msgid "Enter password"
+msgstr "请输入密码"
+
+#, fuzzy
+#| msgid "Leave blank to keep the current password."
+msgid "Leave blank to keep current password"
+msgstr "留空则保持当前密码不变。"
 
 msgid "External link"
 msgstr "外链"
@@ -1261,41 +1597,22 @@ msgstr "外链"
 msgid "Link expiry"
 msgstr "过期时间"
 
+#, fuzzy
+#| msgid "Request failed."
+msgid "Request failed. Please try again."
+msgstr "请求失败。"
+
+msgid "Unable to generate share link right now."
+msgstr "暂时无法生成外链。"
+
 msgid "External link copied."
 msgstr "外链已复制。"
 
-msgid "This article has not been published yet. Publish it before generating an external link."
-msgstr "这篇文章尚未发布，请先发布后再生成外链。"
+msgid "Generate share link"
+msgstr "生成外链"
 
-msgid "Only the original author can generate a new external link for this article."
-msgstr "只有原始作者可以为这篇文章生成新的外链。"
-
-msgid "You can view the current external link, but only the original author can generate a new one."
-msgstr "你可以查看当前外链，但只有原始作者可以生成新的外链。"
-
-msgid "Save this book before generating an external link."
-msgstr "请先保存图书，再生成外链。"
-
-msgid "Create an anonymous access link for this public book. Readers can browse the book without signing in, but they can only see public articles inside it."
-msgstr "为这本公开图书生成匿名访问链接。读者无需登录即可浏览图书，但只能看到图书中的公开文章。"
-
-msgid "Book share links still respect article-level visibility. Anonymous visitors can only access public articles in the book."
-msgstr "图书外链仍然遵循文章级别的可见性限制。匿名访客只能访问图书中的公开文章。"
-
-msgid "Select articles"
-msgstr "选择文章"
-
-msgid "Available articles"
-msgstr "可选文章"
-
-msgid "Book structure"
-msgstr "图书结构"
-
-msgid "Add group"
-msgstr "添加分组"
-
-msgid "New group"
-msgstr "新分组"
+msgid "Copy link"
+msgstr "复制链接"
 
 msgid "Chapter management"
 msgstr "章节管理"
@@ -1305,6 +1622,12 @@ msgstr "章节操作"
 
 msgid "Add articles"
 msgstr "添加文章"
+
+msgid "Add group"
+msgstr "添加分组"
+
+msgid "New group"
+msgstr "新分组"
 
 msgid "No chapters yet. Add articles or groups to start building this book."
 msgstr "还没有章节。请先添加文章或分组来构建这本图书。"
@@ -1324,12 +1647,6 @@ msgstr "上移"
 msgid "Move down"
 msgstr "下移"
 
-msgid "Select"
-msgstr "选择"
-
-msgid "Selected"
-msgstr "已选择"
-
 msgid "Added"
 msgstr "已添加"
 
@@ -1339,189 +1656,503 @@ msgstr "添加所选"
 msgid "Drag"
 msgstr "拖动"
 
-msgid "Rebuild from selection"
-msgstr "按所选文章重建"
+msgid "Save book"
+msgstr "保存图书"
 
-msgid "No published articles available."
-msgstr "暂无可用的已发布文章。"
+msgid "Manage Books"
+msgstr "图书管理"
 
-msgid "Use groups to organize chapters. Drag-free controls keep the structure stable and easy to edit."
-msgstr "使用分组来组织章节。无拖拽的操作方式让结构更稳定，也更容易编辑。"
+msgid "New book"
+msgstr "新建图书"
 
-msgid "Selected articles"
-msgstr "已添加文章"
+msgid "Search books"
+msgstr "搜索图书"
 
-msgid "No articles selected yet."
-msgstr "还没有添加任何文章。"
+msgid "Name"
+msgstr "名称"
 
-msgid "Add selected articles"
-msgstr "添加选中文章"
+msgid "Actions"
+msgstr "操作"
 
-msgid "Remove selected articles"
-msgstr "移除选中文章"
+msgid "Browse"
+msgstr "浏览"
 
-msgid "No accessible articles yet"
-msgstr "暂无可访问文章"
+msgid "Delete book"
+msgstr "删除图书"
 
-msgid "Browse every article you can access, including encrypted ones."
-msgstr "浏览所有你可访问的文章，包括加密文章。"
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
+#| "kept."
+msgid ""
+"Are you sure you want to delete \\\"%(title)s\\\"? Articles in this book "
+"will be kept."
+msgstr "确定要删除\"%(title)s\"吗？该图书中的文章会被保留。"
 
-msgid "Articles you can access will appear here once they are published."
-msgstr "你可访问的文章在发布后会显示在这里。"
+msgid "No books found."
+msgstr "暂无图书。"
 
-msgid "No accessible articles in this book yet."
-msgstr "这本图书暂时还没有可访问的文章。"
+#, fuzzy
+#| msgid "Manage Books"
+msgid "Manage Comments"
+msgstr "图书管理"
 
-msgid "Create book"
-msgstr "创建图书"
+#, fuzzy
+#| msgid "Search posts, books, tags, authors..."
+msgid "Search comments by content or author..."
+msgstr "搜索文章、图书、标签、作者..."
 
-msgid "Book created: %(name)s"
-msgstr "图书已创建：%(name)s"
+#, fuzzy
+#| msgid "Create comment"
+msgid "Search comments"
+msgstr "创建评论"
 
-msgid "Book created successfully."
-msgstr "图书创建成功。"
+#, fuzzy
+#| msgid "No comments yet."
+msgid "No comments found."
+msgstr "还没有评论。"
 
-msgid "Book deleted: %(name)s"
-msgstr "图书已删除：%(name)s"
-
-msgid "Book deleted successfully."
-msgstr "图书删除成功。"
-
-msgid "Basic information"
-msgstr "基本信息"
-
-msgid "Personal settings"
-msgstr "个人设置"
-
-msgid "Account security"
-msgstr "账号安全"
+msgid "Article Editor"
+msgstr "文章编辑器"
 
 msgid "Profile sections"
 msgstr "个人设置导航"
 
-msgid "Email verification is currently unavailable."
-msgstr "当前暂不可进行邮箱验证。"
+msgid "Has revision"
+msgstr "有修订版"
 
-msgid "Please enter a different email address."
-msgstr "请输入不同的邮箱地址。"
+msgid ""
+"You can view the current external link, but only the original author can "
+"generate a new one."
+msgstr "你可以查看当前外链，但只有原始作者可以生成新的外链。"
 
-msgid "Verification code is required when changing email."
-msgstr "修改邮箱时必须填写验证码。"
+msgid "Save revision"
+msgstr "保存修订版"
 
-msgid "[%(app_name)s] Your email verification code"
-msgstr "【%(app_name)s】邮箱验证码"
+msgid "Save draft"
+msgstr "保存草稿"
 
-msgid "Use the verification code below to confirm your new email address."
-msgstr "请使用下方验证码确认您的新邮箱地址。"
+msgid "Publish article"
+msgstr "发布文章"
 
-msgid "Verify New Email"
-msgstr "验证新邮箱"
+msgid "Import"
+msgstr "导入"
 
-msgid "You are receiving this email because an email change verification code was requested for %(app_name)s."
-msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了邮箱变更验证码。"
+msgid "Back to articles"
+msgstr "返回文章管理"
 
-msgid "If you did not request this email change, you can safely ignore it."
-msgstr "如果这次邮箱变更不是您本人发起的，您可以安全地忽略这封邮件。"
+msgid "Search articles to import..."
+msgstr "搜索要导入的文章..."
 
-msgid "Click avatar to upload"
-msgstr "点击头像上传"
+msgid "Search articles to import"
+msgstr "搜索要导入的文章"
+
+msgid "No published articles available to import."
+msgstr "暂无可导入的已发布文章。"
+
+msgid "Manage Articles"
+msgstr "文章管理"
+
+msgid "New article"
+msgstr "新建文章"
+
+msgid "Only .md files are supported."
+msgstr "仅支持 .md 文件。"
+
+msgid "Please choose a markdown file to import."
+msgstr ""
+
+#, fuzzy
+#| msgid "Unable to update share link right now."
+msgid "Unable to import the selected markdown file right now."
+msgstr "暂时无法更新外链。"
+
+#, fuzzy
+#| msgid "Updating..."
+msgid "Importing..."
+msgstr "更新中..."
+
+msgid "Import from .md file"
+msgstr "从 .md 中导入"
+
+msgid "Article lists"
+msgstr "文章列表"
+
+msgid "Created by"
+msgstr "创建人"
+
+msgid "Expires at"
+msgstr "过期时间"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "Expired"
+msgstr "已过期"
+
+msgid "Revision"
+msgstr "修订版"
+
+msgid "Edit external link"
+msgstr "编辑外链"
+
+msgid "External links"
+msgstr "外链管理"
+
+#, python-format
+msgid "View or update the external link for \"%(title)s\"."
+msgstr "查看或更新“%(title)s”的外链。"
+
+msgid ""
+"Anyone with this link can view the article and its comments without signing "
+"in, but cannot interact."
+msgstr ""
+"任何持有此链接的人都可以在不登录的情况下查看文章及评论，但无法进行交互。"
+
+msgid "Update link"
+msgstr "更新外链"
+
+msgid "Updating..."
+msgstr "更新中..."
+
+msgid "Link validity"
+msgstr "链接有效期"
+
+msgid "Share link"
+msgstr "分享链接"
+
+msgid "Share link copied."
+msgstr "分享链接已复制。"
+
+msgid "Unable to update share link right now."
+msgstr "暂时无法更新外链。"
+
+msgid "Delete external link"
+msgstr "删除外链"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete the external link for \"%(title)s\"? This "
+#| "action cannot be undone."
+msgid ""
+"Are you sure you want to delete the external link for \\\"%(title)s\\\"? "
+"This action cannot be undone."
+msgstr "确定要删除“%(title)s”的外链吗？此操作不可恢复。"
+
+msgid "Existing revision"
+msgstr "已有修订版"
+
+msgid "Open"
+msgstr "读取"
+
+msgid "Discard"
+msgstr "遗弃"
+
+#, python-format
+msgid ""
+"The published post \"%(title)s\" already has a saved revision. You can "
+"continue editing the existing revision or start over from the published "
+"version. Starting over will delete the current revision."
+msgstr ""
+"已发布文章\"%(title)s\"已经有一份修订版。你可以继续编辑现有修订版，或从当前已"
+"发布内容重新开始。重新开始会删除当前修订版。"
+
+#, fuzzy
+#| msgid "Selected articles"
+msgid "Delete article"
+msgstr "已添加文章"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete \"%(title)s\"? This action cannot be "
+#| "undone."
+msgid ""
+"Are you sure you want to delete \\\"%(title)s\\\"? This action cannot be "
+"undone."
+msgstr "确定要删除\"%(title)s\"吗？此操作不可恢复。"
+
+msgid "Delete revision"
+msgstr "删除修订版"
+
+msgid "Delete draft"
+msgstr "删除草稿"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete revision \"%(title)s\"? This action "
+#| "cannot be undone."
+msgid ""
+"Are you sure you want to delete revision \\\"%(title)s\\\"? This action "
+"cannot be undone."
+msgstr "确定要删除修订版\"%(title)s\"吗？此操作不可恢复。"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete draft \"%(title)s\"? This action cannot "
+#| "be undone."
+msgid ""
+"Are you sure you want to delete draft \\\"%(title)s\\\"? This action cannot "
+"be undone."
+msgstr "确定要删除草稿\"%(title)s\"吗？此操作不可恢复。"
+
+msgid "No published articles found."
+msgstr "暂无已发布文章。"
+
+msgid "No drafts or revisions found."
+msgstr "暂无草稿或修订版。"
+
+msgid "No external links found."
+msgstr "暂无外链。"
+
+msgid "Workspace"
+msgstr "工作区"
+
+msgid "Website"
+msgstr "网站"
+
+msgid "Appearance assets"
+msgstr "外观资源"
+
+msgid "Website icon preview"
+msgstr "网站图标预览"
+
+msgid "Remove icon"
+msgstr "移除图标"
+
+msgid "Undo remove"
+msgstr "撤销删除"
+
+msgid "Login page background preview"
+msgstr "登录页背景预览"
+
+msgid "Remove background"
+msgstr "移除背景"
+
+msgid "Authenticated page background preview"
+msgstr "登录后页面背景预览"
+
+#, fuzzy
+#| msgid "Audit Logs"
+msgid "Audit logs"
+msgstr "审计日志"
+
+#, fuzzy
+#| msgid "Site settings"
+msgid "VIP settings"
+msgstr "站点设置"
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Article editor"
+msgstr "文章编辑器"
+
+#, fuzzy
+#| msgid "Edit user"
+msgid "Edit User"
+msgstr "用户编辑"
+
+msgid "Delete avatar"
+msgstr "删除头像"
 
 msgid "User groups"
 msgstr "用户组"
 
-msgid "Normal user"
-msgstr "普通用户"
-
-msgid "VIP user"
-msgstr "VIP 用户"
-
-msgid "Administrator"
-msgstr "管理员"
-
-msgid "Discussion"
-msgstr "讨论"
-
-msgid "%(total)s Comment"
-msgid_plural "%(total)s Comments"
-msgstr[0] "%(total)s 条评论"
-
-msgid "Comment"
-msgstr "评论"
-
-msgid "Write a comment"
-msgstr "写下评论"
-
-msgid "Comment content cannot be empty."
-msgstr "评论内容不能为空。"
-
-msgid "Reply"
-msgstr "回复"
-
-msgid "Write a reply"
-msgstr "写下回复"
-
-msgid "Post comment"
-msgstr "发表评论"
-
-msgid "Post reply"
-msgstr "发表回复"
-
-msgid "Delete comment"
-msgstr "删除评论"
-
-msgid "Are you sure you want to delete this comment? This action cannot be undone."
-msgstr "确定要删除这条评论吗？此操作不可恢复。"
-
-msgid "No comments yet."
-msgstr "还没有评论。"
-
-msgid "Create comment"
-msgstr "创建评论"
-
-msgid "Comment posted successfully."
-msgstr "评论发表成功。"
-
-msgid "Reply posted successfully."
-msgstr "回复发表成功。"
-
-msgid "You can only reply to top-level comments."
-msgstr "只能回复一级评论。"
-
-msgid "You are commenting too frequently. Please try again later."
-msgstr "评论过于频繁，请稍后再试。"
-
-msgid "Comment created on %(title)s"
-msgstr "已在 %(title)s 下创建评论"
-
-msgid "Comment deleted on %(title)s"
-msgstr "已删除 %(title)s 下的评论"
-
-msgid "You do not have permission to delete this comment."
-msgstr "您没有权限删除这条评论。"
-
-msgid "Comment deleted successfully."
-msgstr "评论删除成功。"
-
-msgid "Comment parent must belong to the same post."
-msgstr "回复目标必须属于同一篇文章。"
-
-msgid "Only top-level comments can be replied to."
-msgstr "只能回复一级评论。"
-
-msgid "User role"
-msgstr "用户角色"
-
 msgid "Administrator permissions"
 msgstr "管理员权限"
 
-msgid "Business groups"
-msgstr "业务用户组"
+msgid "Virtual assets"
+msgstr ""
 
-msgid "No user groups available."
-msgstr "暂无可用用户组。"
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete user \"%(username)s\"? This action cannot "
+#| "be undone."
+msgid ""
+"Are you sure you want to delete user \\\"%(username)s\\\"? This action "
+"cannot be undone."
+msgstr "确定要删除用户\"%(username)s\"吗？此操作不可恢复。"
 
-msgid "[%(app_name)s] Your password was updated"
-msgstr "【%(app_name)s】密码已更新"
+msgid "Manage Users"
+msgstr "用户管理"
+
+msgid "Search users..."
+msgstr "搜索用户..."
+
+msgid "Search users"
+msgstr "搜索用户"
+
+msgid "Roles"
+msgstr "角色"
+
+msgid "State"
+msgstr "状态"
+
+msgid "Disabled"
+msgstr "禁用"
+
+msgid "No users found."
+msgstr "暂无用户。"
+
+#, fuzzy
+#| msgid "Username"
+msgid "User Namecard"
+msgstr "用户名"
+
+#, fuzzy
+#| msgid "Chapter actions"
+msgid "Namecard sections"
+msgstr "章节操作"
+
+#, fuzzy
+#| msgid "Name"
+msgid "Namecard"
+msgstr "名称"
+
+#, fuzzy
+#| msgid "Personal settings"
+msgid "Personal description"
+msgstr "个人设置"
+
+msgid "No personal description yet."
+msgstr ""
+
+#, fuzzy
+#| msgid "No drafts yet"
+msgid "No posts yet"
+msgstr "暂无草稿"
+
+msgid "This user hasn't published any non-private articles yet."
+msgstr ""
+
+msgid "This user hasn't published any non-private books yet."
+msgstr ""
+
+#, fuzzy
+#| msgid "Profile updated"
+msgid "Profile"
+msgstr "个人资料已更新"
+
+msgid "Click avatar to upload"
+msgstr "点击头像上传"
+
+msgid "Update password"
+msgstr "更新密码"
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search results"
+msgstr "搜索文章"
+
+#, python-format
+msgid "Results for \"%(query)s\""
+msgstr ""
+
+msgid "Enter a keyword from the top search bar."
+msgstr ""
+
+#, fuzzy
+#| msgid "No posts found."
+msgid "No results found"
+msgstr "暂无文章。"
+
+msgid "Try another keyword, book, tag, or author name."
+msgstr "试试其他关键词、图书、标签或作者名。"
+
+#, fuzzy
+#| msgid "Tags"
+msgid "Tag"
+msgstr "标签"
+
+#, fuzzy, python-format
+#| msgid "%(total)s Comment"
+#| msgid_plural "%(total)s Comments"
+msgid "%(total)s post"
+msgid_plural "%(total)s posts"
+msgstr[0] "%(total)s 条评论"
+
+#, fuzzy
+#| msgid "No posts found."
+msgid "No posts found for this tag"
+msgstr "暂无文章。"
+
+#, fuzzy
+#| msgid "Articles you can access will appear here once they are published."
+msgid ""
+"Posts assigned to this tag will appear here once they are visible to you."
+msgstr "你可访问的文章在发布后会显示在这里。"
+
+msgid "All tags"
+msgstr ""
+
+msgid "Browse every tag that currently has visible posts."
+msgstr ""
+
+#, fuzzy
+#| msgid "No drafts yet"
+msgid "No tags yet"
+msgstr "暂无草稿"
+
+msgid "Tags with visible posts will appear here once content is categorized."
+msgstr ""
+
+msgid "Verify New Email"
+msgstr "验证新邮箱"
+
+msgid "Use the verification code below to confirm your new email address."
+msgstr "请使用下方验证码确认您的新邮箱地址。"
+
+#, python-format
+msgid ""
+"You are receiving this email because an email change verification code was "
+"requested for %(app_name)s."
+msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了邮箱变更验证码。"
+
+msgid "One-time code"
+msgstr "一次性验证码"
+
+#, python-format
+msgid "This code will expire in %(minutes)s minutes."
+msgstr "该验证码将在 %(minutes)s 分钟后失效。"
+
+msgid ""
+"For your security, do not forward this email or share the code with anyone."
+msgstr "为保障您的账号安全，请勿转发此邮件或向任何人透露验证码。"
+
+msgid "If you did not request this email change, you can safely ignore it."
+msgstr "如果这次邮箱变更不是您本人发起的，您可以安全地忽略这封邮件。"
+
+#, python-format
+msgid ""
+"This is an automated email from %(app_name)s. Please do not reply directly "
+"to this message."
+msgstr "这是一封由 %(app_name)s 自动发送的邮件，请勿直接回复。"
+
+#, fuzzy, python-format
+#| msgid "[%(app_name)s] Your email verification code"
+msgid "%(app_name)s email verification code"
+msgstr "【%(app_name)s】邮箱验证码"
+
+msgid "Verification Code"
+msgstr "验证码"
+
+msgid "Email Address Updated"
+msgstr "邮箱地址已更新"
+
+msgid "Your account email address has been updated by an administrator."
+msgstr "您的账号邮箱地址已被管理员更新。"
+
+#, python-format
+msgid "This change was applied to the account for %(username)s."
+msgstr "此次变更已应用到 %(username)s 账号。"
+
+msgid "New email address"
+msgstr "新邮箱地址"
+
+msgid ""
+"If you did not expect this change, please contact an administrator "
+"immediately."
+msgstr "如果这不是您预期的操作，请立即联系管理员。"
 
 msgid "Password Updated"
 msgstr "密码已更新"
@@ -1529,65 +2160,50 @@ msgstr "密码已更新"
 msgid "An administrator has updated your account password."
 msgstr "管理员已更新您的账号密码。"
 
-msgid "For security, please sign in as soon as possible and change this password if needed."
+msgid ""
+"For security, please sign in as soon as possible and change this password if "
+"needed."
 msgstr "为了账号安全，请尽快登录，并在需要时再次修改该密码。"
 
-msgid "User password was updated, but the password email could not be sent."
-msgstr "用户密码已更新，但密码通知邮件发送失败。"
+msgid "Use the verification code below to complete your registration."
+msgstr "请使用下方验证码完成注册。"
 
-msgid "Delete avatar"
-msgstr "删除头像"
+#, python-format
+msgid ""
+"You are receiving this email because a registration verification code was "
+"requested for %(app_name)s."
+msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了注册验证码。"
 
-msgid "No avatar to remove."
-msgstr "当前没有可删除的头像。"
+msgid "If you did not request this email, you can safely ignore it."
+msgstr "如果这不是您的操作，您可以直接忽略这封邮件。"
 
-msgid "Avatar removed for user: %(username)s"
-msgstr "已删除用户头像：%(username)s"
+#, python-format
+msgid "%(app_name)s verification code"
+msgstr "%(app_name)s 验证码"
 
-msgid "Avatar removed successfully."
-msgstr "头像删除成功。"
+msgid "Temporary Password"
+msgstr "临时密码"
 
-msgid "Update post"
-msgstr "更新文章"
+msgid "Use the temporary password below to sign in to your account."
+msgstr "请使用下方临时密码登录您的账号。"
 
-msgid "Post updated successfully."
-msgstr "文章更新成功。"
+#, python-format
+msgid "A password reset request was processed for your %(app_name)s account."
+msgstr "系统已为您的 %(app_name)s 账号处理了一次密码重置请求。"
 
-msgid "Cover image removed: %(title)s"
-msgstr "已删除封面图：%(title)s"
+msgid "Temporary password"
+msgstr "临时密码"
 
-msgid "Cover image removed successfully."
-msgstr "封面图删除成功。"
+msgid ""
+"For security, please sign in as soon as possible and change this password "
+"immediately."
+msgstr "为了您的账号安全，请尽快登录并立即修改该密码。"
 
-msgid "Post deleted successfully."
-msgstr "文章删除成功。"
+msgid ""
+"If you did not request this reset, please contact an administrator after "
+"signing in."
+msgstr "如果这不是您的操作，请在登录后尽快联系管理员。"
 
-msgid "Delete post"
-msgstr "删除文章"
-
-msgid "Are you sure you want to remove this cover image? This action cannot be undone."
-msgstr "确定要删除这张封面图吗？此操作不可恢复。"
-
-msgid "Are you sure you want to delete \"%(title)s\"? This action cannot be undone."
-msgstr "确定要删除\"%(title)s\"吗？此操作不可恢复。"
-
-msgid "Nickname"
-msgstr "名称"
-
-msgid "Display name"
-msgstr "显示名称"
-
-msgid "Previous"
-msgstr "上一页"
-
-msgid "Next"
-msgstr "下一页"
-
-msgid "Go"
-msgstr "跳转"
-
-msgid "Encrypted"
-msgstr "加密"
-
-msgid "Enter article password"
-msgstr "输入密码"
+#, python-format
+msgid "%(app_name)s temporary password"
+msgstr "%(app_name)s 临时密码"

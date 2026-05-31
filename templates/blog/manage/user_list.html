@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
-{% load i18n %}
+﻿{% extends 'base.html' %}
+{% load i18n static %}
 
 {% block title %}{% trans "Manage Users" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -13,6 +18,7 @@
                     <span class="section-kicker">{% trans "Manage" %}</span>
                     <h1>{% trans "Users" %}</h1>
                 </div>
+                <button type="button" class="primary-button" data-add-user-trigger data-add-user-url="{% url 'manage-user-create' %}">{% trans "Add user" %}</button>
             </div>
             <form method="get" class="inline-search-form">
                 <input type="search" name="q" value="{{ query }}" class="input-control" placeholder="{% trans 'Search users...' %}" aria-label="{% trans 'Search users' %}">
@@ -52,6 +58,7 @@
                             <td>
                                 <div class="table-actions">
                                     <a href="{% url 'manage-user-update' user_item.pk %}" class="secondary-button table-button">{% trans "Edit" %}</a>
+                                    <a href="{% url 'user-namecard' user_item.pk %}" class="secondary-button table-button">{% trans "Browse" %}</a>
                                 </div>
                             </td>
                         </tr>
@@ -68,3 +75,8 @@
     </section>
 </main>
 {% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
+{% endblock %}
+

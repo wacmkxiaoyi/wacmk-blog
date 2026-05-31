@@ -563,6 +563,7 @@ function initializePostEditor() {
     postEditorForm.addEventListener("submit", function () {
         markGuardClean(postEditorForm);
     });
+    scrollToFirstFormError(postEditorForm);
 }
 
 function initializeMarkdownImportTrigger() {
@@ -693,6 +694,57 @@ function initializeBookEditor() {
         return;
     }
     bookEditorForm.setAttribute("data-book-editor-bound", "true");
+
+    function addOrUpdatePostOption(item) {
+        if (!item || item.id == null) {
+            return null;
+        }
+        var postId = String(item.id);
+        var existingNode = bookEditorForm.querySelector('[data-book-post-option][data-post-id="' + postId + '"]');
+        var container = bookEditorForm.querySelector(".book-editor-post-options");
+        var meta = buildPostMeta(item, getPostMeta(postId));
+
+        if (!existingNode) {
+            if (!container) {
+                return null;
+            }
+            existingNode = document.createElement("div");
+            existingNode.setAttribute("data-book-post-option", "");
+            existingNode.setAttribute("data-post-id", postId);
+            container.appendChild(existingNode);
+        }
+
+        existingNode.setAttribute("data-post-id", postId);
+        existingNode.setAttribute("data-post-title", meta.title || "");
+        existingNode.setAttribute("data-post-visibility", meta.visibility || "public");
+        existingNode.setAttribute("data-post-author", meta.author || "");
+        existingNode.setAttribute("data-post-access-display", meta.accessDisplay ? JSON.stringify(meta.accessDisplay) : "");
+        existingNode.setAttribute("data-post-access-icon", (meta.visibilityPresentation && meta.visibilityPresentation.icon) || "");
+        existingNode.setAttribute("data-post-access-tone", (meta.visibilityPresentation && meta.visibilityPresentation.tone) || "");
+        existingNode.setAttribute("data-post-access-label", (meta.visibilityPresentation && meta.visibilityPresentation.label) || "");
+        existingNode.setAttribute("data-post-selected", meta.selected ? "true" : "false");
+
+        if (item.postUrl || item.url) {
+            existingNode.setAttribute("data-post-url", item.postUrl || item.url || "");
+        } else {
+            existingNode.removeAttribute("data-post-url");
+        }
+
+        if (item.requiresCondition) {
+            existingNode.setAttribute("data-post-requires-condition", "true");
+            existingNode.setAttribute("data-post-condition-status", item.conditionStatus || "");
+            existingNode.setAttribute("data-post-condition-money", item.conditionMoney || "");
+            existingNode.setAttribute("data-post-condition-points", item.conditionPoints || "");
+        } else {
+            existingNode.removeAttribute("data-post-requires-condition");
+            existingNode.removeAttribute("data-post-condition-status");
+            existingNode.removeAttribute("data-post-condition-money");
+            existingNode.removeAttribute("data-post-condition-points");
+        }
+
+        postOptionMap[postId] = meta;
+        return meta;
+    }
 
     function applyVisibilityLayout() {
         var conditionEditorInput = bookEditorForm.querySelector("#id_condition_rules");
@@ -1070,6 +1122,16 @@ function initializeBookEditor() {
             existing[String(postId)] = true;
             structureData.push({ type: "post", post_id: parseInt(postId, 10) });
         });
+    }
+
+    function addPostToStructureByItem(item) {
+        var meta = addOrUpdatePostOption(item);
+        if (!meta || !meta.id) {
+            return false;
+        }
+        addPostsToStructure([meta.id]);
+        rerenderStructure();
+        return true;
     }
 
     function createWorkbenchRow(node, path, depth, parentArray) {
@@ -1540,6 +1602,11 @@ function initializeBookEditor() {
     }
 
     rerenderStructure();
+    bookEditorForm.__bookEditorApi = {
+        addPostItem: addPostToStructureByItem,
+        rerender: rerenderStructure
+    };
+    scrollToFirstFormError(bookEditorForm);
 }
 
 function initProfileEnhancements() {
@@ -1717,8 +1784,9 @@ function initManageUserForm() {
     var memberSection = document.querySelector('[data-role-member-section]');
     var staffCheckbox = document.getElementById('id_is_staff');
     var superuserCheckbox = document.getElementById('id_is_superuser');
-    var businessGroupCheckboxes = document.querySelectorAll('[data-business-group-checkbox="true"]');
-    var defaultBusinessGroupValue = document.querySelector('[data-default-business-group-value]') ? document.querySelector('[data-default-business-group-value]').getAttribute('data-default-business-group-value') || '' : '';
+    var businessIdentitySelect = document.querySelector('[data-business-identity-select="true"]');
+    var businessIdentityTouchedInput = document.getElementById('id_business_identity_touched');
+    var defaultBusinessIdentityValue = document.querySelector('[data-default-business-identity-value]') ? document.querySelector('[data-default-business-identity-value]').getAttribute('data-default-business-identity-value') || '' : '';
     var avatarDisplay = document.querySelector('.user-manage-avatar-display');
     var avatarRemoveButton = document.querySelector('[data-manage-user-avatar-remove]');
     var avatarUndoButton = document.querySelector('[data-manage-user-avatar-undo]');
@@ -1838,21 +1906,52 @@ function initManageUserForm() {
             if (superuserCheckbox) {
                 superuserCheckbox.checked = false;
             }
-            businessGroupCheckboxes.forEach(function (checkbox) {
-                if (checkbox.value === defaultBusinessGroupValue) {
-                    checkbox.checked = true;
-                }
-            });
+            if (businessIdentitySelect && defaultBusinessIdentityValue) {
+                businessIdentitySelect.value = defaultBusinessIdentityValue;
+            }
         }
     }
 
     roleSelect.addEventListener('change', function () {
         syncRoleState(true);
     });
+    if (businessIdentitySelect && businessIdentityTouchedInput) {
+        businessIdentitySelect.addEventListener('change', function () {
+            businessIdentityTouchedInput.value = '1';
+        });
+    }
     syncRoleState(false);
 }
 
 function initSiteSettingsForm() {
+    var vipMaxLevelInput = document.querySelector('[data-vip-max-level-input="true"]');
+    var vipLevelFieldsWrapper = document.querySelector('[data-vip-level-name-fields]');
+
+    function syncVipLevelFieldVisibility() {
+        var maxLevel = 0;
+        if (!vipMaxLevelInput || !vipLevelFieldsWrapper) {
+            return;
+        }
+        maxLevel = parseInt(vipMaxLevelInput.value || '0', 10);
+        if (isNaN(maxLevel) || maxLevel <= 0) {
+            vipLevelFieldsWrapper.hidden = true;
+            vipLevelFieldsWrapper.querySelectorAll('[data-vip-level-name-field]').forEach(function (field) {
+                field.hidden = true;
+            });
+            return;
+        }
+        vipLevelFieldsWrapper.hidden = false;
+        vipLevelFieldsWrapper.querySelectorAll('[data-vip-level-name-field]').forEach(function (field) {
+            var level = parseInt(field.getAttribute('data-vip-level') || '0', 10);
+            field.hidden = isNaN(level) || level > maxLevel;
+        });
+    }
+
+    if (vipMaxLevelInput) {
+        vipMaxLevelInput.addEventListener('input', syncVipLevelFieldVisibility);
+        syncVipLevelFieldVisibility();
+    }
+
     ["site_icon", "auth_background", "app_background"].forEach(function (assetKey) {
         var removeInput = document.querySelector('[data-site-setting-remove-input="' + assetKey + '"]');
         var previewWrapper = document.querySelector('[data-site-setting-preview-wrapper="' + assetKey + '"]');
@@ -1950,6 +2049,221 @@ function initSiteSettingsForm() {
     });
 }
 
+function scrollToFirstFormError(formEl) {
+    if (!formEl) return;
+    var errorEl = formEl.querySelector(".form-alert")
+        || formEl.querySelector(".field-error");
+    if (!errorEl) return;
+    errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function initAddUserButton() {
+    var trigger = document.querySelector("[data-add-user-trigger]");
+    if (!trigger || trigger.getAttribute("data-add-user-bound") === "true") {
+        return;
+    }
+    trigger.setAttribute("data-add-user-bound", "true");
+
+    trigger.addEventListener("click", function () {
+        var createUrl = trigger.getAttribute("data-add-user-url") || "";
+        var csrfToken = getCsrfToken();
+
+        var container = document.createElement("div");
+        container.className = "editor-modal-form";
+
+        var allErrors = document.createElement("div");
+        allErrors.className = "field-error";
+        allErrors.setAttribute("data-add-user-error", "__all__");
+        allErrors.style.display = "none";
+        allErrors.style.marginBottom = "0.75rem";
+        container.appendChild(allErrors);
+
+        function buildField(labelText, inputElement, fieldName) {
+            var field = document.createElement("div");
+            var label = document.createElement("label");
+            var error = document.createElement("span");
+
+            field.className = "form-field";
+            field.style.marginBottom = "0.75rem";
+            label.textContent = labelText;
+            label.style.display = "block";
+            label.style.marginBottom = "0.3rem";
+            label.style.fontWeight = "600";
+            label.style.fontSize = "0.9rem";
+            label.style.color = "#6f78a8";
+            inputElement.setAttribute("data-add-user-field", fieldName);
+            inputElement.style.width = "100%";
+            error.className = "field-error";
+            error.setAttribute("data-add-user-error", fieldName);
+            error.style.display = "none";
+
+            field.appendChild(label);
+            field.appendChild(inputElement);
+            field.appendChild(error);
+            return field;
+        }
+
+        var usernameInput = document.createElement("input");
+        usernameInput.type = "text";
+        usernameInput.className = "input-control";
+        usernameInput.placeholder = escapeHtml(trigger.getAttribute("data-add-user-username-placeholder") || "Username");
+        usernameInput.setAttribute("required", "");
+
+        var firstnameInput = document.createElement("input");
+        firstnameInput.type = "text";
+        firstnameInput.className = "input-control";
+        firstnameInput.placeholder = escapeHtml(trigger.getAttribute("data-add-user-nickname-placeholder") || "Display name (optional)");
+
+        var emailInput = document.createElement("input");
+        emailInput.type = "email";
+        emailInput.className = "input-control";
+        emailInput.placeholder = escapeHtml(trigger.getAttribute("data-add-user-email-placeholder") || "Email address");
+        emailInput.setAttribute("required", "");
+
+        var password1Input = document.createElement("input");
+        password1Input.type = "password";
+        password1Input.className = "input-control";
+        password1Input.placeholder = escapeHtml(trigger.getAttribute("data-add-user-password-placeholder") || "Password");
+        password1Input.setAttribute("required", "");
+
+        var password2Input = document.createElement("input");
+        password2Input.type = "password";
+        password2Input.className = "input-control";
+        password2Input.placeholder = escapeHtml(trigger.getAttribute("data-add-user-confirm-password-placeholder") || "Confirm password");
+        password2Input.setAttribute("required", "");
+
+        container.appendChild(buildField(
+            escapeHtml(trigger.getAttribute("data-add-user-username-label") || "Username"),
+            usernameInput,
+            "username"
+        ));
+        container.appendChild(buildField(
+            escapeHtml(trigger.getAttribute("data-add-user-nickname-label") || "Nickname"),
+            firstnameInput,
+            "first_name"
+        ));
+        container.appendChild(buildField(
+            escapeHtml(trigger.getAttribute("data-add-user-email-label") || "Email"),
+            emailInput,
+            "email"
+        ));
+        container.appendChild(buildField(
+            escapeHtml(trigger.getAttribute("data-add-user-password-label") || "Password"),
+            password1Input,
+            "password1"
+        ));
+        container.appendChild(buildField(
+            escapeHtml(trigger.getAttribute("data-add-user-confirm-password-label") || "Confirm password"),
+            password2Input,
+            "password2"
+        ));
+
+        function clearErrors() {
+            Array.prototype.forEach.call(container.querySelectorAll("[data-add-user-error]"), function (el) {
+                el.textContent = "";
+                el.style.display = "none";
+            });
+        }
+
+        function showFieldError(fieldName, message) {
+            var el = container.querySelector('[data-add-user-error="' + fieldName + '"]');
+            if (el) {
+                el.textContent = message;
+                el.style.display = "block";
+            }
+        }
+
+        function showErrors(errors) {
+            clearErrors();
+            Object.keys(errors).forEach(function (fieldName) {
+                var messages = errors[fieldName];
+                var fieldError = container.querySelector('[data-add-user-error="' + fieldName + '"]');
+                if (fieldError) {
+                    fieldError.textContent = (messages || []).join(" ");
+                    fieldError.style.display = "block";
+                }
+            });
+        }
+
+        openModal({
+            kicker: escapeHtml(trigger.getAttribute("data-add-user-kicker") || "Users"),
+            title: escapeHtml(trigger.getAttribute("data-add-user-title") || "Add user"),
+            contentNode: container,
+            cancelText: escapeHtml(trigger.getAttribute("data-add-user-cancel-label") || "Cancel"),
+            confirmText: escapeHtml(trigger.getAttribute("data-add-user-confirm-label") || "Create"),
+            keepOpenOnConfirm: true,
+            onConfirm: function () {
+                clearErrors();
+
+                var username = (usernameInput.value || "").trim();
+                var email = (emailInput.value || "").trim();
+                var firstname = (firstnameInput.value || "").trim();
+                var password1 = password1Input.value;
+                var password2 = password2Input.value;
+                var hasError = false;
+
+                if (!username) {
+                    showFieldError("username", escapeHtml(trigger.getAttribute("data-add-user-username-required") || "Username is required."));
+                    hasError = true;
+                }
+                if (!email) {
+                    showFieldError("email", escapeHtml(trigger.getAttribute("data-add-user-email-required") || "Email is required."));
+                    hasError = true;
+                }
+                if (!password1) {
+                    showFieldError("password1", escapeHtml(trigger.getAttribute("data-add-user-password-required") || "Password is required."));
+                    hasError = true;
+                }
+                if (!password2) {
+                    showFieldError("password2", escapeHtml(trigger.getAttribute("data-add-user-confirm-password-required") || "Please confirm the password."));
+                    hasError = true;
+                }
+                if (password1 && password2 && password1 !== password2) {
+                    showFieldError("password2", escapeHtml(trigger.getAttribute("data-add-user-password-mismatch") || "The two passwords do not match."));
+                    hasError = true;
+                }
+                if (hasError) {
+                    return;
+                }
+
+                var body = new FormData();
+                body.append("username", username);
+                body.append("first_name", firstname);
+                body.append("email", email);
+                body.append("password1", password1);
+                body.append("password2", password2);
+                body.append("csrfmiddlewaretoken", csrfToken);
+
+                fetch(createUrl, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: body,
+                    credentials: "same-origin"
+                }).then(function (response) {
+                    return response.json().catch(function () {
+                        return { ok: false, errors: { __all__: [escapeHtml(trigger.getAttribute("data-add-user-request-error") || "Unable to create user right now.")] } };
+                    });
+                }).then(function (data) {
+                    if (data.ok) {
+                        closeModal();
+                        window.location.reload();
+                    } else if (data.errors) {
+                        showErrors(data.errors);
+                    }
+                }).catch(function () {
+                    showFieldError("__all__", escapeHtml(trigger.getAttribute("data-add-user-request-error") || "Unable to create user right now."));
+                });
+            }
+        });
+
+        window.setTimeout(function () {
+            usernameInput.focus();
+        }, 0);
+    });
+}
+
 var manageInitialized = false;
 
 export function initBlogManage() {
@@ -1964,6 +2278,7 @@ export function initBlogManage() {
     initProfileEnhancements();
     initManageUserForm();
     initSiteSettingsForm();
+    initAddUserButton();
 }
 
 export function initManagePostListPage() {

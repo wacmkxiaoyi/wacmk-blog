@@ -1,7 +1,11 @@
-{% extends 'base.html' %}
-{% load i18n %}
+﻿{% extends 'base.html' %}
+{% load i18n static %}
 
 {% block title %}{% trans "Tags" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page search-page tags-page">
@@ -26,3 +30,4 @@
     </section>
 </main>
 {% endblock %}
+

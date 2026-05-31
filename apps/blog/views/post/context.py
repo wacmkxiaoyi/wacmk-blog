@@ -5,7 +5,7 @@ from apps.blog.forms import CommentForm
 from apps.blog.models import Post
 from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils.markdown import render_markdown
-from apps.blog.utils.site import build_share_expiry_options
+from apps.blog.utils.site import build_share_expiry_options, check_comment_permission
 from apps.blog.visibility import get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation
 from apps.blog.views.comment.utils import build_comment_tree
 from apps.blog.views.post.utils import get_visible_post_queryset
@@ -40,15 +40,30 @@ def build_post_detail_context(
 ):
     decorate_post_tags_for_display([post])
     annotate_post_feedback(post, user)
-    top_level_comments = build_comment_tree(
+    page = 1
+    if request is not None:
+        try:
+            page = int(request.GET.get("page", "1"))
+        except (ValueError, TypeError):
+            page = 1
+    pagination_base_query = ""
+    if request is not None:
+        params = request.GET.copy()
+        params.pop("page", None)
+    pagination_base_query = params.urlencode()
+    can_interact = bool(getattr(user, "is_authenticated", False) and not is_share_view)
+    can_comment = bool(can_interact and check_comment_permission(user))
+    top_level_comments, pagination = build_comment_tree(
         post,
         user,
         request=request,
         book=book,
         is_share_view=is_share_view,
         share_link=share_link,
+        page=page,
+        paginate_by=5,
+        can_comment=can_comment,
     )
-    can_interact = bool(getattr(user, "is_authenticated", False) and not is_share_view)
     active_reply_parent_id = str(reply_parent_id or "")
     active_edit_comment_id = str(edit_comment_id or "")
     active_share_link = None
@@ -106,12 +121,15 @@ def build_post_detail_context(
             if not is_share_view and getattr(user, "is_authenticated", False)
             else Post.objects.none()
         ),
-        "comment_form": comment_form if can_interact else None,
+        "comment_form": comment_form if can_comment else None,
         "comments": top_level_comments,
         "comment_count": post.comments.count(),
+        "pagination": pagination,
+        "pagination_base_query": pagination_base_query,
         "reply_parent_id": active_reply_parent_id,
         "edit_comment_id": active_edit_comment_id,
         "can_interact": can_interact,
+        "can_comment": can_comment,
         "show_related_posts": bool(not is_share_view and getattr(user, "is_authenticated", False)),
         "is_share_view": is_share_view,
         "detail_tags_clickable": not is_share_view,

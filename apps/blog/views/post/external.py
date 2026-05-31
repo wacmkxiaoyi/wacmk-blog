@@ -53,7 +53,7 @@ class PostShareLinkCreateView(LoginRequiredMixin, View):
         if post.author_id != request.user.pk:
             return JsonResponse({"ok": False, "message": str(_("You do not have permission to generate a share link."))}, status=403)
         if post.status != Post.STATUS_PUBLISHED or post.visibility != Post.VISIBILITY_PUBLIC or post_has_any_conditions(post):
-            return JsonResponse({"ok": False, "message": str(_("Only published public posts can generate share links."))}, status=400)
+            return JsonResponse({"ok": False, "message": str(_("Only published public articles can generate share links."))}, status=400)
 
         expiry_key = (request.POST.get("expiry") or "7d").strip()
         option = SHARE_LINK_EXPIRY_OPTIONS.get(expiry_key)

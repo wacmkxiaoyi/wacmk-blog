@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
-from apps.users.models import EmailVerificationCode
+from apps.users.models import EmailVerificationCode, GENDER_CHOICES, UserProfile
 
 
 User = get_user_model()
@@ -14,11 +14,23 @@ class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(
         required=False,
         label=_("Nickname"),
+        max_length=20,
         widget=forms.TextInput(attrs={"class": "input-control", "placeholder": _("Display name")}),
     )
     email = forms.EmailField(
         label=_("Email"),
         widget=forms.EmailInput(attrs={"class": "input-control", "placeholder": _("Email address")}),
+    )
+    description = forms.CharField(
+        required=False,
+        label=_("Description"),
+        widget=forms.Textarea(
+            attrs={
+                "class": "input-control",
+                "rows": 4,
+                "placeholder": _("Write a brief introduction about yourself"),
+            }
+        ),
     )
     verification_code = forms.CharField(
         required=False,
@@ -33,11 +45,60 @@ class ProfileForm(forms.ModelForm):
             }
         ),
     )
+    gender = forms.ChoiceField(
+        required=False,
+        label=_("Gender"),
+        choices=GENDER_CHOICES,
+        widget=forms.Select(attrs={"class": "input-control"}),
+    )
+    age = forms.IntegerField(
+        required=False,
+        label=_("Age"),
+        min_value=1,
+        max_value=150,
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": "1", "max": "150", "placeholder": _("Your age")}),
+    )
+    github = forms.URLField(
+        required=False,
+        label=_("GitHub"),
+        widget=forms.URLInput(attrs={"class": "input-control", "placeholder": "https://github.com/..."}),
+    )
+    website = forms.URLField(
+        required=False,
+        label=_("Website"),
+        widget=forms.URLInput(attrs={"class": "input-control", "placeholder": "https://..."}),
+    )
+    twitter = forms.URLField(
+        required=False,
+        label=_("Twitter"),
+        widget=forms.URLInput(attrs={"class": "input-control", "placeholder": "https://x.com/..."}),
+    )
+    qq = forms.CharField(
+        required=False,
+        label=_("QQ"),
+        max_length=20,
+        widget=forms.TextInput(attrs={"class": "input-control", "placeholder": _("QQ number")}),
+    )
+    show_email_on_namecard = forms.BooleanField(
+        required=False,
+        label=_("Show email on my namecard"),
+        widget=forms.CheckboxInput(attrs={"class": "input-checkbox"}),
+    )
 
     def __init__(self, *args, **kwargs):
+        profile = kwargs.pop("profile", None)
         super().__init__(*args, **kwargs)
         current_email = (self.instance.email or "").strip().lower() if self.instance else ""
         self.initial_email = current_email
+        if profile is not None:
+            self.fields["description"].initial = profile.description
+            self.fields["gender"].initial = profile.gender
+            self.fields["age"].initial = profile.age
+            self.fields["github"].initial = profile.github
+            self.fields["website"].initial = profile.website
+            self.fields["twitter"].initial = profile.twitter
+            self.fields["qq"].initial = profile.qq
+            self.fields["show_email_on_namecard"].initial = profile.show_email_on_namecard
 
     @property
     def requires_email_verification(self):

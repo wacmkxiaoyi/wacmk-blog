@@ -11,6 +11,7 @@ from apps.blog.forms import CommentForm
 from apps.blog.models import AuditLog, Comment, CommentFeedback
 from apps.blog.utils import get_safe_next_url, with_fragment, write_audit_log
 from apps.blog.utils.request import get_feedback_value_from_request
+from apps.blog.utils.site import check_comment_permission
 from apps.blog.views.post.utils import can_access_post, get_detail_post_queryset
 
 from .utils import get_comment_delete_allowed, get_comment_edit_allowed, is_comment_rate_limited, toggle_feedback
@@ -54,6 +55,10 @@ class CommentCreateView(LoginRequiredMixin, View):
         post = get_object_or_404(get_detail_post_queryset(request.user), slug=kwargs["slug"])
         if not can_access_post(request, post):
             raise Http404
+
+        if not check_comment_permission(request.user):
+            messages.error(request, _("You do not have permission to post comments."))
+            return redirect(f"{post.get_absolute_url()}#comments")
 
         parent_id = (request.POST.get("parent_id") or "").strip()
         target_comment = None
@@ -122,6 +127,10 @@ class CommentUpdateView(LoginRequiredMixin, View):
         comment = get_object_or_404(Comment.objects.select_related("post", "author", "parent", "reply_to"), pk=kwargs["pk"])
         if not get_comment_edit_allowed(comment, request.user):
             messages.error(request, _("You do not have permission to edit this comment."))
+            return redirect(with_fragment(get_safe_next_url(request) or comment.post.get_absolute_url(), f"comment-{comment.pk}"))
+
+        if not check_comment_permission(request.user):
+            messages.error(request, _("You do not have permission to edit comments."))
             return redirect(with_fragment(get_safe_next_url(request) or comment.post.get_absolute_url(), f"comment-{comment.pk}"))
 
         form = CommentForm(request.POST, instance=comment, prefix=f"edit-{comment.pk}")

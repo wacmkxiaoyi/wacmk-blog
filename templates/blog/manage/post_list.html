@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
-{% block title %}{% trans "Manage Posts" %}{% endblock %}
+{% block title %}{% trans "Manage Articles" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -11,13 +16,14 @@
             <div class="section-heading-row">
                 <div>
                     <span class="section-kicker">{% trans "Manage" %}</span>
-                    <h1>{% trans "Posts" %}</h1>
+                    <h1>{% trans "Articles" %}</h1>
                 </div>
+                {% if site_setting.allow_non_admin_create_post %}
                 {% if active_tab != 'external-links' %}
                 <div class="editor-entry-menu">
-                    <a href="{% url 'manage-post-create' %}?next={{ request.get_full_path|urlencode }}" class="primary-button">{% trans "New post" %}</a>
+                    <a href="{% url 'manage-post-create' %}?next={{ request.get_full_path|urlencode }}" class="primary-button">{% trans "New article" %}</a>
                     <div class="editor-entry-popover">
-                        <a href="{% url 'manage-post-import' %}?next={{ request.get_full_path|urlencode }}" class="secondary-button panel-link">{% trans "Import from existing post" %}</a>
+                        <a href="{% url 'manage-post-import' %}?next={{ request.get_full_path|urlencode }}" class="secondary-button panel-link">{% trans "Import from existing article" %}</a>
                         <button
                             type="button"
                             class="secondary-button panel-link"
@@ -36,8 +42,9 @@
                     </div>
                 </div>
                 {% endif %}
+                {% endif %}
             </div>
-            <div class="manage-tab-row" role="tablist" aria-label="{% trans 'Post lists' %}">
+            <div class="manage-tab-row" role="tablist" aria-label="{% trans 'Article lists' %}">
                 {% for tab in post_tabs %}
                 <a href="{{ tab.url }}" class="manage-tab-link{% if active_tab == tab.key %} is-active{% endif %}" role="tab" aria-selected="{% if active_tab == tab.key %}true{% else %}false{% endif %}">{{ tab.label }}</a>
                 {% endfor %}
@@ -120,7 +127,7 @@
                                         data-share-title="{% trans 'Edit external link' %}"
                                         data-share-kicker="{% trans 'External links' %}"
                                         data-share-message="{% blocktrans with title=item.post.title %}View or update the external link for "{{ title }}".{% endblocktrans %}"
-                                        data-share-help="{% trans 'Anyone with this link can view the post and its comments without signing in, but cannot interact.' %}"
+                                        data-share-help="{% trans 'Anyone with this link can view the article and its comments without signing in, but cannot interact.' %}"
                                         data-share-copy-label="{% trans 'Copy link' %}"
                                         data-share-generate-label="{% trans 'Update link' %}"
                                         data-share-generating-label="{% trans 'Updating...' %}"
@@ -140,7 +147,7 @@
                                         action="{% url 'manage-share-link-delete' item.pk %}"
                                         data-delete-confirm-form
                                         data-delete-confirm-title="{% trans 'Delete external link' %}"
-                                        data-delete-confirm-message="{% blocktrans with title=item.post.title %}Are you sure you want to delete the external link for \"{{ title }}\"? This action cannot be undone.{% endblocktrans %}"
+                                        data-delete-confirm-message="{% blocktrans with title=item.post.title %}Are you sure you want to delete the external link for {{ title }}? This action cannot be undone.{% endblocktrans %}"
                                         data-delete-confirm-button="{% trans 'Delete' %}"
                                         data-delete-cancel-button="{% trans 'Cancel' %}"
                                     >
@@ -169,8 +176,8 @@
                                         method="post"
                                         action="{% url 'manage-post-delete' item.pk %}"
                                         data-delete-confirm-form
-                                        data-delete-confirm-title="{% trans 'Delete post' %}"
-                                        data-delete-confirm-message="{% blocktrans with title=item.title %}Are you sure you want to delete \"{{ title }}\"? This action cannot be undone.{% endblocktrans %}"
+                                        data-delete-confirm-title="{% trans 'Delete article' %}"
+                                        data-delete-confirm-message="{% blocktrans with title=item.title %}Are you sure you want to delete {{ title }}? This action cannot be undone.{% endblocktrans %}"
                                         data-delete-confirm-button="{% trans 'Delete' %}"
                                         data-delete-cancel-button="{% trans 'Cancel' %}"
                                     >
@@ -185,7 +192,7 @@
                                         action="{% url 'manage-post-draft-delete' item.pk %}"
                                         data-delete-confirm-form
                                         data-delete-confirm-title="{% if item.source_post_id %}{% trans 'Delete revision' %}{% else %}{% trans 'Delete draft' %}{% endif %}"
-                                        data-delete-confirm-message="{% if item.source_post_id %}{% blocktrans with title=item.title %}Are you sure you want to delete revision \"{{ title }}\"? This action cannot be undone.{% endblocktrans %}{% else %}{% blocktrans with title=item.title %}Are you sure you want to delete draft \"{{ title }}\"? This action cannot be undone.{% endblocktrans %}{% endif %}"
+                                        data-delete-confirm-message="{% if item.source_post_id %}{% blocktrans with title=item.title %}Are you sure you want to delete revision {{ title }}? This action cannot be undone.{% endblocktrans %}{% else %}{% blocktrans with title=item.title %}Are you sure you want to delete draft {{ title }}? This action cannot be undone.{% endblocktrans %}{% endif %}"
                                         data-delete-confirm-button="{% trans 'Delete' %}"
                                         data-delete-cancel-button="{% trans 'Cancel' %}"
                                     >
@@ -198,7 +205,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="empty-cell">{% if active_tab == 'published' %}{% trans "No published posts found." %}{% elif active_tab == 'drafts' %}{% trans "No drafts or revisions found." %}{% else %}{% trans "No external links found." %}{% endif %}</td>
+                            <td colspan="5" class="empty-cell">{% if active_tab == 'published' %}{% trans "No published articles found." %}{% elif active_tab == 'drafts' %}{% trans "No drafts or revisions found." %}{% else %}{% trans "No external links found." %}{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -220,3 +227,4 @@
 {% block extra_js %}
 <script type="module" src="{% static 'js/entrypoints/blog-manage-post-list.js' %}"></script>
 {% endblock %}
+

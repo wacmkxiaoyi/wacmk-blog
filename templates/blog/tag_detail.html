@@ -1,7 +1,11 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
 {% block title %}#{{ tag.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page search-page tags-page">
@@ -38,3 +42,4 @@
 {% block extra_js %}
 <script type="module" src="{% static 'js/entrypoints/blog-content.js' %}"></script>
 {% endblock %}
+

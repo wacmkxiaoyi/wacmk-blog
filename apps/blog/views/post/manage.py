@@ -23,7 +23,7 @@ from apps.blog.utils import get_or_create_site_setting, is_ajax_request, write_a
 from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
 from apps.blog.visibility import get_post_access_display, get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access
-from apps.blog.views.manage.base import ManageBaseMixin, StaffRequiredMixin, get_manage_home_url
+from apps.blog.views.manage.base import ManageBaseMixin, get_manage_home_url
 from apps.blog.views.book.utils import (
     can_access_book,
     can_display_post_in_book_navigation,
@@ -40,6 +40,7 @@ from apps.blog.views.post.utils import (
     create_markdown_import_draft,
     get_author_display_name_sort_expression,
     get_detail_post_queryset,
+    get_reference_post_queryset,
     get_unique_post_slug,
     get_visible_post_queryset,
     prepare_post_cards,
@@ -49,13 +50,13 @@ from apps.blog.views.post.utils import (
 )
 
 
-class ManagePostReferenceSearchView(StaffRequiredMixin, View):
+class ManagePostReferenceSearchView(LoginRequiredMixin, View):
     http_method_names = ["get"]
     paginate_by = 12
 
     def get(self, request, *args, **kwargs):
         query = (request.GET.get("q") or "").strip()
-        queryset = with_post_feedback_counts(get_visible_post_queryset(request.user).filter(status=Post.STATUS_PUBLISHED))
+        queryset = with_post_feedback_counts(get_reference_post_queryset(request.user))
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query)
@@ -297,10 +298,10 @@ class ManagePostListView(ManageBaseMixin, TemplateView):
             context["search_placeholder"] = _("Search external links...")
             context["search_label"] = _("Search external links")
         else:
-            context["search_placeholder"] = _("Search posts...")
-            context["search_label"] = _("Search posts")
+            context["search_placeholder"] = _("Search articles...")
+            context["search_label"] = _("Search articles")
         context["post_tabs"] = [
-            {"key": "published", "label": "Published posts", "url": f"?{self.build_manage_query(tab='published', page=None)}"},
+            {"key": "published", "label": _("Published articles"), "url": f"?{self.build_manage_query(tab='published', page=None)}"},
             {"key": "drafts", "label": "Drafts / Revisions", "url": f"?{self.build_manage_query(tab='drafts', page=None)}"},
             {"key": "external-links", "label": "External links", "url": f"?{self.build_manage_query(tab='external-links', page=None)}"},
         ]
@@ -319,8 +320,8 @@ class ManagePostCreateView(ManageBaseMixin, CreateView):
         if (self.request.POST.get("status") or "").strip() == Post.STATUS_PUBLISHED:
             published_post = publish_post_draft(self.object)
             self.object = published_post
-            write_audit_log(self.request, AuditLog.ACTION_POST_CREATE, str(_("Post created: %(title)s")) % {"title": published_post.title}, user=self.request.user)
-            messages.success(self.request, _("Post published successfully."))
+            write_audit_log(self.request, AuditLog.ACTION_POST_CREATE, str(_("Article created: %(title)s")) % {"title": published_post.title}, user=self.request.user)
+            messages.success(self.request, _("Article published successfully."))
             return redirect(self.get_editor_return_url())
 
         write_audit_log(self.request, AuditLog.ACTION_POST_CREATE, str(_("Draft created: %(title)s")) % {"title": self.object.title}, user=self.request.user)
@@ -332,7 +333,7 @@ class ManagePostCreateView(ManageBaseMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_manage_context(section="posts", page_title=_("Create post")))
+        context.update(self.get_manage_context(section="posts", page_title=_("Create article")))
         context["site_setting"] = get_or_create_site_setting()
         context["editor_mode"] = "draft"
         context["editor_object"] = self.object
@@ -370,13 +371,13 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
         response = super().form_valid(form)
         if self.object.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(self.object) or self.object.condition_rules:
             PostShareLink.objects.filter(post=self.object).delete()
-        write_audit_log(self.request, AuditLog.ACTION_POST_UPDATE, str(_("Post updated: %(title)s")) % {"title": self.object.title}, user=self.request.user)
-        messages.success(self.request, _("Post updated successfully."))
+        write_audit_log(self.request, AuditLog.ACTION_POST_UPDATE, str(_("Article updated: %(title)s")) % {"title": self.object.title}, user=self.request.user)
+        messages.success(self.request, _("Article updated successfully."))
         return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_manage_context(section="posts", page_title=_("Edit post")))
+        context.update(self.get_manage_context(section="posts", page_title=_("Edit article")))
         context["site_setting"] = get_or_create_site_setting()
         context["editor_mode"] = "published"
         context["editor_object"] = self.object
@@ -402,8 +403,8 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
             if published_post.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(published_post) or published_post.condition_rules:
                 PostShareLink.objects.filter(post=published_post).delete()
             action = AuditLog.ACTION_POST_UPDATE if source_post_id else AuditLog.ACTION_POST_CREATE
-            write_audit_log(self.request, action, str(_("Post published: %(title)s")) % {"title": published_post.title}, user=self.request.user)
-            messages.success(self.request, _("Post published successfully."))
+            write_audit_log(self.request, action, str(_("Article published: %(title)s")) % {"title": published_post.title}, user=self.request.user)
+            messages.success(self.request, _("Article published successfully."))
             return redirect(self.get_editor_return_url())
 
         is_revision = bool(self.object.source_post_id)
@@ -463,8 +464,8 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
             draft.cover_image = source_post.cover_image.name
             draft.save(update_fields=["cover_image", "updated_at"])
         draft.tags.set(source_post.tags.all())
-        write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from post: %(title)s")) % {"title": source_post.title}, user=request.user)
-        messages.success(request, _("Post imported as draft successfully."))
+        write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from article: %(title)s")) % {"title": source_post.title}, user=request.user)
+        messages.success(request, _("Article imported as draft successfully."))
         edit_url = reverse("manage-post-draft-update", args=[draft.pk])
         next_url = self.get_next_url()
         if next_url:
@@ -480,7 +481,7 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
             page_obj = paginator.page(page_number)
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages or 1)
-        context.update(self.get_manage_context(section="posts", page_title=_("Import from existing post"), query=query))
+        context.update(self.get_manage_context(section="posts", page_title=_("Import from existing article"), query=query))
         context["posts"] = prepare_post_cards(page_obj.object_list)
         context["page_obj"] = page_obj
         context["is_paginated"] = paginator.num_pages > 1
@@ -530,7 +531,7 @@ class ManagePostMarkdownImportView(ManageBaseMixin, TemplateView):
             request.user,
         )
         write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from markdown file: %(title)s")) % {"title": draft.title}, user=request.user)
-        success_message = str(_("Post imported from .md successfully."))
+        success_message = str(_("Article imported from .md successfully."))
         messages.success(request, success_message)
         edit_url = reverse("manage-post-draft-update", args=[draft.pk])
         next_url = self.get_next_url()
@@ -625,8 +626,8 @@ class ManagePostDeleteView(ManageBaseMixin, View):
                 book.structure = pruned_structure
                 book.save(update_fields=["structure", "updated_at"])
         post.delete()
-        write_audit_log(request, AuditLog.ACTION_POST_DELETE, str(_("Post deleted: %(title)s")) % {"title": title}, user=request.user)
-        messages.success(request, _("Post deleted successfully."))
+        write_audit_log(request, AuditLog.ACTION_POST_DELETE, str(_("Article deleted: %(title)s")) % {"title": title}, user=request.user)
+        messages.success(request, _("Article deleted successfully."))
         return redirect(get_manage_home_url())
 
 

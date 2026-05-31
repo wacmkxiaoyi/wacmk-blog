@@ -241,7 +241,11 @@ export function openModal(options) {
         return;
     }
 
-    closeModal();
+    if (isModalOpen()) {
+        cancelActiveModal();
+    } else {
+        closeModal();
+    }
     tone = options && options.tone ? options.tone : "notice";
     modalState.restoreFocus = document.activeElement;
     modalState.onConfirm = options && options.onConfirm ? options.onConfirm : null;

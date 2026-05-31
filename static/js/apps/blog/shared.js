@@ -98,7 +98,7 @@ export function appendAccessDisplay(container, accessDisplay, options) {
 
     finalPresentation = display && display.presentation ? display.presentation : fallbackPresentation;
     presentation = getAccessPresentationClasses(finalPresentation);
-    if (!presentation || !finalPresentation || finalPresentation.type === "public" || finalPresentation.type === "conditional") {
+    if (!presentation || !finalPresentation || finalPresentation.type === "conditional") {
         return false;
     }
 
@@ -200,11 +200,25 @@ function initializeImportPostCards(rootNode) {
         card.setAttribute("data-import-post-card-bound", "true");
         card.addEventListener("click", function (event) {
             var form = card.closest(".import-post-form");
-            var interactiveTarget = event.target.closest("button, a, input, select, textarea, label, [data-condition-tooltip-trigger]");
-
-            if (!form || interactiveTarget) {
+            if (!form) {
                 return;
             }
+
+            var needsIntercept = form.getAttribute("data-import-requires-condition") === "true";
+            var postId = form.getAttribute("data-import-post-id") || "";
+
+            if (needsIntercept && postId) {
+                event.preventDefault();
+                event.stopPropagation();
+                handleImportConditionalAccess(form, postId);
+                return;
+            }
+
+            var interactiveTarget = event.target.closest("button, a, input, select, textarea, label, [data-condition-tooltip-trigger]");
+            if (interactiveTarget) {
+                return;
+            }
+
             if (typeof form.requestSubmit === "function") {
                 form.requestSubmit();
                 return;
@@ -214,10 +228,219 @@ function initializeImportPostCards(rootNode) {
     });
 }
 
+function handleImportConditionalAccess(form, postId) {
+    var csrfToken = getCsrfToken();
+    var postUrl = form.getAttribute("data-import-post-url") || "";
+    var body = new FormData();
+
+    if (!csrfToken) {
+        return;
+    }
+
+    body.append("source_post_id", postId);
+    body.append("csrfmiddlewaretoken", csrfToken);
+
+    fetch(form.action || window.location.href, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: body,
+        credentials: "same-origin"
+    }).then(function (response) {
+        return response.json().catch(function () {
+            return { ok: false, message: "Request failed." };
+        }).then(function (payload) {
+            return { ok: response.ok && payload.ok, status: response.status, data: payload };
+        });
+    }).then(function (result) {
+        if (result.ok) {
+            window.location.href = result.data.redirect_url || form.action;
+            return;
+        }
+
+        if (result.data.requires_condition) {
+            showImportConditionModal(form, postId);
+            return;
+        }
+
+        if (result.data.requires_password) {
+            openEncryptedPostModal({
+                url: postUrl,
+                title: "Enter password to view this article",
+                kicker: "Encrypted",
+                confirmText: "Unlock article",
+                cancelText: "Cancel",
+                isDirect: false,
+                error: "",
+                onImportSuccess: function () {
+                    submitImportForm(form, postId);
+                }
+            });
+            return;
+        }
+
+        showInlineFlash(result.data.message || "You do not have permission to import this article.", false);
+    }).catch(function () {
+        showInlineFlash("Request failed.", false);
+    });
+}
+
+function showImportConditionModal(form, postId) {
+    var postUrl = form.getAttribute("data-import-post-url") || "";
+    var status = form.getAttribute("data-import-condition-status") || "";
+    var money = form.getAttribute("data-import-condition-money") || "";
+    var points = form.getAttribute("data-import-condition-points") || "";
+
+    var modalConfig = buildConditionModalConfig({
+        status: status,
+        money: money,
+        points: points,
+        postUrl: postUrl,
+        csrfToken: getCsrfToken(),
+        onSuccess: function () {
+            submitImportForm(form, postId);
+        },
+        onError: function (error) {
+            showInlineFlash(error.message || "Insufficient balance.", false);
+        }
+    });
+
+    if (!modalConfig) {
+        return;
+    }
+
+    openModal({
+        tone: modalConfig.tone,
+        kicker: "Conditional",
+        title: "Content access check",
+        message: modalConfig.message,
+        confirmText: modalConfig.confirmText,
+        cancelText: "Cancel",
+        keepOpenOnConfirm: true,
+        onConfirm: modalConfig.confirmHandler,
+        onCancel: function () {
+            return;
+        }
+    });
+}
+
+function submitImportForm(form, postId) {
+    var csrfToken = getCsrfToken();
+    var postUrl = form.getAttribute("data-import-post-url") || "";
+    var body = new URLSearchParams();
+
+    body.append("source_post_id", postId);
+    body.append("csrfmiddlewaretoken", csrfToken);
+
+    fetch(form.action || window.location.href, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: body.toString()
+    }).then(function (response) {
+        return response.json().catch(function () {
+            return { ok: false, message: "Request failed." };
+        }).then(function (payload) {
+            return { ok: response.ok && payload.ok, data: payload };
+        });
+    }).then(function (result) {
+        if (result.ok && result.data.redirect_url) {
+            window.location.href = result.data.redirect_url;
+        } else if (result.ok) {
+            form.submit();
+        } else if (result.data && result.data.requires_password) {
+            openEncryptedPostModal({
+                url: postUrl,
+                title: "Enter password to view this article",
+                kicker: "Encrypted",
+                confirmText: "Unlock article",
+                cancelText: "Cancel",
+                isDirect: false,
+                error: "",
+                onImportSuccess: function () {
+                    submitImportForm(form, postId);
+                }
+            });
+        } else if (result.data && result.data.requires_condition) {
+            showImportConditionModal(form, postId);
+        } else {
+            showInlineFlash(result.data.message || "Import failed.", false);
+        }
+    }).catch(function () {
+        showInlineFlash("Request failed.", false);
+    });
+}
+
+export function buildConditionModalConfig(options) {
+    var status = options.status || "";
+    var money = options.money || "";
+    var points = options.points || "";
+    var postUrl = options.postUrl || "";
+    var csrfToken = options.csrfToken || "";
+    var onSuccess = options.onSuccess;
+    var onError = options.onError;
+    var insufficientMoneyLabel = options.insufficientMoneyLabel || "Insufficient balance";
+    var insufficientPointsLabel = options.insufficientPointsLabel || "Insufficient points";
+
+    if (status === "purchase_required") {
+        return {
+            message: money ? ("This content requires purchasing for " + money + ".") : "This content requires purchase.",
+            tone: "attention",
+            confirmText: "Purchase now",
+            confirmHandler: function () {
+                return fetch(postUrl, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": csrfToken
+                    }
+                }).then(function (response) {
+                    return response.json().catch(function () {
+                        return { ok: false, message: "Request failed." };
+                    }).then(function (payload) {
+                        if (!response.ok || !payload.ok) {
+                            throw new Error(payload.message || "Request failed.");
+                        }
+                        if (onSuccess) {
+                            onSuccess(payload);
+                        }
+                    });
+                }).catch(function (error) {
+                    if (onError) {
+                        onError(error);
+                    }
+                });
+            }
+        };
+    }
+
+    if (status === "insufficient_money") {
+        return {
+            message: insufficientMoneyLabel + (money ? (": " + money) : ""),
+            tone: "warning",
+            confirmText: ""
+        };
+    }
+
+    if (status === "insufficient_points") {
+        return {
+            message: insufficientPointsLabel + (points ? (": " + points) : ""),
+            tone: "warning",
+            confirmText: ""
+        };
+    }
+
+    return null;
+}
+
 function initializeConditionalAccess() {
-    var config = document.querySelector("[data-conditional-access-modal]");
+    var configEl = document.querySelector("[data-conditional-access-modal]");
     var status = "";
-    var confirmText = "";
     var cancelText = "";
     var title = "";
     var kicker = "";
@@ -227,69 +450,56 @@ function initializeConditionalAccess() {
     var points = "";
     var insufficientMoney = "";
     var insufficientPoints = "";
-    var message = "";
-    var confirmHandler = null;
+    var modalConfig = null;
 
-    if (!config || config.getAttribute("data-conditional-access-bound") === "true") {
+    if (!configEl || configEl.getAttribute("data-conditional-access-bound") === "true") {
         return;
     }
-    config.setAttribute("data-conditional-access-bound", "true");
+    configEl.setAttribute("data-conditional-access-bound", "true");
 
-    status = config.getAttribute("data-conditional-access-status") || "";
-    confirmText = config.getAttribute("data-conditional-access-confirm") || "";
-    cancelText = config.getAttribute("data-conditional-access-cancel") || "";
-    title = config.getAttribute("data-conditional-access-title") || "";
-    kicker = config.getAttribute("data-conditional-access-kicker") || "";
-    url = config.getAttribute("data-conditional-access-url") || "";
-    returnUrl = config.getAttribute("data-conditional-access-return-url") || "";
-    money = config.getAttribute("data-conditional-access-money") || "";
-    points = config.getAttribute("data-conditional-access-points") || "";
-    insufficientMoney = config.getAttribute("data-conditional-access-insufficient-money") || "Insufficient balance";
-    insufficientPoints = config.getAttribute("data-conditional-access-insufficient-points") || "Insufficient points";
+    status = configEl.getAttribute("data-conditional-access-status") || "";
+    cancelText = configEl.getAttribute("data-conditional-access-cancel") || "";
+    title = configEl.getAttribute("data-conditional-access-title") || "";
+    kicker = configEl.getAttribute("data-conditional-access-kicker") || "";
+    url = configEl.getAttribute("data-conditional-access-url") || "";
+    returnUrl = configEl.getAttribute("data-conditional-access-return-url") || "";
+    money = configEl.getAttribute("data-conditional-access-money") || "";
+    points = configEl.getAttribute("data-conditional-access-points") || "";
+    insufficientMoney = configEl.getAttribute("data-conditional-access-insufficient-money") || "Insufficient balance";
+    insufficientPoints = configEl.getAttribute("data-conditional-access-insufficient-points") || "Insufficient points";
 
-    if (status === "purchase_required") {
-        message = money ? ("This content requires purchasing for " + money + ".") : "This content requires purchase.";
-        confirmHandler = function () {
-            return fetch(url, {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRFToken": getCsrfToken()
-                }
-            }).then(function (response) {
-                return response.json().then(function (payload) {
-                    if (!response.ok || !payload.ok) {
-                        throw new Error(payload.message || "request failed");
-                    }
-                    window.location.assign(payload.redirect_url || url);
-                });
-            }).catch(function (error) {
-                showInlineFlash(error.message || insufficientMoney, false);
-                if (returnUrl) {
-                    window.location.assign(returnUrl);
-                }
-            });
-        };
-    } else if (status === "insufficient_money") {
-        message = insufficientMoney + (money ? (": " + money) : "");
-        confirmText = "";
-    } else if (status === "insufficient_points") {
-        message = insufficientPoints + (points ? (": " + points) : "");
-        confirmText = "";
-    } else {
+    modalConfig = buildConditionModalConfig({
+        status: status,
+        money: money,
+        points: points,
+        postUrl: url,
+        csrfToken: getCsrfToken(),
+        insufficientMoneyLabel: insufficientMoney,
+        insufficientPointsLabel: insufficientPoints,
+        onSuccess: function (payload) {
+            window.location.assign(payload.redirect_url || url);
+        },
+        onError: function (error) {
+            showInlineFlash(error.message || insufficientMoney, false);
+            if (returnUrl) {
+                window.location.assign(returnUrl);
+            }
+        }
+    });
+
+    if (!modalConfig) {
         return;
     }
 
     openModal({
-        tone: status === "purchase_required" ? "attention" : "warning",
+        tone: modalConfig.tone,
         kicker: kicker,
         title: title,
-        message: message,
-        confirmText: confirmText,
+        message: modalConfig.message,
+        confirmText: modalConfig.confirmText,
         cancelText: cancelText,
         keepOpenOnConfirm: true,
-        onConfirm: confirmHandler,
+        onConfirm: modalConfig.confirmHandler,
         onCancel: function () {
             if (returnUrl) {
                 window.location.assign(returnUrl);
@@ -309,7 +519,7 @@ function getEncryptedPostFallbackUrl() {
     return "/";
 }
 
-function openEncryptedPostModal(config) {
+export function openEncryptedPostModal(config) {
     var csrfToken = getCsrfToken();
     var content = document.createElement("div");
     var field = document.createElement("div");
@@ -367,6 +577,10 @@ function openEncryptedPostModal(config) {
                 input.select();
                 return;
             }
+            if (config.onImportSuccess) {
+                config.onImportSuccess();
+                return;
+            }
             window.location.href = result.data.redirect_url || submitUrl;
         }).catch(function () {
             errorNode.hidden = false;
@@ -405,6 +619,9 @@ function initializeEncryptedPostAccess() {
         trigger.setAttribute("data-encrypted-post-bound", "true");
         trigger.addEventListener("click", function (event) {
             event.preventDefault();
+            var importForm = trigger.closest(".import-post-form");
+            var importPostId = importForm ? (importForm.querySelector("input[name='source_post_id']") || {}).value : null;
+
             openEncryptedPostModal({
                 url: trigger.getAttribute("data-encrypted-post-url") || "",
                 title: trigger.getAttribute("data-encrypted-post-title") || "",
@@ -412,7 +629,10 @@ function initializeEncryptedPostAccess() {
                 confirmText: trigger.getAttribute("data-encrypted-post-confirm") || "",
                 cancelText: trigger.getAttribute("data-encrypted-post-cancel") || "",
                 isDirect: false,
-                error: ""
+                error: "",
+                onImportSuccess: importForm && importPostId ? function () {
+                    submitImportForm(importForm, importPostId);
+                } : null
             });
         });
     });
@@ -1700,6 +1920,21 @@ function initLinkPreviewCleanup() {
     }, true);
 }
 
+function scrollToCommentEditError() {
+    var panels = document.querySelectorAll(
+        "[data-comment-entry-panel]:not([hidden]), [data-comment-edit-panel]:not([hidden]), [data-reply-panel]:not([hidden])"
+    );
+    for (var i = 0; i < panels.length; i++) {
+        var form = panels[i].querySelector("form");
+        if (!form) continue;
+        var errorEl = form.querySelector(".field-error");
+        if (errorEl) {
+            errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+    }
+}
+
 var sharedInitialized = false;
 
 export function initBlogShared() {
@@ -1718,4 +1953,5 @@ export function initBlogShared() {
     initializePostOutline();
     initializeBookOutline();
     initLinkPreviewCleanup();
+    scrollToCommentEditError();
 }

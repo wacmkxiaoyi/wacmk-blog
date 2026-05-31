@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Book Editor" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -149,8 +154,8 @@
                 data-chapter-delete-label="{% trans 'Delete' %}"
                 data-chapter-save-label="{% trans 'Save' %}"
                 data-chapter-cancel-label="{% trans 'Cancel' %}"
-                data-chapter-search-placeholder="{% trans 'Search posts' %}"
-                data-chapter-no-posts-label="{% trans 'No posts found.' %}"
+                data-chapter-search-placeholder="{% trans 'Search articles' %}"
+                data-chapter-no-posts-label="{% trans 'No articles found.' %}"
                 data-chapter-select-label="{% trans 'Select' %}"
                 data-chapter-selected-label="{% trans 'Selected' %}"
                 data-chapter-added-label="{% trans 'Added' %}"
@@ -202,3 +207,4 @@
 {% block extra_js %}
 <script type="module" src="{% static 'js/entrypoints/blog-manage-book-form.js' %}"></script>
 {% endblock %}
+

@@ -52,6 +52,12 @@ class ManageBookCreateView(ManageBaseMixin, CreateView):
     def get_success_url(self):
         return self.get_next_url() or reverse("manage-books")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        kwargs["request"] = self.request
+        return kwargs
+
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         response = super().form_valid(form)
@@ -77,6 +83,12 @@ class ManageBookUpdateView(ManageBaseMixin, UpdateView):
     context_object_name = "book"
     form_class = BookForm
     queryset = Book.objects.select_related("created_by").prefetch_related("posts__author")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        kwargs["request"] = self.request
+        return kwargs
 
     def form_valid(self, form):
         response = super().form_valid(form)

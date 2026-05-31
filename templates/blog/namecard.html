@@ -1,0 +1,213 @@
+﻿{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "User Namecard" %} - {{ namecard_user.first_name|default:namecard_user.username }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/bundles/blog.css" %}">
+<link rel="stylesheet" href="{% static "css/bundles/manage.css" %}">
+<link rel="stylesheet" href="{% static "css/apps/users/namecard.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-namecard.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page namecard-page">
+    <aside class="manage-sidebar section-panel namecard-sidebar">
+        <nav class="manage-sidebar-nav namecard-sidebar-nav" aria-label="{% trans "Namecard sections" %}">
+            {% for item in namecard_nav %}
+            <a href="?tab={{ item.tab }}" class="{% if current_tab == item.tab %}is-active{% endif %}">{{ item.label }}</a>
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <section class="manage-content">
+        {% if current_tab == "basic" %}
+        <div class="section-panel panel-form user-manage-form namecard-form">
+            <div class="user-manage-shell namecard-shell">
+                <div class="section-heading-row user-manage-heading namecard-heading">
+                    <div>
+                        <span class="section-kicker">{% trans "Namecard" %}</span>
+                        <h1>{% trans "Basic Information" %}</h1>
+                    </div>
+                </div>
+
+                <div class="namecard-header">
+                    <div class="namecard-avatar-cell">
+                        {% if namecard_profile.avatar_url %}
+                        <img class="namecard-avatar namecard-avatar-large" src="{{ namecard_profile.avatar_url }}" alt="{{ namecard_user.username }}">
+                        {% else %}
+                        <span class="namecard-avatar namecard-avatar-large namecard-avatar-fallback">&#x1F464;</span>
+                        {% endif %}
+                    </div>
+                    <div class="namecard-identity-cell">
+                        <span class="namecard-display-name">{{ namecard_user.first_name|default:namecard_user.username }}</span>
+                        {% if namecard_is_admin %}
+                        <span class="soft-tag namecard-role-tag">{% trans "Administrator" %}</span>
+                        {% endif %}
+                        {% if namecard_business_identity.is_vip and not namecard_is_admin %}
+                        <span class="soft-tag namecard-role-tag namecard-role-tag-vip"><span class="comment-role-tag-vip-text">{{ namecard_business_identity.label }}</span></span>
+                        {% endif %}
+                    </div>
+                    <div class="namecard-assets-cell">
+                        <div class="namecard-asset access-tone-money">
+                            <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                            <span>{{ namecard_profile.money|default:0 }}</span>
+                        </div>
+                        <div class="namecard-asset access-tone-points">
+                            <i class="fa-solid fa-gem" aria-hidden="true"></i>
+                            <span>{{ namecard_profile.points|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="namecard-details-grid">
+                    <div class="namecard-bio-value namecard-detail-cell">
+                        <span class="namecard-detail-label">{% trans "Gender" %}</span>
+                        {% if namecard_profile.gender %}
+                        <span class="namecard-detail-value">{{ namecard_profile.get_gender_display }}</span>
+                        {% else %}
+                        <span class="namecard-detail-value namecard-bio-empty">{% trans "Not specified" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="namecard-bio-value namecard-detail-cell">
+                        <span class="namecard-detail-label">{% trans "Age" %}</span>
+                        {% if namecard_profile.age %}
+                        <span class="namecard-detail-value">{{ namecard_profile.age }}</span>
+                        {% else %}
+                        <span class="namecard-detail-value namecard-bio-empty">{% trans "Not specified" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="field-group user-manage-field">
+                    <label>{% trans "Personal description" %}</label>
+                    {% if namecard_profile.description %}
+                    <div class="namecard-bio-value">{{ namecard_profile.description }}</div>
+                    {% else %}
+                    <div class="namecard-bio-value namecard-bio-empty">{% trans "No personal description yet." %}</div>
+                    {% endif %}
+                </div>
+
+                {% if namecard_profile.github or namecard_profile.website or namecard_profile.twitter or namecard_profile.qq or namecard_profile.show_email_on_namecard %}
+                <div class="field-group user-manage-field">
+                    <label>{% trans "Social links" %}</label>
+                    <div class="namecard-social-links">
+                        {% if namecard_profile.github %}
+                        <a href="{{ namecard_profile.github }}" target="_blank" rel="noopener noreferrer me" class="namecard-social-link" title="GitHub">
+                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if namecard_profile.website %}
+                        <a href="{{ namecard_profile.website }}" target="_blank" rel="noopener noreferrer me" class="namecard-social-link" title="{% trans 'Website' %}">
+                            <i class="fa-solid fa-globe" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if namecard_profile.twitter %}
+                        <a href="{{ namecard_profile.twitter }}" target="_blank" rel="noopener noreferrer me" class="namecard-social-link" title="Twitter">
+                            <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if namecard_profile.qq %}
+                        <span class="namecard-social-link namecard-social-qq" title="QQ: {{ namecard_profile.qq }}">
+                            <i class="fa-brands fa-qq" aria-hidden="true"></i>
+                            <span class="namecard-social-qq-number">{{ namecard_profile.qq }}</span>
+                        </span>
+                        {% endif %}
+                        {% if namecard_profile.show_email_on_namecard and namecard_user.email %}
+                        <a href="mailto:{{ namecard_user.email }}" class="namecard-social-link" title="{{ namecard_user.email }}">
+                            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                            <span class="namecard-social-qq-number">{{ namecard_user.email }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% elif current_tab == "posts" %}
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Recent Posts" %}</span>
+                    <h1>{% trans "Recent Posts" %}</h1>
+                </div>
+            </div>
+            <div class="post-grid namecard-post-grid">
+                {% for post in namecard_posts %}
+                {% if post.has_encrypted_access and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
+                {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=True %}
+                {% else %}
+                {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True post_requires_password=False %}
+                {% endif %}
+                {% empty %}
+                <div class="empty-panel">
+                    <h3>{% trans "No posts yet" %}</h3>
+                    <p>{% trans "This user hasn't published any non-private articles yet." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif current_tab == "books" %}
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Recent Books" %}</span>
+                    <h1>{% trans "Recent Books" %}</h1>
+                </div>
+            </div>
+            <div class="book-listing">
+                {% for book in namecard_books %}
+                <article class="book-list-card">
+                    <a href="{{ book.get_absolute_url }}" class="book-list-cover-shell" aria-label="{{ book.name }}">
+                        {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" alt="{{ book.name }}" class="book-list-cover">
+                        {% else %}
+                        <div class="book-list-cover book-list-cover-placeholder">
+                            <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    <div class="book-list-body">
+                        <div class="book-list-title-row">
+                            <div class="book-list-title-main">
+                                <h2>{{ book.name }}</h2>
+                                {% if book.condition_summary_items %}
+                                {% include 'blog/includes/condition_summary.html' with condition_items=book.condition_summary_items %}
+                                {% else %}
+                                {% include 'blog/includes/access_badge.html' with access=book.visibility_presentation %}
+                                {% endif %}
+                                <span class="soft-tag">{% blocktrans count total=book.post_count %}{{ total }} article{% plural %}{{ total }} articles{% endblocktrans %}</span>
+                            </div>
+                            <span class="book-list-date">{{ book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        </div>
+                        <div class="book-list-divider" aria-hidden="true"></div>
+                        <p>{{ book.summary|default:_('No summary yet.') }}</p>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="empty-panel">
+                    <h3>{% trans "No books yet" %}</h3>
+                    <p>{% trans "This user hasn't published any non-private books yet." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif current_tab == "comments" %}
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Recent Comments" %}</span>
+                    <h1>{% trans "Recent Comments" %}</h1>
+                </div>
+            </div>
+            <div class="namecard-comment-list">
+                {% include 'blog/includes/namecard_comments.html' with comments=namecard_comments can_interact=True %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +11,7 @@ from django.views.generic import ListView, TemplateView
 
 from apps.blog.forms import SearchForm, SiteSettingForm
 from apps.blog.models import AuditLog, Book, ContentViewLog, Post, PostDraft, SiteSetting, Tag
-from apps.blog.utils import get_or_create_site_setting, write_audit_log
+from apps.blog.utils import get_normalized_vip_level_names, get_or_create_site_setting, write_audit_log
 from apps.blog.utils.site import build_visit_trend
 from apps.blog.views.manage.base import ManageBaseMixin
 from apps.blog.views.post.utils import get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
@@ -64,13 +64,6 @@ class BlogHomeView(LoginRequiredMixin, ListView):
         context["featured_post"] = context["posts"][0] if context["posts"] else None
         context["visit_trend"] = build_visit_trend(days=trend_days)
         context["visit_trend_days"] = trend_days
-        context["recent_drafts"] = draft_posts.order_by("-updated_at")[:4]
-        context["recent_audit_logs"] = AuditLog.objects.select_related("user")[:5]
-        context["top_authors"] = (
-            User.objects.filter(posts__status=Post.STATUS_PUBLISHED)
-            .annotate(post_count=Count("posts", filter=Q(posts__status=Post.STATUS_PUBLISHED), distinct=True))
-            .order_by("-post_count", "username")[:4]
-        )
         context["search_form"] = DashboardSearchForm(self.request.GET or None)
         return context
 
@@ -88,9 +81,18 @@ class ManageSiteSettingView(ManageBaseMixin, TemplateView):
         context.update(self.get_manage_context(section="basic", page_title=_("Basic settings")))
         context["form"] = form
         context["site_setting"] = site_setting
+        context["vip_level_names"] = get_normalized_vip_level_names(site_setting)
         return context
 
     def post(self, request, *args, **kwargs):
+        if request.POST.get("action") == "restore_defaults":
+            site_setting = self.get_site_setting()
+            if site_setting and site_setting.pk:
+                site_setting.delete()
+            write_audit_log(request, AuditLog.ACTION_POST_UPDATE, str(_("Basic site settings restored to defaults.")), user=request.user)
+            messages.success(request, _("Basic settings restored to defaults."))
+            return redirect("manage-site-settings")
+
         site_setting = self.get_site_setting()
         form = SiteSettingForm(request.POST, request.FILES, instance=site_setting)
         if not form.is_valid():

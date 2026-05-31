@@ -15,7 +15,13 @@ from apps.blog.permissions import (
     hash_condition_password,
     normalize_condition_rules,
 )
-from apps.blog.visibility import get_post_access_display, get_post_access_icon_presentation
+from apps.blog.views.book.utils import prune_book_structure_missing_posts
+from apps.blog.visibility import (
+    get_post_access_display,
+    get_post_access_icon_presentation,
+    post_has_encrypted_access,
+    post_has_value_conditions,
+)
 from apps.blog.views.book.utils import prune_book_structure_missing_posts
 
 
@@ -81,6 +87,10 @@ class BookForm(forms.ModelForm):
         fields = ["name", "slug", "summary", "cover_image", "visibility", "condition_rules"]
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        request = kwargs.pop("request", None)
+        self._profile_user = user
+        self._request = request
         if args:
             normalized_args = list(args)
             normalized_args[0] = self.normalize_post_selection_data(normalized_args[0])
@@ -109,8 +119,83 @@ class BookForm(forms.ModelForm):
             }
             for post in posts.filter(pk__in=selected_ids) if selected_ids
         ]
+        if self._profile_user and not (self._profile_user.is_staff or self._profile_user.is_superuser):
+            self._compute_post_access_flags()
         self.initial["structure"] = self.get_structure_payload()
         self.structure_script_value = self.get_structure_script_value()
+
+    def _compute_post_access_flags(self):
+        from apps.blog.access import ACCESS_STATUS_GRANTED, evaluate_article_access
+        from apps.blog.views.post.utils import can_bypass_post_password, is_post_unlocked
+
+        user = self._profile_user
+        for option in self.post_options:
+            try:
+                post_id = int(option["value"])
+            except (TypeError, ValueError):
+                option["can_access"] = False
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+                continue
+            post = Post.objects.filter(pk=post_id).first()
+            if not post:
+                option["can_access"] = False
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+                continue
+            option["post_url"] = post.get_absolute_url()
+            if post.author_id == user.pk:
+                option["can_access"] = True
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+                continue
+            if post.visibility == Post.VISIBILITY_PRIVATE:
+                option["can_access"] = False
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+                continue
+            if post_has_encrypted_access(post):
+                if can_bypass_post_password(user, post):
+                    option["can_access"] = True
+                    option["requires_condition"] = False
+                    option["condition_status"] = ""
+                    option["condition_money"] = ""
+                    option["condition_points"] = ""
+                    continue
+                option["can_access"] = False
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+                continue
+            if post_has_value_conditions(post):
+                access_state = evaluate_article_access(user, post)
+                if access_state["status"] == ACCESS_STATUS_GRANTED:
+                    option["can_access"] = True
+                    option["requires_condition"] = False
+                    option["condition_status"] = ""
+                    option["condition_money"] = ""
+                    option["condition_points"] = ""
+                else:
+                    option["can_access"] = True
+                    option["requires_condition"] = True
+                    option["condition_status"] = access_state["status"]
+                    option["condition_money"] = str(access_state["money_required"] or "")
+                    option["condition_points"] = str(access_state["points_required"] or "")
+                continue
+            option["can_access"] = True
+            option["requires_condition"] = False
+            option["condition_status"] = ""
+            option["condition_money"] = ""
+            option["condition_points"] = ""
 
     def normalize_post_selection_data(self, data):
         if data is None:
@@ -234,6 +319,21 @@ class BookForm(forms.ModelForm):
                     code="invalid_choice",
                     params={"value": post_id},
                 )
+
+        if self._profile_user and not (self._profile_user.is_staff or self._profile_user.is_superuser):
+            from apps.blog.views.post.utils import can_add_post_to_book
+            for post in queryset:
+                if post.author_id == self._profile_user.pk:
+                    continue
+                if post.visibility == Post.VISIBILITY_PRIVATE:
+                    raise forms.ValidationError(
+                        _("You do not have permission to add \"%(title)s\" to this book.") % {"title": post.title}
+                    )
+                if self._request is None or not can_add_post_to_book(self._request, post):
+                    raise forms.ValidationError(
+                        _("You do not have permission to add \"%(title)s\" to this book.") % {"title": post.title}
+                    )
+
         return queryset
 
     def clean_condition_rules(self):
@@ -287,6 +387,8 @@ class BookForm(forms.ModelForm):
         if not structure and selected_ids:
             structure = [{"type": "post", "post_id": int(post_id)} for post_id in selected_ids]
             cleaned_data["structure"] = structure
+        if self.errors.get("post_selection"):
+            return cleaned_data
         structure_ids = {str(pk) for pk in self.extract_post_ids(structure)}
         if structure_ids != selected_ids:
             self.add_error("post_selection", _("Selected articles must match the book structure."))

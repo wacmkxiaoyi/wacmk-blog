@@ -1,15 +1,30 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
-{% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Post Editor" %}{% endif %}{% endblock %}
+{% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Article Editor" %}{% endif %}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% if is_profile_post_view %}
+<link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}">
+{% endif %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 {% endblock %}
 
 {% block content %}
-<main class="site-page manage-page">
+<main class="site-page manage-page{% if is_profile_post_view %} profile-manage-page{% endif %}">
+    {% if is_profile_post_view %}
+    <aside class="manage-sidebar section-panel profile-sidebar">
+        <nav class="manage-sidebar-nav profile-sidebar-nav" aria-label="{% trans 'Profile sections' %}">
+            {% for item in profile_nav %}
+            <a href="{{ item.url }}" class="{% if current_section == item.section %}is-active{% endif %}">{{ item.label }}</a>
+            {% endfor %}
+        </nav>
+    </aside>
+    {% else %}
     {% include 'blog/manage/sidebar.html' with section='posts' %}
+    {% endif %}
     <section class="manage-content">
         <form method="post" enctype="multipart/form-data" class="section-panel panel-form editor-panel" data-post-editor-form data-unsaved-guard data-post-id="{{ editor_mode }}-{{ form.instance.pk|default:'new' }}" data-autosave-enabled="{% if site_setting and site_setting.post_editor_autosave_enabled %}true{% else %}false{% endif %}" data-autosave-interval-ms="{% if site_setting %}{% widthratio site_setting.post_editor_autosave_interval_minutes|default:5 1 60000 %}{% else %}300000{% endif %}">
             {% csrf_token %}
@@ -17,7 +32,7 @@
             <div class="section-heading-row">
                 <div>
                     <span class="section-kicker">{% trans "Editor" %}</span>
-                    <h1>{% if page_title %}{{ page_title }}{% else %}{% trans "Post Editor" %}{% endif %}</h1>
+                    <h1>{% if page_title %}{{ page_title }}{% else %}{% trans "Article Editor" %}{% endif %}</h1>
                 </div>
                 {% if editor_mode == 'published' and revision_draft %}
                 <span class="soft-tag">{% trans "Has revision" %}</span>
@@ -152,7 +167,9 @@
             </div>
             <div class="panel-actions post-form-actions">
                 <button type="submit" name="status" value="draft" class="secondary-button">{% if editor_mode == 'published' %}{% trans "Save revision" %}{% else %}{% trans "Save draft" %}{% endif %}</button>
-                <button type="submit" name="status" value="published" class="primary-button">{% trans "Publish post" %}</button>
+                {% if not hide_publish %}
+                <button type="submit" name="status" value="published" class="primary-button">{% trans "Publish article" %}</button>
+                {% endif %}
             </div>
         </form>
     </section>
@@ -164,3 +181,4 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script type="module" src="{% static 'js/entrypoints/blog-manage-post-form.js' %}"></script>
 {% endblock %}
+

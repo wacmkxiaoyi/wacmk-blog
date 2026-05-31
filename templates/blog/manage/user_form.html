@@ -1,7 +1,13 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Edit User" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+<link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -9,7 +15,8 @@
     <section class="manage-content">
         <form method="post" class="section-panel panel-form user-manage-form" data-unsaved-guard>
             {% csrf_token %}
-            <input type="hidden" value="{{ form.default_business_group_value|default:''|escape }}" data-default-business-group-value="{{ form.default_business_group_value|default:''|escape }}">
+            <input type="hidden" value="{{ form.default_business_identity_value|default:''|escape }}" data-default-business-identity-value="{{ form.default_business_identity_value|default:''|escape }}">
+            {{ form.business_identity_touched }}
             <input type="hidden" name="remove_avatar" value="{% if remove_avatar_pending %}1{% else %}0{% endif %}" data-manage-user-avatar-remove-flag>
             <div class="user-manage-shell">
                 <div class="section-heading-row user-manage-heading">
@@ -49,6 +56,64 @@
                             {{ form.first_name }}
                             {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors|striptags }}</div>{% endif %}
                         </div>
+                        <div class="user-manage-fields-row">
+                            <div class="field-group user-manage-field">
+                                <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                                {{ form.gender }}
+                                {% if form.gender.errors %}<div class="field-error">{{ form.gender.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label for="{{ form.age.id_for_label }}">{{ form.age.label }}</label>
+                                {{ form.age }}
+                                {% if form.age.errors %}<div class="field-error">{{ form.age.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}<div class="field-error">{{ form.description.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-toggle-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                                {{ form.is_active }}
+                            </div>
+                            {% if form.is_active.errors %}<div class="field-error">{{ form.is_active.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "Social information" %}</h2>
+                    </div>
+                    <div class="user-manage-fields">
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.github.id_for_label }}"><i class="fa-brands fa-github" aria-hidden="true"></i> {{ form.github.label }}</label>
+                            {{ form.github }}
+                            {% if form.github.errors %}<div class="field-error">{{ form.github.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.website.id_for_label }}"><i class="fa-solid fa-globe" aria-hidden="true"></i> {{ form.website.label }}</label>
+                            {{ form.website }}
+                            {% if form.website.errors %}<div class="field-error">{{ form.website.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.twitter.id_for_label }}"><i class="fa-brands fa-twitter" aria-hidden="true"></i> {{ form.twitter.label }}</label>
+                            {{ form.twitter }}
+                            {% if form.twitter.errors %}<div class="field-error">{{ form.twitter.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.qq.id_for_label }}"><i class="fa-brands fa-qq" aria-hidden="true"></i> {{ form.qq.label }}</label>
+                            {{ form.qq }}
+                            {% if form.qq.errors %}<div class="field-error">{{ form.qq.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "Account security" %}</h2>
+                    </div>
+                    <div class="user-manage-fields">
                         <div class="field-group user-manage-field">
                             <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                             {{ form.email }}
@@ -64,30 +129,6 @@
                             <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
                             {{ form.password2 }}
                             {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors|striptags }}</div>{% endif %}
-                        </div>
-                        <div class="field-group user-manage-toggle-field">
-                            <div class="user-manage-toggle-row">
-                                <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
-                                {{ form.is_active }}
-                            </div>
-                            {% if form.is_active.errors %}<div class="field-error">{{ form.is_active.errors|striptags }}</div>{% endif %}
-                        </div>
-                    </div>
-                </section>
-                <section class="user-manage-section">
-                    <div class="user-manage-section-header">
-                        <h2>{% trans "Virtual assets" %}</h2>
-                    </div>
-                    <div class="user-manage-fields user-manage-assets-grid">
-                        <div class="field-group user-manage-field">
-                            <label for="{{ form.money.id_for_label }}">{{ form.money.label }}</label>
-                            {{ form.money }}
-                            {% if form.money.errors %}<div class="field-error">{{ form.money.errors|striptags }}</div>{% endif %}
-                        </div>
-                        <div class="field-group user-manage-field">
-                            <label for="{{ form.points.id_for_label }}">{{ form.points.label }}</label>
-                            {{ form.points }}
-                            {% if form.points.errors %}<div class="field-error">{{ form.points.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
@@ -123,28 +164,29 @@
                         <div class="user-manage-divider" data-role-admin-divider{% if current_role != 'admin' %} hidden{% endif %}></div>
                         {% endwith %}
                         <div class="user-manage-subsection" data-role-member-section>
-                            <div class="user-manage-subsection-title">{% trans "Business groups" %}</div>
-                            <div class="user-manage-group-list">
-                                {% for option in form.business_group_options %}
-                                <div class="field-group user-manage-toggle-field">
-                                    <div class="user-manage-toggle-row">
-                                        <label for="{{ option.id }}">{{ option.label }}</label>
-                                        <input
-                                            type="checkbox"
-                                            name="groups"
-                                            value="{{ option.value }}"
-                                            id="{{ option.id }}"
-                                            {% if option.checked %}checked{% endif %}
-                                            data-business-group-checkbox="true"
-                                            data-group-name="{{ option.name }}"
-                                        >
-                                    </div>
-                                </div>
-                                {% empty %}
-                                <div class="field-help">{% trans "No user groups available." %}</div>
-                                {% endfor %}
+                            <div class="field-group user-manage-field">
+                                <label for="{{ form.business_identity.id_for_label }}">{{ form.business_identity.label }}</label>
+                                {% if form.business_identity.help_text %}<div class="field-help">{{ form.business_identity.help_text }}</div>{% endif %}
+                                {{ form.business_identity }}
+                                {% if form.business_identity.errors %}<div class="field-error">{{ form.business_identity.errors|striptags }}</div>{% endif %}
                             </div>
-                            {% if form.groups.errors %}<div class="field-error">{{ form.groups.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+                <section class="user-manage-section">
+                    <div class="user-manage-section-header">
+                        <h2>{% trans "Virtual assets" %}</h2>
+                    </div>
+                    <div class="user-manage-fields user-manage-assets-grid">
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.money.id_for_label }}">{{ form.money.label }}</label>
+                            {{ form.money }}
+                            {% if form.money.errors %}<div class="field-error">{{ form.money.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group user-manage-field">
+                            <label for="{{ form.points.id_for_label }}">{{ form.points.label }}</label>
+                            {{ form.points }}
+                            {% if form.points.errors %}<div class="field-error">{{ form.points.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
@@ -157,7 +199,7 @@
                             formaction="{% url 'manage-user-delete' object.pk %}"
                             data-delete-confirm-trigger
                             data-delete-confirm-title="{% trans 'Delete user' %}"
-                            data-delete-confirm-message="{% blocktrans with username=object.username %}Are you sure you want to delete user \"{{ username }}\"? This action cannot be undone.{% endblocktrans %}"
+                            data-delete-confirm-message="{% blocktrans with username=object.username %}Are you sure you want to delete user {{ username }}? This action cannot be undone.{% endblocktrans %}"
                             data-delete-confirm-button="{% trans 'Delete' %}"
                             data-delete-cancel-button="{% trans 'Cancel' %}"
                         >{% trans "Delete" %}</button>
@@ -176,4 +218,5 @@
 {% block extra_js %}
 <script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
 {% endblock %}
+
 

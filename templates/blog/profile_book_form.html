@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Book Editor" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+<link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page profile-manage-page">
+    <aside class="manage-sidebar section-panel profile-sidebar">
+        <nav class="manage-sidebar-nav profile-sidebar-nav" aria-label="{% trans 'Profile sections' %}">
+            {% for item in profile_nav %}
+            <a href="{{ item.url }}" class="{% if current_section == item.section %}is-active{% endif %}">{{ item.label }}</a>
+            {% endfor %}
+        </nav>
+    </aside>
+    <section class="manage-content">
+        <form method="post" enctype="multipart/form-data" class="section-panel panel-form book-editor-form" data-book-editor-form data-unsaved-guard>
+            {% csrf_token %}
+            {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+            {{ form.structure }}
+            <div data-book-post-selection-inputs hidden></div>
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Editor" %}</span>
+                    <h1>{% if page_title %}{{ page_title }}{% else %}{% trans "Book Editor" %}{% endif %}</h1>
+                </div>
+            </div>
+            {% if form.non_field_errors %}
+            <div class="form-alert" role="alert">{{ form.non_field_errors|striptags }}</div>
+            {% endif %}
+            <div class="form-grid-two">
+                <div class="field-group">
+                    <label for="id_name">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="field-error">{{ form.name.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group">
+                    <label for="id_slug">{{ form.slug.label }}</label>
+                    {{ form.slug }}
+                    {% if form.slug.errors %}<div class="field-error">{{ form.slug.errors|striptags }}</div>{% endif %}
+                </div>
+            </div>
+            <div class="field-group">
+                <label for="id_summary">{{ form.summary.label }}</label>
+                {{ form.summary }}
+                {% if form.summary.errors %}<div class="field-error">{{ form.summary.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="form-grid-two">
+                <div class="field-group">
+                    <label for="id_cover_image">{{ form.cover_image.label }}</label>
+                    <div class="book-cover-field" data-book-cover-field>
+                        <input type="hidden" name="remove_cover_image" value="0" data-book-cover-remove-flag>
+                        <div class="post-cover-preview-wrapper{% if not form.instance.pk or not form.instance.cover_image %} is-hidden{% endif %}" data-book-cover-preview-wrapper>
+                            <div class="post-cover-preview-card book-cover-preview-card" data-book-cover-preview-card>
+                                <img src="{% if form.instance.pk and form.instance.cover_image %}{{ form.instance.cover_image.url }}{% endif %}" alt="{{ form.instance.name }}" class="post-cover-preview-image" data-book-cover-preview-image>
+                            </div>
+                        </div>
+                        <div class="post-cover-upload-row{% if form.instance.pk and form.instance.cover_image %} is-hidden{% endif %}" data-book-cover-upload-row>
+                            <label class="book-cover-input-shell" data-book-cover-input-shell>
+                                {{ form.cover_image }}
+                            </label>
+                        </div>
+                    </div>
+                    {% if form.cover_image.errors %}<div class="field-error">{{ form.cover_image.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group">
+                    <div class="post-cover-side-actions book-cover-side-actions" data-book-cover-actions>
+                        <button type="button" class="secondary-button post-cover-remove-button{% if not form.instance.pk or not form.instance.cover_image %} is-hidden{% endif %}" data-book-cover-remove>{% trans "Delete cover image" %}</button>
+                        <button type="button" class="secondary-button post-cover-undo-button is-hidden" data-book-cover-undo>{% trans "Undo" %}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="editor-access-layout editor-access-layout-book">
+                <div class="field-group editor-access-layout-visibility">
+                    <label for="id_visibility">{{ form.visibility.label }}</label>
+                    {{ form.visibility }}
+                    {{ form.condition_rules }}
+                </div>
+                <div class="field-group editor-access-layout-conditions" data-condition-editor-field hidden>
+                    <label>{% trans "Conditions" %}</label>
+                    <div
+                        class="condition-editor"
+                        data-condition-editor
+                        data-condition-input-id="{{ form.condition_rules.id_for_label }}"
+                        data-condition-initial="{{ form.condition_rules.value|default:'[]'|escapejs }}"
+                        data-condition-existing-password-types="{{ form.existing_password_rule_types|join:',' }}"
+                        data-condition-max-message="{% trans 'Condition types are full' %}"
+                        data-condition-value-placeholder="{% trans 'Value' %}"
+                        data-condition-password-placeholder="{% trans 'Enter password' %}"
+                        data-condition-password-existing-placeholder="{% trans 'Leave blank to keep current password' %}"
+                        data-condition-money-label="{% trans 'Money' %}"
+                        data-condition-points-label="{% trans 'Points' %}"
+                        data-condition-encrypted-label="{% trans 'Encrypted' %}"
+                        data-condition-types="money,points,encrypted"
+                        data-condition-password-types="encrypted"
+                    ></div>
+                    {% if form.condition_rules.errors %}<div class="field-error">{{ form.condition_rules.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group editor-access-layout-share" data-book-share-field {% if not book_share_is_public %}hidden{% endif %}>
+                    <label for="book-share-expiry">{% trans "External link" %}</label>
+                    <div class="inline-action-field editor-share-inline-action-field">
+                        <select
+                            id="book-share-expiry"
+                            class="input-control editor-share-expiry-select"
+                            data-share-expiry-select
+                            aria-label="{% trans 'Link expiry' %}"
+                            {% if not book_share_can_generate %}disabled{% endif %}
+                        >
+                            {% for option in book_share_expiry_options %}
+                            <option value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                        <button
+                            type="button"
+                            class="secondary-button inline-action-button editor-share-generate-button editor-share-generate-button-large"
+                            data-inline-share-trigger
+                            data-share-endpoint="{% if form.instance.pk %}{% url 'book-share-create' form.instance.slug %}{% endif %}"
+                            data-share-can-generate="{% if book_share_can_generate %}true{% else %}false{% endif %}"
+                            data-share-disabled-message="{{ book_share_disabled_message|default:'' }}"
+                            data-share-current-url="{{ book_share_current_url }}"
+                            data-share-current-expires="{{ book_share_current_expires }}"
+                            data-share-request-error="{% trans 'Request failed. Please try again.' %}"
+                            data-share-generate-error="{% trans 'Unable to generate share link right now.' %}"
+                            data-share-copy-success="{% trans 'External link copied.' %}"
+                            {% if not book_share_can_generate %}disabled{% endif %}
+                        >{% trans "Generate share link" %}</button>
+                    </div>
+                </div>
+                {% if form.visibility.errors %}<div class="field-error">{{ form.visibility.errors|striptags }}</div>{% endif %}
+                {% if book_share_disabled_message %}
+                <p class="editor-share-message" data-book-share-message {% if not book_share_is_public %}hidden{% endif %}>{{ book_share_disabled_message }}</p>
+                {% endif %}
+                <div class="editor-share-result{% if not book_share_active_link %} is-hidden{% endif %}" data-book-share-result data-share-inline-result {% if not book_share_is_public %}hidden{% endif %}>
+                    <div class="inline-action-field editor-share-result-row">
+                        <input type="text" class="input-control editor-share-result-input" value="{{ book_share_current_url }}" readonly data-share-inline-url>
+                        <button type="button" class="secondary-button inline-action-button editor-share-copy-button" data-share-inline-copy{% if not book_share_active_link %} disabled{% endif %}>{% trans "Copy link" %}</button>
+                    </div>
+                </div>
+            </div>
+            <section
+                class="chapter-workbench-panel"
+                data-book-chapter-workbench
+                data-reference-search-url="{% url 'profile-book-post-search' %}"
+                data-chapter-kicker="{% trans 'Chapters' %}"
+                data-chapter-title="{% trans 'Chapter management' %}"
+                data-chapter-toolbar-label="{% trans 'Chapter actions' %}"
+                data-chapter-add-posts-label="{% trans 'Add article' %}"
+                data-chapter-add-group-label="{% trans 'Add group' %}"
+                data-chapter-new-group-default="{% trans 'New group' %}"
+                data-chapter-empty-label="{% trans 'No chapters yet. Add articles or groups to start building this book.' %}"
+                data-chapter-rename-title="{% trans 'Rename group' %}"
+                data-chapter-rename-placeholder="{% trans 'Group title' %}"
+                data-chapter-rename-help="{% trans 'Enter a new group name.' %}"
+                data-chapter-move-up-label="{% trans 'Move up' %}"
+                data-chapter-move-down-label="{% trans 'Move down' %}"
+                data-chapter-delete-label="{% trans 'Delete' %}"
+                data-chapter-save-label="{% trans 'Save' %}"
+                data-chapter-cancel-label="{% trans 'Cancel' %}"
+                data-chapter-search-placeholder="{% trans 'Search articles' %}"
+                data-chapter-no-posts-label="{% trans 'No articles found.' %}"
+                data-chapter-select-label="{% trans 'Select' %}"
+                data-chapter-selected-label="{% trans 'Selected' %}"
+                data-chapter-added-label="{% trans 'Added' %}"
+                data-chapter-add-selected-label="{% trans 'Add selected' %}"
+                data-chapter-drag-label="{% trans 'Drag' %}"
+                data-profile-book-mode="true"
+            >
+                <div class="chapter-workbench-panel-header">
+                    <h2>{% trans "Chapter management" %}</h2>
+                    <div class="chapter-workbench-toolbar" role="toolbar" aria-label="{% trans 'Chapter actions' %}">
+                        <button type="button" class="chapter-workbench-tool" data-book-add-posts title="{% trans 'Add article' %}" aria-label="{% trans 'Add article' %}">
+                            <i class="fa-solid fa-file-circle-plus" aria-hidden="true"></i>
+                            <span class="sr-only">{% trans "Add article" %}</span>
+                        </button>
+                        <button type="button" class="chapter-workbench-tool" data-book-add-group title="{% trans 'Add group' %}" aria-label="{% trans 'Add group' %}">
+                            <i class="fa-solid fa-folder-plus" aria-hidden="true"></i>
+                            <span class="sr-only">{% trans "Add group" %}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="chapter-workbench-list" data-book-structure-root></div>
+                {{ form.structure_script_value|json_script:"book-structure-data" }}
+                {% if form.post_selection.errors %}<div class="field-error">{{ form.post_selection.errors|striptags }}</div>{% endif %}
+                {% if form.structure.errors %}<div class="field-error">{{ form.structure.errors|striptags }}</div>{% endif %}
+                <div class="book-editor-post-options" hidden>
+                    {% for option in form.post_options %}
+                    <div
+                        data-book-post-option
+                        data-post-id="{{ option.value }}"
+                        data-post-title="{{ option.title }}"
+                        data-post-visibility="{{ option.visibility }}"
+                        data-post-author="{{ option.author }}"
+                        data-post-access-display="{{ option.access_display|default_if_none:'' }}"
+                        data-post-access-icon="{{ option.visibility_presentation.icon }}"
+                        data-post-access-tone="{{ option.visibility_presentation.tone }}"
+                        data-post-access-label="{{ option.visibility_presentation.label }}"
+                        data-post-selected="{% if option.checked %}true{% else %}false{% endif %}"
+                        {% if option.can_access is not None %}data-post-can-access="{% if option.can_access %}true{% else %}false{% endif %}"{% endif %}
+                        {% if option.post_url %}data-post-url="{{ option.post_url }}"{% endif %}
+                        {% if option.requires_condition %}data-post-requires-condition="true" data-post-condition-status="{{ option.condition_status }}" data-post-condition-money="{{ option.condition_money }}" data-post-condition-points="{{ option.condition_points }}"{% endif %}
+                    ></div>
+                    {% endfor %}
+                </div>
+            </section>
+            <div class="panel-actions">
+                <button type="submit" class="primary-button">{% trans "Save book" %}</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-profile-book-form.js' %}"></script>
+{% endblock %}

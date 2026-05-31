@@ -57,6 +57,51 @@ def can_access_post(request, post):
     return post.visibility == Post.VISIBILITY_PUBLIC
 
 
+def get_book_post_access_state(request, post):
+    user = request.user
+    info = {
+        "can_add": True,
+        "requires_password": False,
+        "requires_condition": False,
+        "condition_status": "",
+        "condition_money": "",
+        "condition_points": "",
+    }
+
+    if post.status != Post.STATUS_PUBLISHED:
+        info["can_add"] = False
+        return info
+
+    if can_bypass_post_password(user, post):
+        return info
+
+    if post.visibility == Post.VISIBILITY_PRIVATE:
+        info["can_add"] = False
+        return info
+
+    if post_has_encrypted_access(post) and not is_post_unlocked(request, post):
+        info["requires_password"] = True
+
+    if post_has_value_conditions(post):
+        access_state = evaluate_article_access(user, post)
+        if access_state["status"] != ACCESS_STATUS_GRANTED:
+            info["requires_condition"] = True
+            info["condition_status"] = access_state["status"]
+            info["condition_money"] = str(access_state["money_required"] or "")
+            info["condition_points"] = str(access_state["points_required"] or "")
+
+    return info
+
+
+def can_add_post_to_book(request, post):
+    access_state = get_book_post_access_state(request, post)
+    return bool(
+        access_state["can_add"]
+        and not access_state["requires_password"]
+        and not access_state["requires_condition"]
+    )
+
+
 def post_requires_password(request, post):
     return bool(
         post_has_encrypted_access(post)

@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 
 from apps.blog.forms import ProfileForm, StyledPasswordChangeForm
 from apps.blog.models import AuditLog
-from apps.blog.utils import write_audit_log
+from apps.blog.utils import build_user_business_identity_summary, get_site_setting, write_audit_log
 from apps.users.models import UserProfile
 
 
@@ -29,16 +29,21 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile_form = kwargs.get("profile_form") or ProfileForm(instance=self.request.user)
+        profile_obj = kwargs.get("profile") or self.get_profile()
+        profile_form = kwargs.get("profile_form") or ProfileForm(instance=self.request.user, profile=profile_obj)
         current_section = kwargs.get("current_section") or self.get_current_section()
         context["profile_form"] = profile_form
         context["password_form"] = kwargs.get("password_form") or StyledPasswordChangeForm(user=self.request.user)
         context["profile"] = kwargs.get("profile") or self.get_profile()
+        context["profile_business_identity"] = build_user_business_identity_summary(self.request.user, get_site_setting())
         context["email_delivery_ready"] = settings.EMAIL_DELIVERY_READY
         context["current_section"] = current_section
         context["profile_nav"] = [
             {"label": _("Basic information"), "url": f"{reverse('profile')}?section={self.SECTION_BASIC}", "section": self.SECTION_BASIC},
             {"label": _("Account security"), "url": f"{reverse('profile')}?section={self.SECTION_SECURITY}", "section": self.SECTION_SECURITY},
+            {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
+            {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
+            {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
         ]
         context["current_email"] = profile_form.initial_email
         return context
@@ -65,7 +70,7 @@ class ProfileView(TemplateView):
             messages.success(request, _("Password updated successfully."))
             return redirect(f"{reverse('profile')}?section={self.SECTION_SECURITY}")
 
-        profile_form = ProfileForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user, profile=profile)
         password_form = StyledPasswordChangeForm(user=request.user)
         avatar_file = request.FILES.get("avatar")
         remove_avatar = (request.POST.get("remove_avatar") or "0").strip() == "1"
@@ -93,6 +98,46 @@ class ProfileView(TemplateView):
 
         if avatar_file or remove_avatar:
             profile.save(update_fields=["avatar"])
+
+        description = profile_form.cleaned_data.get("description", "")
+        if profile.description != description:
+            profile.description = description
+            profile.save(update_fields=["description"])
+
+        gender = profile_form.cleaned_data.get("gender", "")
+        if profile.gender != gender:
+            profile.gender = gender
+            profile.save(update_fields=["gender"])
+
+        age = profile_form.cleaned_data.get("age") or None
+        if profile.age != age:
+            profile.age = age
+            profile.save(update_fields=["age"])
+
+        github = profile_form.cleaned_data.get("github", "") or ""
+        if profile.github != github:
+            profile.github = github
+            profile.save(update_fields=["github"])
+
+        website = profile_form.cleaned_data.get("website", "") or ""
+        if profile.website != website:
+            profile.website = website
+            profile.save(update_fields=["website"])
+
+        twitter = profile_form.cleaned_data.get("twitter", "") or ""
+        if profile.twitter != twitter:
+            profile.twitter = twitter
+            profile.save(update_fields=["twitter"])
+
+        qq = profile_form.cleaned_data.get("qq", "") or ""
+        if profile.qq != qq:
+            profile.qq = qq
+            profile.save(update_fields=["qq"])
+
+        show_email = profile_form.cleaned_data.get("show_email_on_namecard", False)
+        if profile.show_email_on_namecard != show_email:
+            profile.show_email_on_namecard = show_email
+            profile.save(update_fields=["show_email_on_namecard"])
 
         profile_form.save()
         if verification is not None:

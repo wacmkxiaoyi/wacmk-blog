@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from apps.blog.models import Book, BookShareLink, ContentViewLog, Post, PostShareLink
+from apps.blog.utils import get_or_create_site_setting
 from apps.blog.permissions import hash_condition_password
 from apps.blog.views.post.utils.draft import clone_post_to_draft, publish_post_draft
 from apps.users.models import UserProfile
@@ -316,6 +317,199 @@ class BookStructureSyncTests(TestCase):
         imported_post = publish_post_draft(imported_draft)
 
         self.assertEqual(imported_post.books.count(), 0)
+
+
+class ProfileBookLimitAccessTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="book-owner", password="login-pass")
+        self.client.force_login(self.user)
+        UserProfile.objects.get_or_create(user=self.user)
+        self.site_setting = get_or_create_site_setting()
+        self.site_setting.allow_non_admin_create_book = True
+        self.site_setting.vip_only_create_book = False
+        self.site_setting.non_admin_max_book_count = 1
+        self.site_setting.save(
+            update_fields=[
+                "allow_non_admin_create_book",
+                "vip_only_create_book",
+                "non_admin_max_book_count",
+            ]
+        )
+        self.book = Book.objects.create(
+            name="Owned book",
+            slug="owned-book",
+            summary="summary",
+            visibility=Book.VISIBILITY_PUBLIC,
+            created_by=self.user,
+        )
+
+    def test_create_view_is_blocked_when_user_reaches_book_limit(self):
+        response = self.client.get(reverse("profile-book-create"))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_update_view_remains_available_when_user_reaches_book_limit(self):
+        response = self.client.get(reverse("profile-book-update", args=[self.book.pk]))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_view_remains_available_when_user_reaches_book_limit(self):
+        response = self.client.post(reverse("profile-book-delete", args=[self.book.pk]))
+
+        self.assertRedirects(response, reverse("profile-books"))
+        self.assertFalse(Book.objects.filter(pk=self.book.pk).exists())
+
+    def test_book_post_search_remains_available_when_user_reaches_book_limit(self):
+        response = self.client.get(reverse("profile-book-post-search"), {"q": "owned"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["ok"], True)
+
+
+class ProfileBookAccessRuleTests(TestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(username="book-rule-owner", password="login-pass")
+        self.reader = User.objects.create_user(username="book-rule-reader", password="login-pass")
+        self.client.force_login(self.reader)
+        self.profile, _created = UserProfile.objects.get_or_create(user=self.reader)
+        self.book = Book.objects.create(
+            name="Reader book",
+            slug="reader-book",
+            summary="summary",
+            visibility=Book.VISIBILITY_PUBLIC,
+            created_by=self.reader,
+        )
+
+    def test_book_only_post_appears_in_profile_book_search(self):
+        post = Post.objects.create(
+            title="Book only post",
+            slug="book-only-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.owner,
+            condition_rules=[{"type": "book_only"}],
+        )
+
+        response = self.client.get(reverse("profile-book-post-search"), {"q": "Book only"})
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual([item["id"] for item in payload["items"]], [post.pk])
+        self.assertFalse(payload["items"][0]["requiresPassword"])
+        self.assertFalse(payload["items"][0]["requiresCondition"])
+
+    def test_book_only_post_can_be_saved_into_book(self):
+        post = Post.objects.create(
+            title="Book only save",
+            slug="book-only-save",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.owner,
+            condition_rules=[{"type": "book_only"}],
+        )
+
+        response = self.client.post(
+            reverse("profile-book-update", args=[self.book.pk]),
+            {
+                "name": self.book.name,
+                "slug": self.book.slug,
+                "summary": self.book.summary,
+                "visibility": self.book.visibility,
+                "condition_rules": "[]",
+                "structure": '[{"type":"post","post_id":%d}]' % post.pk,
+                "post_selection": str(post.pk),
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.book.refresh_from_db()
+        self.assertEqual(list(self.book.posts.values_list("pk", flat=True)), [post.pk])
+
+    def test_book_only_with_password_and_money_requires_all_conditions_before_save(self):
+        post = Post.objects.create(
+            title="Book only gated",
+            slug="book-only-gated",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.owner,
+            condition_rules=[
+                {"type": "book_only"},
+                {"type": "encrypted", "value": hash_condition_password("gate-pass")},
+                {"type": "money", "value": 50},
+            ],
+        )
+
+        blocked_response = self.client.post(
+            reverse("profile-book-update", args=[self.book.pk]),
+            {
+                "name": self.book.name,
+                "slug": self.book.slug,
+                "summary": self.book.summary,
+                "visibility": self.book.visibility,
+                "condition_rules": "[]",
+                "structure": '[{"type":"post","post_id":%d}]' % post.pk,
+                "post_selection": str(post.pk),
+            },
+        )
+
+        self.assertEqual(blocked_response.status_code, 200)
+        self.assertContains(blocked_response, 'You do not have permission to add "Book only gated" to this book.')
+
+        unlock_response = self.client.post(
+            reverse("blog-detail", kwargs={"slug": post.slug}),
+            {"password": "gate-pass"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(unlock_response.status_code, 200)
+
+        still_blocked_response = self.client.post(
+            reverse("profile-book-update", args=[self.book.pk]),
+            {
+                "name": self.book.name,
+                "slug": self.book.slug,
+                "summary": self.book.summary,
+                "visibility": self.book.visibility,
+                "condition_rules": "[]",
+                "structure": '[{"type":"post","post_id":%d}]' % post.pk,
+                "post_selection": str(post.pk),
+            },
+        )
+
+        self.assertEqual(still_blocked_response.status_code, 200)
+        self.assertContains(still_blocked_response, 'You do not have permission to add "Book only gated" to this book.')
+
+        self.profile.money = 100
+        self.profile.save(update_fields=["money"])
+        purchase_response = self.client.post(
+            reverse("blog-detail", kwargs={"slug": post.slug}),
+            {},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(purchase_response.status_code, 200)
+
+        success_response = self.client.post(
+            reverse("profile-book-update", args=[self.book.pk]),
+            {
+                "name": self.book.name,
+                "slug": self.book.slug,
+                "summary": self.book.summary,
+                "visibility": self.book.visibility,
+                "condition_rules": "[]",
+                "structure": '[{"type":"post","post_id":%d}]' % post.pk,
+                "post_selection": str(post.pk),
+            },
+        )
+
+        self.assertEqual(success_response.status_code, 302)
+        self.book.refresh_from_db()
+        self.assertEqual(list(self.book.posts.values_list("pk", flat=True)), [post.pk])
 
 
 class ContentViewTrackingTests(TestCase):

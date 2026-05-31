@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
-{% load i18n %}
+﻿{% extends 'base.html' %}
+{% load i18n static %}
 
 {% block title %}{% trans "Audit Logs" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -67,3 +72,4 @@
     </section>
 </main>
 {% endblock %}
+

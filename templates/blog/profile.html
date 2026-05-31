@@ -1,7 +1,13 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
 {% block title %}{% trans "Profile" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+<link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page profile-manage-page">
@@ -45,22 +51,24 @@
                             <h2>{% trans "Basic information" %}</h2>
                         </div>
                         <div class="user-manage-fields">
-                            <div class="user-manage-avatar-row">
-                                <div class="user-manage-avatar-display">
-                                    <label for="id_avatar" class="profile-avatar-upload-trigger" data-profile-avatar-preview data-profile-avatar-alt="{{ request.user.username|escape }}">
-                                        {% if profile.avatar %}
-                                        <img src="{{ profile.avatar.url }}" alt="{{ request.user.username }}" class="profile-avatar-large" data-profile-avatar-image>
-                                        {% else %}
-                                        <div class="profile-avatar-large profile-avatar-fallback" data-profile-avatar-fallback>👤</div>
-                                        {% endif %}
-                                        <span class="field-help profile-avatar-upload-help">{% trans "Click avatar to upload" %}</span>
-                                    </label>
-                                    <input id="id_avatar" type="file" name="avatar" class="profile-avatar-input" accept="image/*">
+                            <div class="profile-avatar-field">
+                                <div class="user-manage-avatar-row profile-avatar-row">
+                                    <div class="user-manage-avatar-display profile-avatar-display">
+                                        <label for="id_avatar" class="profile-avatar-upload-trigger" data-profile-avatar-preview data-profile-avatar-alt="{{ request.user.username|escape }}">
+                                            {% if profile.avatar %}
+                                            <img src="{{ profile.avatar.url }}" alt="{{ request.user.username }}" class="profile-avatar-large" data-profile-avatar-image>
+                                            {% else %}
+                                            <div class="profile-avatar-large profile-avatar-fallback" data-profile-avatar-fallback>👤</div>
+                                            {% endif %}
+                                        </label>
+                                        <input id="id_avatar" type="file" name="avatar" class="profile-avatar-input" accept="image/*">
+                                    </div>
+                                    <div class="user-manage-avatar-actions profile-avatar-actions">
+                                        <button type="button" class="secondary-button destructive-button{% if not profile.avatar %} is-hidden{% endif %}" data-profile-avatar-remove>{% trans "Delete avatar" %}</button>
+                                        <button type="button" class="secondary-button post-cover-undo-button{% if not profile.avatar %} is-hidden{% endif %}" data-profile-avatar-undo>{% trans "Undo" %}</button>
+                                    </div>
                                 </div>
-                                <div class="user-manage-avatar-actions">
-                                    <button type="button" class="secondary-button destructive-button{% if not profile.avatar %} is-hidden{% endif %}" data-profile-avatar-remove>{% trans "Delete avatar" %}</button>
-                                    <button type="button" class="secondary-button post-cover-undo-button{% if not profile.avatar %} is-hidden{% endif %}" data-profile-avatar-undo>{% trans "Undo" %}</button>
-                                </div>
+                                <div class="field-help profile-avatar-upload-help">{% trans "Click avatar to upload" %}</div>
                             </div>
                             <div class="field-group user-manage-field">
                                 <label>{% trans "Username" %}</label>
@@ -70,6 +78,58 @@
                                 <label for="id_first_name">{{ profile_form.first_name.label }}</label>
                                 {{ profile_form.first_name }}
                                 {% if profile_form.first_name.errors %}<div class="field-error">{{ profile_form.first_name.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="user-manage-fields-row">
+                                <div class="field-group user-manage-field">
+                                    <label for="id_gender">{{ profile_form.gender.label }}</label>
+                                    {{ profile_form.gender }}
+                                    {% if profile_form.gender.errors %}<div class="field-error">{{ profile_form.gender.errors|striptags }}</div>{% endif %}
+                                </div>
+                                <div class="field-group user-manage-field">
+                                    <label for="id_age">{{ profile_form.age.label }}</label>
+                                    {{ profile_form.age }}
+                                    {% if profile_form.age.errors %}<div class="field-error">{{ profile_form.age.errors|striptags }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label for="id_description">{{ profile_form.description.label }}</label>
+                                {{ profile_form.description }}
+                                {% if profile_form.description.errors %}<div class="field-error">{{ profile_form.description.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="user-manage-section profile-settings-section">
+                        <div class="user-manage-section-header">
+                            <h2>{% trans "Social information" %}</h2>
+                        </div>
+                        <div class="user-manage-fields">
+                            <div class="field-group user-manage-field">
+                                <label for="id_github"><i class="fa-brands fa-github" aria-hidden="true"></i> {{ profile_form.github.label }}</label>
+                                {{ profile_form.github }}
+                                {% if profile_form.github.errors %}<div class="field-error">{{ profile_form.github.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label for="id_website"><i class="fa-solid fa-globe" aria-hidden="true"></i> {{ profile_form.website.label }}</label>
+                                {{ profile_form.website }}
+                                {% if profile_form.website.errors %}<div class="field-error">{{ profile_form.website.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label for="id_twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i> {{ profile_form.twitter.label }}</label>
+                                {{ profile_form.twitter }}
+                                {% if profile_form.twitter.errors %}<div class="field-error">{{ profile_form.twitter.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label for="id_qq"><i class="fa-brands fa-qq" aria-hidden="true"></i> {{ profile_form.qq.label }}</label>
+                                {{ profile_form.qq }}
+                                {% if profile_form.qq.errors %}<div class="field-error">{{ profile_form.qq.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group user-manage-field">
+                                <label class="checkbox-label">
+                                    {{ profile_form.show_email_on_namecard }}
+                                    <span>{{ profile_form.show_email_on_namecard.label }}</span>
+                                </label>
+                                {% if profile_form.show_email_on_namecard.errors %}<div class="field-error">{{ profile_form.show_email_on_namecard.errors|striptags }}</div>{% endif %}
                             </div>
                         </div>
                     </section>
@@ -172,4 +232,5 @@
 {% block extra_js %}
 <script type="module" src="{% static 'js/entrypoints/users-profile.js' %}"></script>
 {% endblock %}
+
 

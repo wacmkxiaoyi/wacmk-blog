@@ -14,11 +14,11 @@ User = get_user_model()
 
 class PrettyAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
-        label=_("Username"),
+        label=_("Username or email"),
         widget=forms.TextInput(
             attrs={
                 "class": "input-control",
-                "placeholder": _("Enter your username"),
+                "placeholder": _("Enter your username or email"),
                 "autocomplete": "username",
             }
         ),
@@ -41,7 +41,7 @@ class PrettyAuthenticationForm(AuthenticationForm):
     )
 
     error_messages = {
-        "invalid_login": _("Username or password is incorrect."),
+        "invalid_login": _("Username/email or password is incorrect."),
         "inactive": _("This account is inactive."),
     }
 
@@ -49,7 +49,7 @@ class PrettyAuthenticationForm(AuthenticationForm):
 class RegistrationForm(forms.Form):
     username = forms.CharField(
         label=_("Username"),
-        max_length=150,
+        max_length=20,
         widget=forms.TextInput(
             attrs={
                 "class": "input-control",
@@ -157,4 +157,6 @@ class RegistrationForm(forms.Form):
 
     @property
     def register_available(self):
-        return settings.REGISTER_AVAILABLE
+        from apps.blog.utils import get_site_setting
+        site_setting = get_site_setting()
+        return site_setting is not None and site_setting.enable_register and settings.REGISTER_EMAIL_SETTINGS_READY

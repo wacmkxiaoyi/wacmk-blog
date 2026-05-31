@@ -7,6 +7,10 @@ from apps.blog.models import Comment
 from .common import MarkdownTextarea
 
 
+def normalize_comment_content(value):
+    return str(value or "").lstrip("\ufeff").strip()
+
+
 class CommentForm(forms.ModelForm):
     content = forms.CharField(
         label=_("Comment"),
@@ -38,11 +42,11 @@ class CommentForm(forms.ModelForm):
                 "data-link-help": _("Enter display text and the target URL."),
                 "data-link-confirm-label": _("Insert"),
                 "data-link-cancel-label": _("Cancel"),
-                "data-link-reference-label": _("Reference internal post"),
-                "data-reference-title": _("Reference internal post"),
-                "data-reference-kicker": _("Posts"),
-                "data-reference-search-placeholder": _("Search posts"),
-                "data-reference-empty-label": _("No posts found."),
+                "data-link-reference-label": _("Reference internal article"),
+                "data-reference-title": _("Reference internal article"),
+                "data-reference-kicker": _("Articles"),
+                "data-reference-search-placeholder": _("Search articles"),
+                "data-reference-empty-label": _("No articles found."),
                 "data-reference-select-label": _("Select"),
                 "data-reference-selected-label": _("Selected"),
                 "data-reference-confirm-label": _("Insert selected"),
@@ -74,7 +78,7 @@ class CommentForm(forms.ModelForm):
         )
 
     def clean_content(self):
-        content = (self.cleaned_data.get("content") or "").strip()
+        content = normalize_comment_content(self.cleaned_data.get("content"))
         if not content:
             raise forms.ValidationError(_("Comment content cannot be empty."))
         return content

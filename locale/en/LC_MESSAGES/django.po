@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wacmk-blog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-23 00:00+0800\n"
+"POT-Creation-Date: 2026-05-30 20:27+0800\n"
 "PO-Revision-Date: 2026-05-23 00:00+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,1024 +12,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Simplified Chinese"
-msgstr "Simplified Chinese"
-
-msgid "English"
-msgstr "English"
-
-msgid "Home"
-msgstr "Home"
-
-msgid "Login"
-msgstr "Login"
-
-msgid "Show"
-msgstr "Show"
-
-msgid "Hide"
-msgstr "Hide"
-
-msgid "Sign in"
-msgstr "Sign in"
-
-msgid "Welcome back"
-msgstr "Welcome back"
-
-msgid "Enter your account details to continue your cute adventure."
-msgstr "Enter your account details to continue your cute adventure."
-
-msgid "Username"
-msgstr "Username"
-
-msgid "Enter your username"
-msgstr "Enter your username"
-
-msgid "Password"
-msgstr "Password"
-
-msgid "Enter your password"
-msgstr "Enter your password"
-
-msgid "Remember me"
-msgstr "Remember me"
-
-msgid "Username or password is incorrect."
-msgstr "Username or password is incorrect."
-
-msgid "This account is inactive."
-msgstr "This account is inactive."
-
-msgid "Show password"
-msgstr "Show password"
-
-msgid "Hide password"
-msgstr "Hide password"
-
-msgid "No account? Sign up"
-msgstr "No account? Sign up"
-
-msgid "Register"
-msgstr "Register"
-
-msgid "Create account"
-msgstr "Create account"
-
-msgid "Already has account? Sign in"
-msgstr "Already has account? Sign in"
-
-msgid "Email"
-msgstr "Email"
-
-msgid "Enter your email"
-msgstr "Enter your email"
-
-msgid "Verification code"
-msgstr "Verification code"
-
-msgid "Enter verification code"
-msgstr "Enter verification code"
-
-msgid "Send code"
-msgstr "Send code"
-
-msgid "Resend in %(seconds)s s"
-msgstr "Resend in %(seconds)s s"
-
-msgid "Confirm password"
-msgstr "Confirm password"
-
-msgid "Enter your password again"
-msgstr "Enter your password again"
-
-msgid "This username is already taken."
-msgstr "This username is already taken."
-
-msgid "This email is already registered."
-msgstr "This email is already registered."
-
-msgid "Enter a valid 6-digit verification code."
-msgstr "Enter a valid 6-digit verification code."
-
-msgid "The two passwords do not match."
-msgstr "The two passwords do not match."
-
-msgid "The verification code is invalid or expired."
-msgstr "The verification code is invalid or expired."
-
-msgid "Registration is currently unavailable."
-msgstr "Registration is currently unavailable."
-
-msgid "Registration successful. Please sign in."
-msgstr "Registration successful. Please sign in."
-
-msgid "Email is required."
-msgstr "Email is required."
-
-msgid "Enter a valid email address."
-msgstr "Enter a valid email address."
-
-msgid "Please wait before requesting another verification code."
-msgstr "Please wait before requesting another verification code."
-
-msgid "Your registration verification code"
-msgstr "Your registration verification code"
-
-msgid "Your verification code is %(code)s. It will expire in %(minutes)s minutes."
-msgstr "Your verification code is %(code)s. It will expire in %(minutes)s minutes."
-
-msgid "[%(app_name)s] Your verification code"
-msgstr "[%(app_name)s] Your verification code"
-
-msgid "Verification Code"
-msgstr "Verification Code"
-
-msgid "Use the verification code below to complete your registration."
-msgstr "Use the verification code below to complete your registration."
-
-msgid "You are receiving this email because a registration verification code was requested for %(app_name)s."
-msgstr "You are receiving this email because a registration verification code was requested for %(app_name)s."
-
-msgid "One-time code"
-msgstr "One-time code"
-
-msgid "This code will expire in %(minutes)s minutes."
-msgstr "This code will expire in %(minutes)s minutes."
-
-msgid "For your security, do not forward this email or share the code with anyone."
-msgstr "For your security, do not forward this email or share the code with anyone."
-
-msgid "If you did not request this email, you can safely ignore it."
-msgstr "If you did not request this email, you can safely ignore it."
-
-msgid "This is an automated email from %(app_name)s. Please do not reply directly to this message."
-msgstr "This is an automated email from %(app_name)s. Please do not reply directly to this message."
-
-msgid "%(app_name)s verification code"
-msgstr "%(app_name)s verification code"
-
-msgid "Verification code sent."
-msgstr "Verification code sent."
-
-msgid "Request failed."
-msgstr "Request failed."
-
-msgid "Forgot password"
-msgstr "Forgot password"
-
-msgid "Password reset successful. Please check your email."
-msgstr "Password reset successful. Please check your email."
-
-msgid "Password reset is currently unavailable."
-msgstr "Password reset is currently unavailable."
-
-msgid "[%(app_name)s] Your temporary password"
-msgstr "[%(app_name)s] Your temporary password"
-
-msgid "Temporary Password"
-msgstr "Temporary Password"
-
-msgid "Use the temporary password below to sign in to your account."
-msgstr "Use the temporary password below to sign in to your account."
-
-msgid "A password reset request was processed for your %(app_name)s account."
-msgstr "A password reset request was processed for your %(app_name)s account."
-
-msgid "Temporary password"
-msgstr "Temporary password"
-
-msgid "For security, please sign in as soon as possible and change this password immediately."
-msgstr "For security, please sign in as soon as possible and change this password immediately."
-
-msgid "If you did not request this reset, please contact an administrator after signing in."
-msgstr "If you did not request this reset, please contact an administrator after signing in."
-
-msgid "%(app_name)s temporary password"
-msgstr "%(app_name)s temporary password"
-
-msgid "Close"
-msgstr "Close"
-
-msgid "Public sharing"
-msgstr "Public sharing"
-
-msgid "Create an anonymous access link for this public post. After generation, you can copy the link and send it to others."
-msgstr "Create an anonymous access link for this public post. After generation, you can copy the link and send it to others."
-
-msgid "Anyone with this link can view the post and its comments without signing in, but cannot interact."
-msgstr "Anyone with this link can view the post and its comments without signing in, but cannot interact."
-
-msgid "Generating..."
-msgstr "Generating..."
-
-msgid "Generate share link"
-msgstr "Generate share link"
-
-msgid "Copy link"
-msgstr "Copy link"
-
-msgid "Generate link"
-msgstr "Generate link"
-
-msgid "Link validity"
-msgstr "Link validity"
-
-msgid "Share link"
-msgstr "Share link"
-
-msgid "Expires at"
-msgstr "Expires at"
-
-msgid "Never expires"
-msgstr "Never expires"
-
-msgid "Share link copied."
-msgstr "Share link copied."
-
-msgid "Unable to generate share link right now."
-msgstr "Unable to generate share link right now."
-
-msgid "Like"
-msgstr "Like"
-
-msgid "Dislike"
-msgstr "Dislike"
-
-msgid "Password Reset"
-msgstr "Password Reset"
-
-msgid "Password Reset Unavailable"
-msgstr "Password Reset Unavailable"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Website management"
-msgstr "Website management"
-
-msgid "Profile settings"
-msgstr "Profile settings"
-
-msgid "Sign out"
-msgstr "Sign out"
-
-msgid "Search posts"
-msgstr "Search posts"
-
-msgid "Search posts, books, tags, authors..."
-msgstr "Search posts, books, tags, authors..."
-
-msgid "Search users"
-msgstr "Search users"
-
-msgid "Search audit logs"
-msgstr "Search audit logs"
-
-msgid "Search posts..."
-msgstr "Search posts..."
-
-msgid "Search users..."
-msgstr "Search users..."
-
-msgid "Try another keyword, book, tag, or author name."
-msgstr "Try another keyword, book, tag, or author name."
-
-msgid "Search audit logs..."
-msgstr "Search audit logs..."
-
-msgid "Supports Markdown, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts."
-msgstr "Supports Markdown, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts."
-
-msgid "Superuser"
-msgstr "Superuser"
-
-msgid "Staff"
-msgstr "Staff"
-
-msgid "Dreamy Notes"
-msgstr "Dreamy Notes"
-
-msgid "A pastel blog space after login"
-msgstr "A pastel blog space after login"
-
-msgid "Publish essays, product notes, and visual diaries with the same soft style as your current login page."
-msgstr "Publish essays, product notes, and visual diaries with the same soft style as your current login page."
-
-msgid "Latest published posts"
-msgstr "Latest published posts"
-
-msgid "Write a new post"
-msgstr "Write a new post"
-
-msgid "No published posts yet"
-msgstr "No published posts yet"
-
-msgid "Create your first article from the management panel to populate the homepage."
-msgstr "Create your first article from the management panel to populate the homepage."
-
-msgid "Access audit"
-msgstr "Access audit"
-
-msgid "Clear"
-msgstr "Clear"
-
-msgid "Clear audit logs"
-msgstr "Clear audit logs"
-
-msgid "Are you sure you want to clear all audit logs? This action cannot be undone."
-msgstr "Are you sure you want to clear all audit logs? This action cannot be undone."
-
-msgid "Audit logs cleared successfully."
-msgstr "Audit logs cleared successfully."
-
-msgid "Workspace"
-msgstr "Workspace"
-
-msgid "Back to blog"
-msgstr "Back to blog"
-
-msgid "Post slug"
-msgstr "Post slug"
-
-msgid "Password changed"
-msgstr "Password changed"
-
-msgid "Profile updated"
-msgstr "Profile updated"
-
-msgid "Post created: %(title)s"
-msgstr "Post created: %(title)s"
-
-msgid "Post updated: %(title)s"
-msgstr "Post updated: %(title)s"
-
-msgid "Post deleted: %(title)s"
-msgstr "Post deleted: %(title)s"
-
-msgid "User updated: %(username)s"
-msgstr "User updated: %(username)s"
-
-msgid "User signed in: %(username)s"
-msgstr "User signed in: %(username)s"
-
-msgid "User signed out: %(username)s"
-msgstr "User signed out: %(username)s"
-
-msgid "anonymous user"
-msgstr "anonymous user"
-
-msgid "Editor"
-msgstr "Editor"
-
-msgid "Create post"
-msgstr "Create post"
-
-msgid "Import from existing post"
-msgstr "Import from existing post"
-
-msgid "Import"
-msgstr "Import"
-
-msgid "Back to posts"
-msgstr "Back to posts"
-
-msgid "Search posts to import..."
-msgstr "Search posts to import..."
-
-msgid "Search posts to import"
-msgstr "Search posts to import"
-
-msgid "Import as draft"
-msgstr "Import as draft"
-
-msgid "No published posts available to import."
-msgstr "No published posts available to import."
-
-msgid "%(title)s (Copy)"
-msgstr "%(title)s (Copy)"
-
-msgid "Draft imported from post: %(title)s"
-msgstr "Draft imported from post: %(title)s"
-
-msgid "Post imported as draft successfully."
-msgstr "Post imported as draft successfully."
-
-msgid "Import from .md file"
-msgstr "Import from .md file"
-
-msgid "Markdown file"
-msgstr "Markdown file"
-
-msgid "Supports .md files with optional front matter fields: title, summary, tags, and slug."
-msgstr "Supports .md files with optional front matter fields: title, summary, tags, and slug."
-
-msgid "Only .md files are supported."
-msgstr "Only .md files are supported."
-
-msgid "The uploaded file is empty."
-msgstr "The uploaded file is empty."
-
-msgid "The uploaded file must be a UTF-8 encoded .md file."
-msgstr "The uploaded file must be a UTF-8 encoded .md file."
-
-msgid "Imported post"
-msgstr "Imported post"
-
-msgid "Draft imported from markdown file: %(title)s"
-msgstr "Draft imported from markdown file: %(title)s"
-
-msgid "Post imported from .md successfully."
-msgstr "Post imported from .md successfully."
-
-msgid "Post Editor"
-msgstr "Post Editor"
-
-msgid "Insert link"
-msgstr "Insert link"
-
-msgid "Markdown"
-msgstr "Markdown"
-
-msgid "Display name"
-msgstr "Display name"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "Enter display text and the target URL."
-msgstr "Enter display text and the target URL."
-
-msgid "Insert"
-msgstr "Insert"
-
-msgid "Reference internal post"
-msgstr "Reference internal post"
-
-
-msgid "Insert table"
-msgstr "Insert table"
-
-msgid "Right-click a cell to insert or remove rows and columns."
-msgstr "Right-click a cell to insert or remove rows and columns."
-
-msgid "Use tabs or | to paste cells, one row per line."
-msgstr "Use tabs or | to paste cells, one row per line."
-
-msgid "Upload image"
-msgstr "Upload image"
-
-msgid "Choose table size"
-msgstr "Choose table size"
-
-msgid "Insert row above"
-msgstr "Insert row above"
-
-msgid "Insert row below"
-msgstr "Insert row below"
-
-msgid "Insert column left"
-msgstr "Insert column left"
-
-msgid "Insert column right"
-msgstr "Insert column right"
-
-msgid "Remove row"
-msgstr "Remove row"
-
-msgid "Remove column"
-msgstr "Remove column"
-
-msgid "Title"
-msgstr "Title"
-
-msgid "Post title"
-msgstr "Post title"
-
-msgid "Slug"
-msgstr "Slug"
-
-msgid "Summary"
-msgstr "Summary"
-
-msgid "Short summary shown on the homepage."
-msgstr "Short summary shown on the homepage."
-
-msgid "Cover image"
-msgstr "Cover image"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Draft"
-msgstr "Draft"
-
-msgid "Published"
-msgstr "Published"
-
-msgid "Tags"
-msgstr "Tags"
-
-msgid "Example: Django, Diary, Update"
-msgstr "Example: Django, Diary, Update"
-
-msgid "Separate tags with commas."
-msgstr "Separate tags with commas."
-
-msgid "Content"
-msgstr "Content"
-
-msgid "Supports Markdown, side-by-side preview, and image insertion."
-msgstr "Supports Markdown, side-by-side preview, and image insertion."
-
-msgid "Publish post"
-msgstr "Publish post"
-
-msgid "Remove cover image"
-msgstr "Remove cover image"
-
-msgid "Delete cover image"
-msgstr "Delete cover image"
-
-msgid "Undo"
-msgstr "Undo"
-
-msgid "Set as draft"
-msgstr "Set as draft"
-
-msgid "Save draft"
-msgstr "Save draft"
-
-msgid "Save revision"
-msgstr "Save revision"
-
-msgid "Published posts"
-msgstr "Published posts"
-
-msgid "Drafts / Revisions"
-msgstr "Drafts / Revisions"
-
-msgid "External links"
-msgstr "External links"
-
-msgid "Post lists"
-msgstr "Post lists"
-
-msgid "Revision"
-msgstr "Revision"
-
-msgid "Type"
-msgstr "Type"
-
-msgid "Has revision"
-msgstr "Has revision"
-
-msgid "No revision"
-msgstr "No revision"
-
-msgid "Existing revision"
-msgstr "Existing revision"
-
-msgid "The published post \"%(title)s\" already has a saved revision. You can continue editing the existing revision or start over from the published version. Starting over will delete the current revision."
-msgstr "The published post \"%(title)s\" already has a saved revision. You can continue editing the existing revision or start over from the published version. Starting over will delete the current revision."
-
-msgid "Open existing revision"
-msgstr "Open existing revision"
-
-msgid "Start a new revision"
-msgstr "Start a new revision"
-
-msgid "Open"
-msgstr "Open"
-
-msgid "Discard"
-msgstr "Discard"
-
-msgid "Delete revision"
-msgstr "Delete revision"
-
-msgid "Delete draft"
-msgstr "Delete draft"
-
-msgid "No published posts found."
-msgstr "No published posts found."
-
-msgid "No drafts or revisions found."
-msgstr "No drafts or revisions found."
-
-msgid "Created by"
-msgstr "Created by"
-
-msgid "Expired"
-msgstr "Expired"
-
-msgid "Edit validity"
-msgstr "Edit validity"
-
-msgid "Delete external link"
-msgstr "Delete external link"
-
-msgid "Are you sure you want to delete the external link for \"%(title)s\"? This action cannot be undone."
-msgstr "Are you sure you want to delete the external link for \"%(title)s\"? This action cannot be undone."
-
-msgid "No external links found."
-msgstr "No external links found."
-
-msgid "Search external links..."
-msgstr "Search external links..."
-
-msgid "Search external links"
-msgstr "Search external links"
-
-msgid "Published with revision"
-msgstr "Published with revision"
-
-msgid "Recently edited drafts and revisions"
-msgstr "Recently edited drafts and revisions"
-
-msgid "Drafts and revisions will appear here after editors start preparing new articles or updating published ones."
-msgstr "Drafts and revisions will appear here after editors start preparing new articles or updating published ones."
-
-msgid "A published post already uses this slug."
-msgstr "A published post already uses this slug."
-
-msgid "Draft created: %(title)s"
-msgstr "Draft created: %(title)s"
-
-msgid "Draft saved: %(title)s"
-msgstr "Draft saved: %(title)s"
-
-msgid "Revision saved: %(title)s"
-msgstr "Revision saved: %(title)s"
-
-msgid "Post published: %(title)s"
-msgstr "Post published: %(title)s"
-
-msgid "Draft deleted: %(title)s"
-msgstr "Draft deleted: %(title)s"
-
-msgid "Draft saved successfully."
-msgstr "Draft saved successfully."
-
-msgid "Revision saved successfully."
-msgstr "Revision saved successfully."
-
-msgid "Post published successfully."
-msgstr "Post published successfully."
-
-msgid "Draft deleted successfully."
-msgstr "Draft deleted successfully."
-
-msgid "External link updated: %(title)s"
-msgstr "External link updated: %(title)s"
-
-msgid "External link deleted: %(title)s"
-msgstr "External link deleted: %(title)s"
-
-msgid "External link validity updated successfully."
-msgstr "External link validity updated successfully."
-
-msgid "External link deleted successfully."
-msgstr "External link deleted successfully."
-
-msgid "Edit external link"
-msgstr "Edit external link"
-
-msgid "View or update the external link for \"%(title)s\"."
-msgstr "View or update the external link for \"%(title)s\"."
-
-msgid "Update link"
-msgstr "Update link"
-
-msgid "Updating..."
-msgstr "Updating..."
-
-msgid "Unable to update share link right now."
-msgstr "Unable to update share link right now."
-
-msgid "Edit draft"
-msgstr "Edit draft"
-
-msgid "Edit revision"
-msgstr "Edit revision"
-
-msgid "Are you sure you want to delete revision \"%(title)s\"? This action cannot be undone."
-msgstr "Are you sure you want to delete revision \"%(title)s\"? This action cannot be undone."
-
-msgid "Are you sure you want to delete draft \"%(title)s\"? This action cannot be undone."
-msgstr "Are you sure you want to delete draft \"%(title)s\"? This action cannot be undone."
-
-msgid "Manage"
-msgstr "Manage"
-
-msgid "Manage Posts"
-msgstr "Manage Posts"
-
-msgid "Posts"
-msgstr "Posts"
-
-msgid "New post"
-msgstr "New post"
-
-msgid "Author"
-msgstr "Author"
-
-msgid "Updated"
-msgstr "Updated"
-
-msgid "Actions"
-msgstr "Actions"
-
-msgid "No posts found."
-msgstr "No posts found."
-
-msgid "Audit"
-msgstr "Audit"
-
-msgid "Manage Users"
-msgstr "Manage Users"
-
-msgid "Users"
-msgstr "Users"
-
-msgid "Roles"
-msgstr "Roles"
-
-msgid "State"
-msgstr "State"
-
-msgid "Active"
-msgstr "Active"
-
-msgid "Disabled"
-msgstr "Disabled"
-
-msgid "No users found."
-msgstr "No users found."
-
-msgid "Delete"
-msgstr "Delete"
-
-msgid "Remove"
-msgstr "Remove"
-
-msgid "Cancel"
-msgstr "Cancel"
-
-msgid "Audit Logs"
-msgstr "Audit Logs"
-
-msgid "Anonymous"
-msgstr "Anonymous"
-
-msgid "No audit logs yet"
-msgstr "No audit logs yet"
-
-msgid "Update user"
-msgstr "Update user"
-
-msgid "Post updated successfully."
-msgstr "Post updated successfully."
-
-msgid "Cover image removed: %(title)s"
-msgstr "Cover image removed: %(title)s"
-
-msgid "Cover image removed successfully."
-msgstr "Cover image removed successfully."
-
-msgid "Post deleted successfully."
-msgstr "Post deleted successfully."
-
-msgid "More"
-msgstr "More"
-
-msgid "Related posts"
-msgstr "Related posts"
-
-msgid "Overview"
-msgstr "Overview"
-
-msgid "Blog performance dashboard"
-msgstr "Blog performance dashboard"
-
-msgid "Track publishing cadence, editorial activity, and the latest content updates from one place."
-msgstr "Track publishing cadence, editorial activity, and the latest content updates from one place."
-
-msgid "Explore posts"
-msgstr "Explore posts"
-
-msgid "Published in the last 7 days"
-msgstr "Published in the last 7 days"
-
-msgid "Fresh articles released this week."
-msgstr "Fresh articles released this week."
-
-msgid "Activity in the last 30 days"
-msgstr "Activity in the last 30 days"
-
-msgid "Recent audit events across the site workspace."
-msgstr "Recent audit events across the site workspace."
-
-msgid "Highlights"
-msgstr "Highlights"
-
-msgid "Content snapshot"
-msgstr "Content snapshot"
-
-msgid "Total posts"
-msgstr "Total posts"
-
-msgid "All articles currently stored in the blog."
-msgstr "All articles currently stored in the blog."
-
-msgid "Posts that are visible to readers right now."
-msgstr "Posts that are visible to readers right now."
-
-msgid "Articles still in progress and not yet published."
-msgstr "Articles still in progress and not yet published."
-
-msgid "Topic labels used to organize the content library."
-msgstr "Topic labels used to organize the content library."
-
-msgid "Authors"
-msgstr "Authors"
-
-msgid "Contributors who have published or drafted posts."
-msgstr "Contributors who have published or drafted posts."
-
-msgid "Trend"
-msgstr "Trend"
-
-msgid "Publishing in the last 30 days"
-msgstr "Publishing in the last 30 days"
-
-msgid "Post publishing trend in the last 30 days"
-msgstr "Post publishing trend in the last 30 days"
-
-msgid "Recently edited drafts"
-msgstr "Recently edited drafts"
-
-msgid "Open management"
-msgstr "Open management"
-
-msgid "By %(name)s · Updated %(updated)s"
-msgstr "By %(name)s · Updated %(updated)s"
-
-msgid "No drafts yet"
-msgstr "No drafts yet"
-
-msgid "Draft posts will appear here after editors start preparing new articles."
-msgstr "Draft posts will appear here after editors start preparing new articles."
-
-msgid "Activity"
-msgstr "Activity"
-
-msgid "Latest workspace events"
-msgstr "Latest workspace events"
-
-msgid "System generated event"
-msgstr "System generated event"
-
-msgid "Contributors"
-msgstr "Contributors"
-
-msgid "Most active authors"
-msgstr "Most active authors"
-
-msgid "%(total)s published post"
-msgid_plural "%(total)s published posts"
-msgstr[0] "%(total)s published post"
-msgstr[1] "%(total)s published posts"
-
-msgid "No active authors yet"
-msgstr "No active authors yet"
-
-msgid "Author insights will appear here once published posts are available."
-msgstr "Author insights will appear here once published posts are available."
-
-msgid "Edit user"
-msgstr "Edit user"
-
-msgid "Save"
-msgstr "Save"
-
-msgid "Delete user"
-msgstr "Delete user"
-
-msgid "Are you sure you want to delete user \"%(username)s\"? This action cannot be undone."
-msgstr "Are you sure you want to delete user \"%(username)s\"? This action cannot be undone."
-
-msgid "Delete item"
-msgstr "Delete item"
-
-msgid "Remove item"
-msgstr "Remove item"
-
-msgid "Are you sure you want to continue? This action cannot be undone."
-msgstr "Are you sure you want to continue? This action cannot be undone."
-
-msgid "Unsaved changes"
-msgstr "Unsaved changes"
-
-msgid "Discard unsaved changes?"
-msgstr "Discard unsaved changes?"
-
-msgid "Your changes have not been saved yet. If you leave this page now, those changes will be lost."
-msgstr "Your changes have not been saved yet. If you leave this page now, those changes will be lost."
-
-msgid "Leave page"
-msgstr "Leave page"
-
-msgid "Keep editing"
-msgstr "Keep editing"
-
-msgid "[%(app_name)s] Your email address was updated"
-msgstr "[%(app_name)s] Your email address was updated"
-
-msgid "Email Address Updated"
-msgstr "Email Address Updated"
-
-msgid "Your account email address has been updated by an administrator."
-msgstr "Your account email address has been updated by an administrator."
-
-msgid "This change was applied to the account for %(username)s."
-msgstr "This change was applied to the account for %(username)s."
-
-msgid "New email address"
-msgstr "New email address"
-
-msgid "If you did not expect this change, please contact an administrator immediately."
-msgstr "If you did not expect this change, please contact an administrator immediately."
-
-msgid "User was updated, but the email notification could not be sent."
-msgstr "User was updated, but the email notification could not be sent."
-
-msgid "You cannot delete your own account."
-msgstr "You cannot delete your own account."
-
-msgid "This user cannot be deleted because related data still exists."
-msgstr "This user cannot be deleted because related data still exists."
-
-msgid "User deleted: %(username)s"
-msgstr "User deleted: %(username)s"
-
-msgid "User deleted successfully."
-msgstr "User deleted successfully."
-
-msgid "New password"
-msgstr "New password"
-
-msgid "Leave blank to keep the current password."
-msgstr "Leave blank to keep the current password."
-
-msgid "Confirm new password"
-msgstr "Confirm new password"
-
-msgid "Groups"
-msgstr "Groups"
-
-msgid "Books"
-msgstr "Books"
-
-msgid "Manage Books"
-msgstr "Manage Books"
-
-msgid "Book Editor"
-msgstr "Book Editor"
-
-msgid "Article editor"
-msgstr "Article editor"
-
-msgid "Book"
-msgstr "Book"
+msgid "Insufficient balance."
+msgstr ""
 
 msgid "Public"
 msgstr "Public"
 
-msgid "Book only"
-msgstr "Book only"
-
 msgid "Private"
 msgstr "Private"
 
-msgid "Access permission"
-msgstr "Access permission"
-
-msgid "Book-only articles stay hidden from the homepage and search, but become visible inside books."
-msgstr "Book-only articles stay hidden from the homepage and search, but become visible inside books."
-
-msgid "Select one or more existing books."
-msgstr "Select one or more existing books."
-
-msgid "Select books"
-msgstr "Select books"
-
-msgid "Selected %(count)s book"
-msgid_plural "Selected %(count)s books"
-msgstr[0] "Selected %(count)s book"
-msgstr[1] "Selected %(count)s books"
-
-msgid "No books available."
-msgstr "No books available."
+msgid "Conditional"
+msgstr ""
 
 msgid "Book name"
 msgstr "Book name"
@@ -1037,74 +30,40 @@ msgstr "Book name"
 msgid "Enter book name"
 msgstr "Enter book name"
 
+msgid "Slug"
+msgstr "Slug"
+
 msgid "Book slug"
 msgstr "Book slug"
 
-msgid "New book"
-msgstr "New book"
-
-msgid "Search books"
-msgstr "Search books"
-
-msgid "Search books..."
-msgstr "Search books..."
-
-msgid "Name"
-msgstr "Name"
-
-msgid "Details"
-msgstr "Details"
-
-msgid "Edit"
-msgstr "Edit"
-
-msgid "Delete book"
-msgstr "Delete book"
-
-msgid "Are you sure you want to delete \"%(title)s\"? Posts in this book will be kept."
-msgstr "Are you sure you want to delete \"%(title)s\"? Posts in this book will be kept."
-
-msgid "No books found."
-msgstr "No books found."
-
-msgid "Save book"
-msgstr "Save book"
-
-msgid "Back to books"
-msgstr "Back to books"
-
-msgid "No posts in this book yet."
-msgstr "No posts in this book yet."
-
-msgid "Books used to organize related articles."
-msgstr "Books used to organize related articles."
+msgid "Summary"
+msgstr "Summary"
 
 msgid "Short summary shown on the books page."
 msgstr "Short summary shown on the books page."
 
-msgid "Enable draft autosave"
-msgstr "Enable draft autosave"
+msgid "Cover image"
+msgstr "Cover image"
 
-msgid "Automatically save article drafts in this browser while editing."
-msgstr "Automatically save article drafts in this browser while editing."
-
-msgid "Draft autosave interval (minutes)"
-msgstr "Draft autosave interval (minutes)"
-
-msgid "How often the editor should save a local recovery draft. Enter a value between 1 and 60 minutes."
-msgstr "How often the editor should save a local recovery draft. Enter a value between 1 and 60 minutes."
-
-msgid "Enter book password"
-msgstr "Enter book password"
+msgid "Access permission"
+msgstr "Access permission"
 
 msgid "Articles"
 msgstr "Articles"
+
+#, fuzzy
+#| msgid "Invalid book structure data."
+msgid "Invalid condition data."
+msgstr "Invalid book structure data."
 
 msgid "Invalid book structure data."
 msgstr "Invalid book structure data."
 
 msgid "Book structure must be a list."
 msgstr "Book structure must be a list."
+
+msgid "At least one complete condition is required."
+msgstr ""
 
 msgid "Password cannot be empty for encrypted books."
 msgstr "Password cannot be empty for encrypted books."
@@ -1124,11 +83,600 @@ msgstr "Group nodes must include a title."
 msgid "Unknown book structure node type."
 msgstr "Unknown book structure node type."
 
+msgid "Comment"
+msgstr "Comment"
+
+msgid "Write a comment"
+msgstr "Write a comment"
+
+msgid "Insert link"
+msgstr "Insert link"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "Display name"
+msgstr "Display name"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Enter display text and the target URL."
+msgstr "Enter display text and the target URL."
+
+msgid "Insert"
+msgstr "Insert"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+#, fuzzy
+#| msgid "Reference internal article"
+msgid "Reference internal post"
+msgstr "Reference internal article"
+
+#, fuzzy
+#| msgid "Posts"
+msgid "Posts"
+msgstr "Posts"
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search posts"
+msgstr "Search posts"
+
+#, fuzzy
+#| msgid "No books found."
+msgid "No posts found."
+msgstr "No books found."
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Selected"
+msgstr "Selected"
+
+#, fuzzy
+#| msgid "Add selected"
+msgid "Insert selected"
+msgstr "Add selected"
+
+#, fuzzy
+#| msgid "Insert table"
+msgid "Insert image"
+msgstr "Insert table"
+
+msgid "Prompt"
+msgstr ""
+
+msgid "Image URL"
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter display text and the target URL."
+msgid "Enter image prompt text and the image URL."
+msgstr "Enter display text and the target URL."
+
+msgid "Upload image"
+msgstr "Upload image"
+
+msgid "Insert table"
+msgstr "Insert table"
+
+msgid "Choose table size"
+msgstr "Choose table size"
+
+#, fuzzy
+#| msgid "Import from .md file"
+msgid "Import from .csv"
+msgstr "Import from .md file"
+
+#, fuzzy
+#| msgid "Import from .md file"
+msgid "Import from .tsv"
+msgstr "Import from .md file"
+
+msgid "Table import failed"
+msgstr ""
+
+msgid "Please choose a valid CSV or TSV file and try again."
+msgstr ""
+
+msgid "The selected file does not contain any table data."
+msgstr ""
+
+msgid "Right-click a cell to insert or remove rows and columns."
+msgstr "Right-click a cell to insert or remove rows and columns."
+
+msgid "Use tabs or | to paste cells, one row per line."
+msgstr "Use tabs or | to paste cells, one row per line."
+
+msgid "Insert row above"
+msgstr "Insert row above"
+
+msgid "Insert row below"
+msgstr "Insert row below"
+
+msgid "Insert column left"
+msgstr "Insert column left"
+
+msgid "Insert column right"
+msgstr "Insert column right"
+
+msgid "Remove row"
+msgstr "Remove row"
+
+msgid "Remove column"
+msgstr "Remove column"
+
+msgid "Comment content cannot be empty."
+msgstr "Comment content cannot be empty."
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search"
+msgstr "Search posts"
+
+msgid "Search posts, books, tags, authors..."
+msgstr "Search posts, books, tags, authors..."
+
+msgid "Administrator"
+msgstr "Administrator"
+
+msgid "Normal user"
+msgstr "Normal user"
+
+msgid "Nickname"
+msgstr ""
+
+#, fuzzy
+#| msgid "Personal settings"
+msgid "Personal introduction"
+msgstr "Personal settings"
+
+msgid "Email"
+msgstr "Email"
+
+#, fuzzy
+#| msgid "New email address"
+msgid "Email address"
+msgstr "New email address"
+
+msgid "New password"
+msgstr "New password"
+
+msgid "Leave blank to keep the current password."
+msgstr "Leave blank to keep the current password."
+
+msgid "Confirm new password"
+msgstr "Confirm new password"
+
+msgid "User role"
+msgstr "User role"
+
+msgid "Business identity"
+msgstr ""
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Staff"
+msgstr "Staff"
+
+msgid "Superuser"
+msgstr "Superuser"
+
+msgid "Groups"
+msgstr "Groups"
+
+msgid "Money"
+msgstr ""
+
+msgid "Points"
+msgstr ""
+
+#, python-format
+msgid ""
+"Current business identity %(identity)s is preserved until you manually "
+"choose a new one."
+msgstr ""
+
+#, fuzzy
+#| msgid "This email is already registered."
+msgid "This email is already in use."
+msgstr "This email is already registered."
+
+msgid "The two passwords do not match."
+msgstr "The two passwords do not match."
+
+msgid "Choose a valid business identity."
+msgstr ""
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Article title"
+msgstr "Article title"
+
+msgid "Article slug"
+msgstr "Article slug"
+
+msgid "Short summary shown on the homepage."
+msgstr "Short summary shown on the homepage."
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Separate tags with commas."
+msgstr "Separate tags with commas."
+
+msgid "Example: Django, Diary, Update"
+msgstr "Example: Django, Diary, Update"
+
+msgid "Reference internal article"
+msgstr "Reference internal article"
+
+msgid "Search articles"
+msgstr "Search articles"
+
+msgid "No articles found."
+msgstr "No articles found."
+
+#, fuzzy
+#| msgid "Password cannot be empty for encrypted books."
+msgid "Password cannot be empty for encrypted articles."
+msgstr "Password cannot be empty for encrypted articles."
+
+msgid "A published article already uses this slug."
+msgstr "A published article already uses this slug."
+
+msgid "Markdown file"
+msgstr "Markdown file"
+
+msgid ""
+"Supports .md files with optional front matter fields: title, summary, tags, "
+"and slug."
+msgstr ""
+"Supports .md files with optional front matter fields: title, summary, tags, "
+"and slug."
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Write a brief introduction about yourself"
+msgstr "Write a brief introduction about yourself"
+
+msgid "Verification code"
+msgstr "Verification code"
+
+msgid "Enter verification code"
+msgstr "Enter verification code"
+
+msgid "Enter a valid 6-digit verification code."
+msgstr "Enter a valid 6-digit verification code."
+
+msgid "Verification code is required when changing email."
+msgstr "Verification code is required when changing email."
+
+msgid "The verification code is invalid or expired."
+msgstr "The verification code is invalid or expired."
+
+#, fuzzy
+#| msgid "Post title"
+msgid "Website title"
+msgstr "Post title"
+
+#, fuzzy
+#| msgid "Leave blank to keep the current password."
+msgid "Leave blank to use the default site title"
+msgstr "Leave blank to keep the current password."
+
+msgid "Shown in the browser tab and site header context where applicable."
+msgstr ""
+
+#, fuzzy
+#| msgid "Website management"
+msgid "Website icon"
+msgstr "Website management"
+
+msgid ""
+"Used as the browser tab icon. Leave empty to keep the current icon or use "
+"the default."
+msgstr ""
+
+msgid "Login page background"
+msgstr ""
+
+msgid "Used on login, register, and other unauthenticated auth pages."
+msgstr ""
+
+msgid "Authenticated page background"
+msgstr ""
+
+msgid "Used after sign-in across the main site and management pages."
+msgstr ""
+
+msgid "Enable draft autosave"
+msgstr "Enable draft autosave"
+
+msgid "Automatically save article drafts in this browser while editing."
+msgstr "Automatically save article drafts in this browser while editing."
+
+msgid "Draft autosave interval (minutes)"
+msgstr "Draft autosave interval (minutes)"
+
+msgid ""
+"How often the editor should save a local recovery draft. Enter a value "
+"between 1 and 60 minutes."
+msgstr ""
+"How often the editor should save a local recovery draft. Enter a value "
+"between 1 and 60 minutes."
+
+msgid "Enable scheduled audit log cleanup"
+msgstr ""
+
+msgid "Allow the system task to automatically delete expired audit logs."
+msgstr ""
+
+msgid "Audit log retention (days)"
+msgstr ""
+
+msgid ""
+"Audit logs older than this number of days will be removed when the cleanup "
+"task runs."
+msgstr ""
+
+msgid "Maximum VIP level"
+msgstr ""
+
+#, python-format
+msgid "Set to 0 to disable VIP support. Choose up to %(max_level)s levels."
+msgstr ""
+
+msgid "Homepage visit trend range"
+msgstr ""
+
+msgid "Choose how many recent days to show in the homepage visit chart."
+msgstr ""
+
+#, fuzzy
+#| msgid "Books used to organize related articles."
+msgid "Allow users to create articles"
+msgstr "Books used to organize related articles."
+
+msgid ""
+"When enabled, non-admin users can create draft articles from their profile. "
+"When disabled, article creation is hidden for everyone."
+msgstr ""
+
+#, python-format
+msgid "VIP %(level)s display name"
+msgstr ""
+
+#, fuzzy
+#| msgid "Leave blank to keep the current password."
+msgid "Leave blank to use the default name."
+msgstr "Leave blank to keep the current password."
+
+#, fuzzy
+#| msgid "Posts"
+msgid "Post"
+msgstr "Posts"
+
+msgid "Book"
+msgstr "Book"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Logout"
+msgstr ""
+
+msgid "Create post"
+msgstr "Create post"
+
+#, fuzzy
+#| msgid "Create post"
+msgid "Update post"
+msgstr "Create post"
+
+msgid "Delete post"
+msgstr "Delete post"
+
+msgid "Create comment"
+msgstr "Create comment"
+
+#, fuzzy
+#| msgid "Create comment"
+msgid "Update comment"
+msgstr "Create comment"
+
+msgid "Delete comment"
+msgstr "Delete comment"
+
+#, fuzzy
+#| msgid "Update link"
+msgid "Update profile"
+msgstr "Update link"
+
+msgid "Update user"
+msgstr "Update user"
+
+msgid "Delete user"
+msgstr "Delete user"
+
+#, fuzzy
+#| msgid "Update user"
+msgid "Update user assets"
+msgstr "Update user"
+
+#, fuzzy
+#| msgid "Only top-level comments can be replied to."
+msgid "Top-level comments cannot reply to another comment."
+msgstr "Only top-level comments can be replied to."
+
+msgid "Comment parent must belong to the same post."
+msgstr "Comment parent must belong to the same post."
+
+#, fuzzy
+#| msgid "You can only reply to top-level comments."
+msgid "Replies must stay under a top-level comment."
+msgstr "You can only reply to top-level comments."
+
+msgid "Replies must target a comment."
+msgstr ""
+
+#, fuzzy
+#| msgid "Comment parent must belong to the same post."
+msgid "Reply target must belong to the same post."
+msgstr "Comment parent must belong to the same post."
+
+msgid ""
+"Replies can only target the top-level comment or one of its direct replies."
+msgstr ""
+
+msgid "Feedback value must be either 1 or -1."
+msgstr ""
+
+msgid "Draft"
+msgstr "Draft"
+
+msgid "Published"
+msgstr "Published"
+
+msgid "7 days"
+msgstr ""
+
+msgid "14 days"
+msgstr ""
+
+msgid "30 days"
+msgstr ""
+
+#, fuzzy
+#| msgid "Profile settings"
+msgid "Site setting"
+msgstr "Profile settings"
+
+#, fuzzy
+#| msgid "Profile settings"
+msgid "Site settings"
+msgstr "Profile settings"
+
+msgid "Encrypted"
+msgstr ""
+
+msgid "Book only"
+msgstr "Book only"
+
+#, fuzzy
+#| msgid "Book structure must be a list."
+msgid "Condition data must be a list."
+msgstr "Book structure must be a list."
+
+#, fuzzy
+#| msgid "Each book structure node must be an object."
+msgid "Each condition must be an object."
+msgstr "Each book structure node must be an object."
+
+#, fuzzy
+#| msgid "Unknown book structure node type."
+msgid "Unknown condition type."
+msgstr "Unknown book structure node type."
+
+msgid "Each condition type can only be used once."
+msgstr ""
+
+msgid "Condition value must be a positive integer."
+msgstr ""
+
+msgid "At least one condition is required."
+msgstr ""
+
+#, python-format
+msgid "User signed in: %(username)s"
+msgstr "User signed in: %(username)s"
+
+msgid "anonymous user"
+msgstr "anonymous user"
+
+#, python-format
+msgid "User signed out: %(username)s"
+msgstr "User signed out: %(username)s"
+
+msgid "1 day"
+msgstr ""
+
+msgid "Never expires"
+msgstr "Never expires"
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to generate a share link."
+msgstr "You do not have permission to delete this comment."
+
+msgid "Only public books can generate share links."
+msgstr "Only public books can generate share links."
+
+msgid "Invalid expiry option."
+msgstr ""
+
+#, python-format
+msgid "Book created: %(name)s"
+msgstr "Book created: %(name)s"
+
+msgid "Book created successfully."
+msgstr "Book created successfully."
+
+msgid "Create book"
+msgstr "Create book"
+
+#, python-format
 msgid "Book updated: %(name)s"
 msgstr "Book updated: %(name)s"
 
 msgid "Book updated successfully."
 msgstr "Book updated successfully."
+
+#, python-format
+msgid "Book deleted: %(name)s"
+msgstr "Book deleted: %(name)s"
+
+msgid "Book deleted successfully."
+msgstr "Book deleted successfully."
+
+#, fuzzy
+#| msgid "Enter password to view this book"
+msgid "Enter password to view this article"
+msgstr "Enter password to view this book"
+
+#, fuzzy
+#| msgid "Select articles"
+msgid "Unlock article"
+msgstr "Select articles"
+
+#, fuzzy
+#| msgid "Content snapshot"
+msgid "Content access check"
+msgstr "Content snapshot"
+
+msgid "Purchase now"
+msgstr ""
+
+msgid "Insufficient balance"
+msgstr ""
+
+msgid "Insufficient points"
+msgstr ""
+
+msgid "No accessible articles in this book yet."
+msgstr "No accessible articles in this book yet."
 
 msgid "Enter password to view this book"
 msgstr "Enter password to view this book"
@@ -1136,25 +684,587 @@ msgstr "Enter password to view this book"
 msgid "Unlock book"
 msgstr "Unlock book"
 
-msgid "Only public books can generate share links."
-msgstr "Only public books can generate share links."
+#, fuzzy
+#| msgid "Email is required."
+msgid "Password is required."
+msgstr "Email is required."
 
-msgid "Library"
-msgstr "Library"
+#, fuzzy
+#| msgid "Forgot password"
+msgid "Incorrect password."
+msgstr "Forgot password"
 
-msgid "No summary yet."
-msgstr "No summary yet."
+msgid "Password"
+msgstr "Password"
 
-msgid "%(total)s article"
-msgid_plural "%(total)s articles"
-msgstr[0] "%(total)s article"
-msgstr[1] "%(total)s articles"
+msgid "Enter book password"
+msgstr "Enter book password"
 
-msgid "No books yet"
-msgstr "No books yet"
+msgid "Save this book before generating an external link."
+msgstr "Save this book before generating an external link."
 
-msgid "Books will appear here after editors create and publish them."
-msgstr "Books will appear here after editors create and publish them."
+msgid "You are commenting too frequently. Please try again later."
+msgstr "You are commenting too frequently. Please try again later."
+
+msgid ""
+"Replies can only target a top-level comment or one of its direct replies."
+msgstr ""
+
+msgid "Reply posted successfully."
+msgstr "Reply posted successfully."
+
+msgid "Comment posted successfully."
+msgstr "Comment posted successfully."
+
+#, python-format
+msgid "Comment created on %(title)s"
+msgstr "Comment created on %(title)s"
+
+msgid "You do not have permission to delete this comment."
+msgstr "You do not have permission to delete this comment."
+
+#, python-format
+msgid "Comment deleted on %(title)s"
+msgstr "Comment deleted on %(title)s"
+
+msgid "Comment deleted successfully."
+msgstr "Comment deleted successfully."
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to edit this comment."
+msgstr "You do not have permission to delete this comment."
+
+#, fuzzy, python-format
+#| msgid "Comment created on %(title)s"
+msgid "Comment updated on %(title)s"
+msgstr "Comment created on %(title)s"
+
+#, fuzzy
+#| msgid "Comment posted successfully."
+msgid "Comment updated successfully."
+msgstr "Comment posted successfully."
+
+msgid "Audit logs cleared successfully."
+msgstr "Audit logs cleared successfully."
+
+msgid "Basic"
+msgstr ""
+
+msgid "Users"
+msgstr "Users"
+
+msgid "Books"
+msgstr "Books"
+
+#, fuzzy
+#| msgid "Comment"
+msgid "Comments"
+msgstr "Comment"
+
+msgid "Audit"
+msgstr "Audit"
+
+#, fuzzy
+#| msgid "Search users..."
+msgid "Search dashboard..."
+msgstr "Search users..."
+
+#, fuzzy
+#| msgid "Profile settings"
+msgid "Basic settings"
+msgstr "Profile settings"
+
+msgid "Basic site settings updated"
+msgstr ""
+
+msgid "Pending removals were applied when saving."
+msgstr ""
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "Basic settings updated successfully."
+msgstr "Post updated successfully."
+
+#, python-format
+msgid "User updated: %(username)s"
+msgstr "User updated: %(username)s"
+
+#, python-format
+msgid "Money updated for %(username)s: %(before)s -> %(after)s"
+msgstr ""
+
+#, python-format
+msgid "Points updated for %(username)s: %(before)s -> %(after)s"
+msgstr ""
+
+#, python-format
+msgid "[%(app_name)s] Your password was updated"
+msgstr "[%(app_name)s] Your password was updated"
+
+msgid "User password was updated, but the password email could not be sent."
+msgstr "User password was updated, but the password email could not be sent."
+
+#, python-format
+msgid "[%(app_name)s] Your email address was updated"
+msgstr "[%(app_name)s] Your email address was updated"
+
+msgid "User was updated, but the email notification could not be sent."
+msgstr "User was updated, but the email notification could not be sent."
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "User updated successfully."
+msgstr "Post updated successfully."
+
+msgid "Edit user"
+msgstr "Edit user"
+
+msgid "You cannot delete your own account."
+msgstr "You cannot delete your own account."
+
+msgid "This user cannot be deleted because related data still exists."
+msgstr "This user cannot be deleted because related data still exists."
+
+#, python-format
+msgid "User deleted: %(username)s"
+msgstr "User deleted: %(username)s"
+
+msgid "User deleted successfully."
+msgstr "User deleted successfully."
+
+#, fuzzy
+#| msgid "Basic information"
+msgid "Basic Information"
+msgstr "Basic information"
+
+msgid "Recent Posts"
+msgstr ""
+
+#, fuzzy
+#| msgid "Select books"
+msgid "Recent Books"
+msgstr "Select books"
+
+#, fuzzy
+#| msgid "Delete comment"
+msgid "Recent Comments"
+msgstr "Delete comment"
+
+msgid "Reply"
+msgstr "Reply"
+
+msgid "Write a reply"
+msgstr "Write a reply"
+
+#, fuzzy
+#| msgid "Post comment"
+msgid "Edit comment"
+msgstr "Post comment"
+
+#, fuzzy
+#| msgid "Create comment"
+msgid "Update your comment"
+msgstr "Create comment"
+
+#, fuzzy
+#| msgid "Only public books can generate share links."
+msgid "Only published public articles can generate share links."
+msgstr "Only published public articles can generate share links."
+
+#, python-format
+msgid "External link updated: %(title)s"
+msgstr "External link updated: %(title)s"
+
+msgid "External link validity updated successfully."
+msgstr "External link validity updated successfully."
+
+#, python-format
+msgid "External link deleted: %(title)s"
+msgstr "External link deleted: %(title)s"
+
+msgid "External link deleted successfully."
+msgstr "External link deleted successfully."
+
+msgid "Search external links..."
+msgstr "Search external links..."
+
+msgid "Search external links"
+msgstr "Search external links"
+
+msgid "Search articles..."
+msgstr "Search articles..."
+
+#, fuzzy
+#| msgid "Publish article"
+msgid "Published articles"
+msgstr "Publish article"
+
+#, python-format
+msgid "Article created: %(title)s"
+msgstr "Article created: %(title)s"
+
+msgid "Article published successfully."
+msgstr "Article published successfully."
+
+#, python-format
+msgid "Draft created: %(title)s"
+msgstr "Draft created: %(title)s"
+
+msgid "Draft saved successfully."
+msgstr "Draft saved successfully."
+
+#, fuzzy
+#| msgid "Related articles"
+msgid "Create article"
+msgstr "Related articles"
+
+#, python-format
+msgid "Revision saved: %(title)s"
+msgstr "Revision saved: %(title)s"
+
+msgid "Revision saved successfully."
+msgstr "Revision saved successfully."
+
+#, python-format
+msgid "Article updated: %(title)s"
+msgstr "Article updated: %(title)s"
+
+msgid "Article updated successfully."
+msgstr "Article updated successfully."
+
+#, fuzzy
+#| msgid "Edit user"
+msgid "Edit article"
+msgstr "Edit article"
+
+#, python-format
+msgid "Article published: %(title)s"
+msgstr "Article published: %(title)s"
+
+#, python-format
+msgid "Draft saved: %(title)s"
+msgstr "Draft saved: %(title)s"
+
+msgid "Edit revision"
+msgstr "Edit revision"
+
+msgid "Edit draft"
+msgstr "Edit draft"
+
+#, python-format
+msgid "Draft imported from article: %(title)s"
+msgstr "Draft imported from article: %(title)s"
+
+msgid "Article imported as draft successfully."
+msgstr "Article imported as draft successfully."
+
+msgid "Import from existing article"
+msgstr "Import from existing article"
+
+msgid "Unable to import the selected markdown file."
+msgstr ""
+
+#, python-format
+msgid "Draft imported from markdown file: %(title)s"
+msgstr "Draft imported from markdown file: %(title)s"
+
+msgid "Article imported from .md successfully."
+msgstr "Article imported from .md successfully."
+
+#, python-format
+msgid "Draft deleted: %(title)s"
+msgstr "Draft deleted: %(title)s"
+
+msgid "Draft deleted successfully."
+msgstr "Draft deleted successfully."
+
+#, python-format
+msgid "Cover image removed: %(title)s"
+msgstr "Cover image removed: %(title)s"
+
+msgid "Cover image removed successfully."
+msgstr "Cover image removed successfully."
+
+#, python-format
+msgid "Article deleted: %(title)s"
+msgstr "Article deleted: %(title)s"
+
+msgid "Article deleted successfully."
+msgstr "Article deleted successfully."
+
+msgid "No image uploaded."
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter your password"
+msgid "Enter article password"
+msgstr "Enter your password"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "Imported post"
+msgstr "Imported post"
+
+msgid ""
+"This article has not been published yet. Publish it before generating an "
+"external link."
+msgstr ""
+"This article has not been published yet. Publish it before generating an "
+"external link."
+
+msgid ""
+"Only the original author can generate a new external link for this article."
+msgstr ""
+"Only the original author can generate a new external link for this article."
+
+msgid "Basic information"
+msgstr "Basic information"
+
+msgid "Account security"
+msgstr "Account security"
+
+#, fuzzy
+#| msgid "Add articles"
+msgid "My articles"
+msgstr "My articles"
+
+msgid "My comments"
+msgstr "My comments"
+
+msgid "Password changed"
+msgstr "Password changed"
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "Password updated successfully."
+msgstr "Post updated successfully."
+
+msgid "Profile updated"
+msgstr "Profile updated"
+
+#, fuzzy
+#| msgid "Post updated successfully."
+msgid "Profile updated successfully."
+msgstr "Post updated successfully."
+
+#, fuzzy
+#| msgid "You do not have permission to delete this comment."
+msgid "You do not have permission to import this article."
+msgstr "You do not have permission to delete this comment."
+
+msgid "Username or email"
+msgstr "Username or email"
+
+msgid "Enter your username or email"
+msgstr "Enter your username or email"
+
+msgid "Enter your password"
+msgstr "Enter your password"
+
+msgid "Remember me"
+msgstr "Remember me"
+
+msgid "Username/email or password is incorrect."
+msgstr "Username/email or password is incorrect."
+
+msgid "This account is inactive."
+msgstr "This account is inactive."
+
+msgid "Enter your email"
+msgstr "Enter your email"
+
+msgid "Confirm password"
+msgstr "Confirm password"
+
+msgid "Enter your password again"
+msgstr "Enter your password again"
+
+msgid "This username is already taken."
+msgstr "This username is already taken."
+
+msgid "This email is already registered."
+msgstr "This email is already registered."
+
+msgid "Please wait before requesting another verification code."
+msgstr "Please wait before requesting another verification code."
+
+msgid "Verification code sent."
+msgstr "Verification code sent."
+
+msgid "Registration is currently unavailable."
+msgstr "Registration is currently unavailable."
+
+msgid "Registration successful. Please sign in."
+msgstr "Registration successful. Please sign in."
+
+msgid "Email is required."
+msgstr "Email is required."
+
+msgid "Enter a valid email address."
+msgstr "Enter a valid email address."
+
+#, python-format
+msgid "[%(app_name)s] Your verification code"
+msgstr "[%(app_name)s] Your verification code"
+
+msgid "Email verification is currently unavailable."
+msgstr "Email verification is currently unavailable."
+
+msgid "Please enter a different email address."
+msgstr "Please enter a different email address."
+
+#, python-format
+msgid "[%(app_name)s] Your email verification code"
+msgstr "[%(app_name)s] Your email verification code"
+
+msgid "Password reset is currently unavailable."
+msgstr "Password reset is currently unavailable."
+
+msgid "Password reset successful. Please check your email."
+msgstr "Password reset successful. Please check your email."
+
+#, python-format
+msgid "[%(app_name)s] Your temporary password"
+msgstr "[%(app_name)s] Your temporary password"
+
+msgid "Simplified Chinese"
+msgstr "Simplified Chinese"
+
+msgid "English"
+msgstr "English"
+
+msgid "Welcome back"
+msgstr "Welcome back"
+
+msgid "No account? Sign up"
+msgstr "No account? Sign up"
+
+msgid "Show password"
+msgstr "Show password"
+
+msgid "Hide password"
+msgstr "Hide password"
+
+msgid "Password Reset"
+msgstr "Password Reset"
+
+msgid "Password Reset Unavailable"
+msgstr "Password Reset Unavailable"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Forgot password"
+msgstr "Forgot password"
+
+msgid "Sign in"
+msgstr "Sign in"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Create account"
+msgstr "Create account"
+
+msgid "Already has account? Sign in"
+msgstr "Already has account? Sign in"
+
+msgid "Send code"
+msgstr "Send code"
+
+#, fuzzy, python-format
+#| msgid "Resend in %(seconds)s s"
+msgid "Resend in %%(seconds)s s"
+msgstr "Resend in %(seconds)s s"
+
+msgid "Request failed."
+msgstr "Request failed."
+
+msgid "Primary navigation"
+msgstr ""
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Search books..."
+msgstr "Search books..."
+
+#, fuzzy
+#| msgid "Search posts..."
+msgid "Search tags..."
+msgstr "Search posts..."
+
+#, fuzzy
+#| msgid "Open management"
+msgid "Open user menu"
+msgstr "Open management"
+
+#, fuzzy
+#| msgid "Account security"
+msgid "Account summary"
+msgstr "Account security"
+
+msgid "Website management"
+msgstr "Website management"
+
+msgid "Profile settings"
+msgstr "Profile settings"
+
+msgid "Sign out"
+msgstr "Sign out"
+
+#, fuzzy
+#| msgid "Profile sections"
+msgid "Notifications"
+msgstr "Profile sections"
+
+msgid "Delete item"
+msgstr "Delete item"
+
+msgid "Remove item"
+msgstr "Remove item"
+
+msgid "Are you sure you want to continue? This action cannot be undone."
+msgstr "Are you sure you want to continue? This action cannot be undone."
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Unsaved changes"
+msgstr "Unsaved changes"
+
+msgid "Discard unsaved changes?"
+msgstr "Discard unsaved changes?"
+
+msgid ""
+"Your changes have not been saved yet. If you leave this page now, those "
+"changes will be lost."
+msgstr ""
+"Your changes have not been saved yet. If you leave this page now, those "
+"changes will be lost."
+
+msgid "Leave page"
+msgstr "Leave page"
+
+msgid "Keep editing"
+msgstr "Keep editing"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Browse every article you can access, including encrypted ones."
+msgstr "Browse every article you can access, including encrypted ones."
+
+msgid "No accessible articles yet"
+msgstr "No accessible articles yet"
+
+msgid "Articles you can access will appear here once they are published."
+msgstr "Articles you can access will appear here once they are published."
 
 msgid "Chapters"
 msgstr "Chapters"
@@ -1162,17 +1272,345 @@ msgstr "Chapters"
 msgid "Book chapters"
 msgstr "Book chapters"
 
-msgid "回到顶部"
-msgstr "Back to top"
+msgid "Table of Contents"
+msgstr ""
 
-msgid "Creator"
-msgstr "Creator"
+#, fuzzy
+#| msgid "Back to blog"
+msgid "Back to top"
+msgstr "Back to blog"
 
-msgid "Access"
-msgstr "Access"
+#, fuzzy
+#| msgid "Article editor"
+msgid "Article outline"
+msgstr "Article editor"
 
-msgid "Book visibility"
-msgstr "Book visibility"
+#, fuzzy
+#| msgid "Copy link"
+msgid "Copy"
+msgstr "Copy link"
+
+msgid "Copied"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+#, python-format
+msgid "Hidden %%count%% more lines"
+msgstr ""
+
+#, fuzzy
+#| msgid "Show"
+msgid "Show all"
+msgstr "Show"
+
+msgid "Discussion"
+msgstr "Discussion"
+
+#, python-format
+msgid "%(total)s Comment"
+msgid_plural "%(total)s Comments"
+msgstr[0] "%(total)s Comment"
+msgstr[1] "%(total)s Comments"
+
+msgid "Post comment"
+msgstr "Post comment"
+
+#, fuzzy
+#| msgid ""
+#| "Supports Markdown, side-by-side preview, direct image upload, table "
+#| "insertion, and GitHub-style callouts."
+msgid ""
+"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
+"direct image upload, table insertion, and GitHub-style callouts."
+msgstr ""
+"Supports Markdown, side-by-side preview, direct image upload, table "
+"insertion, and GitHub-style callouts."
+
+msgid "Library"
+msgstr "Library"
+
+#, python-format
+msgid "%(total)s article"
+msgid_plural "%(total)s articles"
+msgstr[0] "%(total)s article"
+msgstr[1] "%(total)s articles"
+
+msgid "No summary yet."
+msgstr "No summary yet."
+
+msgid "No books yet"
+msgstr "No books yet"
+
+msgid "Books will appear here after editors create and publish them."
+msgstr "Books will appear here after editors create and publish them."
+
+msgid "More"
+msgstr "More"
+
+msgid "Related articles"
+msgstr "Related articles"
+
+#, fuzzy
+#| msgid "No published posts yet"
+msgid "No Related articles yet."
+msgstr "No published posts yet"
+
+msgid "Blog"
+msgstr ""
+
+msgid "Overview"
+msgstr "Overview"
+
+msgid "Blog performance dashboard"
+msgstr "Blog performance dashboard"
+
+msgid ""
+"Track publishing cadence, editorial activity, and the latest content updates "
+"from one place."
+msgstr ""
+"Track publishing cadence, editorial activity, and the latest content updates "
+"from one place."
+
+msgid "Explore articles"
+msgstr "Explore articles"
+
+msgid "Write a new article"
+msgstr "Write a new article"
+
+#, fuzzy
+#| msgid "Activity in the last 30 days"
+msgid "Article views in the last 7 days"
+msgstr "Activity in the last 30 days"
+
+#, fuzzy
+#| msgid "Fresh articles released this week."
+msgid "Independent article page visits recorded this week."
+msgstr "Fresh articles released this week."
+
+#, fuzzy
+#| msgid "Published in the last 7 days"
+msgid "Book views in the last 7 days"
+msgstr "Published in the last 7 days"
+
+msgid "Independent book page visits recorded this week."
+msgstr ""
+
+msgid "Highlights"
+msgstr "Highlights"
+
+msgid "Content snapshot"
+msgstr "Content snapshot"
+
+msgid "Total articles"
+msgstr "Total articles"
+
+msgid "All articles currently stored in the blog."
+msgstr "All articles currently stored in the blog."
+
+msgid "Topic labels used to organize the content library."
+msgstr "Topic labels used to organize the content library."
+
+msgid "Books used to organize related articles."
+msgstr "Books used to organize related articles."
+
+msgid "Authors"
+msgstr "Authors"
+
+msgid "Contributors who have published or drafted articles."
+msgstr "Contributors who have published or drafted articles."
+
+msgid "Traffic"
+msgstr ""
+
+#, fuzzy, python-format
+#| msgid "Activity in the last 30 days"
+msgid "Visits in the last %(days)s days"
+msgstr "Activity in the last 30 days"
+
+#, fuzzy, python-format
+#| msgid "Post publishing trend in the last 30 days"
+msgid "Article and book visit trend in the last %(days)s days"
+msgstr "Post publishing trend in the last 30 days"
+
+msgid "Latest published articles"
+msgstr "Latest published articles"
+
+#, fuzzy
+#| msgid "Write a new article"
+msgid "Write a new post"
+msgstr "Write a new article"
+
+msgid "No published articles yet"
+msgstr "No published articles yet"
+
+msgid ""
+"Create your first article from the management panel to populate the homepage."
+msgstr ""
+"Create your first article from the management panel to populate the homepage."
+
+msgid "Author"
+msgstr "Author"
+
+msgid "Open comment actions"
+msgstr ""
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+msgstr ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Post reply"
+msgstr "Post reply"
+
+msgid "Like"
+msgstr "Like"
+
+msgid "Dislike"
+msgstr "Dislike"
+
+#, python-format
+msgid "Expand %(count)s replies"
+msgstr ""
+
+msgid "Collapse replies"
+msgstr ""
+
+msgid "No comments yet."
+msgstr "No comments yet."
+
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Jump to page"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+#, python-format
+msgctxt "conditional summary"
+msgid "%(counter)s condition"
+msgid_plural "%(counter)s conditions"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+#| msgid "Article Editor"
+msgid "Article in book"
+msgstr "Article Editor"
+
+#, fuzzy
+#| msgid "New article"
+msgid "From article"
+msgstr "New article"
+
+#, python-format
+msgid "Page: %(current)s / %(total)s"
+msgstr ""
+
+#, python-format
+msgid "Likes %(up)s, dislikes %(down)s"
+msgstr ""
+
+msgid "No tags"
+msgstr ""
+
+msgid "Audit Logs"
+msgstr "Audit Logs"
+
+msgid "Manage"
+msgstr "Manage"
+
+msgid "Access audit"
+msgstr "Access audit"
+
+msgid "Clear audit logs"
+msgstr "Clear audit logs"
+
+msgid ""
+"Are you sure you want to clear all audit logs? This action cannot be undone."
+msgstr ""
+"Are you sure you want to clear all audit logs? This action cannot be undone."
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Search audit logs..."
+msgstr "Search audit logs..."
+
+msgid "Search audit logs"
+msgstr "Search audit logs"
+
+#, fuzzy
+#| msgid "Actions"
+msgid "Action"
+msgstr "Actions"
+
+msgid "Message"
+msgstr ""
+
+#, fuzzy
+#| msgid "Users"
+msgid "User"
+msgstr "Users"
+
+msgid "IP"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Anonymous"
+msgstr "Anonymous"
+
+msgid "No audit logs yet"
+msgstr "No audit logs yet"
+
+msgid "Book Editor"
+msgstr "Book Editor"
+
+msgid "Editor"
+msgstr "Editor"
+
+msgid "Delete cover image"
+msgstr "Delete cover image"
+
+msgid "Undo"
+msgstr "Undo"
+
+msgid "Conditions"
+msgstr ""
+
+msgid "Condition types are full"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter your password"
+msgid "Enter password"
+msgstr "Enter your password"
+
+#, fuzzy
+#| msgid "Leave blank to keep the current password."
+msgid "Leave blank to keep current password"
+msgstr "Leave blank to keep the current password."
 
 msgid "External link"
 msgstr "External link"
@@ -1180,38 +1618,22 @@ msgstr "External link"
 msgid "Link expiry"
 msgstr "Link expiry"
 
+#, fuzzy
+#| msgid "Request failed."
+msgid "Request failed. Please try again."
+msgstr "Request failed."
+
+msgid "Unable to generate share link right now."
+msgstr "Unable to generate share link right now."
+
 msgid "External link copied."
 msgstr "External link copied."
 
-msgid "This article has not been published yet. Publish it before generating an external link."
-msgstr "This article has not been published yet. Publish it before generating an external link."
+msgid "Generate share link"
+msgstr "Generate share link"
 
-msgid "Only the original author can generate a new external link for this article."
-msgstr "Only the original author can generate a new external link for this article."
-
-msgid "You can view the current external link, but only the original author can generate a new one."
-msgstr "You can view the current external link, but only the original author can generate a new one."
-
-msgid "Save this book before generating an external link."
-msgstr "Save this book before generating an external link."
-
-msgid "Create an anonymous access link for this public book. Readers can browse the book without signing in, but they can only see public articles inside it."
-msgstr "Create an anonymous access link for this public book. Readers can browse the book without signing in, but they can only see public articles inside it."
-
-msgid "Book share links still respect article-level visibility. Anonymous visitors can only access public articles in the book."
-msgstr "Book share links still respect article-level visibility. Anonymous visitors can only access public articles in the book."
-
-msgid "Select articles"
-msgstr "Select articles"
-
-msgid "Available articles"
-msgstr "Available articles"
-
-msgid "Book structure"
-msgstr "Book structure"
-
-msgid "Add group"
-msgstr "Add group"
+msgid "Copy link"
+msgstr "Copy link"
 
 msgid "Chapter management"
 msgstr "Chapter management"
@@ -1222,6 +1644,12 @@ msgstr "Chapter actions"
 msgid "Add articles"
 msgstr "Add articles"
 
+msgid "Add group"
+msgstr "Add group"
+
+msgid "New group"
+msgstr "New group"
+
 msgid "No chapters yet. Add articles or groups to start building this book."
 msgstr "No chapters yet. Add articles or groups to start building this book."
 
@@ -1230,9 +1658,6 @@ msgstr "Rename group"
 
 msgid "Group title"
 msgstr "Group title"
-
-msgid "New group"
-msgstr "New group"
 
 msgid "Enter a new group name."
 msgstr "Enter a new group name."
@@ -1243,12 +1668,6 @@ msgstr "Move up"
 msgid "Move down"
 msgstr "Move down"
 
-msgid "Select"
-msgstr "Select"
-
-msgid "Selected"
-msgstr "Selected"
-
 msgid "Added"
 msgstr "Added"
 
@@ -1258,190 +1677,536 @@ msgstr "Add selected"
 msgid "Drag"
 msgstr "Drag"
 
-msgid "Rebuild from selection"
-msgstr "Rebuild from selection"
+msgid "Save book"
+msgstr "Save book"
 
-msgid "No published articles available."
-msgstr "No published articles available."
+msgid "Manage Books"
+msgstr "Manage Books"
 
-msgid "Use groups to organize chapters. Drag-free controls keep the structure stable and easy to edit."
-msgstr "Use groups to organize chapters. Drag-free controls keep the structure stable and easy to edit."
+msgid "New book"
+msgstr "New book"
 
-msgid "Selected articles"
-msgstr "Selected articles"
+msgid "Search books"
+msgstr "Search books"
 
-msgid "No articles selected yet."
-msgstr "No articles selected yet."
+msgid "Name"
+msgstr "Name"
 
-msgid "Add selected articles"
-msgstr "Add selected articles"
+msgid "Actions"
+msgstr "Actions"
 
-msgid "Remove selected articles"
-msgstr "Remove selected articles"
+msgid "Browse"
+msgstr ""
 
-msgid "No accessible articles yet"
-msgstr "No accessible articles yet"
+msgid "Delete book"
+msgstr "Delete book"
 
-msgid "Browse every article you can access, including encrypted ones."
-msgstr "Browse every article you can access, including encrypted ones."
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
+#| "kept."
+msgid ""
+"Are you sure you want to delete \\\"%(title)s\\\"? Articles in this book "
+"will be kept."
+msgstr ""
+"Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
+"kept."
 
-msgid "Articles you can access will appear here once they are published."
-msgstr "Articles you can access will appear here once they are published."
+msgid "No books found."
+msgstr "No books found."
 
-msgid "No accessible articles in this book yet."
-msgstr "No accessible articles in this book yet."
+#, fuzzy
+#| msgid "Manage Books"
+msgid "Manage Comments"
+msgstr "Manage Books"
 
-msgid "Create book"
-msgstr "Create book"
+#, fuzzy
+#| msgid "Search posts, books, tags, authors..."
+msgid "Search comments by content or author..."
+msgstr "Search posts, books, tags, authors..."
 
-msgid "Book created: %(name)s"
-msgstr "Book created: %(name)s"
+#, fuzzy
+#| msgid "Create comment"
+msgid "Search comments"
+msgstr "Create comment"
 
-msgid "Book created successfully."
-msgstr "Book created successfully."
+#, fuzzy
+#| msgid "No comments yet."
+msgid "No comments found."
+msgstr "No comments yet."
 
-msgid "Book deleted: %(name)s"
-msgstr "Book deleted: %(name)s"
-
-msgid "Book deleted successfully."
-msgstr "Book deleted successfully."
-
-msgid "Basic information"
-msgstr "Basic information"
-
-msgid "Personal settings"
-msgstr "Personal settings"
-
-msgid "Account security"
-msgstr "Account security"
+msgid "Article Editor"
+msgstr "Article Editor"
 
 msgid "Profile sections"
 msgstr "Profile sections"
 
-msgid "Email verification is currently unavailable."
-msgstr "Email verification is currently unavailable."
+msgid "Has revision"
+msgstr "Has revision"
 
-msgid "Please enter a different email address."
-msgstr "Please enter a different email address."
+msgid ""
+"You can view the current external link, but only the original author can "
+"generate a new one."
+msgstr ""
+"You can view the current external link, but only the original author can "
+"generate a new one."
 
-msgid "Verification code is required when changing email."
-msgstr "Verification code is required when changing email."
+msgid "Save revision"
+msgstr "Save revision"
 
-msgid "[%(app_name)s] Your email verification code"
-msgstr "[%(app_name)s] Your email verification code"
+msgid "Save draft"
+msgstr "Save draft"
 
-msgid "Use the verification code below to confirm your new email address."
-msgstr "Use the verification code below to confirm your new email address."
+msgid "Publish article"
+msgstr "Publish article"
 
-msgid "Verify New Email"
-msgstr "Verify New Email"
+msgid "Import"
+msgstr "Import"
 
-msgid "You are receiving this email because an email change verification code was requested for %(app_name)s."
-msgstr "You are receiving this email because an email change verification code was requested for %(app_name)s."
+msgid "Back to articles"
+msgstr "Back to articles"
 
-msgid "If you did not request this email change, you can safely ignore it."
-msgstr "If you did not request this email change, you can safely ignore it."
+msgid "Search articles to import..."
+msgstr "Search articles to import..."
 
-msgid "Click avatar to upload"
-msgstr "Click avatar to upload"
+msgid "Search articles to import"
+msgstr "Search articles to import"
+
+msgid "No published articles available to import."
+msgstr "No published articles available to import."
+
+msgid "Manage Articles"
+msgstr "Manage Articles"
+
+msgid "New article"
+msgstr "New article"
+
+msgid "Only .md files are supported."
+msgstr "Only .md files are supported."
+
+msgid "Please choose a markdown file to import."
+msgstr ""
+
+#, fuzzy
+#| msgid "Unable to update share link right now."
+msgid "Unable to import the selected markdown file right now."
+msgstr "Unable to update share link right now."
+
+#, fuzzy
+#| msgid "Updating..."
+msgid "Importing..."
+msgstr "Updating..."
+
+msgid "Import from .md file"
+msgstr "Import from .md file"
+
+msgid "Article lists"
+msgstr "Article lists"
+
+msgid "Created by"
+msgstr "Created by"
+
+msgid "Expires at"
+msgstr "Expires at"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Expired"
+msgstr "Expired"
+
+msgid "Revision"
+msgstr "Revision"
+
+msgid "Edit external link"
+msgstr "Edit external link"
+
+msgid "External links"
+msgstr "External links"
+
+#, python-format
+msgid "View or update the external link for \"%(title)s\"."
+msgstr "View or update the external link for \"%(title)s\"."
+
+#, fuzzy
+#| msgid ""
+#| "Anyone with this link can view the post and its comments without signing "
+#| "in, but cannot interact."
+msgid ""
+"Anyone with this link can view the article and its comments without signing "
+"in, but cannot interact."
+msgstr ""
+"Anyone with this link can view the article and its comments without signing "
+"in, but cannot interact."
+
+msgid "Update link"
+msgstr "Update link"
+
+msgid "Updating..."
+msgstr "Updating..."
+
+msgid "Link validity"
+msgstr "Link validity"
+
+msgid "Share link"
+msgstr "Share link"
+
+msgid "Share link copied."
+msgstr "Share link copied."
+
+msgid "Unable to update share link right now."
+msgstr "Unable to update share link right now."
+
+msgid "Delete external link"
+msgstr "Delete external link"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete the external link for \"%(title)s\"? This "
+#| "action cannot be undone."
+msgid ""
+"Are you sure you want to delete the external link for \\\"%(title)s\\\"? "
+"This action cannot be undone."
+msgstr ""
+"Are you sure you want to delete the external link for \"%(title)s\"? This "
+"action cannot be undone."
+
+msgid "Existing revision"
+msgstr "Existing revision"
+
+msgid "Open"
+msgstr "Open"
+
+msgid "Discard"
+msgstr "Discard"
+
+#, python-format
+msgid ""
+"The published post \"%(title)s\" already has a saved revision. You can "
+"continue editing the existing revision or start over from the published "
+"version. Starting over will delete the current revision."
+msgstr ""
+"The published post \"%(title)s\" already has a saved revision. You can "
+"continue editing the existing revision or start over from the published "
+"version. Starting over will delete the current revision."
+
+#, fuzzy
+#| msgid "Selected articles"
+msgid "Delete article"
+msgstr "Selected articles"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete \"%(title)s\"? This action cannot be "
+#| "undone."
+msgid ""
+"Are you sure you want to delete \\\"%(title)s\\\"? This action cannot be "
+"undone."
+msgstr ""
+"Are you sure you want to delete \"%(title)s\"? This action cannot be undone."
+
+msgid "Delete revision"
+msgstr "Delete revision"
+
+msgid "Delete draft"
+msgstr "Delete draft"
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete revision \"%(title)s\"? This action "
+#| "cannot be undone."
+msgid ""
+"Are you sure you want to delete revision \\\"%(title)s\\\"? This action "
+"cannot be undone."
+msgstr ""
+"Are you sure you want to delete revision \"%(title)s\"? This action cannot "
+"be undone."
+
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete draft \"%(title)s\"? This action cannot "
+#| "be undone."
+msgid ""
+"Are you sure you want to delete draft \\\"%(title)s\\\"? This action cannot "
+"be undone."
+msgstr ""
+"Are you sure you want to delete draft \"%(title)s\"? This action cannot be "
+"undone."
+
+msgid "No published articles found."
+msgstr "No published articles found."
+
+msgid "No drafts or revisions found."
+msgstr "No drafts or revisions found."
+
+msgid "No external links found."
+msgstr "No external links found."
+
+msgid "Workspace"
+msgstr "Workspace"
+
+msgid "Website"
+msgstr ""
+
+msgid "Appearance assets"
+msgstr ""
+
+msgid "Website icon preview"
+msgstr ""
+
+#, fuzzy
+#| msgid "Remove column"
+msgid "Remove icon"
+msgstr "Remove column"
+
+msgid "Undo remove"
+msgstr ""
+
+msgid "Login page background preview"
+msgstr ""
+
+#, fuzzy
+#| msgid "Remove column"
+msgid "Remove background"
+msgstr "Remove column"
+
+msgid "Authenticated page background preview"
+msgstr ""
+
+#, fuzzy
+#| msgid "Audit Logs"
+msgid "Audit logs"
+msgstr "Audit Logs"
+
+#, fuzzy
+#| msgid "Profile settings"
+msgid "VIP settings"
+msgstr "Profile settings"
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Article editor"
+msgstr "Article editor"
+
+#, fuzzy
+#| msgid "Edit user"
+msgid "Edit User"
+msgstr "Edit user"
+
+msgid "Delete avatar"
+msgstr "Delete avatar"
 
 msgid "User groups"
 msgstr "User groups"
 
-msgid "Normal user"
-msgstr "Normal user"
-
-msgid "VIP user"
-msgstr "VIP user"
-
-msgid "Administrator"
-msgstr "Administrator"
-
-msgid "Discussion"
-msgstr "Discussion"
-
-msgid "%(total)s Comment"
-msgid_plural "%(total)s Comments"
-msgstr[0] "%(total)s Comment"
-msgstr[1] "%(total)s Comments"
-
-msgid "Comment"
-msgstr "Comment"
-
-msgid "Write a comment"
-msgstr "Write a comment"
-
-msgid "Comment content cannot be empty."
-msgstr "Comment content cannot be empty."
-
-msgid "Reply"
-msgstr "Reply"
-
-msgid "Write a reply"
-msgstr "Write a reply"
-
-msgid "Post comment"
-msgstr "Post comment"
-
-msgid "Post reply"
-msgstr "Post reply"
-
-msgid "Delete comment"
-msgstr "Delete comment"
-
-msgid "Are you sure you want to delete this comment? This action cannot be undone."
-msgstr "Are you sure you want to delete this comment? This action cannot be undone."
-
-msgid "No comments yet."
-msgstr "No comments yet."
-
-msgid "Create comment"
-msgstr "Create comment"
-
-msgid "Comment posted successfully."
-msgstr "Comment posted successfully."
-
-msgid "Reply posted successfully."
-msgstr "Reply posted successfully."
-
-msgid "You can only reply to top-level comments."
-msgstr "You can only reply to top-level comments."
-
-msgid "You are commenting too frequently. Please try again later."
-msgstr "You are commenting too frequently. Please try again later."
-
-msgid "Comment created on %(title)s"
-msgstr "Comment created on %(title)s"
-
-msgid "Comment deleted on %(title)s"
-msgstr "Comment deleted on %(title)s"
-
-msgid "You do not have permission to delete this comment."
-msgstr "You do not have permission to delete this comment."
-
-msgid "Comment deleted successfully."
-msgstr "Comment deleted successfully."
-
-msgid "Comment parent must belong to the same post."
-msgstr "Comment parent must belong to the same post."
-
-msgid "Only top-level comments can be replied to."
-msgstr "Only top-level comments can be replied to."
-
-msgid "User role"
-msgstr "User role"
-
 msgid "Administrator permissions"
 msgstr "Administrator permissions"
 
-msgid "Business groups"
-msgstr "Business groups"
+msgid "Virtual assets"
+msgstr ""
 
-msgid "No user groups available."
-msgstr "No user groups available."
+#, fuzzy, python-format
+#| msgid ""
+#| "Are you sure you want to delete user \"%(username)s\"? This action cannot "
+#| "be undone."
+msgid ""
+"Are you sure you want to delete user \\\"%(username)s\\\"? This action "
+"cannot be undone."
+msgstr ""
+"Are you sure you want to delete user \"%(username)s\"? This action cannot be "
+"undone."
 
-msgid "[%(app_name)s] Your password was updated"
-msgstr "[%(app_name)s] Your password was updated"
+msgid "Manage Users"
+msgstr "Manage Users"
+
+msgid "Search users..."
+msgstr "Search users..."
+
+msgid "Search users"
+msgstr "Search users"
+
+msgid "Roles"
+msgstr "Roles"
+
+msgid "State"
+msgstr "State"
+
+msgid "Disabled"
+msgstr "Disabled"
+
+msgid "No users found."
+msgstr "No users found."
+
+#, fuzzy
+#| msgid "Username"
+msgid "User Namecard"
+msgstr "Username"
+
+#, fuzzy
+#| msgid "Chapter actions"
+msgid "Namecard sections"
+msgstr "Chapter actions"
+
+#, fuzzy
+#| msgid "Name"
+msgid "Namecard"
+msgstr "Name"
+
+#, fuzzy
+#| msgid "Personal settings"
+msgid "Personal description"
+msgstr "Personal settings"
+
+msgid "No personal description yet."
+msgstr ""
+
+#, fuzzy
+#| msgid "No drafts yet"
+msgid "No posts yet"
+msgstr "No drafts yet"
+
+msgid "This user hasn't published any non-private articles yet."
+msgstr ""
+
+msgid "This user hasn't published any non-private books yet."
+msgstr ""
+
+#, fuzzy
+#| msgid "Profile updated"
+msgid "Profile"
+msgstr "Profile updated"
+
+msgid "Click avatar to upload"
+msgstr "Click avatar to upload"
+
+#, fuzzy
+#| msgid "Hide password"
+msgid "Update password"
+msgstr "Hide password"
+
+#, fuzzy
+#| msgid "Search posts"
+msgid "Search results"
+msgstr "Search posts"
+
+#, python-format
+msgid "Results for \"%(query)s\""
+msgstr ""
+
+msgid "Enter a keyword from the top search bar."
+msgstr ""
+
+#, fuzzy
+#| msgid "No posts found."
+msgid "No results found"
+msgstr "No posts found."
+
+msgid "Try another keyword, book, tag, or author name."
+msgstr "Try another keyword, book, tag, or author name."
+
+#, fuzzy
+#| msgid "Tags"
+msgid "Tag"
+msgstr "Tags"
+
+#, fuzzy, python-format
+#| msgid "%(total)s Comment"
+#| msgid_plural "%(total)s Comments"
+msgid "%(total)s post"
+msgid_plural "%(total)s posts"
+msgstr[0] "%(total)s Comment"
+msgstr[1] "%(total)s Comments"
+
+#, fuzzy
+#| msgid "No posts found."
+msgid "No posts found for this tag"
+msgstr "No posts found."
+
+#, fuzzy
+#| msgid "Articles you can access will appear here once they are published."
+msgid ""
+"Posts assigned to this tag will appear here once they are visible to you."
+msgstr "Articles you can access will appear here once they are published."
+
+msgid "All tags"
+msgstr ""
+
+msgid "Browse every tag that currently has visible posts."
+msgstr ""
+
+#, fuzzy
+#| msgid "No drafts yet"
+msgid "No tags yet"
+msgstr "No drafts yet"
+
+msgid "Tags with visible posts will appear here once content is categorized."
+msgstr ""
+
+msgid "Verify New Email"
+msgstr "Verify New Email"
+
+msgid "Use the verification code below to confirm your new email address."
+msgstr "Use the verification code below to confirm your new email address."
+
+#, python-format
+msgid ""
+"You are receiving this email because an email change verification code was "
+"requested for %(app_name)s."
+msgstr ""
+"You are receiving this email because an email change verification code was "
+"requested for %(app_name)s."
+
+msgid "One-time code"
+msgstr "One-time code"
+
+#, python-format
+msgid "This code will expire in %(minutes)s minutes."
+msgstr "This code will expire in %(minutes)s minutes."
+
+msgid ""
+"For your security, do not forward this email or share the code with anyone."
+msgstr ""
+"For your security, do not forward this email or share the code with anyone."
+
+msgid "If you did not request this email change, you can safely ignore it."
+msgstr "If you did not request this email change, you can safely ignore it."
+
+#, python-format
+msgid ""
+"This is an automated email from %(app_name)s. Please do not reply directly "
+"to this message."
+msgstr ""
+"This is an automated email from %(app_name)s. Please do not reply directly "
+"to this message."
+
+#, fuzzy, python-format
+#| msgid "[%(app_name)s] Your email verification code"
+msgid "%(app_name)s email verification code"
+msgstr "[%(app_name)s] Your email verification code"
+
+msgid "Verification Code"
+msgstr "Verification Code"
+
+msgid "Email Address Updated"
+msgstr "Email Address Updated"
+
+msgid "Your account email address has been updated by an administrator."
+msgstr "Your account email address has been updated by an administrator."
+
+#, python-format
+msgid "This change was applied to the account for %(username)s."
+msgstr "This change was applied to the account for %(username)s."
+
+msgid "New email address"
+msgstr "New email address"
+
+msgid ""
+"If you did not expect this change, please contact an administrator "
+"immediately."
+msgstr ""
+"If you did not expect this change, please contact an administrator "
+"immediately."
 
 msgid "Password Updated"
 msgstr "Password Updated"
@@ -1449,29 +2214,58 @@ msgstr "Password Updated"
 msgid "An administrator has updated your account password."
 msgstr "An administrator has updated your account password."
 
-msgid "For security, please sign in as soon as possible and change this password if needed."
-msgstr "For security, please sign in as soon as possible and change this password if needed."
+msgid ""
+"For security, please sign in as soon as possible and change this password if "
+"needed."
+msgstr ""
+"For security, please sign in as soon as possible and change this password if "
+"needed."
 
-msgid "User password was updated, but the password email could not be sent."
-msgstr "User password was updated, but the password email could not be sent."
+msgid "Use the verification code below to complete your registration."
+msgstr "Use the verification code below to complete your registration."
 
-msgid "Delete avatar"
-msgstr "Delete avatar"
+#, python-format
+msgid ""
+"You are receiving this email because a registration verification code was "
+"requested for %(app_name)s."
+msgstr ""
+"You are receiving this email because a registration verification code was "
+"requested for %(app_name)s."
 
-msgid "No avatar to remove."
-msgstr "No avatar to remove."
+msgid "If you did not request this email, you can safely ignore it."
+msgstr "If you did not request this email, you can safely ignore it."
 
-msgid "Avatar removed for user: %(username)s"
-msgstr "Avatar removed for user: %(username)s"
+#, python-format
+msgid "%(app_name)s verification code"
+msgstr "%(app_name)s verification code"
 
-msgid "Avatar removed successfully."
-msgstr "Avatar removed successfully."
+msgid "Temporary Password"
+msgstr "Temporary Password"
 
-msgid "Are you sure you want to remove this cover image? This action cannot be undone."
-msgstr "Are you sure you want to remove this cover image? This action cannot be undone."
+msgid "Use the temporary password below to sign in to your account."
+msgstr "Use the temporary password below to sign in to your account."
 
-msgid "Delete post"
-msgstr "Delete post"
+#, python-format
+msgid "A password reset request was processed for your %(app_name)s account."
+msgstr "A password reset request was processed for your %(app_name)s account."
 
-msgid "Are you sure you want to delete \"%(title)s\"? This action cannot be undone."
-msgstr "Are you sure you want to delete \"%(title)s\"? This action cannot be undone."
+msgid "Temporary password"
+msgstr "Temporary password"
+
+msgid ""
+"For security, please sign in as soon as possible and change this password "
+"immediately."
+msgstr ""
+"For security, please sign in as soon as possible and change this password "
+"immediately."
+
+msgid ""
+"If you did not request this reset, please contact an administrator after "
+"signing in."
+msgstr ""
+"If you did not request this reset, please contact an administrator after "
+"signing in."
+
+#, python-format
+msgid "%(app_name)s temporary password"
+msgstr "%(app_name)s temporary password"

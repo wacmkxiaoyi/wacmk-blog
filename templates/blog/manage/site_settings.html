@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load i18n static %}
 
 {% block title %}{% if page_title %}{{ page_title }}{% else %}{% trans "Basic settings" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="site-page manage-page">
@@ -26,10 +31,26 @@
                     </div>
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field">
-                            <label for="{{ form.site_title.id_for_label }}">{{ form.site_title.label }}</label>
-                            {% if form.site_title.help_text %}<div class="field-help">{{ form.site_title.help_text }}</div>{% endif %}
+                            <label for="{{ form.site_title.id_for_label }}">{{ form.site_title.label }}{% if form.site_title.help_text %}<span class="label-tip-icon" data-tip="{{ form.site_title.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             {{ form.site_title }}
                             {% if form.site_title.errors %}<div class="field-error">{{ form.site_title.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.enable_register.id_for_label }}">{{ form.enable_register.label }}{% if form.enable_register.help_text %}<span class="label-tip-icon" data-tip="{{ form.enable_register.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.enable_register }}
+                            </div>
+                            {% if form.enable_register.errors %}<div class="field-error">{{ form.enable_register.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.code_expire_seconds.id_for_label }}">{{ form.code_expire_seconds.label }}{% if form.code_expire_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_expire_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.code_expire_seconds }}
+                            {% if form.code_expire_seconds.errors %}<div class="field-error">{{ form.code_expire_seconds.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.code_resend_seconds.id_for_label }}">{{ form.code_resend_seconds.label }}{% if form.code_resend_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_resend_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.code_resend_seconds }}
+                            {% if form.code_resend_seconds.errors %}<div class="field-error">{{ form.code_resend_seconds.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
@@ -40,8 +61,7 @@
                     </div>
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field site-settings-asset-field">
-                            <label for="{{ form.site_icon.id_for_label }}">{{ form.site_icon.label }}</label>
-                            {% if form.site_icon.help_text %}<div class="field-help">{{ form.site_icon.help_text }}</div>{% endif %}
+                            <label for="{{ form.site_icon.id_for_label }}">{{ form.site_icon.label }}{% if form.site_icon.help_text %}<span class="label-tip-icon" data-tip="{{ form.site_icon.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_site_icon" value="0" data-site-setting-remove-input="site_icon">
                             <div class="site-settings-asset-layout">
                                 <div class="site-settings-asset-preview-wrapper{% if not site_setting.site_icon %} is-empty{% endif %}" data-site-setting-preview-wrapper="site_icon"{% if not site_setting.site_icon %} hidden{% endif %}>
@@ -63,8 +83,7 @@
                         </div>
 
                         <div class="field-group site-settings-field site-settings-asset-field">
-                            <label for="{{ form.auth_background.id_for_label }}">{{ form.auth_background.label }}</label>
-                            {% if form.auth_background.help_text %}<div class="field-help">{{ form.auth_background.help_text }}</div>{% endif %}
+                            <label for="{{ form.auth_background.id_for_label }}">{{ form.auth_background.label }}{% if form.auth_background.help_text %}<span class="label-tip-icon" data-tip="{{ form.auth_background.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_auth_background" value="0" data-site-setting-remove-input="auth_background">
                             <div class="site-settings-asset-layout">
                                 <div class="site-settings-asset-preview-wrapper{% if not site_setting.auth_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="auth_background"{% if not site_setting.auth_background %} hidden{% endif %}>
@@ -86,8 +105,7 @@
                         </div>
 
                         <div class="field-group site-settings-field site-settings-asset-field">
-                            <label for="{{ form.app_background.id_for_label }}">{{ form.app_background.label }}</label>
-                            {% if form.app_background.help_text %}<div class="field-help">{{ form.app_background.help_text }}</div>{% endif %}
+                            <label for="{{ form.app_background.id_for_label }}">{{ form.app_background.label }}{% if form.app_background.help_text %}<span class="label-tip-icon" data-tip="{{ form.app_background.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_app_background" value="0" data-site-setting-remove-input="app_background">
                             <div class="site-settings-asset-layout">
                                 <div class="site-settings-asset-preview-wrapper{% if not site_setting.app_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="app_background"{% if not site_setting.app_background %} hidden{% endif %}>
@@ -112,63 +130,168 @@
 
                 <section class="site-settings-section">
                     <div class="site-settings-section-header">
-                        <h2>{% trans "Audit logs" %}</h2>
-                    </div>
-                    <div class="site-settings-fields">
-                        <div class="field-group site-settings-field">
-                            <div class="user-manage-toggle-row">
-                                <label for="{{ form.audit_log_cleanup_enabled.id_for_label }}">{{ form.audit_log_cleanup_enabled.label }}</label>
-                                {{ form.audit_log_cleanup_enabled }}
-                            </div>
-                            {% if form.audit_log_cleanup_enabled.help_text %}<div class="field-help">{{ form.audit_log_cleanup_enabled.help_text }}</div>{% endif %}
-                            {% if form.audit_log_cleanup_enabled.errors %}<div class="field-error">{{ form.audit_log_cleanup_enabled.errors|striptags }}</div>{% endif %}
-                        </div>
-                        <div class="field-group site-settings-field">
-                            <label for="{{ form.audit_log_retention_days.id_for_label }}">{{ form.audit_log_retention_days.label }}</label>
-                            {% if form.audit_log_retention_days.help_text %}<div class="field-help">{{ form.audit_log_retention_days.help_text }}</div>{% endif %}
-                            {{ form.audit_log_retention_days }}
-                            {% if form.audit_log_retention_days.errors %}<div class="field-error">{{ form.audit_log_retention_days.errors|striptags }}</div>{% endif %}
-                        </div>
-                    </div>
-                </section>
-
-                <section class="site-settings-section">
-                    <div class="site-settings-section-header">
                         <h2>{% trans "Dashboard" %}</h2>
                     </div>
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field">
-                            <label for="{{ form.dashboard_visit_trend_days.id_for_label }}">{{ form.dashboard_visit_trend_days.label }}</label>
-                            {% if form.dashboard_visit_trend_days.help_text %}<div class="field-help">{{ form.dashboard_visit_trend_days.help_text }}</div>{% endif %}
+                            <label for="{{ form.dashboard_visit_trend_days.id_for_label }}">{{ form.dashboard_visit_trend_days.label }}{% if form.dashboard_visit_trend_days.help_text %}<span class="label-tip-icon" data-tip="{{ form.dashboard_visit_trend_days.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             {{ form.dashboard_visit_trend_days }}
                             {% if form.dashboard_visit_trend_days.errors %}<div class="field-error">{{ form.dashboard_visit_trend_days.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
 
+                <section class="site-settings-section" data-vip-settings-section>
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "VIP settings" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.vip_max_level.id_for_label }}">{{ form.vip_max_level.label }}{% if form.vip_max_level.help_text %}<span class="label-tip-icon" data-tip="{{ form.vip_max_level.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.vip_max_level }}
+                            {% if form.vip_max_level.errors %}<div class="field-error">{{ form.vip_max_level.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="site-settings-subgroup" data-vip-level-name-fields{% if not form.current_vip_max_level %} hidden{% endif %}>
+                            <div class="site-settings-fields">
+                                {% for row in form.vip_level_name_rows %}
+                                <div class="field-group site-settings-field" data-vip-level-name-field data-vip-level="{{ row.level }}"{% if row.hidden %} hidden{% endif %}>
+                                    <label for="{{ row.field.id_for_label }}">{{ row.field.label }}{% if row.field.help_text %}<span class="label-tip-icon" data-tip="{{ row.field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                    {{ row.field }}
+                                    {% if row.field.errors %}<div class="field-error">{{ row.field.errors|striptags }}</div>{% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <section class="site-settings-section">
                     <div class="site-settings-section-header">
-                        <h2>{% trans "Article editor" %}</h2>
+                        <h2>{% trans "Article" %}</h2>
                     </div>
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field">
                             <div class="user-manage-toggle-row">
-                                <label for="{{ form.post_editor_autosave_enabled.id_for_label }}">{{ form.post_editor_autosave_enabled.label }}</label>
-                                {{ form.post_editor_autosave_enabled }}
+                                <label for="{{ form.allow_non_admin_create_post.id_for_label }}">{{ form.allow_non_admin_create_post.label }}{% if form.allow_non_admin_create_post.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_non_admin_create_post.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.allow_non_admin_create_post }}
                             </div>
-                            {% if form.post_editor_autosave_enabled.help_text %}<div class="field-help">{{ form.post_editor_autosave_enabled.help_text }}</div>{% endif %}
-                            {% if form.post_editor_autosave_enabled.errors %}<div class="field-error">{{ form.post_editor_autosave_enabled.errors|striptags }}</div>{% endif %}
+                            {% if form.allow_non_admin_create_post.errors %}<div class="field-error">{{ form.allow_non_admin_create_post.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="allow-create-post-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                                <label for="{{ form.non_admin_max_post_count.id_for_label }}">{{ form.non_admin_max_post_count.label }}{% if form.non_admin_max_post_count.help_text %}<span class="label-tip-icon" data-tip="{{ form.non_admin_max_post_count.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.non_admin_max_post_count }}
+                                {% if form.non_admin_max_post_count.errors %}<div class="field-error">{{ form.non_admin_max_post_count.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group site-settings-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.vip_only_create_post.id_for_label }}">{{ form.vip_only_create_post.label }}{% if form.vip_only_create_post.help_text %}<span class="label-tip-icon" data-tip="{{ form.vip_only_create_post.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                    {{ form.vip_only_create_post }}
+                                </div>
+                                {% if form.vip_only_create_post.errors %}<div class="field-error">{{ form.vip_only_create_post.errors|striptags }}</div>{% endif %}
+                            </div>
                         </div>
                         <div class="field-group site-settings-field">
-                            <label for="{{ form.post_editor_autosave_interval_minutes.id_for_label }}">{{ form.post_editor_autosave_interval_minutes.label }}</label>
-                            {% if form.post_editor_autosave_interval_minutes.help_text %}<div class="field-help">{{ form.post_editor_autosave_interval_minutes.help_text }}</div>{% endif %}
-                            {{ form.post_editor_autosave_interval_minutes }}
-                            {% if form.post_editor_autosave_interval_minutes.errors %}<div class="field-error">{{ form.post_editor_autosave_interval_minutes.errors|striptags }}</div>{% endif %}
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.post_editor_autosave_enabled.id_for_label }}">{{ form.post_editor_autosave_enabled.label }}{% if form.post_editor_autosave_enabled.help_text %}<span class="label-tip-icon" data-tip="{{ form.post_editor_autosave_enabled.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.post_editor_autosave_enabled }}
+                            </div>
+                            {% if form.post_editor_autosave_enabled.errors %}<div class="field-error">{{ form.post_editor_autosave_enabled.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="post-editor-autosave-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                                <label for="{{ form.post_editor_autosave_interval_minutes.id_for_label }}">{{ form.post_editor_autosave_interval_minutes.label }}{% if form.post_editor_autosave_interval_minutes.help_text %}<span class="label-tip-icon" data-tip="{{ form.post_editor_autosave_interval_minutes.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.post_editor_autosave_interval_minutes }}
+                                {% if form.post_editor_autosave_interval_minutes.errors %}<div class="field-error">{{ form.post_editor_autosave_interval_minutes.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Book" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.allow_non_admin_create_book.id_for_label }}">{{ form.allow_non_admin_create_book.label }}{% if form.allow_non_admin_create_book.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_non_admin_create_book.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.allow_non_admin_create_book }}
+                            </div>
+                            {% if form.allow_non_admin_create_book.errors %}<div class="field-error">{{ form.allow_non_admin_create_book.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="allow-create-book-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                                <label for="{{ form.non_admin_max_book_count.id_for_label }}">{{ form.non_admin_max_book_count.label }}{% if form.non_admin_max_book_count.help_text %}<span class="label-tip-icon" data-tip="{{ form.non_admin_max_book_count.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.non_admin_max_book_count }}
+                                {% if form.non_admin_max_book_count.errors %}<div class="field-error">{{ form.non_admin_max_book_count.errors|striptags }}</div>{% endif %}
+                            </div>
+                            <div class="field-group site-settings-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.vip_only_create_book.id_for_label }}">{{ form.vip_only_create_book.label }}{% if form.vip_only_create_book.help_text %}<span class="label-tip-icon" data-tip="{{ form.vip_only_create_book.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                    {{ form.vip_only_create_book }}
+                                </div>
+                                {% if form.vip_only_create_book.errors %}<div class="field-error">{{ form.vip_only_create_book.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Comment" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.allow_comment.id_for_label }}">{{ form.allow_comment.label }}{% if form.allow_comment.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_comment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.allow_comment }}
+                            </div>
+                            {% if form.allow_comment.errors %}<div class="field-error">{{ form.allow_comment.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="allow-comment-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.vip_only_comment.id_for_label }}">{{ form.vip_only_comment.label }}{% if form.vip_only_comment.help_text %}<span class="label-tip-icon" data-tip="{{ form.vip_only_comment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                    {{ form.vip_only_comment }}
+                                </div>
+                                {% if form.vip_only_comment.errors %}<div class="field-error">{{ form.vip_only_comment.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Audit logs" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.audit_log_cleanup_enabled.id_for_label }}">{{ form.audit_log_cleanup_enabled.label }}{% if form.audit_log_cleanup_enabled.help_text %}<span class="label-tip-icon" data-tip="{{ form.audit_log_cleanup_enabled.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.audit_log_cleanup_enabled }}
+                            </div>
+                            {% if form.audit_log_cleanup_enabled.errors %}<div class="field-error">{{ form.audit_log_cleanup_enabled.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="audit-log-retention-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                            <label for="{{ form.audit_log_retention_days.id_for_label }}">{{ form.audit_log_retention_days.label }}{% if form.audit_log_retention_days.help_text %}<span class="label-tip-icon" data-tip="{{ form.audit_log_retention_days.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.audit_log_retention_days }}
+                                {% if form.audit_log_retention_days.errors %}<div class="field-error">{{ form.audit_log_retention_days.errors|striptags }}</div>{% endif %}
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <div class="panel-actions site-settings-actions">
+                    <button type="submit" name="action" value="restore_defaults" class="secondary-button destructive-button site-settings-restore-button"
+                        formnovalidate
+                        data-delete-confirm-title="{% trans 'Restore defaults' %}"
+                        data-delete-confirm-message="{% trans 'Are you sure you want to restore all settings to their defaults?' %}"
+                        data-delete-confirm-button="{% trans 'Confirm' %}"
+                        data-delete-cancel-button="{% trans 'Cancel' %}">
+                        {% trans "Restore defaults" %}
+                    </button>
                     <div class="site-settings-actions-right">
                         <button type="submit" class="primary-button">{% trans "Save" %}</button>
                     </div>
@@ -180,6 +303,25 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+(function() {
+    function bindDependentToggle(checkboxId, dependentId) {
+        var checkbox = document.getElementById(checkboxId);
+        var dependent = document.getElementById(dependentId);
+        if (!checkbox || !dependent) return;
+        function sync() { dependent.style.display = checkbox.checked ? '' : 'none'; }
+        checkbox.addEventListener('change', sync);
+        sync();
+    }
+
+    bindDependentToggle('{{ form.allow_non_admin_create_post.id_for_label }}', 'allow-create-post-dependent');
+    bindDependentToggle('{{ form.post_editor_autosave_enabled.id_for_label }}', 'post-editor-autosave-dependent');
+    bindDependentToggle('{{ form.audit_log_cleanup_enabled.id_for_label }}', 'audit-log-retention-dependent');
+    bindDependentToggle('{{ form.allow_non_admin_create_book.id_for_label }}', 'allow-create-book-dependent');
+    bindDependentToggle('{{ form.allow_comment.id_for_label }}', 'allow-comment-dependent');
+})();
+</script>
 <script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>
 {% endblock %}
+
 

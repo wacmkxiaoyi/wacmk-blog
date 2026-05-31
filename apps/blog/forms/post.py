@@ -33,7 +33,7 @@ class BasePostEditorForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 "class": "input-control",
-                "placeholder": _("Post title"),
+                "placeholder": _("Article title"),
             }
         ),
     )
@@ -43,7 +43,7 @@ class BasePostEditorForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 "class": "input-control",
-                "placeholder": _("Post slug"),
+                "placeholder": _("Article slug"),
             }
         ),
     )
@@ -121,11 +121,11 @@ class BasePostEditorForm(forms.ModelForm):
                 "data-link-help": _("Enter display text and the target URL."),
                 "data-link-confirm-label": _("Insert"),
                 "data-link-cancel-label": _("Cancel"),
-                "data-link-reference-label": _("Reference internal post"),
-                "data-reference-title": _("Reference internal post"),
-                "data-reference-kicker": _("Posts"),
-                "data-reference-search-placeholder": _("Search posts"),
-                "data-reference-empty-label": _("No posts found."),
+                "data-link-reference-label": _("Reference internal article"),
+                "data-reference-title": _("Reference internal article"),
+                "data-reference-kicker": _("Articles"),
+                "data-reference-search-placeholder": _("Search articles"),
+                "data-reference-empty-label": _("No articles found."),
                 "data-reference-select-label": _("Select"),
                 "data-reference-selected-label": _("Selected"),
                 "data-reference-confirm-label": _("Insert selected"),
@@ -223,7 +223,7 @@ class BasePostEditorForm(forms.ModelForm):
         encrypted_rule = self.get_mutable_encrypted_rule(condition_rules)
         encrypted_password = str((encrypted_rule or {}).get("value") or "").strip()
         if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED not in self.existing_password_rule_types:
-            self.add_error("condition_rules", _("Password cannot be empty for encrypted posts."))
+            self.add_error("condition_rules", _("Password cannot be empty for encrypted articles."))
         if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED in self.existing_password_rule_types:
             encrypted_rule["value"] = self.get_existing_encrypted_password()
         elif encrypted_rule:
@@ -292,7 +292,7 @@ class PostDraftForm(BasePostEditorForm):
         if source_post_id:
             conflicting_post = conflicting_post.exclude(pk=source_post_id)
         if slug and conflicting_post.exists():
-            self.add_error("slug", _("A published post already uses this slug."))
+            self.add_error("slug", _("A published article already uses this slug."))
         return cleaned_data
 
 

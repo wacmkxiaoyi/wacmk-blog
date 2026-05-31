@@ -20,7 +20,7 @@ CONDITION_TYPE_LABELS = dict(CONDITION_TYPE_CHOICES)
 MAX_CONDITION_COUNT = len(CONDITION_TYPE_CHOICES)
 
 ACCESS_PRESENTATION = {
-    "public": {"icon": "lock-open", "tone": "public", "label": _("Public")},
+    "public": {"icon": "user-group", "tone": "public", "label": _("Public")},
     "private": {"icon": "user", "tone": "private", "label": _("Private")},
     CONDITION_TYPE_MONEY: {"icon": "coins", "tone": "money", "label": CONDITION_TYPE_LABELS[CONDITION_TYPE_MONEY]},
     CONDITION_TYPE_POINTS: {"icon": "gem", "tone": "points", "label": CONDITION_TYPE_LABELS[CONDITION_TYPE_POINTS]},

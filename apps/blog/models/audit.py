@@ -51,6 +51,7 @@ class AuditLog(TimeStampedModel):
     ACTION_COMMENT_UPDATE = "comment_update"
     ACTION_COMMENT_DELETE = "comment_delete"
     ACTION_PROFILE_UPDATE = "profile_update"
+    ACTION_USER_CREATE = "user_create"
     ACTION_USER_UPDATE = "user_update"
     ACTION_USER_DELETE = "user_delete"
     ACTION_USER_ASSET_UPDATE = "user_asset_update"
@@ -64,6 +65,7 @@ class AuditLog(TimeStampedModel):
         (ACTION_COMMENT_UPDATE, _("Update comment")),
         (ACTION_COMMENT_DELETE, _("Delete comment")),
         (ACTION_PROFILE_UPDATE, _("Update profile")),
+        (ACTION_USER_CREATE, _("Create user")),
         (ACTION_USER_UPDATE, _("Update user")),
         (ACTION_USER_DELETE, _("Delete user")),
         (ACTION_USER_ASSET_UPDATE, _("Update user assets")),

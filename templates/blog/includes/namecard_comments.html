@@ -1,0 +1,69 @@
+{% load i18n %}
+{% for comment in comments %}
+<article id="nc-comment-{{ comment.pk }}" class="comment-card namecard-comment-card" tabindex="0">
+    <div class="comment-card-header">
+        <div class="comment-header-main">
+            <div class="comment-author-row{% if comment.reply_target %} comment-author-row-reply{% endif %}">
+                <a href="{% if comment.author_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' comment.author_id %}{% endif %}" class="comment-author-link">
+                    {% if comment.author.profile.avatar_url %}<img class="comment-avatar" src="{{ comment.author.profile.avatar_url }}" alt="">{% else %}<span class="comment-avatar comment-avatar-fallback"></span>{% endif %}
+                    <strong>{{ comment.author.first_name|default:comment.author.username }}</strong>
+                </a>
+                {% if comment.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                {% if comment.author_is_vip and not comment.is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.author_vip_label }}</span></span>{% endif %}
+                {% if comment.reply_target %}
+                <span class="comment-reply-label">{% trans "Reply" %}</span>
+                <a href="{% if comment.reply_target.author_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' comment.reply_target.author_id %}{% endif %}" class="comment-author-link">
+                    {% if comment.reply_target.author.profile.avatar_url %}<img class="comment-avatar" src="{{ comment.reply_target.author.profile.avatar_url }}" alt="">{% else %}<span class="comment-avatar comment-avatar-fallback"></span>{% endif %}
+                    <strong>{{ comment.reply_target.author.first_name|default:comment.reply_target.author.username }}</strong>
+                </a>
+                {% if comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
+                {% if comment.reply_target_is_vip and not comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.reply_target_vip_label }}</span></span>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="comment-meta-actions">
+            <div class="comment-meta-row">
+                <div class="comment-date">{{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="comment-divider comment-divider-header" aria-hidden="true"></div>
+    <div
+        class="blog-markdown-content comment-markdown-content"
+        data-code-copy-enabled="true"
+        data-code-copy-label="{% trans 'Copy' %}"
+        data-code-copied-label="{% trans 'Copied' %}"
+        data-code-copy-failed-label="{% trans 'Failed' %}"
+        data-overflow-code-lines="12"
+        data-overflow-table-rows="6"
+        data-overflow-hint="{% trans 'Hidden %count% more lines' %}"
+        data-overflow-expand-label="{% trans 'Show all' %}"
+    >
+        {{ comment.rendered_content|safe }}
+    </div>
+    <div class="comment-divider comment-divider-footer" aria-hidden="true"></div>
+    <div class="comment-feedback-row">
+        <div class="namecard-comment-feedback-row">
+            <div class="feedback-actions comment-feedback-actions"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'comment-feedback-toggle' comment.pk %}"{% endif %}>
+                <button type="button" class="feedback-button feedback-button-compact{% if comment.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if comment.feedback_value == 1 %}true{% else %}false{% endif %}" title="{% trans 'Like' %}">
+                    <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
+                    <span class="feedback-count" data-feedback-count="up">{{ comment.up_count }}</span>
+                </button>
+                <button type="button" class="feedback-button feedback-button-compact{% if comment.feedback_value == -1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="-1"{% else %}disabled{% endif %} aria-pressed="{% if comment.feedback_value == -1 %}true{% else %}false{% endif %}" title="{% trans 'Dislike' %}">
+                    <i class="fa-regular fa-thumbs-down" aria-hidden="true"></i>
+                    <span class="feedback-count" data-feedback-count="down">{{ comment.down_count }}</span>
+                </button>
+            </div>
+                        {% if comment.source_type == "book" %}
+            <span class="namecard-comment-from">{% trans "Article in book" %} <a href="{{ comment.source_url }}" class="namecard-comment-source">&laquo;{{ comment.source_title }}&raquo;</a></span>
+            {% else %}
+            <span class="namecard-comment-from">{% trans "From article" %} <a href="{{ comment.source_url }}" class="namecard-comment-source">&laquo;{{ comment.source_title }}&raquo;</a></span>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% empty %}
+<div class="empty-panel">
+    <p>{% trans "No comments yet." %}</p>
+</div>
+{% endfor %}

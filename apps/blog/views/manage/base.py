@@ -83,8 +83,9 @@ class ManageBaseMixin(StaffRequiredMixin):
         context["manage_nav"] = [
             {"label": _("Basic"), "url": reverse("manage-site-settings"), "match": "manage-site-settings"},
             {"label": _("Users"), "url": reverse("manage-users"), "match": "manage-users"},
-            {"label": _("Posts"), "url": reverse("manage-posts"), "match": "manage-posts"},
+            {"label": _("Articles"), "url": reverse("manage-posts"), "match": "manage-posts"},
             {"label": _("Books"), "url": reverse("manage-books"), "match": "manage-books"},
+            {"label": _("Comments"), "url": reverse("manage-comments"), "match": "manage-comments"},
             {"label": _("Audit"), "url": reverse("manage-audit"), "match": "manage-audit"},
         ]
         context["current_sort"] = self.get_current_sort() or ""

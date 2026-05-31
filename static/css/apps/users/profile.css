@@ -1,0 +1,137 @@
+﻿
+.profile-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 1.25rem;
+}
+
+.profile-layout {
+    grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.profile-summary-card {
+    text-align: center;
+}
+
+.profile-manage-page {
+    align-items: start;
+}
+
+.profile-sidebar {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.profile-sidebar-nav {
+    margin-top: 0;
+}
+
+.profile-settings-form {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-settings-shell {
+    width: min(100%, 760px);
+}
+
+.profile-settings-heading {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.profile-settings-section {
+    scroll-margin-top: 7rem;
+}
+
+.profile-avatar-field {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.profile-avatar-row {
+    align-items: center;
+}
+
+.profile-avatar-display {
+    align-items: center;
+}
+
+.profile-avatar-upload-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profile-avatar-upload-trigger:hover .profile-avatar-large,
+.profile-avatar-upload-trigger:focus-within .profile-avatar-large {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(255, 163, 200, 0.16);
+}
+
+.profile-avatar-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.profile-avatar-upload-help {
+    margin-top: 0;
+    text-align: left;
+}
+
+.profile-readonly-value {
+    min-height: 52px;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(220, 186, 228, 0.55);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(246, 243, 248, 0.98) 0%, rgba(243, 238, 247, 0.94) 100%);
+    color: var(--text-soft);
+    display: flex;
+    align-items: center;
+}
+
+.profile-section-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.profile-email-code-field[hidden] {
+    display: none;
+}
+
+.profile-settings-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.profile-settings-actions .user-manage-actions-right {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.profile-avatar-large {
+    margin: 0 auto;
+}
+
+.profile-form-stack {
+    display: grid;
+    gap: 1.25rem;
+}
+
+
+.user-manage-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+
+

@@ -129,7 +129,7 @@ export function initSendCodeButtons(rootNode) {
 
 export function initForgotPassword(rootNode) {
     Array.prototype.forEach.call((rootNode || document).querySelectorAll("[data-forgot-password]"), function (forgotPasswordButton) {
-        var usernameInput = document.querySelector(forgotPasswordButton.getAttribute("data-username-input") || "");
+        var identifierInput = document.querySelector(forgotPasswordButton.getAttribute("data-identifier-input") || "");
         var forgotPasswordUrl = forgotPasswordButton.getAttribute("data-url");
         var forgotPasswordSuccessTitle = forgotPasswordButton.getAttribute("data-success-title") || "";
         var forgotPasswordSuccess = forgotPasswordButton.getAttribute("data-success-message") || "";
@@ -147,13 +147,13 @@ export function initForgotPassword(rootNode) {
         forgotPasswordButton.addEventListener("click", function () {
             var body = null;
 
-            if (!usernameInput || !forgotPasswordUrl || !csrfToken || !usernameInput.value.trim()) {
+            if (!identifierInput || !forgotPasswordUrl || !csrfToken || !identifierInput.value.trim()) {
                 return;
             }
 
             forgotPasswordButton.disabled = true;
             body = new URLSearchParams();
-            body.append("username", usernameInput.value || "");
+            body.append("identifier", identifierInput.value || "");
             body.append("csrfmiddlewaretoken", csrfToken);
 
             fetch(forgotPasswordUrl, {

@@ -6,6 +6,7 @@ from .base import TimeStampedModel
 
 
 class SiteSetting(TimeStampedModel):
+    VIP_MAX_LEVEL_LIMIT = 20
     DASHBOARD_VISIT_TREND_DAYS_7 = 7
     DASHBOARD_VISIT_TREND_DAYS_14 = 14
     DASHBOARD_VISIT_TREND_DAYS_30 = 30
@@ -15,6 +16,9 @@ class SiteSetting(TimeStampedModel):
         (DASHBOARD_VISIT_TREND_DAYS_30, _("30 days")),
     ]
 
+    enable_register = models.BooleanField(default=False)
+    code_expire_seconds = models.PositiveIntegerField(default=600)
+    code_resend_seconds = models.PositiveIntegerField(default=60)
     site_title = models.CharField(max_length=120, blank=True)
     site_icon = models.ImageField(upload_to="site/", blank=True)
     auth_background = models.ImageField(upload_to="site/", blank=True)
@@ -29,10 +33,23 @@ class SiteSetting(TimeStampedModel):
         default=30,
         validators=[MinValueValidator(1), MaxValueValidator(3650)],
     )
+    vip_max_level = models.PositiveSmallIntegerField(
+        default=3,
+        validators=[MaxValueValidator(VIP_MAX_LEVEL_LIMIT)],
+    )
+    vip_level_names = models.JSONField(default=list, blank=True)
     dashboard_visit_trend_days = models.PositiveSmallIntegerField(
         default=DASHBOARD_VISIT_TREND_DAYS_7,
         choices=DASHBOARD_VISIT_TREND_DAY_CHOICES,
     )
+    allow_non_admin_create_post = models.BooleanField(default=False)
+    non_admin_max_post_count = models.PositiveIntegerField(default=10)
+    vip_only_create_post = models.BooleanField(default=False)
+    allow_non_admin_create_book = models.BooleanField(default=False)
+    non_admin_max_book_count = models.PositiveIntegerField(default=3)
+    vip_only_create_book = models.BooleanField(default=False)
+    allow_comment = models.BooleanField(default=True)
+    vip_only_comment = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("Site setting")

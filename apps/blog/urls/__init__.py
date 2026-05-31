@@ -1,6 +1,7 @@
-from .book import urlpatterns as book_urlpatterns
+﻿from .book import urlpatterns as book_urlpatterns
 from .comment import urlpatterns as comment_urlpatterns
 from .manage import urlpatterns as manage_urlpatterns
+from .namecard import urlpatterns as namecard_urlpatterns
 from .post import urlpatterns as post_urlpatterns
 from .profile import urlpatterns as profile_urlpatterns
 from .tag import urlpatterns as tag_urlpatterns
@@ -11,5 +12,6 @@ urlpatterns = [
     *comment_urlpatterns,
     *tag_urlpatterns,
     *profile_urlpatterns,
+    *namecard_urlpatterns,
     *manage_urlpatterns,
 ]

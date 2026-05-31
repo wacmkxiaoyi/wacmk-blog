@@ -1,8 +1,10 @@
 from .access import (
     ENCRYPTED_POST_SESSION_KEY,
     PostAccessForm,
+    can_add_post_to_book,
     can_access_post,
     can_bypass_post_password,
+    get_book_post_access_state,
     get_post_condition_access_state,
     get_post_unlock_session_key,
     get_unlocked_post_keys,
@@ -22,7 +24,7 @@ from .importer import (
     parse_front_matter_tags,
     parse_markdown_front_matter,
 )
-from .query import get_author_display_name_sort_expression, get_detail_post_queryset, get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
+from .query import get_author_display_name_sort_expression, get_detail_post_queryset, get_reference_post_queryset, get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
 from .share import build_post_share_editor_context
 
 __all__ = [name for name in globals() if not name.startswith("_")]

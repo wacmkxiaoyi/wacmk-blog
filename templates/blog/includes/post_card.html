@@ -31,7 +31,7 @@
             {% else %}
             {% include 'blog/includes/access_badge.html' with access=post.visibility_presentation %}
             {% endif %}
-            <span class="post-card-feedback-summary" aria-label="Likes {{ post.up_count|default:0 }}, dislikes {{ post.down_count|default:0 }}">
+            <span class="post-card-feedback-summary" aria-label="{% blocktrans with up=post.up_count|default:0 down=post.down_count|default:0 %}Likes {{ up }}, dislikes {{ down }}{% endblocktrans %}">
                 <span class="post-card-feedback-stat">
                     <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
                     <span>{{ post.up_count|default:0 }}</span>

@@ -20,6 +20,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import FormView
 
+from apps.blog.utils import get_site_setting
 from .forms import PrettyAuthenticationForm, RegistrationForm
 from .models import EmailVerificationCode
 
@@ -28,7 +29,9 @@ User = get_user_model()
 
 
 def get_register_code_expire_minutes():
-    return max(1, ceil(settings.REGISTER_CODE_EXPIRE_SECONDS / 60))
+    site_setting = get_site_setting()
+    seconds = site_setting.code_expire_seconds if site_setting else 600
+    return max(1, ceil(seconds / 60))
 
 
 def get_verification_code_expire_minutes():
@@ -66,13 +69,30 @@ def build_email_message(subject, text_template, html_template, context, recipien
     return message
 
 
+def get_user_by_identifier(identifier):
+    identifier = (identifier or "").strip()
+    if not identifier:
+        return None
+
+    if "@" in identifier:
+        matches = list(User.objects.filter(email__iexact=identifier)[:2])
+        if len(matches) != 1:
+            return None
+        return matches[0]
+
+    return User.objects.filter(username=identifier).first()
+
+
 def send_verification_code_email(email, purpose, text_template, html_template, subject_text, intro_context=None):
+    site_setting = get_site_setting()
+    code_resend_seconds = site_setting.code_resend_seconds if site_setting else 60
+    code_expire_seconds = site_setting.code_expire_seconds if site_setting else 600
     latest_code = (
         EmailVerificationCode.objects.filter(email__iexact=email, purpose=purpose)
         .order_by("-created_at")
         .first()
     )
-    if latest_code and timezone.now() < latest_code.created_at + timedelta(seconds=settings.REGISTER_CODE_RESEND_SECONDS):
+    if latest_code and timezone.now() < latest_code.created_at + timedelta(seconds=code_resend_seconds):
         return {
             "ok": False,
             "message": str(_("Please wait before requesting another verification code.")),
@@ -84,7 +104,7 @@ def send_verification_code_email(email, purpose, text_template, html_template, s
         email=email,
         code=code,
         purpose=purpose,
-        expires_at=timezone.now() + timedelta(seconds=settings.REGISTER_CODE_EXPIRE_SECONDS),
+        expires_at=timezone.now() + timedelta(seconds=code_expire_seconds),
     )
     context = {
         "app_name": settings.APP_NAME,
@@ -99,9 +119,14 @@ def send_verification_code_email(email, purpose, text_template, html_template, s
     return {"ok": True, "message": str(_("Verification code sent.")), "status": 200}
 
 
+def _is_register_available():
+    site_setting = get_site_setting()
+    return (site_setting is not None and site_setting.enable_register and settings.REGISTER_EMAIL_SETTINGS_READY)
+
+
 class RegisterAvailabilityMixin:
     def dispatch(self, request, *args, **kwargs):
-        if not settings.REGISTER_AVAILABLE:
+        if not _is_register_available():
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({"ok": False, "message": str(_("Registration is currently unavailable."))}, status=404)
             return redirect("login")
@@ -116,7 +141,7 @@ class CuteLoginView(LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["next_url"] = self.get_redirect_url() or self.get_success_url()
-        context["register_available"] = settings.REGISTER_AVAILABLE
+        context["register_available"] = _is_register_available()
         context["password_reset_available"] = settings.EMAIL_DELIVERY_READY
         return context
 
@@ -231,11 +256,11 @@ class ForgotPasswordView(View):
                 status=503,
             )
 
-        username = (request.POST.get("username") or "").strip()
-        if not username:
+        identifier = (request.POST.get("identifier") or request.POST.get("username") or "").strip()
+        if not identifier:
             return JsonResponse({"ok": False, "message": ""}, status=400)
 
-        user = User.objects.filter(username=username).first()
+        user = get_user_by_identifier(identifier)
         if user is None or not user.email:
             return JsonResponse({"ok": True, "message": str(_("Password reset successful. Please check your email."))})
 

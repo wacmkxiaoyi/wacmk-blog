@@ -279,7 +279,7 @@
     align-items: center;
 }
 
-.field-help.is-error,
+.field-help.is-error{
     color: #c44b7d;
 }
 

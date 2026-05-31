@@ -6,6 +6,7 @@ from django.db.models.functions import TruncDate
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.constants import LEGACY_VIP_GROUP_NAME, get_default_business_group_name, get_vip_group_name
 from apps.blog.models import Book, ContentViewLog, Post, SiteSetting
 from apps.blog.utils.request import get_client_ip
 
@@ -140,12 +141,82 @@ def get_or_create_site_setting():
     return site_setting
 
 
+def get_normalized_vip_level_names(site_setting=None):
+    setting = site_setting or get_or_create_site_setting()
+    max_level = max(int(getattr(setting, "vip_max_level", 0) or 0), 0)
+    configured_names = list(getattr(setting, "vip_level_names", []) or [])
+    normalized_names = []
+    for level in range(1, max_level + 1):
+        configured_name = ""
+        if level - 1 < len(configured_names):
+            configured_name = (configured_names[level - 1] or "").strip()
+        normalized_names.append(configured_name or f"VIP {level}")
+    return normalized_names
+
+
+def build_business_identity_choices(site_setting=None):
+    setting = site_setting or get_or_create_site_setting()
+    choices = [(get_default_business_group_name(), _("Normal user"))]
+    for level, label in enumerate(get_normalized_vip_level_names(setting), start=1):
+        choices.append((get_vip_group_name(level), label))
+    return choices
+
+
+def resolve_business_identity_from_group_names(group_names, site_setting=None):
+    setting = site_setting or get_or_create_site_setting()
+    available_choices = {value for value, _label in build_business_identity_choices(setting)}
+    normalized_group_names = [group_name for group_name in group_names if group_name]
+    for level in range(max(int(getattr(setting, "vip_max_level", 0) or 0), 0), 0, -1):
+        vip_group_name = get_vip_group_name(level)
+        if vip_group_name in normalized_group_names and vip_group_name in available_choices:
+            return vip_group_name
+    if LEGACY_VIP_GROUP_NAME in normalized_group_names:
+        highest_level = max(int(getattr(setting, "vip_max_level", 0) or 0), 0)
+        if highest_level > 0:
+            highest_vip_group_name = get_vip_group_name(highest_level)
+            if highest_vip_group_name in available_choices:
+                return highest_vip_group_name
+    default_group_name = get_default_business_group_name()
+    if default_group_name in available_choices:
+        return default_group_name
+    return normalized_group_names[0] if normalized_group_names else default_group_name
+
+
+def build_user_business_identity_summary(user, site_setting=None):
+    setting = site_setting or get_or_create_site_setting()
+    group_names = list(user.groups.values_list("name", flat=True)) if user is not None else []
+    identity_value = resolve_business_identity_from_group_names(group_names, setting)
+    identity_label_map = dict(build_business_identity_choices(setting))
+    default_group_name = get_default_business_group_name()
+    identity_label = str(identity_label_map.get(identity_value) or identity_value or _("Normal user"))
+    return {
+        "value": identity_value,
+        "label": identity_label,
+        "is_vip": identity_value != default_group_name,
+    }
+
+
 def format_share_link_expires_display(share_link):
     if not share_link:
         return ""
     if share_link.expires_at is None:
         return str(_("Never expires"))
     return timezone.localtime(share_link.expires_at).strftime("%Y-%m-%d %H:%M")
+
+
+def check_comment_permission(user, site_setting=None):
+    if not getattr(user, "is_authenticated", False):
+        return False
+    if user.is_staff or user.is_superuser:
+        return True
+    setting = site_setting or get_or_create_site_setting()
+    if not setting.allow_comment:
+        return False
+    if setting.vip_only_comment:
+        identity = build_user_business_identity_summary(user, setting)
+        if not identity["is_vip"]:
+            return False
+    return True
 
 
 def build_share_expiry_options():
