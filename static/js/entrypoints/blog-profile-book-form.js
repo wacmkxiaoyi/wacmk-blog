@@ -1,5 +1,5 @@
-import { onReady, getCsrfToken, openModal, closeModal, showInlineFlash } from "../core/app.js";
-import { initBlogShared, buildConditionModalConfig, openEncryptedPostModal } from "../apps/blog/shared.js";
+import { onReady, openModal, closeModal } from "../core/app.js";
+import { initBlogShared } from "../apps/blog/shared.js";
 import { initBlogManage } from "../apps/blog/manage.js";
 
 onReady(function () {
@@ -25,71 +25,6 @@ onReady(function () {
 function getBookEditorString(el, name, fallback) {
     var value = el ? el.getAttribute(name) : "";
     return value || fallback;
-}
-
-function showConditionModal(postData, onSuccess) {
-    var conditionStatus = postData.conditionStatus || "";
-    var conditionMoney = postData.conditionMoney || "";
-    var conditionPoints = postData.conditionPoints || "";
-    var postUrl = postData.postUrl || postData.url || "";
-    var requiresPassword = postData.requiresPassword === true;
-    var modalConfig = null;
-    var nextPostData = null;
-
-    if (requiresPassword) {
-        openEncryptedPostModal({
-            url: postUrl,
-            title: "Enter password to view this article",
-            kicker: "Encrypted",
-            confirmText: "Unlock article",
-            cancelText: "Cancel",
-            isDirect: false,
-            error: "",
-            onImportSuccess: function () {
-                nextPostData = Object.assign({}, postData, { requiresPassword: false });
-                closeModal();
-                if (nextPostData.requiresCondition) {
-                    window.requestAnimationFrame(function () {
-                        showConditionModal(nextPostData, onSuccess);
-                    });
-                    return;
-                }
-                onSuccess();
-            }
-        });
-        return;
-    }
-
-    modalConfig = buildConditionModalConfig({
-        status: conditionStatus,
-        money: conditionMoney,
-        points: conditionPoints,
-        postUrl: postUrl,
-        csrfToken: getCsrfToken(),
-        onSuccess: function () {
-            onSuccess();
-            closeModal();
-        },
-        onError: function (error) {
-            showInlineFlash(error.message || "Insufficient balance.", false);
-        }
-    });
-
-    if (!modalConfig) {
-        onSuccess();
-        return;
-    }
-
-    openModal({
-        tone: modalConfig.tone,
-        kicker: "Conditional",
-        title: "Content access check",
-        message: modalConfig.message,
-        confirmText: modalConfig.confirmText,
-        cancelText: "Cancel",
-        keepOpenOnConfirm: true,
-        onConfirm: modalConfig.confirmHandler
-    });
 }
 
 function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
@@ -276,20 +211,8 @@ function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
         keepOpenOnConfirm: true,
         onConfirm: function () {
             if (!selectedPostId) return;
-
             var selectedItem = postItemCache[String(selectedPostId)];
             if (!selectedItem) return;
-
-            if (selectedItem.requiresCondition || selectedItem.requiresPassword) {
-                closeModal();
-                window.requestAnimationFrame(function () {
-                    showConditionModal(selectedItem, function () {
-                        doAddPost(selectedItem);
-                    });
-                });
-                return;
-            }
-
             doAddPost(selectedItem);
             closeModal();
         },

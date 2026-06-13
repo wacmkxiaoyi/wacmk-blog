@@ -84,6 +84,7 @@
                             <td>{{ item.title }}</td>
                             {% if active_tab == 'published' %}
                             <td>
+                                {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=item.show_vip_badge vip_condition_summary_items=item.vip_condition_summary_items vip_visibility_presentation=item.vip_visibility_presentation %}
                                 {% if item.condition_summary_items %}
                                 {% include 'blog/includes/condition_summary.html' with condition_items=item.condition_summary_items %}
                                 {% else %}

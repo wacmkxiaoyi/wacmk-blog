@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Access verification" %} — {{ access_object.title|default:access_object.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/access-gate.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="site-page access-gate-page">
+    <div class="app-modal-dialog access-gate-card" role="dialog" aria-modal="true" aria-label="{% trans 'Access verification' %}">
+        <div class="app-modal-header">
+            <h2 class="app-modal-title" data-gate-title>
+                {% trans "Access verification" %} — {{ object_name }}
+            </h2>
+            {% if access_check.is_vip %}
+            <span class="soft-tag soft-tag-access access-tone-vip" data-gate-vip>
+                <i class="fa-solid fa-crown" aria-hidden="true"></i> VIP
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="app-modal-body">
+            <div data-gate-table-wrapper>
+                <table class="access-gate-table">
+                    <thead>
+                        <tr>
+                            <th class="access-gate-col-icon"></th>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Requirement" %}</th>
+                            <th class="access-gate-col-action">{% trans "Authorization" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for condition in access_check.conditions %}
+                        <tr class="access-gate-row" data-condition-type="{{ condition.type }}" data-condition-status="{{ condition.status }}">
+                            <td class="access-gate-col-icon access-gate-icon-{{ condition.type }}">
+                                <i class="fa-solid fa-{{ condition.icon }}" aria-hidden="true"></i>
+                            </td>
+                            <td><strong>{{ condition.label }}</strong></td>
+                            <td class="access-gate-col-requirement">{{ condition.requirement }}</td>
+                            <td class="access-gate-col-action">
+                                {% if condition.status == "granted" %}
+                                <span class="access-gate-status-granted" title="{% trans 'Granted' %}">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </span>
+                                {% elif condition.action == "password" %}
+                                <button type="button" class="app-modal-action-open access-gate-action-btn access-gate-verify-btn" data-action="password">
+                                    Verify
+                                </button>
+                                {% elif condition.action == "purchase" %}
+                                <button type="button" class="app-modal-action-open access-gate-action-btn access-gate-purchase-btn" data-action="purchase">
+                                    Purchase
+                                </button>
+                                {% else %}
+                                <span class="access-gate-status-denied" title="{% trans 'Cannot satisfy' %}">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div data-gate-password-form hidden>
+                <div class="access-gate-inline-form">
+                    <input
+                        type="password"
+                        class="input-control access-gate-password-input"
+                        placeholder="{% trans 'Password' %}"
+                        autocomplete="current-password"
+                        data-gate-password-input
+                    >
+                    <p class="access-gate-inline-error" data-gate-password-error hidden></p>
+                    <div class="access-gate-inline-actions">
+                        <button type="button" class="btn btn-outline" data-gate-password-cancel>{% trans "Cancel" %}</button>
+                        <button type="button" class="btn btn-primary" data-gate-password-confirm>{% trans "Confirm" %}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div data-gate-purchase-form hidden>
+                <div class="access-gate-inline-form">
+                    <p data-gate-purchase-info></p>
+                    <p class="access-gate-inline-error" data-gate-purchase-error hidden></p>
+                    <div class="access-gate-inline-actions">
+                        <button type="button" class="btn btn-outline" data-gate-purchase-cancel>{% trans "Cancel" %}</button>
+                        <button type="button" class="btn btn-primary" data-gate-purchase-confirm>{% trans "Confirm" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-modal-actions">
+            <div class="app-modal-actions-left"></div>
+            <div class="app-modal-actions-right">
+                <button
+                    type="button"
+                    class="primary-button"
+                    data-gate-enter
+                    {% if not access_check.all_granted %}disabled{% endif %}
+                >{% trans "Enter" %}</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+{{ access_check|json_script:"access-check-data" }}
+<script id="access-gate-config" type="application/json">
+{
+    "checkUrl": "{{ check_url }}",
+    "objectId": {{ access_object.pk }},
+    "isAccessGate": true
+}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/apps/blog/access-gate.js' %}"></script>
+{% endblock %}

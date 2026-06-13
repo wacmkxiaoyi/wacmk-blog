@@ -15,6 +15,9 @@ def apply_editor_payload(instance, cleaned_data):
     instance.content = cleaned_data["content"]
     instance.visibility = cleaned_data["visibility"]
     instance.condition_rules = cleaned_data.get("condition_rules", [])
+    instance.access_scope = cleaned_data.get("access_scope", "unified")
+    instance.vip_access_permission = cleaned_data.get("vip_access_permission", "public")
+    instance.vip_condition_rules = cleaned_data.get("vip_condition_rules", [])
 
 
 def clone_post_to_draft(post, author):
@@ -26,6 +29,9 @@ def clone_post_to_draft(post, author):
         content=post.content,
         visibility=post.visibility,
         condition_rules=post.condition_rules,
+        access_scope=getattr(post, "access_scope", "unified"),
+        vip_access_permission=getattr(post, "vip_access_permission", "public"),
+        vip_condition_rules=getattr(post, "vip_condition_rules", []),
         author=author,
     )
     if post.cover_image:
@@ -51,6 +57,9 @@ def publish_post_draft(draft):
             "content": draft.content,
             "visibility": draft.visibility,
             "condition_rules": draft.condition_rules,
+            "access_scope": getattr(draft, "access_scope", "unified"),
+            "vip_access_permission": getattr(draft, "vip_access_permission", "public"),
+            "vip_condition_rules": getattr(draft, "vip_condition_rules", []),
         },
     )
     post.status = Post.STATUS_PUBLISHED

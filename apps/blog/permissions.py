@@ -142,11 +142,6 @@ def has_condition_rule(rules, condition_type, *, legacy_visibility="", allowed_t
     )
 
 
-def has_value_condition_rules(rules, *, legacy_visibility="", allowed_types=None):
-    return any(
-        rule["type"] in CONDITION_VALUE_TYPES
-        for rule in get_effective_condition_rules(rules, legacy_visibility=legacy_visibility, allowed_types=allowed_types)
-    )
 
 
 def build_condition_summary_items(rules, *, legacy_visibility="", allowed_types=None):

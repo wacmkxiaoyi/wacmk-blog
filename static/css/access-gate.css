@@ -1,0 +1,169 @@
+.access-gate-page {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+}
+
+.access-gate-card {
+    width: 100%;
+    max-width: 620px;
+    margin-top: 1rem;
+}
+
+.access-gate-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.access-gate-table thead th {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted, #888);
+    text-align: left;
+    border-bottom: 2px solid var(--border-soft, #e8e8e8);
+}
+
+.access-gate-table tbody td {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border-hairline, #f2f2f2);
+    vertical-align: middle;
+}
+
+.access-gate-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.access-gate-col-icon {
+    width: 2.4rem;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+.access-gate-col-action {
+    width: 110px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.access-gate-icon-encrypted { color: var(--tone-encrypted, #e67e22); }
+.access-gate-icon-money     { color: var(--tone-money, #f1c40f); }
+.access-gate-icon-points    { color: var(--tone-points, #9b59b6); }
+.access-gate-icon-book_only { color: var(--tone-book-only, #3498db); }
+
+.access-gate-status-granted {
+    color: var(--color-success, #10b981);
+    font-size: 1.15rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.access-gate-status-denied {
+    color: var(--color-danger, #ef4444);
+    font-size: 1.15rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.access-gate-verify-btn,
+.access-gate-purchase-btn {
+    min-width: 85px;
+}
+
+.access-gate-action-btn {
+    border-radius: 999px;
+}
+
+.access-gate-row-updating {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.access-gate-inline-form {
+    padding: 0.75rem 0 0.25rem;
+}
+
+.access-gate-inline-form + .access-gate-inline-form {
+    border-top: 1px solid var(--border-hairline, #f2f2f2);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+.access-gate-password-input {
+    width: 100%;
+}
+
+.access-gate-inline-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.access-gate-inline-error {
+    color: var(--color-danger, #ef4444);
+    font-size: 0.825rem;
+    margin: 0.35rem 0 0;
+}
+
+.access-gate-password-error {
+    color: var(--color-danger, #ef4444);
+    font-size: 0.825rem;
+    margin: 0.35rem 0 0;
+}
+
+.access-gate-purchase-error {
+    color: var(--color-danger, #ef4444);
+    font-size: 0.825rem;
+    margin: 0.35rem 0 0;
+}
+
+.is-table-dialog .access-gate-table {
+    margin: 0;
+}
+
+.is-table-dialog .access-gate-table thead th {
+    background: var(--card-muted-bg, #f9fafb);
+    padding: 0.6rem 0.75rem;
+}
+
+.is-table-dialog .access-gate-table tbody td {
+    padding: 0.85rem 0.75rem;
+}
+
+.access-gate-nested-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.access-gate-nested-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+}
+
+.access-gate-nested-shell {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+}
+
+.access-gate-nested-dialog {
+    width: min(420px, calc(100vw - 2rem));
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+}
+
+.access-gate-nested-message {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary, #666);
+}

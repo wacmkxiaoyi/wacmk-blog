@@ -192,463 +192,55 @@ export function bindConditionTooltips(rootNode) {
     });
 }
 
-function initializeImportPostCards(rootNode) {
-    Array.prototype.forEach.call((rootNode || document).querySelectorAll(".import-post-form .post-card"), function (card) {
-        if (card.getAttribute("data-import-post-card-bound") === "true") {
-            return;
-        }
-        card.setAttribute("data-import-post-card-bound", "true");
-        card.addEventListener("click", function (event) {
-            var form = card.closest(".import-post-form");
-            if (!form) {
-                return;
-            }
-
-            var needsIntercept = form.getAttribute("data-import-requires-condition") === "true";
-            var postId = form.getAttribute("data-import-post-id") || "";
-
-            if (needsIntercept && postId) {
-                event.preventDefault();
-                event.stopPropagation();
-                handleImportConditionalAccess(form, postId);
-                return;
-            }
-
-            var interactiveTarget = event.target.closest("button, a, input, select, textarea, label, [data-condition-tooltip-trigger]");
-            if (interactiveTarget) {
-                return;
-            }
-
-            if (typeof form.requestSubmit === "function") {
-                form.requestSubmit();
-                return;
-            }
-            form.submit();
-        });
-    });
-}
-
-function handleImportConditionalAccess(form, postId) {
-    var csrfToken = getCsrfToken();
-    var postUrl = form.getAttribute("data-import-post-url") || "";
-    var body = new FormData();
-
-    if (!csrfToken) {
+function showVipTooltip(trigger) {
+    hideConditionTooltip();
+    var template = trigger.nextElementSibling;
+    if (!template || template.getAttribute("data-vip-tooltip-template") === null) {
         return;
     }
-
-    body.append("source_post_id", postId);
-    body.append("csrfmiddlewaretoken", csrfToken);
-
-    fetch(form.action || window.location.href, {
-        method: "POST",
-        headers: {
-            "X-Requested-With": "XMLHttpRequest"
-        },
-        body: body,
-        credentials: "same-origin"
-    }).then(function (response) {
-        return response.json().catch(function () {
-            return { ok: false, message: "Request failed." };
-        }).then(function (payload) {
-            return { ok: response.ok && payload.ok, status: response.status, data: payload };
-        });
-    }).then(function (result) {
-        if (result.ok) {
-            window.location.href = result.data.redirect_url || form.action;
-            return;
-        }
-
-        if (result.data.requires_condition) {
-            showImportConditionModal(form, postId);
-            return;
-        }
-
-        if (result.data.requires_password) {
-            openEncryptedPostModal({
-                url: postUrl,
-                title: "Enter password to view this article",
-                kicker: "Encrypted",
-                confirmText: "Unlock article",
-                cancelText: "Cancel",
-                isDirect: false,
-                error: "",
-                onImportSuccess: function () {
-                    submitImportForm(form, postId);
-                }
-            });
-            return;
-        }
-
-        showInlineFlash(result.data.message || "You do not have permission to import this article.", false);
-    }).catch(function () {
-        showInlineFlash("Request failed.", false);
-    });
-}
-
-function showImportConditionModal(form, postId) {
-    var postUrl = form.getAttribute("data-import-post-url") || "";
-    var status = form.getAttribute("data-import-condition-status") || "";
-    var money = form.getAttribute("data-import-condition-money") || "";
-    var points = form.getAttribute("data-import-condition-points") || "";
-
-    var modalConfig = buildConditionModalConfig({
-        status: status,
-        money: money,
-        points: points,
-        postUrl: postUrl,
-        csrfToken: getCsrfToken(),
-        onSuccess: function () {
-            submitImportForm(form, postId);
-        },
-        onError: function (error) {
-            showInlineFlash(error.message || "Insufficient balance.", false);
-        }
-    });
-
-    if (!modalConfig) {
+    var content = template.innerHTML;
+    if (!content.trim()) {
         return;
     }
+    var tooltip = createConditionTooltip();
+    var rect = null;
+    var tooltipRect = null;
+    var top = 0;
+    var left = 0;
+    var minTop = 10;
+    var minLeft = 10;
+    var maxLeft = 0;
 
-    openModal({
-        tone: modalConfig.tone,
-        kicker: "Conditional",
-        title: "Content access check",
-        message: modalConfig.message,
-        confirmText: modalConfig.confirmText,
-        cancelText: "Cancel",
-        keepOpenOnConfirm: true,
-        onConfirm: modalConfig.confirmHandler,
-        onCancel: function () {
+    tooltip.innerHTML = '<div class="condition-tooltip-content">' + content + '</div>';
+    tooltip.hidden = false;
+    rect = trigger.getBoundingClientRect();
+    tooltipRect = tooltip.getBoundingClientRect();
+    top = rect.top - tooltipRect.height - 10;
+    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    if (top < minTop) {
+        top = rect.bottom + 10;
+    }
+    maxLeft = window.innerWidth - tooltipRect.width - minLeft;
+    left = Math.max(minLeft, Math.min(left, maxLeft));
+    tooltip.style.top = top + "px";
+    tooltip.style.left = left + "px";
+}
+
+export function bindVipTooltips(rootNode) {
+    Array.prototype.forEach.call((rootNode || document).querySelectorAll("[data-vip-tooltip-trigger]"), function (trigger) {
+        if (trigger.getAttribute("data-vip-tooltip-bound") === "true") {
             return;
         }
-    });
-}
-
-function submitImportForm(form, postId) {
-    var csrfToken = getCsrfToken();
-    var postUrl = form.getAttribute("data-import-post-url") || "";
-    var body = new URLSearchParams();
-
-    body.append("source_post_id", postId);
-    body.append("csrfmiddlewaretoken", csrfToken);
-
-    fetch(form.action || window.location.href, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-            "X-Requested-With": "XMLHttpRequest",
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: body.toString()
-    }).then(function (response) {
-        return response.json().catch(function () {
-            return { ok: false, message: "Request failed." };
-        }).then(function (payload) {
-            return { ok: response.ok && payload.ok, data: payload };
+        trigger.setAttribute("data-vip-tooltip-bound", "true");
+        trigger.addEventListener("mouseenter", function () {
+            showVipTooltip(trigger);
         });
-    }).then(function (result) {
-        if (result.ok && result.data.redirect_url) {
-            window.location.href = result.data.redirect_url;
-        } else if (result.ok) {
-            form.submit();
-        } else if (result.data && result.data.requires_password) {
-            openEncryptedPostModal({
-                url: postUrl,
-                title: "Enter password to view this article",
-                kicker: "Encrypted",
-                confirmText: "Unlock article",
-                cancelText: "Cancel",
-                isDirect: false,
-                error: "",
-                onImportSuccess: function () {
-                    submitImportForm(form, postId);
-                }
-            });
-        } else if (result.data && result.data.requires_condition) {
-            showImportConditionModal(form, postId);
-        } else {
-            showInlineFlash(result.data.message || "Import failed.", false);
-        }
-    }).catch(function () {
-        showInlineFlash("Request failed.", false);
-    });
-}
-
-export function buildConditionModalConfig(options) {
-    var status = options.status || "";
-    var money = options.money || "";
-    var points = options.points || "";
-    var postUrl = options.postUrl || "";
-    var csrfToken = options.csrfToken || "";
-    var onSuccess = options.onSuccess;
-    var onError = options.onError;
-    var insufficientMoneyLabel = options.insufficientMoneyLabel || "Insufficient balance";
-    var insufficientPointsLabel = options.insufficientPointsLabel || "Insufficient points";
-
-    if (status === "purchase_required") {
-        return {
-            message: money ? ("This content requires purchasing for " + money + ".") : "This content requires purchase.",
-            tone: "attention",
-            confirmText: "Purchase now",
-            confirmHandler: function () {
-                return fetch(postUrl, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": csrfToken
-                    }
-                }).then(function (response) {
-                    return response.json().catch(function () {
-                        return { ok: false, message: "Request failed." };
-                    }).then(function (payload) {
-                        if (!response.ok || !payload.ok) {
-                            throw new Error(payload.message || "Request failed.");
-                        }
-                        if (onSuccess) {
-                            onSuccess(payload);
-                        }
-                    });
-                }).catch(function (error) {
-                    if (onError) {
-                        onError(error);
-                    }
-                });
-            }
-        };
-    }
-
-    if (status === "insufficient_money") {
-        return {
-            message: insufficientMoneyLabel + (money ? (": " + money) : ""),
-            tone: "warning",
-            confirmText: ""
-        };
-    }
-
-    if (status === "insufficient_points") {
-        return {
-            message: insufficientPointsLabel + (points ? (": " + points) : ""),
-            tone: "warning",
-            confirmText: ""
-        };
-    }
-
-    return null;
-}
-
-function initializeConditionalAccess() {
-    var configEl = document.querySelector("[data-conditional-access-modal]");
-    var status = "";
-    var cancelText = "";
-    var title = "";
-    var kicker = "";
-    var url = "";
-    var returnUrl = "";
-    var money = "";
-    var points = "";
-    var insufficientMoney = "";
-    var insufficientPoints = "";
-    var modalConfig = null;
-
-    if (!configEl || configEl.getAttribute("data-conditional-access-bound") === "true") {
-        return;
-    }
-    configEl.setAttribute("data-conditional-access-bound", "true");
-
-    status = configEl.getAttribute("data-conditional-access-status") || "";
-    cancelText = configEl.getAttribute("data-conditional-access-cancel") || "";
-    title = configEl.getAttribute("data-conditional-access-title") || "";
-    kicker = configEl.getAttribute("data-conditional-access-kicker") || "";
-    url = configEl.getAttribute("data-conditional-access-url") || "";
-    returnUrl = configEl.getAttribute("data-conditional-access-return-url") || "";
-    money = configEl.getAttribute("data-conditional-access-money") || "";
-    points = configEl.getAttribute("data-conditional-access-points") || "";
-    insufficientMoney = configEl.getAttribute("data-conditional-access-insufficient-money") || "Insufficient balance";
-    insufficientPoints = configEl.getAttribute("data-conditional-access-insufficient-points") || "Insufficient points";
-
-    modalConfig = buildConditionModalConfig({
-        status: status,
-        money: money,
-        points: points,
-        postUrl: url,
-        csrfToken: getCsrfToken(),
-        insufficientMoneyLabel: insufficientMoney,
-        insufficientPointsLabel: insufficientPoints,
-        onSuccess: function (payload) {
-            window.location.assign(payload.redirect_url || url);
-        },
-        onError: function (error) {
-            showInlineFlash(error.message || insufficientMoney, false);
-            if (returnUrl) {
-                window.location.assign(returnUrl);
-            }
-        }
-    });
-
-    if (!modalConfig) {
-        return;
-    }
-
-    openModal({
-        tone: modalConfig.tone,
-        kicker: kicker,
-        title: title,
-        message: modalConfig.message,
-        confirmText: modalConfig.confirmText,
-        cancelText: cancelText,
-        keepOpenOnConfirm: true,
-        onConfirm: modalConfig.confirmHandler,
-        onCancel: function () {
-            if (returnUrl) {
-                window.location.assign(returnUrl);
-                return;
-            }
-            if (window.history.length > 1) {
-                window.history.back();
-            }
-        }
-    });
-}
-
-function getEncryptedPostFallbackUrl() {
-    if (document.referrer && document.referrer !== window.location.href) {
-        return document.referrer;
-    }
-    return "/";
-}
-
-export function openEncryptedPostModal(config) {
-    var csrfToken = getCsrfToken();
-    var content = document.createElement("div");
-    var field = document.createElement("div");
-    var label = document.createElement("label");
-    var input = document.createElement("input");
-    var errorNode = document.createElement("div");
-    var submitUrl = config.url || "";
-    var fallbackUrl = config.fallbackUrl || getEncryptedPostFallbackUrl();
-
-    if (!csrfToken || !submitUrl) {
-        return;
-    }
-
-    content.className = "encrypted-access-form";
-    field.className = "field-group";
-    label.textContent = config.passwordLabel || "Password";
-    label.setAttribute("for", "encrypted-post-password-input");
-    input.type = "password";
-    input.id = "encrypted-post-password-input";
-    input.className = "input-control";
-    input.placeholder = config.placeholder || "Enter article password";
-    input.autocomplete = "current-password";
-    errorNode.className = "field-error";
-    errorNode.hidden = !config.error;
-    errorNode.textContent = config.error || "";
-    field.appendChild(label);
-    field.appendChild(input);
-    field.appendChild(errorNode);
-    content.appendChild(field);
-
-    function submitPassword() {
-        var body = new FormData();
-
-        body.append("password", input.value || "");
-        body.append("csrfmiddlewaretoken", csrfToken);
-
-        return fetch(submitUrl, {
-            method: "POST",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: body,
-            credentials: "same-origin"
-        }).then(function (response) {
-            return response.json().catch(function () {
-                return { ok: false, message: "Request failed." };
-            }).then(function (data) {
-                return { ok: response.ok && data.ok, data: data };
-            });
-        }).then(function (result) {
-            if (!result.ok) {
-                errorNode.hidden = false;
-                errorNode.textContent = result.data.message || config.error || "Request failed.";
-                input.focus();
-                input.select();
-                return;
-            }
-            if (config.onImportSuccess) {
-                config.onImportSuccess();
-                return;
-            }
-            window.location.href = result.data.redirect_url || submitUrl;
-        }).catch(function () {
-            errorNode.hidden = false;
-            errorNode.textContent = "Request failed.";
+        trigger.addEventListener("mouseleave", hideConditionTooltip);
+        trigger.addEventListener("focus", function () {
+            showVipTooltip(trigger);
         });
-    }
-
-    openModal({
-        tone: "error",
-        kicker: config.kicker || "Encrypted",
-        title: config.title || "Enter password to view this article",
-        contentNode: content,
-        cancelText: config.cancelText || "Cancel",
-        confirmText: config.confirmText || "Unlock article",
-        keepOpenOnConfirm: true,
-        onConfirm: submitPassword,
-        onCancel: function () {
-            if (config.isDirect) {
-                window.location.href = fallbackUrl;
-            }
-        }
+        trigger.addEventListener("blur", hideConditionTooltip);
     });
-
-    window.requestAnimationFrame(function () {
-        input.focus();
-    });
-}
-
-function initializeEncryptedPostAccess() {
-    var pageModalConfig = document.querySelector("[data-encrypted-post-modal]");
-
-    Array.prototype.forEach.call(document.querySelectorAll("[data-encrypted-post-trigger]"), function (trigger) {
-        if (trigger.getAttribute("data-encrypted-post-bound") === "true") {
-            return;
-        }
-        trigger.setAttribute("data-encrypted-post-bound", "true");
-        trigger.addEventListener("click", function (event) {
-            event.preventDefault();
-            var importForm = trigger.closest(".import-post-form");
-            var importPostId = importForm ? (importForm.querySelector("input[name='source_post_id']") || {}).value : null;
-
-            openEncryptedPostModal({
-                url: trigger.getAttribute("data-encrypted-post-url") || "",
-                title: trigger.getAttribute("data-encrypted-post-title") || "",
-                kicker: trigger.getAttribute("data-encrypted-post-kicker") || "",
-                confirmText: trigger.getAttribute("data-encrypted-post-confirm") || "",
-                cancelText: trigger.getAttribute("data-encrypted-post-cancel") || "",
-                isDirect: false,
-                error: "",
-                onImportSuccess: importForm && importPostId ? function () {
-                    submitImportForm(importForm, importPostId);
-                } : null
-            });
-        });
-    });
-
-    if (pageModalConfig && pageModalConfig.getAttribute("data-encrypted-post-page-bound") !== "true") {
-        pageModalConfig.setAttribute("data-encrypted-post-page-bound", "true");
-        openEncryptedPostModal({
-            url: pageModalConfig.getAttribute("data-encrypted-post-url") || "",
-            title: pageModalConfig.getAttribute("data-encrypted-post-title") || "",
-            kicker: pageModalConfig.getAttribute("data-encrypted-post-kicker") || "",
-            confirmText: pageModalConfig.getAttribute("data-encrypted-post-confirm") || "",
-            cancelText: pageModalConfig.getAttribute("data-encrypted-post-cancel") || "",
-            error: pageModalConfig.getAttribute("data-encrypted-post-error") || "",
-            isDirect: pageModalConfig.getAttribute("data-encrypted-post-direct") === "true"
-        });
-    }
 }
 
 function updateFeedbackWidget(widget, payload) {
@@ -1499,8 +1091,27 @@ function initializeBookOutline() {
             if (node.isCurrent) {
                 link.setAttribute("aria-current", "page");
             }
+            if (node.postId) {
+                link.classList.add("js-access-gate-link");
+                link.setAttribute("data-object-type", "post");
+                link.setAttribute("data-object-id", node.postId);
+                link.setAttribute("data-gate-url", node.url);
+            }
             title.className = "book-outline-link-text";
             title.textContent = node.title || "";
+
+            if (node.showVipBadge) {
+                var vipBadge = document.createElement("span");
+                var vipIcon = document.createElement("span");
+                vipBadge.className = "vip-access-badge";
+                vipBadge.title = "VIP access";
+                vipIcon.className = "vip-badge-icon";
+                vipIcon.textContent = "VIP";
+                vipBadge.appendChild(vipIcon);
+                link.appendChild(vipBadge);
+                link.appendChild(document.createTextNode(" "));
+            }
+
             hasStatus = appendAccessDisplay(link, node.accessDisplay || null, {
                 fallbackPresentation: node.visibilityPresentation || null,
                 iconClassName: "book-outline-status-icon",
@@ -1521,6 +1132,7 @@ function initializeBookOutline() {
         nav.innerHTML = "";
         nav.appendChild(renderNodes(items));
         bindConditionTooltips(nav);
+        bindVipTooltips(nav);
     });
 
     if (mobileToggle && mobilePanel) {
@@ -1943,9 +1555,7 @@ export function initBlogShared() {
     }
     sharedInitialized = true;
     bindConditionTooltips(document);
-    initializeImportPostCards(document);
-    initializeConditionalAccess();
-    initializeEncryptedPostAccess();
+    bindVipTooltips(document);
     bindFeedbackWidgets();
     bindInlineShareControls();
     bindExternalShareEditors();

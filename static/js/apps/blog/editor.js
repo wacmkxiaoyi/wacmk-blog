@@ -7,7 +7,7 @@ import {
     openModal,
     showInlineFlash
 } from "../../core/app.js";
-import { bindConditionTooltips, bindInternalPostLinkPreviews } from "./shared.js";
+import { bindConditionTooltips, bindInternalPostLinkPreviews, bindVipTooltips } from "./shared.js";
 
 var markdownTextColors = [
     { className: "md-color-berry", label: "Berry", color: "#d9487d" },
@@ -705,6 +705,7 @@ function openInternalReferenceDialog(editor) {
             resultsGrid.appendChild(card);
         });
         bindConditionTooltips(resultsGrid);
+        bindVipTooltips(resultsGrid);
         syncConfirmButton();
     }
 

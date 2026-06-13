@@ -119,11 +119,7 @@
 
         <div class="post-grid">
             {% for post in posts %}
-            {% if post.has_encrypted_access and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
-            {% include 'blog/includes/post_card.html' with card_class='post-card-home' summary_length=140 show_visibility=True show_tags=True post_requires_password=True %}
-            {% else %}
-            {% include 'blog/includes/post_card.html' with card_class='post-card-home' summary_length=140 show_visibility=True show_tags=True post_requires_password=False %}
-            {% endif %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=110 show_visibility=True show_tags=True %}
             {% empty %}
             <div class="empty-panel">
                 <h3>{% trans "No published articles yet" %}</h3>

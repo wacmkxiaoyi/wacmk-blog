@@ -18,7 +18,6 @@
                     <span class="section-kicker">{% trans "Manage" %}</span>
                     <h1>{% trans "Articles" %}</h1>
                 </div>
-                {% if site_setting.allow_non_admin_create_post %}
                 {% if active_tab != 'external-links' %}
                 <div class="editor-entry-menu">
                     <a href="{% url 'manage-post-create' %}?next={{ request.get_full_path|urlencode }}" class="primary-button">{% trans "New article" %}</a>
@@ -41,7 +40,6 @@
                         </form>
                     </div>
                 </div>
-                {% endif %}
                 {% endif %}
             </div>
             <div class="manage-tab-row" role="tablist" aria-label="{% trans 'Article lists' %}">
@@ -100,6 +98,7 @@
                             <td>{{ item.title }}</td>
                             {% if active_tab == 'published' %}
                             <td>
+                                {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=item.show_vip_badge vip_condition_summary_items=item.vip_condition_summary_items vip_visibility_presentation=item.vip_visibility_presentation %}
                                 {% if item.condition_summary_items %}
                                 {% include 'blog/includes/condition_summary.html' with condition_items=item.condition_summary_items %}
                                 {% else %}

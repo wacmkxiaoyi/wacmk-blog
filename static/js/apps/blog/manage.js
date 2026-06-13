@@ -1,5 +1,5 @@
 import { closeModal, escapeHtml, getCsrfToken, markGuardClean, openActionMenu, openModal, showInlineFlash } from "../../core/app.js";
-import { appendAccessDisplay, bindConditionTooltips } from "./shared.js";
+import { appendAccessDisplay, bindConditionTooltips, bindVipTooltips } from "./shared.js";
 import { getPrimaryPostMarkdownEditor } from "./editor.js";
 
 function parseConditionRules(value) {
@@ -43,11 +43,14 @@ function buildPostMeta(item, fallbackMeta) {
 }
 
 function initializeConditionEditors() {
-    Array.prototype.forEach.call(document.querySelectorAll("[data-condition-editor]"), function (editor) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-condition-editor], [data-vip-condition-editor]"), function (editor) {
         var inputId = editor.getAttribute("data-condition-input-id") || "";
         var hiddenInput = inputId ? document.getElementById(inputId) : null;
         var form = editor.closest("form");
-        var visibilitySelect = form ? form.querySelector("#id_visibility") : null;
+        var isVipEditor = editor.hasAttribute("data-vip-condition-editor");
+        var visibilitySelect = isVipEditor
+            ? (form ? form.querySelector("#id_vip_access_permission") : null)
+            : (form ? form.querySelector("#id_visibility") : null);
         var fieldWrapper = editor.closest("[data-condition-editor-field]");
         var maxMessage = editor.getAttribute("data-condition-max-message") || "Condition types are full";
         var conditionTypes = (editor.getAttribute("data-condition-types") || "money,points").split(",").map(function (value) { return value.trim(); }).filter(Boolean);
@@ -307,8 +310,13 @@ function initializeConditionEditors() {
 
         function syncVisibilityState() {
             var supportsConditions = visibilitySelect && visibilitySelect.value === "conditional";
+            var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
+            var accessScopeField = form ? form.querySelector("[data-access-scope-field]") : null;
             if (fieldWrapper) {
                 fieldWrapper.hidden = !supportsConditions;
+            }
+            if (accessScopeField) {
+                accessScopeField.hidden = !isConditionalOrPrivate;
             }
             Array.prototype.forEach.call(getRows(), function (row) {
                 var input = row.querySelector("input");
@@ -447,6 +455,13 @@ function initializePostEditor() {
         var conditionEditorInput = postEditorForm.querySelector("#id_condition_rules");
         var rules = parseConditionRules(conditionEditorInput ? conditionEditorInput.value : "[]");
         var isPublic = visibilitySelect && visibilitySelect.value === "public" && !rules.length;
+        var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
+        var accessScopeField = postEditorForm.querySelector("[data-access-scope-field]");
+        var accessScopeSelect = postEditorForm.querySelector("#id_access_scope");
+        var vipPermissionField = postEditorForm.querySelector("[data-vip-permission-field]");
+        var vipConditionEditorField = postEditorForm.querySelector("[data-vip-condition-editor-field]");
+        var vipPermissionSelect = postEditorForm.querySelector("#id_vip_access_permission");
+
         if (shareField) {
             shareField.hidden = !isPublic;
         }
@@ -455,6 +470,20 @@ function initializePostEditor() {
         });
         if (shareResult) {
             shareResult.hidden = !isPublic || shareResult.classList.contains("is-hidden");
+        }
+        if (accessScopeField) {
+            accessScopeField.hidden = !isConditionalOrPrivate;
+            if (isPublic && accessScopeSelect) {
+                accessScopeSelect.value = "unified";
+            }
+        }
+        var isStandalone = accessScopeSelect && accessScopeSelect.value === "standalone";
+        if (vipPermissionField) {
+            vipPermissionField.hidden = !isStandalone;
+        }
+        if (vipConditionEditorField) {
+            var vipConditional = vipPermissionSelect && vipPermissionSelect.value === "conditional";
+            vipConditionEditorField.hidden = !isStandalone || !vipConditional;
         }
     }
 
@@ -531,8 +560,16 @@ function initializePostEditor() {
         applyVisibilityLayout();
         visibilitySelect.addEventListener("change", applyVisibilityLayout);
     }
+    var accessScopeSelect = postEditorForm.querySelector("#id_access_scope");
+    if (accessScopeSelect) {
+        accessScopeSelect.addEventListener("change", applyVisibilityLayout);
+    }
+    var vipPermissionSelect = postEditorForm.querySelector("#id_vip_access_permission");
+    if (vipPermissionSelect) {
+        vipPermissionSelect.addEventListener("change", applyVisibilityLayout);
+    }
     postEditorForm.addEventListener("input", function (event) {
-        if (event.target && event.target.id === "id_condition_rules") {
+        if (event.target && (event.target.id === "id_condition_rules" || event.target.id === "id_vip_condition_rules")) {
             applyVisibilityLayout();
         }
     });
@@ -750,6 +787,13 @@ function initializeBookEditor() {
         var conditionEditorInput = bookEditorForm.querySelector("#id_condition_rules");
         var rules = parseConditionRules(conditionEditorInput ? conditionEditorInput.value : "[]");
         var isPublic = visibilitySelect && visibilitySelect.value === "public" && !rules.length;
+        var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
+        var accessScopeField = bookEditorForm.querySelector("[data-access-scope-field]");
+        var accessScopeSelect = bookEditorForm.querySelector("#id_access_scope");
+        var vipPermissionField = bookEditorForm.querySelector("[data-vip-permission-field]");
+        var vipConditionEditorField = bookEditorForm.querySelector("[data-vip-condition-editor-field]");
+        var vipPermissionSelect = bookEditorForm.querySelector("#id_vip_access_permission");
+
         if (shareField) {
             shareField.hidden = !isPublic;
         }
@@ -758,6 +802,20 @@ function initializeBookEditor() {
         });
         if (shareResult) {
             shareResult.hidden = !isPublic || shareResult.classList.contains("is-hidden");
+        }
+        if (accessScopeField) {
+            accessScopeField.hidden = !isConditionalOrPrivate;
+            if (isPublic && accessScopeSelect) {
+                accessScopeSelect.value = "unified";
+            }
+        }
+        var isStandalone = accessScopeSelect && accessScopeSelect.value === "standalone";
+        if (vipPermissionField) {
+            vipPermissionField.hidden = !isStandalone;
+        }
+        if (vipConditionEditorField) {
+            var vipConditional = vipPermissionSelect && vipPermissionSelect.value === "conditional";
+            vipConditionEditorField.hidden = !isStandalone || !vipConditional;
         }
     }
 
@@ -1173,6 +1231,7 @@ function initializeBookEditor() {
                 countClassName: "chapter-workbench-visibility-count"
             })) {
                 bindConditionTooltips(title);
+                bindVipTooltips(title);
             }
         }
 
@@ -1466,6 +1525,7 @@ function initializeBookEditor() {
                 resultGrid.appendChild(card);
             });
             bindConditionTooltips(resultGrid);
+            bindVipTooltips(resultGrid);
         }
 
         function fetchResults(query, page) {
@@ -1573,6 +1633,19 @@ function initializeBookEditor() {
         applyVisibilityLayout();
         visibilitySelect.addEventListener("change", applyVisibilityLayout);
     }
+    var bookAccessScopeSelect = bookEditorForm.querySelector("#id_access_scope");
+    if (bookAccessScopeSelect) {
+        bookAccessScopeSelect.addEventListener("change", applyVisibilityLayout);
+    }
+    var bookVipPermissionSelect = bookEditorForm.querySelector("#id_vip_access_permission");
+    if (bookVipPermissionSelect) {
+        bookVipPermissionSelect.addEventListener("change", applyVisibilityLayout);
+    }
+    bookEditorForm.addEventListener("input", function (event) {
+        if (event.target && (event.target.id === "id_condition_rules" || event.target.id === "id_vip_condition_rules")) {
+            applyVisibilityLayout();
+        }
+    });
     if (coverInput) {
         coverInput.addEventListener("change", syncCoverPreview);
     }

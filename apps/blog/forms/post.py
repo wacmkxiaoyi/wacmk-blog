@@ -6,22 +6,15 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.auth import get_allowed_types_for_post
 from apps.blog.models import Post, PostDraft, Tag
-from apps.blog.permissions import (
-    CONDITION_TYPE_BOOK_ONLY,
-    CONDITION_TYPE_ENCRYPTED,
-    CONDITION_TYPE_MONEY,
-    CONDITION_TYPE_POINTS,
-    get_password_condition_rule,
-    hash_condition_password,
-    normalize_condition_rules,
-)
 
 from .common import MarkdownTextarea
+from .mixins import AccessScopeFormMixin
 
 
-class BasePostEditorForm(forms.ModelForm):
-    CONDITIONAL_ALLOWED_TYPES = [CONDITION_TYPE_MONEY, CONDITION_TYPE_POINTS, CONDITION_TYPE_ENCRYPTED, CONDITION_TYPE_BOOK_ONLY]
+class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
+    CONDITIONAL_ALLOWED_TYPES = get_allowed_types_for_post()
     VISIBILITY_EDITOR_CHOICES = [
         (Post.VISIBILITY_PUBLIC, _("Public")),
         (Post.VISIBILITY_PRIVATE, _("Private")),
@@ -88,6 +81,19 @@ class BasePostEditorForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "input-control"}),
     )
     condition_rules = forms.CharField(widget=forms.HiddenInput(), required=False)
+    access_scope = forms.ChoiceField(
+        required=False,
+        label=_("Access scope"),
+        choices=Post.ACCESS_SCOPE_CHOICES,
+        widget=forms.Select(attrs={"class": "input-control"}),
+    )
+    vip_access_permission = forms.ChoiceField(
+        required=False,
+        label=_("VIP access permission"),
+        choices=VISIBILITY_EDITOR_CHOICES,
+        widget=forms.Select(attrs={"class": "input-control"}),
+    )
+    vip_condition_rules = forms.CharField(widget=forms.HiddenInput(), required=False)
     tag_names = forms.CharField(
         required=False,
         label=_("Tags"),
@@ -101,16 +107,14 @@ class BasePostEditorForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "slug", "summary", "cover_image", "content", "status", "visibility", "condition_rules"]
+        fields = ["title", "slug", "summary", "cover_image", "content", "status", "visibility", "condition_rules", "access_scope", "vip_access_permission", "vip_condition_rules"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._remove_cover_image = False
         self.fields["visibility"].choices = self.VISIBILITY_EDITOR_CHOICES
-        self.existing_password_rule_types = self.get_existing_password_rule_types()
-        self.initial["condition_rules"] = json.dumps(self.get_editor_condition_rules(), ensure_ascii=True)
-        if getattr(self.instance, "condition_rules", None):
-            self.initial["visibility"] = Post.VISIBILITY_CONDITIONAL
+        self.fields["vip_access_permission"].choices = self.VISIBILITY_EDITOR_CHOICES
+        self._init_condition_rules_fields()
         content_widget = self.fields["content"].widget
         content_widget.attrs.update(
             {
@@ -163,83 +167,19 @@ class BasePostEditorForm(forms.ModelForm):
         title = (self.cleaned_data.get("title") or "").strip()
         return slug or slugify(title)
 
-    def get_existing_password_rule_types(self):
-        existing_types = []
-        for rule in getattr(self.instance, "condition_rules", []) or []:
-            if not isinstance(rule, dict):
-                continue
-            if str(rule.get("type") or "").strip().lower() != CONDITION_TYPE_ENCRYPTED:
-                continue
-            if str(rule.get("value") or "").strip():
-                existing_types.append(CONDITION_TYPE_ENCRYPTED)
-        return existing_types
-
-    def get_editor_condition_rules(self):
-        rules = []
-        for rule in getattr(self.instance, "condition_rules", []) or []:
-            if not isinstance(rule, dict):
-                continue
-            condition_type = str(rule.get("type") or "").strip().lower()
-            if not condition_type:
-                continue
-            if condition_type == CONDITION_TYPE_ENCRYPTED:
-                rules.append({"type": condition_type})
-                continue
-            if "value" in rule:
-                rules.append({"type": condition_type, "value": rule.get("value")})
-                continue
-            rules.append({"type": condition_type})
-        return rules
-
     def clean_condition_rules(self):
-        raw_value = (self.cleaned_data.get("condition_rules") or "").strip()
-        if not raw_value:
-            return []
-        try:
-            payload = json.loads(raw_value)
-        except (TypeError, ValueError) as exc:
-            raise forms.ValidationError(_("Invalid condition data.")) from exc
-        if payload == []:
-            return []
-        try:
-            return normalize_condition_rules(payload, allowed_types=self.CONDITIONAL_ALLOWED_TYPES)
-        except forms.ValidationError:
-            raise
-        except Exception as exc:
-            raise forms.ValidationError(exc.messages[0] if hasattr(exc, "messages") else str(exc)) from exc
+        return self._clean_condition_rules_field("condition_rules")
+
+    def clean_vip_condition_rules(self):
+        return self._clean_condition_rules_field("vip_condition_rules")
 
     def clean(self):
         cleaned_data = super().clean()
-        visibility = cleaned_data.get("visibility")
-        condition_rules = list(cleaned_data.get("condition_rules") or [])
         self._remove_cover_image = (self.data.get("remove_cover_image") or "0").strip() == "1"
 
-        if visibility == Post.VISIBILITY_CONDITIONAL:
-            if not condition_rules:
-                self.add_error("visibility", _("At least one complete condition is required."))
-        else:
-            condition_rules = []
-
-        encrypted_rule = self.get_mutable_encrypted_rule(condition_rules)
-        encrypted_password = str((encrypted_rule or {}).get("value") or "").strip()
-        if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED not in self.existing_password_rule_types:
-            self.add_error("condition_rules", _("Password cannot be empty for encrypted articles."))
-        if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED in self.existing_password_rule_types:
-            encrypted_rule["value"] = self.get_existing_encrypted_password()
-        elif encrypted_rule:
-            encrypted_rule["value"] = hash_condition_password(encrypted_password)
-        cleaned_data["condition_rules"] = condition_rules
+        condition_rules, vip_condition_rules = self._apply_access_scope_clean(cleaned_data)
+        cleaned_data = self._hash_encrypted_passwords(cleaned_data, condition_rules, vip_condition_rules)
         return cleaned_data
-
-    def get_existing_encrypted_password(self):
-        existing_rule = get_password_condition_rule(getattr(self.instance, "condition_rules", []) or [], allowed_types=self.CONDITIONAL_ALLOWED_TYPES)
-        return "" if existing_rule is None else str(existing_rule.get("value") or "")
-
-    def get_mutable_encrypted_rule(self, condition_rules):
-        for rule in condition_rules:
-            if str(rule.get("type") or "").strip().lower() == CONDITION_TYPE_ENCRYPTED:
-                return rule
-        return None
 
     def save(self, commit=True):
         existing_cover_name = self.instance.cover_image.name if getattr(self.instance, "cover_image", None) else ""

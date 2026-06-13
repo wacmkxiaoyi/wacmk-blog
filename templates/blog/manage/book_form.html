@@ -38,6 +38,7 @@
                     {% if form.slug.errors %}<div class="field-error">{{ form.slug.errors|striptags }}</div>{% endif %}
                 </div>
             </div>
+            <div class="user-manage-divider" aria-hidden="true"></div>
             <div class="field-group">
                 <label for="id_summary">{{ form.summary.label }}</label>
                 {{ form.summary }}
@@ -68,11 +69,16 @@
                     </div>
                 </div>
             </div>
+            <div class="user-manage-divider" aria-hidden="true"></div>
             <div class="editor-access-layout editor-access-layout-book">
                 <div class="field-group editor-access-layout-visibility">
                     <label for="id_visibility">{{ form.visibility.label }}</label>
                     {{ form.visibility }}
                     {{ form.condition_rules }}
+                </div>
+                <div class="field-group editor-access-layout-additional-permission" data-access-scope-field hidden>
+                    <label for="id_access_scope">{% trans "Access scope" %}</label>
+                    {{ form.access_scope }}
                 </div>
                 <div class="field-group editor-access-layout-conditions" data-condition-editor-field hidden>
                     <label>{% trans "Conditions" %}</label>
@@ -93,6 +99,32 @@
                         data-condition-password-types="encrypted"
                     ></div>
                     {% if form.condition_rules.errors %}<div class="field-error">{{ form.condition_rules.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group editor-access-layout-vip-permission" data-vip-permission-field hidden>
+                    <label for="id_vip_access_permission">{% trans "VIP access permission" %}</label>
+                    {{ form.vip_access_permission }}
+                    {{ form.vip_condition_rules }}
+                    {% if form.vip_access_permission.errors %}<div class="field-error">{{ form.vip_access_permission.errors|striptags }}</div>{% endif %}
+                </div>
+                <div class="field-group editor-access-layout-vip-conditions" data-vip-condition-editor-field hidden>
+                    <label>{% trans "VIP conditions" %}</label>
+                    <div
+                        class="condition-editor"
+                        data-vip-condition-editor
+                        data-condition-input-id="{{ form.vip_condition_rules.id_for_label }}"
+                        data-condition-initial="{{ form.vip_condition_rules.value|default:'[]'|escapejs }}"
+                        data-condition-existing-password-types="{{ form.existing_vip_password_rule_types|join:',' }}"
+                        data-condition-max-message="{% trans 'VIP condition types are full' %}"
+                        data-condition-value-placeholder="{% trans 'Value' %}"
+                        data-condition-password-placeholder="{% trans 'Enter password' %}"
+                        data-condition-password-existing-placeholder="{% trans 'Leave blank to keep current password' %}"
+                        data-condition-money-label="{% trans 'Money' %}"
+                        data-condition-points-label="{% trans 'Points' %}"
+                        data-condition-encrypted-label="{% trans 'Encrypted' %}"
+                        data-condition-types="money,points,encrypted"
+                        data-condition-password-types="encrypted"
+                    ></div>
+                    {% if form.vip_condition_rules.errors %}<div class="field-error">{{ form.vip_condition_rules.errors|striptags }}</div>{% endif %}
                 </div>
                 <div class="field-group editor-access-layout-share" data-book-share-field {% if not book_share_is_public %}hidden{% endif %}>
                     <label for="book-share-expiry">{% trans "External link" %}</label>
@@ -135,6 +167,7 @@
                     </div>
                 </div>
             </div>
+            <div class="user-manage-divider" aria-hidden="true"></div>
             <section
                 class="chapter-workbench-panel"
                 data-book-chapter-workbench

@@ -22,7 +22,15 @@ from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils import get_or_create_site_setting, is_ajax_request, write_audit_log
 from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
-from apps.blog.visibility import get_post_access_display, get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access
+from apps.blog.visibility import (
+    get_post_access_display,
+    get_post_access_icon_presentation,
+    get_post_condition_summary_items,
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
+    get_post_visibility_presentation,
+    post_has_vip_standalone,
+)
 from apps.blog.views.manage.base import ManageBaseMixin, get_manage_home_url
 from apps.blog.views.book.utils import (
     can_access_book,
@@ -104,7 +112,6 @@ class ManagePostReferenceSearchView(LoginRequiredMixin, View):
                             "post_card_url": post.get_absolute_url(),
                             "show_tag_links": False,
                             "disable_encrypted_modal": True,
-                            "post_requires_password": post.has_encrypted_access,
                         },
                             request=request,
                         ),
@@ -289,7 +296,10 @@ class ManagePostListView(ManageBaseMixin, TemplateView):
             for item in context["items"]:
                 item.condition_summary_items = get_post_condition_summary_items(item)
                 item.visibility_presentation = get_post_visibility_presentation(item)
-                item.has_encrypted_access = post_has_encrypted_access(item)
+                item.show_vip_badge = post_has_vip_standalone(item)
+                if item.show_vip_badge:
+                    item.vip_condition_summary_items = get_post_vip_condition_summary_items(item)
+                    item.vip_visibility_presentation = get_post_vip_visibility_presentation(item)
         context["page_obj"] = page_obj
         context["paginator"] = paginator
         context["is_paginated"] = paginator.num_pages > 1
@@ -369,7 +379,7 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        if self.object.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(self.object) or self.object.condition_rules:
+        if self.object.visibility != Post.VISIBILITY_PUBLIC or self.object.condition_rules:
             PostShareLink.objects.filter(post=self.object).delete()
         write_audit_log(self.request, AuditLog.ACTION_POST_UPDATE, str(_("Article updated: %(title)s")) % {"title": self.object.title}, user=self.request.user)
         messages.success(self.request, _("Article updated successfully."))
@@ -400,7 +410,7 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
         if (self.request.POST.get("status") or "").strip() == Post.STATUS_PUBLISHED:
             source_post_id = self.object.source_post_id
             published_post = publish_post_draft(self.object)
-            if published_post.visibility != Post.VISIBILITY_PUBLIC or post_has_encrypted_access(published_post) or published_post.condition_rules:
+            if published_post.visibility != Post.VISIBILITY_PUBLIC or published_post.condition_rules:
                 PostShareLink.objects.filter(post=published_post).delete()
             action = AuditLog.ACTION_POST_UPDATE if source_post_id else AuditLog.ACTION_POST_CREATE
             write_audit_log(self.request, action, str(_("Article published: %(title)s")) % {"title": published_post.title}, user=self.request.user)

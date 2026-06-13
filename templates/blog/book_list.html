@@ -19,7 +19,7 @@
         <div class="book-listing">
             {% for book in books %}
             <article class="book-list-card">
-                <a href="{{ book.get_absolute_url }}" class="book-list-cover-shell" aria-label="{{ book.name }}">
+                <a href="{{ book.get_absolute_url }}" class="book-list-cover-shell js-access-gate-link" aria-label="{{ book.name }}" data-object-type="book" data-object-id="{{ book.pk }}" data-gate-url="{{ book.get_absolute_url }}">
                     {% if book.cover_image %}
                     <img src="{{ book.cover_image.url }}" alt="{{ book.name }}" class="book-list-cover">
                     {% else %}
@@ -32,6 +32,7 @@
                     <div class="book-list-title-row">
                         <div class="book-list-title-main">
                             <h2>{{ book.name }}</h2>
+                            {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=book.show_vip_badge vip_condition_summary_items=book.vip_condition_summary_items vip_visibility_presentation=book.vip_visibility_presentation %}
                             {% if book.condition_summary_items %}
                             {% include 'blog/includes/condition_summary.html' with condition_items=book.condition_summary_items %}
                             {% else %}

@@ -45,6 +45,7 @@
                             <td>{{ book.name }}</td>
                             <td>{{ book.post_count }}</td>
                             <td>
+                                {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=book.show_vip_badge vip_condition_summary_items=book.vip_condition_summary_items vip_visibility_presentation=book.vip_visibility_presentation %}
                                 {% if book.condition_summary_items %}
                                 {% include 'blog/includes/condition_summary.html' with condition_items=book.condition_summary_items %}
                                 {% else %}

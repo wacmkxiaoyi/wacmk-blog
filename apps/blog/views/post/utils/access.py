@@ -1,96 +1,43 @@
-from django import forms
-from django.utils.translation import gettext_lazy as _
-
-from apps.blog.access import ACCESS_STATUS_GRANTED, evaluate_article_access
+from apps.blog.access import build_access_check
 from apps.blog.models import Post
-from apps.blog.visibility import post_has_encrypted_access, post_has_value_conditions, post_is_book_only
+from apps.blog.permissions import CONDITION_TYPE_BOOK_ONLY, has_condition_rule
 
 
-ENCRYPTED_POST_SESSION_KEY = "blog_unlocked_posts"
-
-
-def get_post_unlock_session_key(post):
-    return str(post.pk)
-
-
-def get_unlocked_post_keys(request):
-    raw_value = request.session.get(ENCRYPTED_POST_SESSION_KEY, [])
-    if isinstance(raw_value, list):
-        return {str(item) for item in raw_value}
-    return set()
-
-
-def mark_post_unlocked(request, post):
-    unlocked = get_unlocked_post_keys(request)
-    unlocked.add(get_post_unlock_session_key(post))
-    request.session[ENCRYPTED_POST_SESSION_KEY] = sorted(unlocked)
-    request.session.modified = True
-
-
-def is_post_unlocked(request, post):
-    return get_post_unlock_session_key(post) in get_unlocked_post_keys(request)
-
-
-def can_bypass_post_password(user, post):
-    return bool(user.is_staff or user.is_superuser or post.author_id == getattr(user, "pk", None))
+def _post_is_book_only(post):
+    return has_condition_rule(post.condition_rules, CONDITION_TYPE_BOOK_ONLY)
 
 
 def can_access_post(request, post):
-    user = request.user
-    if post.status != Post.STATUS_PUBLISHED:
-        return False
-    if can_bypass_post_password(user, post):
-        return True
-    if post.visibility == Post.VISIBILITY_PRIVATE:
-        return False
-    if post_is_book_only(post):
-        return False
-    is_unlocked = True
-    if post_has_encrypted_access(post):
-        is_unlocked = is_post_unlocked(request, post)
-        if not is_unlocked:
-            return False
-    if post_has_value_conditions(post):
-        return evaluate_article_access(user, post)["status"] == ACCESS_STATUS_GRANTED
-    if post_has_encrypted_access(post):
-        return is_unlocked
-    return post.visibility == Post.VISIBILITY_PUBLIC
+    return build_access_check(post, request.user)["all_granted"]
 
 
 def get_book_post_access_state(request, post):
-    user = request.user
-    info = {
-        "can_add": True,
-        "requires_password": False,
-        "requires_condition": False,
-        "condition_status": "",
-        "condition_money": "",
-        "condition_points": "",
+    check = build_access_check(post, request.user)
+    is_book_only = any(
+        c["type"] == "book_only" for c in check["conditions"]
+    )
+    can_add = check["all_granted"] or is_book_only or any(
+        c["action"] == "purchase" for c in check["conditions"]
+    )
+    return {
+        "can_add": can_add,
+        "requires_password": any(
+            c["type"] == "encrypted" and c["status"] == "pending" and not is_book_only
+            for c in check["conditions"]
+        ),
+        "requires_condition": not can_add and not any(
+            c["type"] == "book_only" for c in check["conditions"]
+        ),
+        "condition_status": next(
+            (c.get("status", "") for c in check["conditions"] if c.get("action") == "purchase"), ""
+        ),
+        "condition_money": str(
+            next((c.get("requirement", "") for c in check["conditions"] if c["type"] == "money"), "")
+        ),
+        "condition_points": str(
+            next((c.get("requirement", "") for c in check["conditions"] if c["type"] == "points"), "")
+        ),
     }
-
-    if post.status != Post.STATUS_PUBLISHED:
-        info["can_add"] = False
-        return info
-
-    if can_bypass_post_password(user, post):
-        return info
-
-    if post.visibility == Post.VISIBILITY_PRIVATE:
-        info["can_add"] = False
-        return info
-
-    if post_has_encrypted_access(post) and not is_post_unlocked(request, post):
-        info["requires_password"] = True
-
-    if post_has_value_conditions(post):
-        access_state = evaluate_article_access(user, post)
-        if access_state["status"] != ACCESS_STATUS_GRANTED:
-            info["requires_condition"] = True
-            info["condition_status"] = access_state["status"]
-            info["condition_money"] = str(access_state["money_required"] or "")
-            info["condition_points"] = str(access_state["points_required"] or "")
-
-    return info
 
 
 def can_add_post_to_book(request, post):
@@ -103,38 +50,42 @@ def can_add_post_to_book(request, post):
 
 
 def post_requires_password(request, post):
-    return bool(
-        post_has_encrypted_access(post)
-        and not can_bypass_post_password(request.user, post)
-        and not is_post_unlocked(request, post)
+    return any(
+        c["type"] == "encrypted" and c["status"] == "pending"
+        for c in build_access_check(post, request.user)["conditions"]
     )
 
 
 def post_requires_condition(request, post):
-    return bool(
-        not post_requires_password(request, post)
-        and post_has_value_conditions(post)
-        and get_post_condition_access_state(request, post)["status"] != ACCESS_STATUS_GRANTED
+    check = build_access_check(post, request.user)
+    if check["all_granted"]:
+        return False
+    return not any(
+        c["type"] == "encrypted" and c["status"] == "pending"
+        for c in check["conditions"]
     )
 
 
 def get_post_condition_access_state(request, post):
-    if not post_has_value_conditions(post) or can_bypass_post_password(request.user, post):
-        return {"status": ACCESS_STATUS_GRANTED, "money_required": None, "points_required": None, "has_purchase": False}
-    return evaluate_article_access(request.user, post)
-
-
-class PostAccessForm(forms.Form):
-    password = forms.CharField(
-        label=_("Password"),
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "input-control",
-                "placeholder": _("Enter article password"),
-                "autocomplete": "current-password",
-            }
+    check = build_access_check(post, request.user)
+    money_condition = next((c for c in check["conditions"] if c["type"] == "money"), {})
+    points_condition = next((c for c in check["conditions"] if c["type"] == "points"), {})
+    return {
+        "status": "granted" if check["all_granted"] else (
+            "purchase_required" if money_condition.get("action") == "purchase"
+            else money_condition.get("status", "granted")
         ),
-    )
+        "money_required": money_condition.get("requirement"),
+        "points_required": points_condition.get("requirement"),
+        "has_purchase": money_condition.get("status") == "granted" if money_condition.get("type") == "money" else False,
+    }
 
 
-__all__ = [name for name in globals() if not name.startswith("_")]
+__all__ = [
+    "can_access_post",
+    "can_add_post_to_book",
+    "get_book_post_access_state",
+    "get_post_condition_access_state",
+    "post_requires_condition",
+    "post_requires_password",
+]

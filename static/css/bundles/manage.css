@@ -66,6 +66,7 @@
 .user-manage-divider {
     height: 1px;
     background: rgba(228, 204, 232, 0.7);
+    margin: 1.25rem 0;
 }
 
 .user-manage-subsection-title {

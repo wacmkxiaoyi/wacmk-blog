@@ -36,6 +36,7 @@
                 <div class="post-detail-hero{% if post.cover_image %} post-detail-hero-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
                     <div class="post-detail-title-row">
                         <h1>{{ post.title }}</h1>
+                        {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=show_vip_badge vip_condition_summary_items=vip_condition_summary_items vip_visibility_presentation=vip_visibility_presentation %}
                         {% if condition_summary_items %}
                         {% include 'blog/includes/condition_badges.html' with condition_items=condition_summary_items icon_only=True %}
                         {% else %}
@@ -153,11 +154,7 @@
         </div>
         <div class="post-grid post-grid-compact">
             {% for post in related_posts %}
-            {% if post.has_encrypted_access and not request.user.is_staff and not request.user.is_superuser and post.author_id != request.user.id %}
-            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=True %}
-            {% else %}
-            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True post_requires_password=False %}
-            {% endif %}
+            {% include 'blog/includes/post_card.html' with card_class='compact-card' summary_length=90 show_visibility=False show_tags=True %}
             {% empty %}
             <div class="empty-panel">
                 <p>{% trans "No Related articles yet." %}</p>
@@ -173,36 +170,6 @@
     <span data-share-expiry-option="{{ option.value }}">{{ option.label }}</span>
     {% endfor %}
 </div>
-{% endif %}
-{% if requires_password %}
-<div
-    hidden
-    data-encrypted-post-modal
-    data-encrypted-post-url="{{ password_submit_url }}"
-    data-encrypted-post-title="{{ password_modal_title }}"
-    data-encrypted-post-kicker="{{ password_modal_kicker }}"
-    data-encrypted-post-confirm="{{ password_modal_confirm }}"
-    data-encrypted-post-cancel="{{ password_modal_cancel }}"
-    data-encrypted-post-error="{% if access_form.password.errors %}{{ access_form.password.errors|striptags }}{% endif %}"
-    data-encrypted-post-direct="true"
-></div>
-{% endif %}
-{% if requires_condition %}
-<div
-    hidden
-    data-conditional-access-modal
-    data-conditional-access-url="{{ post.get_absolute_url }}"
-    data-conditional-access-title="{{ condition_modal_title }}"
-    data-conditional-access-kicker="{{ condition_modal_kicker }}"
-    data-conditional-access-confirm="{{ condition_modal_confirm }}"
-    data-conditional-access-cancel="{{ condition_modal_cancel }}"
-    data-conditional-access-status="{{ condition_access.status }}"
-    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
-    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
-    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
-    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
-    data-conditional-access-return-url="{{ condition_return_url }}"
-></div>
 {% endif %}
 {% endblock %}
 

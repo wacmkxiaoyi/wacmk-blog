@@ -17,12 +17,22 @@ class Book(TimeStampedModel):
         (VISIBILITY_CONDITIONAL, _("Conditional")),
     ]
 
+    ACCESS_SCOPE_UNIFIED = "unified"
+    ACCESS_SCOPE_STANDALONE = "standalone"
+    ACCESS_SCOPE_CHOICES = [
+        (ACCESS_SCOPE_UNIFIED, _("Unified")),
+        (ACCESS_SCOPE_STANDALONE, _("Standalone")),
+    ]
+
     name = models.CharField(max_length=64, unique=True)
     slug = models.SlugField(max_length=80, unique=True)
     summary = models.TextField(blank=True)
     cover_image = models.ImageField(upload_to="blog/book-covers/", blank=True)
     visibility = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
+    access_scope = models.CharField(max_length=16, choices=ACCESS_SCOPE_CHOICES, default=ACCESS_SCOPE_UNIFIED)
+    vip_access_permission = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
+    vip_condition_rules = models.JSONField(default=list, blank=True)
     structure = models.JSONField(default=list, blank=True)
     view_count = models.PositiveIntegerField(default=0)
     created_by = models.ForeignKey(
@@ -91,3 +101,20 @@ class BookPurchaseRecord(TimeStampedModel):
 
     def __str__(self):
         return f"Book purchase {self.book_id} by {self.user_id}"
+
+
+class BookPasswordRecord(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="book_password_records")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="password_records")
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "book"], name="blog_bookpassword_user_book_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["user", "book"]),
+        ]
+
+    def __str__(self):
+        return f"Book password verified {self.book_id} by {self.user_id}"

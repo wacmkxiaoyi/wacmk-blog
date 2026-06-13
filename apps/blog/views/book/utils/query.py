@@ -1,24 +1,13 @@
-from django.db.models import Q
-
-from apps.blog.models import Book
+from apps.blog.access.queryset import get_detail_book_queryset as _get_detail_book_queryset
+from apps.blog.access.queryset import get_visible_book_queryset as _get_visible_book_queryset
 
 
 def get_visible_book_queryset(user):
-    queryset = Book.objects.select_related("created_by")
-    if user.is_staff or user.is_superuser:
-        return queryset
-    if not user.is_authenticated:
-        return queryset.filter(visibility=Book.VISIBILITY_PUBLIC)
-    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_CONDITIONAL]) | Q(created_by=user)).distinct()
+    return _get_visible_book_queryset(user)
 
 
 def get_detail_book_queryset(user):
-    queryset = Book.objects.select_related("created_by")
-    if user.is_staff or user.is_superuser:
-        return queryset
-    if not user.is_authenticated:
-        return queryset.filter(visibility=Book.VISIBILITY_PUBLIC)
-    return queryset.filter(Q(visibility__in=[Book.VISIBILITY_PUBLIC, Book.VISIBILITY_CONDITIONAL]) | Q(created_by=user)).distinct()
+    return _get_detail_book_queryset(user)
 
 
 __all__ = ["get_detail_book_queryset", "get_visible_book_queryset"]

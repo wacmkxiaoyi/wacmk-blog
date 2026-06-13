@@ -13,7 +13,7 @@ from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import build_user_business_identity_summary, get_site_setting
 from apps.blog.views.comment.utils import _build_author_vip_map
 from apps.blog.views.post.utils import prepare_post_cards, with_post_feedback_counts
-from apps.blog.visibility import book_has_encrypted_access, get_book_condition_summary_items, get_book_visibility_presentation
+from apps.blog.visibility import get_book_condition_summary_items, get_book_visibility_presentation
 from apps.users.models import UserProfile
 
 
@@ -73,9 +73,8 @@ class UserNamecardView(LoginRequiredMixin, TemplateView):
                 .order_by("-created_at")[:10]
             )
             for book in books:
-                book.condition_summary_items = get_book_condition_summary_items(book)
-                book.visibility_presentation = get_book_visibility_presentation(book)
-                book.has_encrypted_access = book_has_encrypted_access(book)
+                    book.condition_summary_items = get_book_condition_summary_items(book)
+                    book.visibility_presentation = get_book_visibility_presentation(book)
             context["namecard_books"] = books
 
         if current_tab == "comments":

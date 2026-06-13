@@ -791,3 +791,19 @@ class ManageVisibilitySaveTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "At least one complete condition is required.")
         self.assertFalse(Book.objects.filter(slug="conditional-book").exists())
+
+
+class ManagePostListViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="post-manager", password="login-pass", is_staff=True)
+        self.client.force_login(self.user)
+        self.site_setting = get_or_create_site_setting()
+        self.site_setting.allow_non_admin_create_post = False
+        self.site_setting.save(update_fields=["allow_non_admin_create_post"])
+
+    def test_new_article_button_is_visible_for_admin_when_non_admin_creation_disabled(self):
+        response = self.client.get(reverse("manage-posts"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse("manage-post-create"))
+        self.assertContains(response, "New article")

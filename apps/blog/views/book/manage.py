@@ -9,7 +9,14 @@ from django.views.generic import CreateView, ListView, UpdateView
 from apps.blog.forms import BookForm
 from apps.blog.models import AuditLog, Book, BookShareLink
 from apps.blog.utils import write_audit_log
-from apps.blog.visibility import book_has_any_conditions, book_has_encrypted_access, get_book_condition_summary_items, get_book_visibility_presentation
+from apps.blog.visibility import (
+    book_has_any_conditions,
+    book_has_vip_standalone,
+    get_book_condition_summary_items,
+    get_book_vip_condition_summary_items,
+    get_book_vip_visibility_presentation,
+    get_book_visibility_presentation,
+)
 from apps.blog.views.book.utils import build_book_share_editor_context
 from apps.blog.views.manage.base import ManageBaseMixin
 
@@ -34,7 +41,10 @@ class ManageBookListView(ManageBaseMixin, ListView):
         for book in books:
             book.condition_summary_items = get_book_condition_summary_items(book)
             book.visibility_presentation = get_book_visibility_presentation(book)
-            book.has_encrypted_access = book_has_encrypted_access(book)
+            book.show_vip_badge = book_has_vip_standalone(book)
+            if book.show_vip_badge:
+                book.vip_condition_summary_items = get_book_vip_condition_summary_items(book)
+                book.vip_visibility_presentation = get_book_vip_visibility_presentation(book)
         return books
 
     def get_context_data(self, **kwargs):

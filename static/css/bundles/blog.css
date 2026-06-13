@@ -466,6 +466,66 @@
     display: none;
 }
 
+.vip-access-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.28rem 0.52rem;
+    border-radius: 999px;
+    border: 1.6px solid rgba(139, 92, 246, 0.45);
+    background: rgba(139, 92, 246, 0.12);
+    cursor: help;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.vip-access-badge:focus-visible {
+    outline: 2px solid rgba(139, 92, 246, 0.48);
+    outline-offset: 2px;
+}
+
+.vip-badge-icon {
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: #8b5cf6;
+    background: linear-gradient(120deg, #ff9a3c 0%, #ffd85a 22%, #ff5f9a 45%, #9b6bff 72%, #5fd6ff 100%);
+    background-size: 220% 100%;
+    background-position: 0 50%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: vip-text-flow 3.2s ease-in-out infinite, vip-text-pulse 2.4s ease-in-out infinite;
+    will-change: background-position, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vip-badge-icon {
+        animation: none;
+        background-position: 50% 50%;
+        filter: none;
+    }
+}
+
+.post-detail-title-row .vip-access-badge {
+    vertical-align: bottom;
+}
+
+.post-card-feedback-row .vip-access-badge,
+.book-list-title-main .vip-access-badge {
+    margin-right: 0.3rem;
+}
+
+.editor-access-layout-vip-permission,
+.editor-access-layout-vip-conditions {
+    margin-bottom: 0;
+}
+
+.editor-access-layout-vip-conditions {
+    grid-column: 1 / -1;
+}
+
 .condition-editor {
     display: grid;
     gap: 0.75rem;
@@ -2159,6 +2219,7 @@
 }
 
 .editor-access-layout-visibility,
+.editor-access-layout-additional-permission,
 .editor-access-layout-share {
     margin-bottom: 0;
 }

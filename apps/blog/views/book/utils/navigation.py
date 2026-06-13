@@ -1,8 +1,17 @@
 import json
 from urllib.parse import urlencode
 
+from apps.blog.access import get_access_handler
 from apps.blog.models import Post
-from apps.blog.visibility import get_post_access_display, get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access, post_has_value_conditions, post_is_book_only
+from apps.blog.permissions import CONDITION_TYPE_BOOK_ONLY, has_condition_rule
+from apps.blog.visibility import (
+    get_post_access_display,
+    get_post_condition_summary_items,
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
+    get_post_visibility_presentation,
+    post_has_vip_standalone,
+)
 
 
 def get_book_structure_post_ids(structure):
@@ -61,23 +70,30 @@ def remove_post_from_book_structure(structure, post_id):
     return prune_book_structure_missing_posts(structure, set(get_book_structure_post_ids(structure)) - {int(post_id)})
 
 
+def _is_book_only_post(post):
+    return has_condition_rule(post.condition_rules, CONDITION_TYPE_BOOK_ONLY)
+
+
 def can_display_post_in_book_navigation(post, user, *, is_share_view=False):
     if post.status != Post.STATUS_PUBLISHED:
         return False
-    if post.visibility == Post.VISIBILITY_PUBLIC:
-        return True
-    if post_is_book_only(post):
+    if _is_book_only_post(post):
         return True if is_share_view else bool(user.is_authenticated)
+
+    handler = get_access_handler(post, user)
+
+    if handler.effective_visibility == Post.VISIBILITY_PUBLIC:
+        return True
     if is_share_view:
         return False
+
     return bool(
         user.is_authenticated
         and (
             user.is_staff
             or user.is_superuser
             or post.author_id == user.pk
-            or post_has_encrypted_access(post)
-            or post_has_value_conditions(post)
+            or handler.has_conditions
         )
     )
 
@@ -104,15 +120,18 @@ def build_book_navigation_tree(book, request, *, current_post=None, is_share_vie
                         "access_display": get_post_access_display(post),
                         "type": "post",
                         "post": post,
+                        "post_id": post.pk,
                         "title": post.title,
                         "url": f"{navigation_base_url}?{urlencode({'post': post.slug})}",
                         "is_current": bool(current_post and current_post.pk == post.pk),
-                        "is_book_only": post_is_book_only(post),
+                        "is_book_only": _is_book_only_post(post),
                         "is_private": post.visibility == Post.VISIBILITY_PRIVATE,
-                        "is_encrypted": post_has_encrypted_access(post),
-                        "is_conditional": post_has_value_conditions(post),
+                        "has_conditions": bool(post.condition_rules),
                         "condition_summary_items": get_post_condition_summary_items(post),
                         "visibility_presentation": get_post_visibility_presentation(post),
+                        "show_vip_badge": post_has_vip_standalone(post),
+                        "vip_condition_summary_items": get_post_vip_condition_summary_items(post) if post_has_vip_standalone(post) else [],
+                        "vip_visibility_presentation": get_post_vip_visibility_presentation(post) if post_has_vip_standalone(post) else None,
                     }
                 )
                 continue
@@ -148,14 +167,17 @@ def dump_book_navigation_tree(nodes):
             payload.append(
                 {
                     "type": "post",
+                    "postId": item.get("post_id"),
                     "title": item["title"],
                     "url": item["url"],
                     "isCurrent": item["is_current"],
                     "accessDisplay": item.get("access_display") or None,
                     "isPrivate": item["is_private"],
-                    "isEncrypted": item["is_encrypted"],
-                    "isConditional": item.get("is_conditional", False),
+                    "hasConditions": item.get("has_conditions", False),
                     "visibilityPresentation": item.get("visibility_presentation") or {"type": "public"},
+                    "showVipBadge": item.get("show_vip_badge", False),
+                    "vipConditionSummaryItems": item.get("vip_condition_summary_items") or [],
+                    "vipVisibilityPresentation": item.get("vip_visibility_presentation") or None,
                 }
             )
         return payload

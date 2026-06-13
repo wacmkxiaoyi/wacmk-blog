@@ -27,6 +27,13 @@ class Post(TimeStampedModel):
         (VISIBILITY_CONDITIONAL, _("Conditional")),
     ]
 
+    ACCESS_SCOPE_UNIFIED = "unified"
+    ACCESS_SCOPE_STANDALONE = "standalone"
+    ACCESS_SCOPE_CHOICES = [
+        (ACCESS_SCOPE_UNIFIED, _("Unified")),
+        (ACCESS_SCOPE_STANDALONE, _("Standalone")),
+    ]
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     summary = models.TextField(blank=True)
@@ -35,6 +42,9 @@ class Post(TimeStampedModel):
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_DRAFT)
     visibility = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
+    access_scope = models.CharField(max_length=16, choices=ACCESS_SCOPE_CHOICES, default=ACCESS_SCOPE_UNIFIED)
+    vip_access_permission = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
+    vip_condition_rules = models.JSONField(default=list, blank=True)
     published_at = models.DateTimeField(blank=True, null=True)
     view_count = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="posts")
@@ -85,6 +95,9 @@ class PostDraft(TimeStampedModel):
     cover_image = models.ImageField(upload_to="blog/covers/", blank=True)
     visibility = models.CharField(max_length=16, choices=Post.VISIBILITY_CHOICES, default=Post.VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
+    access_scope = models.CharField(max_length=16, choices=Post.ACCESS_SCOPE_CHOICES, default=Post.ACCESS_SCOPE_UNIFIED)
+    vip_access_permission = models.CharField(max_length=16, choices=Post.VISIBILITY_CHOICES, default=Post.VISIBILITY_PUBLIC)
+    vip_condition_rules = models.JSONField(default=list, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="post_drafts")
     tags = models.ManyToManyField("blog.Tag", blank=True, related_name="post_drafts")
     books = models.ManyToManyField("blog.Book", blank=True, related_name="post_drafts")
@@ -156,6 +169,23 @@ class ArticlePurchaseRecord(TimeStampedModel):
 
     def __str__(self):
         return f"Article purchase {self.article_id} by {self.user_id}"
+
+
+class PostPasswordRecord(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="post_password_records")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="password_records")
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "post"], name="blog_postpassword_user_post_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["user", "post"]),
+        ]
+
+    def __str__(self):
+        return f"Post password verified {self.post_id} by {self.user_id}"
 
 
 class PostFeedback(TimeStampedModel):

@@ -1,3 +1,12 @@
+from apps.blog.access.display import (
+    get_book_vip_condition_summary_items,
+    get_book_vip_visibility_presentation,
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
+)
+from apps.blog.access.resolver import get_access_handler, object_has_vip_standalone
+from apps.blog.access.vip_check import check_is_vip_user
+from apps.blog.auth import get_allowed_types_for_book, get_allowed_types_for_post
 from apps.blog.models import Book, Post
 from apps.blog.permissions import (
     CONDITION_TYPE_BOOK_ONLY,
@@ -5,40 +14,31 @@ from apps.blog.permissions import (
     build_condition_summary_items,
     get_access_presentation,
     has_condition_rule,
-    has_value_condition_rules,
 )
 
 
-POST_CONDITION_TYPES = ["money", "points", CONDITION_TYPE_ENCRYPTED, CONDITION_TYPE_BOOK_ONLY]
-BOOK_CONDITION_TYPES = ["money", "points", CONDITION_TYPE_ENCRYPTED]
+POST_CONDITION_TYPES = get_allowed_types_for_post()
+BOOK_CONDITION_TYPES = get_allowed_types_for_book()
 
 
-def post_has_encrypted_access(post):
-    return bool(has_condition_rule(post.condition_rules, CONDITION_TYPE_ENCRYPTED, allowed_types=POST_CONDITION_TYPES))
+def post_has_vip_standalone(post):
+    return object_has_vip_standalone(post)
+
+
+def book_has_vip_standalone(book):
+    return object_has_vip_standalone(book)
 
 
 def post_is_book_only(post):
     return bool(has_condition_rule(post.condition_rules, CONDITION_TYPE_BOOK_ONLY, allowed_types=POST_CONDITION_TYPES))
 
 
-def post_has_value_conditions(post):
-    return bool(has_value_condition_rules(post.condition_rules, allowed_types=POST_CONDITION_TYPES))
-
-
 def post_has_any_conditions(post):
-    return bool(post_is_book_only(post) or post_has_encrypted_access(post) or post_has_value_conditions(post))
-
-
-def book_has_encrypted_access(book):
-    return bool(has_condition_rule(book.condition_rules, CONDITION_TYPE_ENCRYPTED, allowed_types=BOOK_CONDITION_TYPES))
-
-
-def book_has_value_conditions(book):
-    return bool(has_value_condition_rules(book.condition_rules, allowed_types=BOOK_CONDITION_TYPES))
+    return bool(post.condition_rules)
 
 
 def book_has_any_conditions(book):
-    return bool(book_has_encrypted_access(book) or book_has_value_conditions(book))
+    return bool(book.condition_rules)
 
 
 def get_post_condition_summary_items(post):
@@ -95,16 +95,20 @@ def get_book_access_display(book):
 
 
 def get_post_access_icon_presentation(post):
-    if post_has_encrypted_access(post):
-        return get_access_presentation(CONDITION_TYPE_ENCRYPTED)
+    if post.condition_rules:
+        first = post.condition_rules[0] if isinstance(post.condition_rules, list) and post.condition_rules else None
+        if first and isinstance(first, dict):
+            return get_access_presentation(first.get("type", ""))
     if post_is_book_only(post):
         return get_access_presentation(CONDITION_TYPE_BOOK_ONLY)
     return get_post_visibility_presentation(post)
 
 
 def get_book_access_icon_presentation(book):
-    if book_has_encrypted_access(book):
-        return get_access_presentation(CONDITION_TYPE_ENCRYPTED)
+    if book.condition_rules:
+        first = book.condition_rules[0] if isinstance(book.condition_rules, list) and book.condition_rules else None
+        if first and isinstance(first, dict):
+            return get_access_presentation(first.get("type", ""))
     return get_book_visibility_presentation(book)
 
 

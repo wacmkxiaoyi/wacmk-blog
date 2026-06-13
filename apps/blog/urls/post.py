@@ -1,5 +1,6 @@
 from django.urls import path
 
+from apps.blog.views.access_check import AccessCheckView
 from apps.blog.views.post import (
     ArticleListView,
     BlogDetailView,
@@ -27,6 +28,7 @@ from apps.blog.views.post import (
 )
 
 urlpatterns = [
+    path("api/access-check/<str:object_type>/<int:object_id>/", AccessCheckView.as_view(), name="access-check"),
     path("articles/", ArticleListView.as_view(), name="article-list"),
     path("blog/markdown-preview/", MarkdownPreviewView.as_view(), name="blog-markdown-preview"),
     path("blog/link-preview/", PostLinkPreviewView.as_view(), name="blog-post-preview"),

@@ -25,7 +25,13 @@ from apps.blog.views.post.utils import (
     prepare_post_cards,
     with_post_feedback_counts,
 )
-from apps.blog.visibility import get_post_condition_summary_items, get_post_visibility_presentation, post_has_encrypted_access
+from apps.blog.visibility import (
+    get_post_condition_summary_items,
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
+    get_post_visibility_presentation,
+    post_has_vip_standalone,
+)
 
 
 class ProfilePostAccessMixin(LoginRequiredMixin):
@@ -206,7 +212,10 @@ class ProfilePostListView(ProfilePostAccessMixin, TemplateView):
             for item in context["items"]:
                 item.condition_summary_items = get_post_condition_summary_items(item)
                 item.visibility_presentation = get_post_visibility_presentation(item)
-                item.has_encrypted_access = post_has_encrypted_access(item)
+                item.show_vip_badge = post_has_vip_standalone(item)
+                if item.show_vip_badge:
+                    item.vip_condition_summary_items = get_post_vip_condition_summary_items(item)
+                    item.vip_visibility_presentation = get_post_vip_visibility_presentation(item)
         context["page_obj"] = page_obj
         context["paginator"] = paginator
         context["is_paginated"] = paginator.num_pages > 1

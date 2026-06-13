@@ -5,28 +5,19 @@ from django.http import QueryDict
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.auth import get_allowed_types_for_book
 from apps.blog.models import Book, Post
-from apps.blog.permissions import (
-    CONDITION_TYPE_ENCRYPTED,
-    CONDITION_TYPE_MONEY,
-    CONDITION_TYPE_POINTS,
-    get_access_presentation,
-    get_password_condition_rule,
-    hash_condition_password,
-    normalize_condition_rules,
-)
 from apps.blog.views.book.utils import prune_book_structure_missing_posts
 from apps.blog.visibility import (
     get_post_access_display,
     get_post_access_icon_presentation,
-    post_has_encrypted_access,
-    post_has_value_conditions,
 )
-from apps.blog.views.book.utils import prune_book_structure_missing_posts
+
+from .mixins import AccessScopeFormMixin
 
 
-class BookForm(forms.ModelForm):
-    CONDITIONAL_ALLOWED_TYPES = [CONDITION_TYPE_MONEY, CONDITION_TYPE_POINTS, CONDITION_TYPE_ENCRYPTED]
+class BookForm(AccessScopeFormMixin, forms.ModelForm):
+    CONDITIONAL_ALLOWED_TYPES = get_allowed_types_for_book()
     VISIBILITY_EDITOR_CHOICES = [
         (Book.VISIBILITY_PUBLIC, _("Public")),
         (Book.VISIBILITY_PRIVATE, _("Private")),
@@ -74,6 +65,19 @@ class BookForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "input-control"}),
     )
     condition_rules = forms.CharField(widget=forms.HiddenInput(), required=False)
+    access_scope = forms.ChoiceField(
+        required=False,
+        label=_("Access scope"),
+        choices=Book.ACCESS_SCOPE_CHOICES,
+        widget=forms.Select(attrs={"class": "input-control"}),
+    )
+    vip_access_permission = forms.ChoiceField(
+        required=False,
+        label=_("VIP access permission"),
+        choices=VISIBILITY_EDITOR_CHOICES,
+        widget=forms.Select(attrs={"class": "input-control"}),
+    )
+    vip_condition_rules = forms.CharField(widget=forms.HiddenInput(), required=False)
     post_selection = forms.ModelMultipleChoiceField(
         required=False,
         label=_("Articles"),
@@ -84,7 +88,7 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ["name", "slug", "summary", "cover_image", "visibility", "condition_rules"]
+        fields = ["name", "slug", "summary", "cover_image", "visibility", "condition_rules", "access_scope", "vip_access_permission", "vip_condition_rules"]
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -100,10 +104,8 @@ class BookForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self._remove_cover_image = False
         self.fields["visibility"].choices = self.VISIBILITY_EDITOR_CHOICES
-        self.existing_password_rule_types = self.get_existing_password_rule_types()
-        self.initial["condition_rules"] = json.dumps(self.get_editor_condition_rules(), ensure_ascii=True)
-        if getattr(self.instance, "condition_rules", None):
-            self.initial["visibility"] = Book.VISIBILITY_CONDITIONAL
+        self.fields["vip_access_permission"].choices = self.VISIBILITY_EDITOR_CHOICES
+        self._init_condition_rules_fields()
         posts = Post.objects.filter(status=Post.STATUS_PUBLISHED).select_related("author").order_by("title")
         self.fields["post_selection"].queryset = posts
         selected_ids = {str(pk) for pk in self.get_selected_post_ids()}
@@ -125,8 +127,7 @@ class BookForm(forms.ModelForm):
         self.structure_script_value = self.get_structure_script_value()
 
     def _compute_post_access_flags(self):
-        from apps.blog.access import ACCESS_STATUS_GRANTED, evaluate_article_access
-        from apps.blog.views.post.utils import can_bypass_post_password, is_post_unlocked
+        from apps.blog.access import build_access_check
 
         user = self._profile_user
         for option in self.post_options:
@@ -162,40 +163,35 @@ class BookForm(forms.ModelForm):
                 option["condition_money"] = ""
                 option["condition_points"] = ""
                 continue
-            if post_has_encrypted_access(post):
-                if can_bypass_post_password(user, post):
-                    option["can_access"] = True
-                    option["requires_condition"] = False
-                    option["condition_status"] = ""
-                    option["condition_money"] = ""
-                    option["condition_points"] = ""
-                    continue
+
+            check = build_access_check(post, user)
+            has_granted = check["all_granted"]
+            has_purchase = any(c["action"] == "purchase" for c in check["conditions"])
+            has_password = any(
+                c["type"] == "encrypted" and c["status"] == "pending"
+                for c in check["conditions"]
+            )
+            money_cond = next((c for c in check["conditions"] if c["type"] == "money"), {})
+            points_cond = next((c for c in check["conditions"] if c["type"] == "points"), {})
+
+            if has_password or not (has_granted or has_purchase):
                 option["can_access"] = False
                 option["requires_condition"] = False
                 option["condition_status"] = ""
                 option["condition_money"] = ""
                 option["condition_points"] = ""
-                continue
-            if post_has_value_conditions(post):
-                access_state = evaluate_article_access(user, post)
-                if access_state["status"] == ACCESS_STATUS_GRANTED:
-                    option["can_access"] = True
-                    option["requires_condition"] = False
-                    option["condition_status"] = ""
-                    option["condition_money"] = ""
-                    option["condition_points"] = ""
-                else:
-                    option["can_access"] = True
-                    option["requires_condition"] = True
-                    option["condition_status"] = access_state["status"]
-                    option["condition_money"] = str(access_state["money_required"] or "")
-                    option["condition_points"] = str(access_state["points_required"] or "")
-                continue
-            option["can_access"] = True
-            option["requires_condition"] = False
-            option["condition_status"] = ""
-            option["condition_money"] = ""
-            option["condition_points"] = ""
+            elif has_granted:
+                option["can_access"] = True
+                option["requires_condition"] = False
+                option["condition_status"] = ""
+                option["condition_money"] = ""
+                option["condition_points"] = ""
+            else:
+                option["can_access"] = True
+                option["requires_condition"] = True
+                option["condition_status"] = money_cond.get("status", "")
+                option["condition_money"] = str(money_cond.get("requirement", ""))
+                option["condition_points"] = str(points_cond.get("requirement", ""))
 
     def normalize_post_selection_data(self, data):
         if data is None:
@@ -261,33 +257,11 @@ class BookForm(forms.ModelForm):
         name = (self.cleaned_data.get("name") or "").strip()
         return slug or slugify(name)
 
-    def get_existing_password_rule_types(self):
-        existing_types = []
-        for rule in getattr(self.instance, "condition_rules", []) or []:
-            if not isinstance(rule, dict):
-                continue
-            if str(rule.get("type") or "").strip().lower() != CONDITION_TYPE_ENCRYPTED:
-                continue
-            if str(rule.get("value") or "").strip():
-                existing_types.append(CONDITION_TYPE_ENCRYPTED)
-        return existing_types
+    def clean_condition_rules(self):
+        return self._clean_condition_rules_field("condition_rules")
 
-    def get_editor_condition_rules(self):
-        rules = []
-        for rule in getattr(self.instance, "condition_rules", []) or []:
-            if not isinstance(rule, dict):
-                continue
-            condition_type = str(rule.get("type") or "").strip().lower()
-            if not condition_type:
-                continue
-            if condition_type == CONDITION_TYPE_ENCRYPTED:
-                rules.append({"type": condition_type})
-                continue
-            if "value" in rule:
-                rules.append({"type": condition_type, "value": rule.get("value")})
-                continue
-            rules.append({"type": condition_type})
-        return rules
+    def clean_vip_condition_rules(self):
+        return self._clean_condition_rules_field("vip_condition_rules")
 
     def clean_post_selection(self):
         raw_values = self.parse_post_selection_values(self.data.getlist("post_selection"))
@@ -336,21 +310,6 @@ class BookForm(forms.ModelForm):
 
         return queryset
 
-    def clean_condition_rules(self):
-        raw_value = (self.cleaned_data.get("condition_rules") or "").strip()
-        if not raw_value:
-            return []
-        try:
-            payload = json.loads(raw_value)
-        except json.JSONDecodeError as exc:
-            raise forms.ValidationError(_("Invalid condition data.")) from exc
-        if payload == []:
-            return []
-        try:
-            return normalize_condition_rules(payload, allowed_types=self.CONDITIONAL_ALLOWED_TYPES)
-        except Exception as exc:
-            raise forms.ValidationError(exc.messages[0] if hasattr(exc, "messages") else str(exc)) from exc
-
     def clean_structure(self):
         raw_value = (self.cleaned_data.get("structure") or "[]").strip() or "[]"
         try:
@@ -363,24 +322,10 @@ class BookForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        visibility = cleaned_data.get("visibility")
-        condition_rules = list(cleaned_data.get("condition_rules") or [])
         self._remove_cover_image = (self.data.get("remove_cover_image") or "0").strip() == "1"
-        if visibility == Book.VISIBILITY_CONDITIONAL:
-            if not condition_rules:
-                self.add_error("visibility", _("At least one complete condition is required."))
-        else:
-            condition_rules = []
 
-        encrypted_rule = self.get_mutable_encrypted_rule(condition_rules)
-        encrypted_password = str((encrypted_rule or {}).get("value") or "").strip()
-        if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED not in self.existing_password_rule_types:
-            self.add_error("condition_rules", _("Password cannot be empty for encrypted books."))
-        if encrypted_rule and not encrypted_password and CONDITION_TYPE_ENCRYPTED in self.existing_password_rule_types:
-            encrypted_rule["value"] = self.get_existing_encrypted_password()
-        elif encrypted_rule:
-            encrypted_rule["value"] = hash_condition_password(encrypted_password)
-        cleaned_data["condition_rules"] = condition_rules
+        condition_rules, vip_condition_rules = self._apply_access_scope_clean(cleaned_data)
+        cleaned_data = self._hash_encrypted_passwords(cleaned_data, condition_rules, vip_condition_rules)
 
         selected_ids = {str(post.pk) for post in cleaned_data.get("post_selection") or []}
         structure = cleaned_data.get("structure") or []
@@ -393,16 +338,6 @@ class BookForm(forms.ModelForm):
         if structure_ids != selected_ids:
             self.add_error("post_selection", _("Selected articles must match the book structure."))
         return cleaned_data
-
-    def get_existing_encrypted_password(self):
-        existing_rule = get_password_condition_rule(getattr(self.instance, "condition_rules", []) or [], allowed_types=self.CONDITIONAL_ALLOWED_TYPES)
-        return "" if existing_rule is None else str(existing_rule.get("value") or "")
-
-    def get_mutable_encrypted_rule(self, condition_rules):
-        for rule in condition_rules:
-            if str(rule.get("type") or "").strip().lower() == CONDITION_TYPE_ENCRYPTED:
-                return rule
-        return None
 
     def save(self, commit=True):
         existing_cover_name = self.instance.cover_image.name if getattr(self.instance, "cover_image", None) else ""

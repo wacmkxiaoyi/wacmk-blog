@@ -4,20 +4,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from apps.blog.access import ACCESS_STATUS_GRANTED, ACCESS_STATUS_INSUFFICIENT_MONEY, ACCESS_STATUS_INSUFFICIENT_POINTS, ACCESS_STATUS_PURCHASE_REQUIRED, purchase_article_access
+from apps.blog.access import build_access_check
 from apps.blog.forms import CommentForm, SearchForm
 from apps.blog.models import Post, PostFeedback
-from apps.blog.permissions import check_condition_password
-from apps.blog.utils import get_safe_next_url, is_ajax_request, record_post_view
-from apps.blog.visibility import post_has_encrypted_access, post_has_value_conditions
+from apps.blog.utils import get_safe_next_url, record_post_view
 from apps.blog.views.post.context import annotate_post_feedback, build_post_detail_context
-from apps.blog.views.post.utils import PostAccessForm, can_access_post, can_bypass_post_password, get_detail_post_queryset, get_post_condition_access_state, get_visible_post_queryset, mark_post_unlocked, post_requires_password, prepare_post_cards, with_post_feedback_counts
+from apps.blog.views.post.utils import get_detail_post_queryset, get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
 
 
 class BlogDetailView(LoginRequiredMixin, DetailView):
@@ -29,22 +27,29 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.method.lower() == "post" and post_has_encrypted_access(self.object):
+        access_check = build_access_check(self.object, request.user)
+
+        if access_check["all_granted"]:
             return super().dispatch(request, *args, **kwargs)
-        if request.method.lower() == "post" and post_has_value_conditions(self.object):
-            return super().dispatch(request, *args, **kwargs)
-        if can_access_post(request, self.object):
-            return super().dispatch(request, *args, **kwargs)
-        if post_requires_password(request, self.object):
-            self.access_form = PostAccessForm()
-            return self.render_to_response(self.get_context_data(access_form=self.access_form, requires_password=True))
-        if post_has_value_conditions(self.object):
-            return self.render_to_response(self.get_context_data(requires_condition=True))
-        raise Http404
+
+        self._access_check = access_check
+        self.template_name = "blog/access_gate.html"
+        return self.render_to_response(self.get_context_data(is_access_gate=True))
 
     def get_context_data(self, **kwargs):
+        if kwargs.get("is_access_gate"):
+            return {
+                "is_access_gate": True,
+                "access_object": self.object,
+                "post": self.object,
+                "object_name": self.object.title,
+                "access_check": self._access_check,
+                "object_type": "post",
+                "check_url": reverse("access-check", kwargs={"object_type": "post", "object_id": self.object.pk}),
+            }
+
         context = super().get_context_data(**kwargs)
-        if not kwargs.get("requires_password") and not getattr(self, "_view_recorded", False):
+        if not getattr(self, "_view_recorded", False):
             record_post_view(self.request, self.object)
             self.object.refresh_from_db(fields=["view_count"])
             self._view_recorded = True
@@ -62,94 +67,7 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
         )
         context.setdefault("detail_timestamp", self.object.published_at)
         context.setdefault("detail_timestamp_label", _("Published"))
-        context.setdefault("requires_password", False)
-        context.setdefault("access_form", kwargs.get("access_form") or PostAccessForm())
-        context.setdefault("password_submit_url", self.object.get_absolute_url())
-        context.setdefault("password_modal_title", _("Enter password to view this article"))
-        context.setdefault("password_modal_kicker", _("Encrypted"))
-        context.setdefault("password_modal_confirm", _("Unlock article"))
-        context.setdefault("password_modal_cancel", _("Cancel"))
-        context.setdefault("post_requires_password", post_requires_password(self.request, self.object))
-        condition_access = get_post_condition_access_state(self.request, self.object)
-        context.setdefault("requires_condition", kwargs.get("requires_condition", False))
-        context["condition_access"] = condition_access
-        context["condition_modal_title"] = _("Content access check")
-        context["condition_modal_kicker"] = _("Conditional")
-        context["condition_modal_confirm"] = _("Purchase now")
-        context["condition_modal_cancel"] = _("Cancel")
-        context["condition_modal_insufficient_money"] = _("Insufficient balance")
-        context["condition_modal_insufficient_points"] = _("Insufficient points")
-        context["condition_return_url"] = get_safe_next_url(self.request) or self.request.META.get("HTTP_REFERER") or reverse("article-list")
         return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not post_has_encrypted_access(self.object) and not post_has_value_conditions(self.object):
-            raise Http404
-        next_url = get_safe_next_url(request) or self.object.get_absolute_url()
-        has_encrypted_access = post_has_encrypted_access(self.object)
-        has_value_conditions = post_has_value_conditions(self.object)
-        password_submitted = has_encrypted_access and "password" in request.POST
-        requires_password = post_requires_password(request, self.object)
-
-        if password_submitted and can_bypass_post_password(request.user, self.object):
-            if is_ajax_request(request):
-                return JsonResponse({"ok": True, "redirect_url": next_url})
-            return redirect(next_url)
-
-        if password_submitted:
-            form = PostAccessForm(request.POST)
-            if not form.is_valid():
-                if is_ajax_request(request):
-                    return JsonResponse({"ok": False, "message": str(form.errors.get("password", [_("Password is required.")])[0])}, status=400)
-                return self.render_to_response(self.get_context_data(access_form=form, requires_password=True))
-            if not check_condition_password(self.object.condition_rules, form.cleaned_data["password"]):
-                form.add_error("password", _("Incorrect password."))
-                if is_ajax_request(request):
-                    return JsonResponse({"ok": False, "message": str(_("Incorrect password."))}, status=400)
-                return self.render_to_response(self.get_context_data(access_form=form, requires_password=True))
-            mark_post_unlocked(request, self.object)
-            if has_value_conditions:
-                access_state = get_post_condition_access_state(request, self.object)
-                if access_state["status"] != ACCESS_STATUS_GRANTED:
-                    if is_ajax_request(request):
-                        return JsonResponse({"ok": True, "redirect_url": next_url})
-                    return redirect(next_url)
-            if is_ajax_request(request):
-                return JsonResponse({"ok": True, "redirect_url": next_url})
-            return redirect(next_url)
-
-        if requires_password:
-            form = PostAccessForm(request.POST or None)
-            if is_ajax_request(request):
-                return JsonResponse({"ok": False, "message": str(_("Password is required."))}, status=400)
-            return self.render_to_response(self.get_context_data(access_form=form, requires_password=True))
-
-        if has_value_conditions:
-            access_state = get_post_condition_access_state(request, self.object)
-            if access_state["status"] == ACCESS_STATUS_PURCHASE_REQUIRED:
-                purchase_result = purchase_article_access(request.user, self.object)
-                if not purchase_result["ok"]:
-                    access_state = get_post_condition_access_state(request, self.object)
-                    if is_ajax_request(request):
-                        return JsonResponse({"ok": False, "status": access_state["status"], "message": purchase_result["message"]}, status=400)
-                    return self.render_to_response(self.get_context_data(requires_condition=True))
-                if is_ajax_request(request):
-                    return JsonResponse({"ok": True, "redirect_url": next_url})
-                return redirect(next_url)
-            if access_state["status"] in [ACCESS_STATUS_INSUFFICIENT_MONEY, ACCESS_STATUS_INSUFFICIENT_POINTS]:
-                if is_ajax_request(request):
-                    return JsonResponse({"ok": False, "status": access_state["status"]}, status=400)
-                return self.render_to_response(self.get_context_data(requires_condition=True))
-            return redirect(next_url)
-        if can_bypass_post_password(request.user, self.object):
-            if is_ajax_request(request):
-                return JsonResponse({"ok": True, "redirect_url": next_url})
-            return redirect(next_url)
-        form = PostAccessForm(request.POST)
-        if is_ajax_request(request):
-            return JsonResponse({"ok": False, "message": str(form.errors.get("password", [_("Password is required.")])[0])}, status=400)
-        return self.render_to_response(self.get_context_data(access_form=form, requires_password=True))
 
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -218,7 +136,7 @@ class PostFeedbackToggleView(LoginRequiredMixin, View):
         from apps.blog.utils.request import get_feedback_value_from_request
 
         post = get_object_or_404(get_detail_post_queryset(request.user), slug=kwargs["slug"])
-        if not can_access_post(request, post):
+        if not build_access_check(post, request.user)["all_granted"]:
             raise Http404
         try:
             value = get_feedback_value_from_request(request)

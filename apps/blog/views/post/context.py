@@ -6,7 +6,17 @@ from apps.blog.models import Post
 from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils.markdown import render_markdown
 from apps.blog.utils.site import build_share_expiry_options, check_comment_permission
-from apps.blog.visibility import get_post_access_icon_presentation, get_post_condition_summary_items, get_post_visibility_presentation
+from apps.blog.access import object_has_vip_standalone
+
+post_has_vip_standalone = object_has_vip_standalone
+
+from apps.blog.visibility import (
+    get_post_access_icon_presentation,
+    get_post_condition_summary_items,
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
+    get_post_visibility_presentation,
+)
 from apps.blog.views.comment.utils import build_comment_tree
 from apps.blog.views.post.utils import get_visible_post_queryset
 
@@ -111,11 +121,23 @@ def build_post_detail_context(
             reply.edit_form.fields["content"].label = _("Edit comment")
             reply.edit_form.fields["content"].widget.attrs["placeholder"] = _("Update your comment")
 
+    show_vip_badge = post_has_vip_standalone(post)
+    vip_context = {}
+    if show_vip_badge:
+        vip_context = {
+            "show_vip_badge": True,
+            "vip_condition_summary_items": get_post_vip_condition_summary_items(post),
+            "vip_visibility_presentation": get_post_vip_visibility_presentation(post),
+        }
+
     return {
         "rendered_content": render_markdown(post.content),
         "condition_summary_items": get_post_condition_summary_items(post),
         "access_icon_presentation": get_post_access_icon_presentation(post),
         "visibility_presentation": get_post_visibility_presentation(post),
+        "show_vip_badge": show_vip_badge,
+        "vip_condition_summary_items": vip_context.get("vip_condition_summary_items", []),
+        "vip_visibility_presentation": vip_context.get("vip_visibility_presentation", None),
         "related_posts": (
             decorate_post_tags_for_display(list(get_visible_post_queryset(user).filter(status=Post.STATUS_PUBLISHED).exclude(pk=post.pk).order_by("-published_at")[:3]))
             if not is_share_view and getattr(user, "is_authenticated", False)

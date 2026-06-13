@@ -29,7 +29,7 @@
             <nav class="post-outline-nav" aria-label="{% trans 'Book chapters' %}" data-book-outline-nav></nav>
         </div>
     </div>
-    {% if post and not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
+    {% if post and post_access_check.all_granted %}
     <div class="post-detail-floating-outline book-post-outline" data-post-outline-root data-post-outline-hide-narrow data-post-outline-always-expanded>
         <button
             type="button"
@@ -53,31 +53,6 @@
     {% endif %}
     <div class="book-detail-layout" data-book-outline-scope>
         <div class="book-detail-content" data-post-outline-scope>
-            {% if requires_password %}
-            <article class="post-detail-shell">
-                <header class="post-detail-header">
-                    <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
-                        <div class="tag-row post-detail-tag-row">
-                            <div class="post-detail-tag-row-main">
-                                {% if book_condition_summary_items %}
-                                {% include 'blog/includes/condition_badges.html' with condition_items=book_condition_summary_items icon_only=True %}
-                                {% else %}
-                                {% include 'blog/includes/access_badge.html' with access=book_access_icon_presentation show_label=False %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <h1>{{ current_book.name }}</h1>
-                        <div class="card-meta-row card-meta-row-soft">
-                            <a href="{% if current_book.created_by_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' current_book.created_by_id %}{% endif %}" class="comment-author-link">{{ current_book.created_by.first_name|default:current_book.created_by.username }}</a>
-                            <span>{{ current_book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
-                        </div>
-                        {% if current_book.summary %}
-                        <p class="post-detail-summary">{{ current_book.summary }}</p>
-                        {% endif %}
-                    </div>
-                </header>
-            </article>
-            {% else %}
             <article class="post-detail-shell">
                 <header class="post-detail-header">
                     {% if post %}
@@ -85,6 +60,7 @@
                         <div class="tag-row post-detail-tag-row" aria-hidden="true"></div>
                         <div class="post-detail-title-row">
                             <h1>{{ post.title }}</h1>
+                            {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=show_vip_badge vip_condition_summary_items=vip_condition_summary_items vip_visibility_presentation=vip_visibility_presentation %}
                             {% if condition_summary_items %}
                             {% include 'blog/includes/condition_badges.html' with condition_items=condition_summary_items icon_only=True %}
                             {% else %}
@@ -116,6 +92,7 @@
                     <div class="post-detail-hero{% if current_book.cover_image %} post-detail-hero-with-cover{% endif %}"{% if current_book.cover_image %} style="background-image: url('{{ current_book.cover_image.url }}');"{% endif %}>
                         <div class="tag-row post-detail-tag-row">
                             <div class="post-detail-tag-row-main">
+                                {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=show_book_vip_badge vip_condition_summary_items=book_vip_condition_summary_items vip_visibility_presentation=book_vip_visibility_presentation %}
                                 {% if book_condition_summary_items %}
                                 {% include 'blog/includes/condition_badges.html' with condition_items=book_condition_summary_items icon_only=True %}
                                 {% else %}
@@ -134,7 +111,7 @@
                     </div>
                     {% endif %}
                 </header>
-                {% if post and not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
+                {% if post and post_access_check.all_granted %}
                 <section
                     class="markdown-body blog-markdown-content"
                     data-post-content
@@ -162,6 +139,16 @@
                     </div>
                 </div>
                 {% endif %}
+                {% if post and not post_access_check.all_granted %}
+                {{ post_access_check|json_script:"post-access-check-data" }}
+                <script id="post-gate-config" type="application/json">
+                {
+                    "checkUrl": "{{ post_gate_check_url }}",
+                    "objectId": {{ post.pk }},
+                    "objectType": "post"
+                }
+                </script>
+                {% endif %}
                 {% if not post %}
                 <section class="empty-panel book-empty-panel">
                     <h2>{% trans "No accessible articles yet" %}</h2>
@@ -169,9 +156,8 @@
                 </section>
                 {% endif %}
             </article>
-            {% endif %}
 
-            {% if not requires_password and not requires_condition and not requires_post_password and not requires_post_condition %}
+            {% if post_access_check.all_granted %}
             <section id="comments" class="section-panel comment-section" tabindex="-1">
                 <div class="comment-section-header">
                     <span class="section-kicker">{% trans "Discussion" %}</span>
@@ -223,65 +209,7 @@
         </div>
     </div>
 </main>
-{% if requires_password %}
-<div
-    hidden
-    data-encrypted-post-modal
-    data-encrypted-post-url="{{ password_submit_url }}"
-    data-encrypted-post-title="{{ password_modal_title }}"
-    data-encrypted-post-kicker="{{ password_modal_kicker }}"
-    data-encrypted-post-confirm="{{ password_modal_confirm }}"
-    data-encrypted-post-cancel="{{ password_modal_cancel }}"
-    data-encrypted-post-error="{% if access_form.password.errors %}{{ access_form.password.errors|striptags }}{% endif %}"
-    data-encrypted-post-direct="true"
-></div>
-{% elif requires_condition %}
-<div
-    hidden
-    data-conditional-access-modal
-    data-conditional-access-url="{{ condition_submit_url }}"
-    data-conditional-access-title="{{ condition_modal_title }}"
-    data-conditional-access-kicker="{{ condition_modal_kicker }}"
-    data-conditional-access-confirm="{{ condition_modal_confirm }}"
-    data-conditional-access-cancel="{{ condition_modal_cancel }}"
-    data-conditional-access-status="{{ condition_access.status }}"
-    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
-    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
-    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
-    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
-    data-conditional-access-return-url="{{ condition_return_url }}"
-></div>
-{% elif requires_post_password %}
-<div
-    hidden
-    data-encrypted-post-modal
-    data-encrypted-post-url="{{ password_submit_url }}"
-    data-encrypted-post-title="{{ password_modal_title }}"
-    data-encrypted-post-kicker="{{ password_modal_kicker }}"
-    data-encrypted-post-confirm="{{ password_modal_confirm }}"
-    data-encrypted-post-cancel="{{ password_modal_cancel }}"
-    data-encrypted-post-direct="true"
-></div>
-{% elif requires_post_condition %}
-<div
-    hidden
-    data-conditional-access-modal
-    data-conditional-access-url="{{ condition_submit_url }}"
-    data-conditional-access-title="{{ condition_modal_title }}"
-    data-conditional-access-kicker="{{ condition_modal_kicker }}"
-    data-conditional-access-confirm="{{ condition_modal_confirm }}"
-    data-conditional-access-cancel="{{ condition_modal_cancel }}"
-    data-conditional-access-status="{{ condition_access.status }}"
-    data-conditional-access-money="{{ condition_access.money_required|default:'' }}"
-    data-conditional-access-points="{{ condition_access.points_required|default:'' }}"
-    data-conditional-access-insufficient-money="{{ condition_modal_insufficient_money }}"
-    data-conditional-access-insufficient-points="{{ condition_modal_insufficient_points }}"
-    data-conditional-access-return-url="{{ condition_return_url }}"
-></div>
-{% endif %}
-{% if not requires_password and not requires_condition %}
 <script type="application/json" data-book-outline-data>{{ book_navigation_json|safe }}</script>
-{% endif %}
 {% endblock %}
 
 {% block extra_js %}

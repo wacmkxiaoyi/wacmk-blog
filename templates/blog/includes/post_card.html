@@ -2,7 +2,7 @@
 <article class="post-card{% if card_class %} {{ card_class }}{% endif %}">
     <div class="post-card-body">
         {% if post_card_button %}
-        <button type="{{ post_card_button_type|default:'button' }}" class="post-card-link-overlay post-card-button-overlay{% if post_requires_password %} encrypted-post-link{% endif %}" aria-label="{{ post_card_button_label|default:post.title }}" data-post-card-select{% if post_card_url %} data-post-card-url="{{ post_card_url }}"{% endif %} data-post-card-title="{{ post.title }}"{% if post_requires_password %} data-encrypted-post-trigger data-encrypted-post-url="{{ post.get_absolute_url }}" data-encrypted-post-title="{% trans 'Enter password to view this article' %}" data-encrypted-post-kicker="{% trans 'Encrypted' %}" data-encrypted-post-confirm="{% trans 'Unlock article' %}" data-encrypted-post-cancel="{% trans 'Cancel' %}"{% endif %}>
+        <button type="{{ post_card_button_type|default:'button' }}" class="post-card-link-overlay post-card-button-overlay js-access-gate-link" aria-label="{{ post_card_button_label|default:post.title }}" data-post-card-select{% if post_card_url %} data-post-card-url="{{ post_card_url }}"{% endif %} data-post-card-title="{{ post.title }}" data-object-type="post" data-object-id="{{ post.pk }}" data-gate-url="{% if post_card_url %}{{ post_card_url }}{% else %}{{ post.get_absolute_url }}{% endif %}">
             <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
                 <div class="card-meta-row card-meta-row-soft">
                     <span>{{ post.author.first_name|default:post.author.username }}</span>
@@ -13,7 +13,7 @@
             </div>
         </button>
         {% else %}
-        <a href="{{ post.get_absolute_url }}" class="post-card-link-overlay post-card-content-link{% if post_requires_password %} encrypted-post-link{% endif %}" aria-label="{{ post.title }}"{% if post_requires_password %} data-encrypted-post-trigger data-encrypted-post-url="{{ post.get_absolute_url }}" data-encrypted-post-title="{% trans 'Enter password to view this article' %}" data-encrypted-post-kicker="{% trans 'Encrypted' %}" data-encrypted-post-confirm="{% trans 'Unlock article' %}" data-encrypted-post-cancel="{% trans 'Cancel' %}"{% endif %}>
+        <a href="{{ post.get_absolute_url }}" class="post-card-link-overlay post-card-content-link js-access-gate-link" aria-label="{{ post.title }}" data-object-type="post" data-object-id="{{ post.pk }}" data-gate-url="{{ post.get_absolute_url }}">
             <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
                 <div class="card-meta-row card-meta-row-soft">
                     <span>{{ post.author.first_name|default:post.author.username }}</span>
@@ -26,6 +26,7 @@
         {% endif %}
         {% if show_visibility|default:False %}
         <div class="tag-row post-card-feedback-row">
+            {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=post.show_vip_badge vip_condition_summary_items=post.vip_condition_summary_items vip_visibility_presentation=post.vip_visibility_presentation %}
             {% if post.condition_summary_items %}
             {% include 'blog/includes/condition_summary.html' with condition_items=post.condition_summary_items %}
             {% else %}

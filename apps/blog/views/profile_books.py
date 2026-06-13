@@ -17,8 +17,10 @@ from apps.blog.utils import build_user_business_identity_summary, get_or_create_
 from apps.blog.views.book.utils import build_book_share_editor_context
 from apps.blog.visibility import (
     book_has_any_conditions,
-    book_has_encrypted_access,
+    book_has_vip_standalone,
     get_book_condition_summary_items,
+    get_book_vip_condition_summary_items,
+    get_book_vip_visibility_presentation,
     get_book_visibility_presentation,
     get_post_access_display,
     get_post_access_icon_presentation,
@@ -158,7 +160,10 @@ class ProfileBookListView(ProfileBookAccessMixin, TemplateView):
         for book in books:
             book.condition_summary_items = get_book_condition_summary_items(book)
             book.visibility_presentation = get_book_visibility_presentation(book)
-            book.has_encrypted_access = book_has_encrypted_access(book)
+            book.show_vip_badge = book_has_vip_standalone(book)
+            if book.show_vip_badge:
+                book.vip_condition_summary_items = get_book_vip_condition_summary_items(book)
+                book.vip_visibility_presentation = get_book_vip_visibility_presentation(book)
         return books
 
     def get_context_data(self, **kwargs):
@@ -363,7 +368,6 @@ class ProfileBookPostSearchView(ProfileBookWriteMixin, View):
                         "post_card_url": post.get_absolute_url(),
                         "show_tag_links": False,
                         "disable_encrypted_modal": True,
-                        "post_requires_password": post_has_encrypted_access(post),
                     },
                     request=request,
                 ),
