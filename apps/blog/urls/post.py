@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.blog.views.access_check import AccessCheckView
+from apps.blog.views.attachment import AttachmentAccessCheckView, AttachmentDownloadView, AttachmentUploadView
 from apps.blog.views.post import (
     ArticleListView,
     BlogDetailView,
@@ -21,6 +22,7 @@ from apps.blog.views.post import (
     ManagePostUpdateView,
     MarkdownPreviewView,
     PostFeedbackToggleView,
+    PostStarToggleView,
     PostLinkPreviewView,
     PostShareDetailView,
     PostShareLinkCreateView,
@@ -29,12 +31,16 @@ from apps.blog.views.post import (
 
 urlpatterns = [
     path("api/access-check/<str:object_type>/<int:object_id>/", AccessCheckView.as_view(), name="access-check"),
+    path("attachments/upload/", AttachmentUploadView.as_view(), name="attachment-upload"),
+    path("attachments/<int:pk>/download/", AttachmentDownloadView.as_view(), name="attachment-download"),
+    path("attachments/<int:pk>/access-check/", AttachmentAccessCheckView.as_view(), name="attachment-access-check"),
     path("articles/", ArticleListView.as_view(), name="article-list"),
     path("blog/markdown-preview/", MarkdownPreviewView.as_view(), name="blog-markdown-preview"),
     path("blog/link-preview/", PostLinkPreviewView.as_view(), name="blog-post-preview"),
     path("blog/<slug:slug>/", BlogDetailView.as_view(), name="blog-detail"),
     path("blog/<slug:slug>/share-links/", PostShareLinkCreateView.as_view(), name="blog-share-create"),
     path("blog/<slug:slug>/feedback/", PostFeedbackToggleView.as_view(), name="blog-feedback-toggle"),
+    path("blog/<slug:slug>/star/", PostStarToggleView.as_view(), name="blog-star-toggle"),
     path("share/<str:token>/", PostShareDetailView.as_view(), name="blog-share-detail"),
     path("search/", SearchView.as_view(), name="blog-search"),
     path("manage/posts/", ManagePostListView.as_view(), name="manage-posts"),

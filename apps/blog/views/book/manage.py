@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView
 
-from apps.blog.forms import BookForm
+from apps.blog.forms.book import BookForm
 from apps.blog.models import AuditLog, Book, BookShareLink
 from apps.blog.utils import write_audit_log
 from apps.blog.visibility import (

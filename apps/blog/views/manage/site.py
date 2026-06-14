@@ -9,12 +9,13 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, TemplateView
 
-from apps.blog.forms import SearchForm, SiteSettingForm
-from apps.blog.models import AuditLog, Book, ContentViewLog, Post, PostDraft, SiteSetting, Tag
+from apps.blog.forms.common import SearchForm
+from apps.blog.forms.site import SiteSettingForm
+from apps.blog.models import Attachment, AuditLog, Book, ContentViewLog, Post, PostDraft, SiteSetting, Tag
 from apps.blog.utils import get_normalized_vip_level_names, get_or_create_site_setting, write_audit_log
 from apps.blog.utils.site import build_visit_trend
 from apps.blog.views.manage.base import ManageBaseMixin
-from apps.blog.views.post.utils import get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
+from apps.blog.views.post.utils import get_visible_post_queryset, order_posts_by_user_stars, prepare_post_cards, with_post_feedback_counts
 
 
 User = get_user_model()
@@ -32,7 +33,9 @@ class BlogHomeView(LoginRequiredMixin, ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        return prepare_post_cards(with_post_feedback_counts(get_visible_post_queryset(self.request.user)).order_by("-published_at", "-updated_at"))
+        queryset = with_post_feedback_counts(get_visible_post_queryset(self.request.user))
+        queryset = order_posts_by_user_stars(queryset, self.request.user, "-published_at", "-updated_at")
+        return prepare_post_cards(queryset)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,6 +53,7 @@ class BlogHomeView(LoginRequiredMixin, ListView):
             "draft_posts": draft_posts.count(),
             "tag_count": Tag.objects.count(),
             "book_count": Book.objects.count(),
+            "attachment_count": Attachment.objects.count(),
             "author_count": User.objects.filter(Q(posts__isnull=False) | Q(post_drafts__isnull=False)).distinct().count(),
             "article_views_last_7_days": ContentViewLog.objects.filter(
                 content_type=ContentViewLog.CONTENT_TYPE_POST,

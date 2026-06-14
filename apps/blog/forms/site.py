@@ -144,6 +144,13 @@ class SiteSettingForm(forms.ModelForm):
         help_text=_("When enabled, only VIP users can create books."),
         widget=forms.CheckboxInput(attrs={"class": "switch-input"}),
     )
+    attachment_max_size_mb = forms.IntegerField(
+        min_value=1,
+        initial=1,
+        label=_("Maximum attachment size (MB)"),
+        help_text=_("Maximum allowed size for a single uploaded attachment. Default is 1 MB."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 1, "step": 1}),
+    )
     allow_comment = forms.BooleanField(
         required=False,
         label=_("Enable comment feature"),
@@ -179,6 +186,7 @@ class SiteSettingForm(forms.ModelForm):
             "allow_non_admin_create_book",
             "non_admin_max_book_count",
             "vip_only_create_book",
+            "attachment_max_size_mb",
             "allow_comment",
             "vip_only_comment",
         ]

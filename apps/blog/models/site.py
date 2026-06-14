@@ -48,6 +48,7 @@ class SiteSetting(TimeStampedModel):
     allow_non_admin_create_book = models.BooleanField(default=False)
     non_admin_max_book_count = models.PositiveIntegerField(default=3)
     vip_only_create_book = models.BooleanField(default=False)
+    attachment_max_size_mb = models.PositiveSmallIntegerField(default=1)
     allow_comment = models.BooleanField(default=True)
     vip_only_comment = models.BooleanField(default=False)
 

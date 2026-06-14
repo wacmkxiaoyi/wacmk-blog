@@ -7,10 +7,14 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.auth import get_allowed_types_for_book
 from apps.blog.models import Book, Post
-from apps.blog.views.book.utils import prune_book_structure_missing_posts
 from apps.blog.visibility import (
     get_post_access_display,
     get_post_access_icon_presentation,
+    post_has_vip_standalone,
+)
+from apps.blog.access.display import (
+    get_post_vip_condition_summary_items,
+    get_post_vip_visibility_presentation,
 )
 
 from .mixins import AccessScopeFormMixin
@@ -118,6 +122,9 @@ class BookForm(AccessScopeFormMixin, forms.ModelForm):
                 "access_display": json.dumps(get_post_access_display(post), ensure_ascii=True),
                 "visibility_presentation": get_post_access_icon_presentation(post),
                 "checked": str(post.pk) in selected_ids,
+                "show_vip_badge": post_has_vip_standalone(post),
+                "vip_condition_summary_items": json.dumps(get_post_vip_condition_summary_items(post), ensure_ascii=True) if post_has_vip_standalone(post) else "",
+                "vip_visibility_presentation": json.dumps(get_post_vip_visibility_presentation(post), ensure_ascii=True) if post_has_vip_standalone(post) else "",
             }
             for post in posts.filter(pk__in=selected_ids) if selected_ids
         ]
@@ -241,6 +248,8 @@ class BookForm(AccessScopeFormMixin, forms.ModelForm):
         return self.get_existing_structure_value()
 
     def get_existing_structure_value(self):
+        from apps.blog.views.book.utils.navigation import prune_book_structure_missing_posts
+
         structure = self.instance.structure or []
         structure_post_ids = self.extract_post_ids(structure)
         if not structure_post_ids:

@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from apps.blog.forms import CommentForm
+from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment, CommentFeedback
 from apps.blog.utils import get_safe_next_url, with_fragment, write_audit_log
 from apps.blog.utils.request import get_feedback_value_from_request

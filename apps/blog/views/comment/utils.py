@@ -8,7 +8,7 @@ from django.utils import timezone
 from apps.blog.constants import LEGACY_VIP_GROUP_NAME, get_default_business_group_name, get_vip_group_name
 from apps.blog.forms.comment import normalize_comment_content
 from apps.blog.models import Comment, CommentFeedback
-from apps.blog.utils.markdown import render_markdown
+from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import get_normalized_vip_level_names, get_or_create_site_setting
 from apps.blog.views.book.utils import rewrite_book_content_internal_links
 
@@ -141,7 +141,13 @@ def build_comment_tree(post, user, *, request=None, book=None, is_share_view=Fal
     author_vip_map = _build_author_vip_map(comment_list)
 
     def render_comment_content(comment):
-        rendered_content = render_markdown(normalize_comment_content(comment.content))
+        rendered_content = render_markdown_with_attachments(
+            normalize_comment_content(comment.content),
+            user,
+            request=request,
+            compact=True,
+            is_share_view=is_share_view,
+        )
         if request is None or book is None:
             return rendered_content
         return rewrite_book_content_internal_links(

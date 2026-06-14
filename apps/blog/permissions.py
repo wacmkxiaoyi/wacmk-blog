@@ -19,6 +19,8 @@ CONDITION_TYPE_CHOICES = [
 CONDITION_TYPE_LABELS = dict(CONDITION_TYPE_CHOICES)
 MAX_CONDITION_COUNT = len(CONDITION_TYPE_CHOICES)
 
+ATTACHMENT_ALLOWED_CONDITION_TYPES = {CONDITION_TYPE_MONEY, CONDITION_TYPE_POINTS, CONDITION_TYPE_ENCRYPTED}
+
 ACCESS_PRESENTATION = {
     "public": {"icon": "user-group", "tone": "public", "label": _("Public")},
     "private": {"icon": "user", "tone": "private", "label": _("Private")},

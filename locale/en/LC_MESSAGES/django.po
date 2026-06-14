@@ -2269,3 +2269,9 @@ msgstr ""
 #, python-format
 msgid "%(app_name)s temporary password"
 msgstr "%(app_name)s temporary password"
+
+msgid "Allow reprint"
+msgstr "Allow reprint"
+
+msgid "Allow quote"
+msgstr "Allow quote"

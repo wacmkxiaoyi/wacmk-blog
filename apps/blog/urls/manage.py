@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.blog.views.book import ManageBookCreateView, ManageBookDeleteView, ManageBookListView, ManageBookUpdateView
-from apps.blog.views.manage import BlogHomeView, ManageAuditClearView, ManageAuditListView, ManageCommentDeleteView, ManageCommentListView, ManageCommentUpdateView, ManageSiteSettingView, ManageUserCreateView, ManageUserDeleteView, ManageUserListView, ManageUserUpdateView
+from apps.blog.views.manage import BlogHomeView, ManageAttachmentDeleteView, ManageAttachmentListView, ManageAttachmentUpdateView, ManageAuditClearView, ManageAuditListView, ManageCommentDeleteView, ManageCommentListView, ManageCommentUpdateView, ManageSiteSettingView, ManageUserCreateView, ManageUserDeleteView, ManageUserListView, ManageUserUpdateView
 from apps.blog.views.post import ImageUploadView
 
 urlpatterns = [
@@ -12,6 +12,9 @@ urlpatterns = [
     path("manage/books/new/", ManageBookCreateView.as_view(), name="manage-book-create"),
     path("manage/books/<int:pk>/edit/", ManageBookUpdateView.as_view(), name="manage-book-update"),
     path("manage/books/<int:pk>/delete/", ManageBookDeleteView.as_view(), name="manage-book-delete"),
+    path("manage/attachments/", ManageAttachmentListView.as_view(), name="manage-attachments"),
+    path("manage/attachments/<int:pk>/edit/", ManageAttachmentUpdateView.as_view(), name="manage-attachment-update"),
+    path("manage/attachments/<int:pk>/delete/", ManageAttachmentDeleteView.as_view(), name="manage-attachment-delete"),
     path("manage/comments/", ManageCommentListView.as_view(), name="manage-comments"),
     path("manage/comments/<int:pk>/edit/", ManageCommentUpdateView.as_view(), name="manage-comment-update"),
     path("manage/comments/<int:pk>/delete/", ManageCommentDeleteView.as_view(), name="manage-comment-delete"),

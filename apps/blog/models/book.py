@@ -118,3 +118,21 @@ class BookPasswordRecord(TimeStampedModel):
 
     def __str__(self):
         return f"Book password verified {self.book_id} by {self.user_id}"
+
+
+class BookStar(TimeStampedModel):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="star_entries")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="book_star_entries")
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["book", "user"], name="blog_bookstar_book_user_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["book", "created_at"]),
+            models.Index(fields=["user", "created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Book star for {self.book_id} by {self.user_id}"

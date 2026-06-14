@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
 from apps.blog.presentation import decorate_tag_for_display, decorate_tags_for_display
-from apps.blog.views.post.utils import get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
+from apps.blog.views.post.utils import get_visible_post_queryset, order_posts_by_user_stars, prepare_post_cards, with_post_feedback_counts
 
 from .utils import get_visible_tag_queryset
 
@@ -35,7 +35,9 @@ class TagDetailView(ListView):
         return self.tag
 
     def get_queryset(self):
-        return prepare_post_cards(with_post_feedback_counts(get_visible_post_queryset(self.request.user).filter(tags=self.get_tag()).distinct()))
+        queryset = with_post_feedback_counts(get_visible_post_queryset(self.request.user).filter(tags=self.get_tag()).distinct())
+        queryset = order_posts_by_user_stars(queryset, self.request.user, "-published_at", "-updated_at")
+        return prepare_post_cards(queryset)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

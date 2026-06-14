@@ -7,10 +7,21 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
-from apps.blog.forms import ProfileForm, StyledPasswordChangeForm
+from apps.blog.forms.profile import ProfileForm, StyledPasswordChangeForm
 from apps.blog.models import AuditLog
 from apps.blog.utils import build_user_business_identity_summary, get_site_setting, write_audit_log
 from apps.users.models import UserProfile
+
+
+def build_profile_nav():
+    return [
+        {"label": _("Basic information"), "url": f"{reverse('profile')}?section=basic", "section": "basic"},
+        {"label": _("Account security"), "url": f"{reverse('profile')}?section=security", "section": "security"},
+        {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
+        {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
+        {"label": _("My attachments"), "url": reverse("profile-attachments"), "section": "attachments"},
+        {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
+    ]
 
 
 class ProfileView(TemplateView):
@@ -38,13 +49,7 @@ class ProfileView(TemplateView):
         context["profile_business_identity"] = build_user_business_identity_summary(self.request.user, get_site_setting())
         context["email_delivery_ready"] = settings.EMAIL_DELIVERY_READY
         context["current_section"] = current_section
-        context["profile_nav"] = [
-            {"label": _("Basic information"), "url": f"{reverse('profile')}?section={self.SECTION_BASIC}", "section": self.SECTION_BASIC},
-            {"label": _("Account security"), "url": f"{reverse('profile')}?section={self.SECTION_SECURITY}", "section": self.SECTION_SECURITY},
-            {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
-            {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
-            {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
-        ]
+        context["profile_nav"] = build_profile_nav()
         context["current_email"] = profile_form.initial_email
         return context
 
@@ -148,4 +153,4 @@ class ProfileView(TemplateView):
         return redirect(f"{reverse('profile')}?section={current_section}")
 
 
-__all__ = ["ProfileView"]
+__all__ = ["ProfileView", "build_profile_nav"]

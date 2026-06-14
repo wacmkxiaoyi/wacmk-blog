@@ -283,6 +283,19 @@
                     </div>
                 </section>
 
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Attachment" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.attachment_max_size_mb.id_for_label }}">{{ form.attachment_max_size_mb.label }}{% if form.attachment_max_size_mb.help_text %}<span class="label-tip-icon" data-tip="{{ form.attachment_max_size_mb.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.attachment_max_size_mb }}
+                            {% if form.attachment_max_size_mb.errors %}<div class="field-error">{{ form.attachment_max_size_mb.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
                 <div class="panel-actions site-settings-actions">
                     <button type="submit" name="action" value="restore_defaults" class="secondary-button destructive-button site-settings-restore-button"
                         formnovalidate

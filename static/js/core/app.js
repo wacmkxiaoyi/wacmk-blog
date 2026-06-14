@@ -38,7 +38,7 @@ function getModalDefaults() {
     var appModal = getModalElements().appModal;
     return {
         toneClasses: ["is-attention", "is-warning", "is-error"],
-        variantClasses: ["is-table-dialog", "is-wide-dialog"],
+        variantClasses: ["is-table-dialog", "is-wide-dialog", "is-medium-dialog"],
         deleteDefaultTitle: appModal ? appModal.getAttribute("data-delete-default-title") || "Delete item" : "Delete item",
         removeDefaultTitle: appModal ? appModal.getAttribute("data-remove-default-title") || "Remove item" : "Remove item",
         deleteDefaultMessage: appModal ? appModal.getAttribute("data-delete-default-message") || "Are you sure you want to continue? This action cannot be undone." : "Are you sure you want to continue? This action cannot be undone.",
@@ -77,7 +77,12 @@ export function escapeHtml(value) {
 
 export function getCsrfToken() {
     var input = document.querySelector("input[name='csrfmiddlewaretoken']");
-    return input ? input.value : "";
+    if (input) {
+        return input.value;
+    }
+
+    var match = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : "";
 }
 
 export function copyTextToClipboard(value) {

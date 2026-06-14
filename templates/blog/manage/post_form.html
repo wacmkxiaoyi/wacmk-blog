@@ -26,7 +26,7 @@
     {% include 'blog/manage/sidebar.html' with section='posts' %}
     {% endif %}
     <section class="manage-content">
-        <form method="post" enctype="multipart/form-data" class="section-panel panel-form editor-panel" data-post-editor-form data-unsaved-guard data-post-id="{{ editor_mode }}-{{ form.instance.pk|default:'new' }}" data-autosave-enabled="{% if site_setting and site_setting.post_editor_autosave_enabled %}true{% else %}false{% endif %}" data-autosave-interval-ms="{% if site_setting %}{% widthratio site_setting.post_editor_autosave_interval_minutes|default:5 1 60000 %}{% else %}300000{% endif %}">
+        <form method="post" enctype="multipart/form-data" class="section-panel panel-form editor-panel" data-post-editor-form data-unsaved-guard data-post-id="{{ editor_mode }}-{{ form.instance.pk|default:'new' }}" data-autosave-enabled="{% if site_setting and site_setting.post_editor_autosave_enabled %}true{% else %}false{% endif %}" data-autosave-interval-ms="{% if site_setting %}{% widthratio site_setting.post_editor_autosave_interval_minutes|default:5 1 60000 %}{% else %}300000{% endif %}" data-attachment-max-size-mb="{{ site_setting.attachment_max_size_mb|default:1 }}">
             {% csrf_token %}
             {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
             <div class="section-heading-row">
@@ -88,6 +88,16 @@
                 </div>
             </div>
             <div class="user-manage-divider" aria-hidden="true"></div>
+            <div class="editor-allow-options">
+                <div class="field-group editor-allow-reprint-field">
+                    <label for="id_allow_reprint">{{ form.allow_reprint.label }}</label>
+                    {{ form.allow_reprint }}
+                </div>
+                <div class="field-group editor-allow-quote-field">
+                    <label for="id_allow_quote">{{ form.allow_quote.label }}</label>
+                    {{ form.allow_quote }}
+                </div>
+            </div>
             <div class="editor-access-layout editor-access-layout-post">
                 <div class="field-group post-visibility-field editor-access-layout-visibility" data-post-visibility-field>
                     <label for="id_visibility">{{ form.visibility.label }}</label>

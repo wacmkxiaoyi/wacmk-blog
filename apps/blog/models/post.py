@@ -50,6 +50,8 @@ class Post(TimeStampedModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="posts")
     tags = models.ManyToManyField("blog.Tag", blank=True, related_name="posts")
     books = models.ManyToManyField("blog.Book", blank=True, related_name="posts")
+    allow_reprint = models.BooleanField(default=False)
+    allow_quote = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["-published_at", "-created_at"]
@@ -210,3 +212,21 @@ class PostFeedback(TimeStampedModel):
         super().clean()
         if self.value not in {-1, 1}:
             raise ValidationError({"value": _("Feedback value must be either 1 or -1.")})
+
+
+class PostStar(TimeStampedModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="star_entries")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="post_star_entries")
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["post", "user"], name="blog_poststar_post_user_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["post", "created_at"]),
+            models.Index(fields=["user", "created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Post star for {self.post_id} by {self.user_id}"

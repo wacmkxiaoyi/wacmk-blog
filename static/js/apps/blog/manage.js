@@ -1,5 +1,5 @@
 import { closeModal, escapeHtml, getCsrfToken, markGuardClean, openActionMenu, openModal, showInlineFlash } from "../../core/app.js";
-import { appendAccessDisplay, bindConditionTooltips, bindVipTooltips } from "./shared.js";
+import { appendAccessDisplay, bindConditionTooltips, bindStarWidgets } from "./shared.js";
 import { getPrimaryPostMarkdownEditor } from "./editor.js";
 
 function parseConditionRules(value) {
@@ -10,6 +10,72 @@ function parseConditionRules(value) {
     } catch (_error) {
         return [];
     }
+}
+
+function createAccessLayoutController(config) {
+    var form = config && config.form ? config.form : null;
+    var visibilitySelect = config && config.visibilitySelect ? config.visibilitySelect : null;
+    var conditionInput = config && config.conditionInput ? config.conditionInput : null;
+    var accessScopeField = config && config.accessScopeField ? config.accessScopeField : null;
+    var accessScopeSelect = config && config.accessScopeSelect ? config.accessScopeSelect : null;
+    var vipPermissionField = config && config.vipPermissionField ? config.vipPermissionField : null;
+    var vipPermissionSelect = config && config.vipPermissionSelect ? config.vipPermissionSelect : null;
+    var vipConditionEditorField = config && config.vipConditionEditorField ? config.vipConditionEditorField : null;
+    var shareField = config && config.shareField ? config.shareField : null;
+    var shareMessages = config && config.shareMessages ? config.shareMessages : [];
+    var shareResult = config && config.shareResult ? config.shareResult : null;
+
+    function applyLayout() {
+        var rules = parseConditionRules(conditionInput ? conditionInput.value : "[]");
+        var isPublic = visibilitySelect && visibilitySelect.value === "public" && !rules.length;
+        var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
+        var isStandalone = accessScopeSelect && accessScopeSelect.value === "standalone";
+        var vipConditional = vipPermissionSelect && vipPermissionSelect.value === "conditional";
+
+        if (shareField) {
+            shareField.hidden = !isPublic;
+        }
+        Array.prototype.forEach.call(shareMessages || [], function (node) {
+            node.hidden = !isPublic;
+        });
+        if (shareResult) {
+            shareResult.hidden = !isPublic || shareResult.classList.contains("is-hidden");
+        }
+        if (accessScopeField) {
+            accessScopeField.hidden = !isConditionalOrPrivate;
+            if (isPublic && accessScopeSelect) {
+                accessScopeSelect.value = "unified";
+                isStandalone = false;
+            }
+        }
+        if (vipPermissionField) {
+            vipPermissionField.hidden = !isStandalone;
+        }
+        if (vipConditionEditorField) {
+            vipConditionEditorField.hidden = !isStandalone || !vipConditional;
+        }
+    }
+
+    if (visibilitySelect) {
+        visibilitySelect.addEventListener("change", applyLayout);
+    }
+    if (accessScopeSelect) {
+        accessScopeSelect.addEventListener("change", applyLayout);
+    }
+    if (vipPermissionSelect) {
+        vipPermissionSelect.addEventListener("change", applyLayout);
+    }
+    if (form) {
+        form.addEventListener("input", function (event) {
+            if (event.target && (event.target === conditionInput || event.target.id === "id_condition_rules" || event.target.id === "id_vip_condition_rules")) {
+                applyLayout();
+            }
+        });
+    }
+
+    return {
+        applyLayout: applyLayout
+    };
 }
 
 function parseJsonObject(value, fallbackValue) {
@@ -38,19 +104,27 @@ function buildPostMeta(item, fallbackMeta) {
         accessDisplay: item && item.accessDisplay ? item.accessDisplay : (fallback.accessDisplay || null),
         visibility: item && item.visibility ? item.visibility : (fallback.visibility || "public"),
         visibilityPresentation: item && item.visibilityPresentation ? item.visibilityPresentation : (fallback.visibilityPresentation || null),
-        selected: typeof fallback.selected === "boolean" ? fallback.selected : false
+        selected: typeof fallback.selected === "boolean" ? fallback.selected : false,
+        showVipBadge: item && item.showVipBadge != null ? item.showVipBadge : (fallback.showVipBadge || false),
+        vipConditionSummaryItems: item && item.vipConditionSummaryItems ? item.vipConditionSummaryItems : (fallback.vipConditionSummaryItems || null),
+        vipVisibilityPresentation: item && item.vipVisibilityPresentation ? item.vipVisibilityPresentation : (fallback.vipVisibilityPresentation || null)
     };
 }
 
-function initializeConditionEditors() {
-    Array.prototype.forEach.call(document.querySelectorAll("[data-condition-editor], [data-vip-condition-editor]"), function (editor) {
+export function initializeConditionEditorsWithin(rootNode) {
+    var scope = rootNode || document;
+
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-condition-editor], [data-vip-condition-editor]"), function (editor) {
         var inputId = editor.getAttribute("data-condition-input-id") || "";
-        var hiddenInput = inputId ? document.getElementById(inputId) : null;
         var form = editor.closest("form");
+        var hiddenInput = inputId
+            ? ((form ? form.querySelector("[id='" + inputId + "']") : null) || document.getElementById(inputId))
+            : null;
         var isVipEditor = editor.hasAttribute("data-vip-condition-editor");
+        var visibilityInputId = editor.getAttribute("data-condition-visibility-input-id") || "";
         var visibilitySelect = isVipEditor
-            ? (form ? form.querySelector("#id_vip_access_permission") : null)
-            : (form ? form.querySelector("#id_visibility") : null);
+            ? (form ? form.querySelector("#" + (visibilityInputId || "id_vip_access_permission")) : null)
+            : (form ? form.querySelector("#" + (visibilityInputId || "id_visibility")) : null);
         var fieldWrapper = editor.closest("[data-condition-editor-field]");
         var maxMessage = editor.getAttribute("data-condition-max-message") || "Condition types are full";
         var conditionTypes = (editor.getAttribute("data-condition-types") || "money,points").split(",").map(function (value) { return value.trim(); }).filter(Boolean);
@@ -284,7 +358,9 @@ function initializeConditionEditors() {
                 refreshOptions();
             });
             input.addEventListener("input", syncHiddenInput);
-            addButton.addEventListener("click", function () {
+            addButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (!hasAvailableType()) {
                     renderHint();
                     return;
@@ -292,7 +368,9 @@ function initializeConditionEditors() {
                 appendRow(null);
                 refreshOptions();
             });
-            removeButton.addEventListener("click", function () {
+            removeButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (getRows().length <= 1) {
                     return;
                 }
@@ -339,6 +417,10 @@ function initializeConditionEditors() {
         }
         syncVisibilityState();
     });
+}
+
+function initializeConditionEditors() {
+    initializeConditionEditorsWithin(document);
 }
 
 function getPostEditorRecoveryKey(postEditorForm) {
@@ -451,41 +533,19 @@ function initializePostEditor() {
     }
     postEditorForm.setAttribute("data-post-editor-bound", "true");
 
-    function applyVisibilityLayout() {
-        var conditionEditorInput = postEditorForm.querySelector("#id_condition_rules");
-        var rules = parseConditionRules(conditionEditorInput ? conditionEditorInput.value : "[]");
-        var isPublic = visibilitySelect && visibilitySelect.value === "public" && !rules.length;
-        var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
-        var accessScopeField = postEditorForm.querySelector("[data-access-scope-field]");
-        var accessScopeSelect = postEditorForm.querySelector("#id_access_scope");
-        var vipPermissionField = postEditorForm.querySelector("[data-vip-permission-field]");
-        var vipConditionEditorField = postEditorForm.querySelector("[data-vip-condition-editor-field]");
-        var vipPermissionSelect = postEditorForm.querySelector("#id_vip_access_permission");
-
-        if (shareField) {
-            shareField.hidden = !isPublic;
-        }
-        Array.prototype.forEach.call(shareMessages || [], function (node) {
-            node.hidden = !isPublic;
-        });
-        if (shareResult) {
-            shareResult.hidden = !isPublic || shareResult.classList.contains("is-hidden");
-        }
-        if (accessScopeField) {
-            accessScopeField.hidden = !isConditionalOrPrivate;
-            if (isPublic && accessScopeSelect) {
-                accessScopeSelect.value = "unified";
-            }
-        }
-        var isStandalone = accessScopeSelect && accessScopeSelect.value === "standalone";
-        if (vipPermissionField) {
-            vipPermissionField.hidden = !isStandalone;
-        }
-        if (vipConditionEditorField) {
-            var vipConditional = vipPermissionSelect && vipPermissionSelect.value === "conditional";
-            vipConditionEditorField.hidden = !isStandalone || !vipConditional;
-        }
-    }
+    var accessLayoutController = createAccessLayoutController({
+        form: postEditorForm,
+        visibilitySelect: visibilitySelect,
+        conditionInput: postEditorForm ? postEditorForm.querySelector("#id_condition_rules") : null,
+        accessScopeField: postEditorForm ? postEditorForm.querySelector("[data-access-scope-field]") : null,
+        accessScopeSelect: postEditorForm ? postEditorForm.querySelector("#id_access_scope") : null,
+        vipPermissionField: postEditorForm ? postEditorForm.querySelector("[data-vip-permission-field]") : null,
+        vipPermissionSelect: postEditorForm ? postEditorForm.querySelector("#id_vip_access_permission") : null,
+        vipConditionEditorField: postEditorForm ? postEditorForm.querySelector("[data-vip-condition-editor-field]") : null,
+        shareField: shareField,
+        shareMessages: shareMessages,
+        shareResult: shareResult
+    });
 
     function revokeCoverObjectUrl() {
         if (coverObjectUrl) {
@@ -556,23 +616,7 @@ function initializePostEditor() {
         }
     }
 
-    if (visibilitySelect) {
-        applyVisibilityLayout();
-        visibilitySelect.addEventListener("change", applyVisibilityLayout);
-    }
-    var accessScopeSelect = postEditorForm.querySelector("#id_access_scope");
-    if (accessScopeSelect) {
-        accessScopeSelect.addEventListener("change", applyVisibilityLayout);
-    }
-    var vipPermissionSelect = postEditorForm.querySelector("#id_vip_access_permission");
-    if (vipPermissionSelect) {
-        vipPermissionSelect.addEventListener("change", applyVisibilityLayout);
-    }
-    postEditorForm.addEventListener("input", function (event) {
-        if (event.target && (event.target.id === "id_condition_rules" || event.target.id === "id_vip_condition_rules")) {
-            applyVisibilityLayout();
-        }
-    });
+    accessLayoutController.applyLayout();
     if (coverRemoveButton) {
         coverRemoveButton.addEventListener("click", function () {
             revokeCoverObjectUrl();
@@ -760,6 +804,9 @@ function initializeBookEditor() {
         existingNode.setAttribute("data-post-access-tone", (meta.visibilityPresentation && meta.visibilityPresentation.tone) || "");
         existingNode.setAttribute("data-post-access-label", (meta.visibilityPresentation && meta.visibilityPresentation.label) || "");
         existingNode.setAttribute("data-post-selected", meta.selected ? "true" : "false");
+        existingNode.setAttribute("data-post-show-vip-badge", meta.showVipBadge ? "true" : "false");
+        existingNode.setAttribute("data-post-vip-condition-summary-items", meta.vipConditionSummaryItems ? JSON.stringify(meta.vipConditionSummaryItems) : "");
+        existingNode.setAttribute("data-post-vip-visibility", meta.vipVisibilityPresentation ? JSON.stringify(meta.vipVisibilityPresentation) : "");
 
         if (item.postUrl || item.url) {
             existingNode.setAttribute("data-post-url", item.postUrl || item.url || "");
@@ -783,41 +830,19 @@ function initializeBookEditor() {
         return meta;
     }
 
-    function applyVisibilityLayout() {
-        var conditionEditorInput = bookEditorForm.querySelector("#id_condition_rules");
-        var rules = parseConditionRules(conditionEditorInput ? conditionEditorInput.value : "[]");
-        var isPublic = visibilitySelect && visibilitySelect.value === "public" && !rules.length;
-        var isConditionalOrPrivate = visibilitySelect && (visibilitySelect.value === "conditional" || visibilitySelect.value === "private");
-        var accessScopeField = bookEditorForm.querySelector("[data-access-scope-field]");
-        var accessScopeSelect = bookEditorForm.querySelector("#id_access_scope");
-        var vipPermissionField = bookEditorForm.querySelector("[data-vip-permission-field]");
-        var vipConditionEditorField = bookEditorForm.querySelector("[data-vip-condition-editor-field]");
-        var vipPermissionSelect = bookEditorForm.querySelector("#id_vip_access_permission");
-
-        if (shareField) {
-            shareField.hidden = !isPublic;
-        }
-        Array.prototype.forEach.call(shareMessages || [], function (node) {
-            node.hidden = !isPublic;
-        });
-        if (shareResult) {
-            shareResult.hidden = !isPublic || shareResult.classList.contains("is-hidden");
-        }
-        if (accessScopeField) {
-            accessScopeField.hidden = !isConditionalOrPrivate;
-            if (isPublic && accessScopeSelect) {
-                accessScopeSelect.value = "unified";
-            }
-        }
-        var isStandalone = accessScopeSelect && accessScopeSelect.value === "standalone";
-        if (vipPermissionField) {
-            vipPermissionField.hidden = !isStandalone;
-        }
-        if (vipConditionEditorField) {
-            var vipConditional = vipPermissionSelect && vipPermissionSelect.value === "conditional";
-            vipConditionEditorField.hidden = !isStandalone || !vipConditional;
-        }
-    }
+    var accessLayoutController = createAccessLayoutController({
+        form: bookEditorForm,
+        visibilitySelect: visibilitySelect,
+        conditionInput: bookEditorForm ? bookEditorForm.querySelector("#id_condition_rules") : null,
+        accessScopeField: bookEditorForm ? bookEditorForm.querySelector("[data-access-scope-field]") : null,
+        accessScopeSelect: bookEditorForm ? bookEditorForm.querySelector("#id_access_scope") : null,
+        vipPermissionField: bookEditorForm ? bookEditorForm.querySelector("[data-vip-permission-field]") : null,
+        vipPermissionSelect: bookEditorForm ? bookEditorForm.querySelector("#id_vip_access_permission") : null,
+        vipConditionEditorField: bookEditorForm ? bookEditorForm.querySelector("[data-vip-condition-editor-field]") : null,
+        shareField: shareField,
+        shareMessages: shareMessages,
+        shareResult: shareResult
+    });
 
     function getBookEditorString(name, fallback) {
         var value = chapterWorkbench ? chapterWorkbench.getAttribute(name) : "";
@@ -1225,13 +1250,56 @@ function initializeBookEditor() {
 
         if (node.type === "post") {
             var postMeta = getPostMeta(node.post_id);
+            if (postMeta && postMeta.showVipBadge) {
+                var vipBadge = document.createElement("span");
+                vipBadge.className = "vip-access-badge";
+                vipBadge.setAttribute("data-condition-tooltip-trigger", "");
+                vipBadge.setAttribute("tabindex", "0");
+                vipBadge.setAttribute("aria-label", "VIP access permission");
+                var vipIcon = document.createElement("span");
+                vipIcon.className = "vip-badge-icon";
+                vipIcon.textContent = "VIP";
+                vipBadge.appendChild(vipIcon);
+                title.appendChild(vipBadge);
+                var vipTooltipContent = "";
+                if (postMeta.vipConditionSummaryItems && postMeta.vipConditionSummaryItems.length) {
+                    vipTooltipContent = '<span class="condition-badge-group condition-badge-group-inline">' + postMeta.vipConditionSummaryItems.map(function (item) {
+                        var label = item && item.label ? String(item.label) : "";
+                        var tone = item && item.tone ? String(item.tone) : "conditional";
+                        var type = item && item.type ? String(item.type) : "conditional";
+                        var icon = item && item.icon ? String(item.icon) : "circle-question";
+                        var value = item && item.value != null && item.value !== "" ? String(item.value) : "";
+                        var text = value ? (label ? (label + " " + value) : value) : label;
+                        return '<span class="condition-badge access-tone-' + tone + ' condition-badge-' + type + '">' +
+                            '<i class="fa-solid fa-' + icon + '" aria-hidden="true"></i>' +
+                            '<span>' + text + '</span>' +
+                            '</span>';
+                    }).join("") + '</span>';
+                } else {
+                    var vp = postMeta.vipVisibilityPresentation;
+                    if (vp && vp.icon && vp.label) {
+                        vipTooltipContent = '<span class="condition-badge-group condition-badge-group-inline">' +
+                            '<span class="condition-badge access-tone-' + (vp.tone || "conditional") + '">' +
+                            '<i class="fa-solid fa-' + vp.icon + '" aria-hidden="true"></i>' +
+                            '<span>' + vp.label + '</span>' +
+                            '</span></span>';
+                    }
+                }
+                if (vipTooltipContent) {
+                    var vipTooltipTemplate = document.createElement("span");
+                    vipTooltipTemplate.hidden = true;
+                    vipTooltipTemplate.setAttribute("data-condition-tooltip-template", "");
+                    vipTooltipTemplate.innerHTML = vipTooltipContent;
+                    title.appendChild(vipTooltipTemplate);
+                }
+                bindConditionTooltips(title);
+            }
             if (appendAccessDisplay(title, postMeta && postMeta.accessDisplay ? postMeta.accessDisplay : null, {
                 fallbackPresentation: postMeta && postMeta.visibilityPresentation ? postMeta.visibilityPresentation : null,
                 iconClassName: "chapter-workbench-visibility-icon",
                 countClassName: "chapter-workbench-visibility-count"
             })) {
                 bindConditionTooltips(title);
-                bindVipTooltips(title);
             }
         }
 
@@ -1431,6 +1499,7 @@ function initializeBookEditor() {
         input.className = "input-control";
         input.placeholder = getBookEditorString("data-chapter-search-placeholder", "Search posts");
         results.className = "chapter-post-picker-results";
+        results.setAttribute("data-star-results-reload", "true");
         resultGrid.className = "post-grid editor-reference-grid chapter-post-picker-grid";
         pagination.className = "editor-dialog-pagination pagination-panel";
         paginationStatus.className = "pagination-status";
@@ -1525,8 +1594,12 @@ function initializeBookEditor() {
                 resultGrid.appendChild(card);
             });
             bindConditionTooltips(resultGrid);
-            bindVipTooltips(resultGrid);
+            bindStarWidgets(resultGrid);
         }
+
+        results.__starReloadResults = function () {
+            fetchResults(latestQuery, activePage);
+        };
 
         function fetchResults(query, page) {
             requestId += 1;
@@ -1616,7 +1689,10 @@ function initializeBookEditor() {
                 label: item.getAttribute("data-post-access-label") || ""
             },
             author: item.getAttribute("data-post-author") || "",
-            selected: item.getAttribute("data-post-selected") === "true"
+            selected: item.getAttribute("data-post-selected") === "true",
+            showVipBadge: item.getAttribute("data-post-show-vip-badge") === "true",
+            vipConditionSummaryItems: parseJsonObject(item.getAttribute("data-post-vip-condition-summary-items") || "", null),
+            vipVisibilityPresentation: parseJsonObject(item.getAttribute("data-post-vip-visibility") || "", null)
         };
     });
 
@@ -1629,23 +1705,7 @@ function initializeBookEditor() {
         });
     }
 
-    if (visibilitySelect) {
-        applyVisibilityLayout();
-        visibilitySelect.addEventListener("change", applyVisibilityLayout);
-    }
-    var bookAccessScopeSelect = bookEditorForm.querySelector("#id_access_scope");
-    if (bookAccessScopeSelect) {
-        bookAccessScopeSelect.addEventListener("change", applyVisibilityLayout);
-    }
-    var bookVipPermissionSelect = bookEditorForm.querySelector("#id_vip_access_permission");
-    if (bookVipPermissionSelect) {
-        bookVipPermissionSelect.addEventListener("change", applyVisibilityLayout);
-    }
-    bookEditorForm.addEventListener("input", function (event) {
-        if (event.target && (event.target.id === "id_condition_rules" || event.target.id === "id_vip_condition_rules")) {
-            applyVisibilityLayout();
-        }
-    });
+    accessLayoutController.applyLayout();
     if (coverInput) {
         coverInput.addEventListener("change", syncCoverPreview);
     }

@@ -3,15 +3,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
-from apps.blog.forms import CommentForm
+from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment
 from apps.blog.utils import write_audit_log
 from apps.blog.utils.site import check_comment_permission
+from apps.blog.views.profile import build_profile_nav
 
 
 class ProfileCommentListView(LoginRequiredMixin, TemplateView):
@@ -92,13 +92,7 @@ class ProfileCommentListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["profile_nav"] = [
-            {"label": _("Basic information"), "url": f"{reverse('profile')}?section=basic", "section": "basic"},
-            {"label": _("Account security"), "url": f"{reverse('profile')}?section=security", "section": "security"},
-            {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
-            {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
-            {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
-        ]
+        context["profile_nav"] = build_profile_nav()
         context["current_section"] = "comments"
         context["can_comment"] = check_comment_permission(self.request.user)
         queryset = self.get_queryset()

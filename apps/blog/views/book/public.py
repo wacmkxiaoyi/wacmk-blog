@@ -1,16 +1,18 @@
 from urllib.parse import urlencode
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.db.models import Count, Q
-from django.http import Http404
-from django.shortcuts import redirect
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 from django.views.generic import DetailView, ListView
 
 from apps.blog.access import build_access_check
-from apps.blog.forms import CommentForm
-from apps.blog.models import Book, Post
+from apps.blog.forms.comment import CommentForm
+from apps.blog.models import Book, BookStar, Post
 from apps.blog.utils import get_safe_next_url, record_book_view
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
 from apps.blog.visibility import (
@@ -30,6 +32,7 @@ from apps.blog.views.book.utils import (
     get_detail_book_queryset,
     get_first_visible_book_post,
     get_visible_book_queryset,
+    order_books_by_user_stars,
     rewrite_book_content_internal_links,
 )
 from apps.blog.views.post.context import build_post_detail_context
@@ -45,7 +48,8 @@ class BookListView(LoginRequiredMixin, ListView):
         queryset = get_visible_book_queryset(self.request.user)
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(summary__icontains=query))
-        books = list(queryset.annotate(post_count=Count("posts", distinct=True)).order_by("name"))
+        queryset = queryset.annotate(post_count=Count("posts", distinct=True))
+        books = list(order_books_by_user_stars(queryset, self.request.user, "name", "pk"))
         for book in books:
             book.condition_summary_items = get_book_condition_summary_items(book)
             book.visibility_presentation = get_book_visibility_presentation(book)
@@ -196,4 +200,24 @@ class BookDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-__all__ = ["BookDetailView", "BookListView"]
+class BookStarToggleView(LoginRequiredMixin, View):
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        book = get_object_or_404(get_detail_book_queryset(request.user), slug=kwargs["slug"])
+        if not build_access_check(book, request.user)["all_granted"]:
+            raise Http404
+
+        with transaction.atomic():
+            existing_star = BookStar.objects.select_for_update().filter(book=book, user=request.user).first()
+            if existing_star is not None:
+                existing_star.delete()
+                starred = False
+            else:
+                BookStar.objects.create(book=book, user=request.user)
+                starred = True
+
+        return JsonResponse({"ok": True, "starred": starred, "book_id": book.pk})
+
+
+__all__ = ["BookDetailView", "BookListView", "BookStarToggleView"]

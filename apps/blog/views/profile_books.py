@@ -6,15 +6,15 @@ from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, TemplateView, UpdateView
 
-from apps.blog.forms import BookForm
+from apps.blog.forms.book import BookForm
 from apps.blog.models import AuditLog, Book, BookShareLink, Post
 from apps.blog.utils import build_user_business_identity_summary, get_or_create_site_setting, write_audit_log
 from apps.blog.views.book.utils import build_book_share_editor_context
+from apps.blog.views.profile import build_profile_nav
 from apps.blog.visibility import (
     book_has_any_conditions,
     book_has_vip_standalone,
@@ -27,6 +27,7 @@ from apps.blog.visibility import (
 )
 from apps.blog.views.post.utils import (
     get_book_post_access_state,
+    order_posts_by_user_stars,
     prepare_post_cards,
     with_post_feedback_counts,
 )
@@ -37,14 +38,8 @@ class ProfileBookAccessMixin(LoginRequiredMixin):
         site_setting = get_or_create_site_setting()
         context = kwargs
         context["site_setting"] = site_setting
-        context["profile_nav"] = [
-            {"label": _("Basic information"), "url": f"{reverse('profile')}?section=basic", "section": "basic"},
-            {"label": _("Account security"), "url": f"{reverse('profile')}?section=security", "section": "security"},
-            {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
-            {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
-            {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
-        ]
-        context["current_section"] = "books"
+        context["profile_nav"] = build_profile_nav()
+        context["current_section"] = context.get("current_section") or "books"
         return context
 
 
@@ -322,6 +317,7 @@ class ProfileBookPostSearchView(ProfileBookWriteMixin, View):
                 | Q(visibility=Post.VISIBILITY_PUBLIC)
                 | Q(visibility=Post.VISIBILITY_CONDITIONAL)
             )
+            queryset = queryset.filter(Q(allow_quote=True) | Q(author=request.user))
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query)
@@ -330,7 +326,8 @@ class ProfileBookPostSearchView(ProfileBookWriteMixin, View):
                 | Q(author__username__icontains=query)
                 | Q(author__first_name__icontains=query)
             )
-        paginator = Paginator(queryset.order_by("-published_at", "-updated_at"), self.paginate_by)
+        queryset = order_posts_by_user_stars(queryset, request.user, "-published_at", "-updated_at")
+        paginator = Paginator(queryset, self.paginate_by)
         page_number = (request.GET.get("page") or "1").strip() or "1"
         try:
             page_obj = paginator.page(page_number)
@@ -351,6 +348,9 @@ class ProfileBookPostSearchView(ProfileBookWriteMixin, View):
                 "accessDisplay": get_post_access_display(post),
                 "visibility": post.visibility,
                 "visibilityPresentation": get_post_access_icon_presentation(post),
+                "showVipBadge": getattr(post, "show_vip_badge", False),
+                "vipConditionSummaryItems": getattr(post, "vip_condition_summary_items", []),
+                "vipVisibilityPresentation": getattr(post, "vip_visibility_presentation", None),
                 "requiresPassword": access_info["requires_password"],
                 "requiresCondition": access_info["requires_condition"],
                 "conditionStatus": access_info["condition_status"],

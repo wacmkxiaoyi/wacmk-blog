@@ -1,6 +1,5 @@
 import json
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -8,12 +7,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 
 from apps.blog.access import get_access_handler, build_access_check
+from apps.blog.models.attachment import Attachment, AttachmentPasswordRecord
 from apps.blog.models.book import Book, BookPasswordRecord
 from apps.blog.models.post import Post, PostPasswordRecord
 from apps.blog.permissions import CONDITION_TYPE_ENCRYPTED, CONDITION_TYPE_MONEY, has_condition_rule
 
 
-class AccessCheckView(LoginRequiredMixin, View):
+class AccessCheckView(View):
     http_method_names = ["get", "post"]
 
     def _get_object(self, object_type, object_id):
@@ -21,6 +21,8 @@ class AccessCheckView(LoginRequiredMixin, View):
             return get_object_or_404(Post.objects.select_related("author"), pk=object_id)
         if object_type == "book":
             return get_object_or_404(Book.objects.select_related("created_by"), pk=object_id)
+        if object_type == "attachment":
+            return get_object_or_404(Attachment.objects.select_related("uploaded_by"), pk=object_id)
         raise Http404
 
     def get(self, request, object_type, object_id):
@@ -63,6 +65,8 @@ class AccessCheckView(LoginRequiredMixin, View):
 
         if object_type == "post":
             PostPasswordRecord.objects.get_or_create(user=request.user, post=obj)
+        elif object_type == "attachment":
+            AttachmentPasswordRecord.objects.get_or_create(user=request.user, attachment=obj)
         else:
             BookPasswordRecord.objects.get_or_create(user=request.user, book=obj)
 

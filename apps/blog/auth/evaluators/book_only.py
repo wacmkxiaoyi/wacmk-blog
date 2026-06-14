@@ -13,6 +13,7 @@ class BookOnlyEvaluator(BaseConditionEvaluator):
     tone = "book-only"
     value_kind = "none"
     allowed_on_book = False
+    allowed_on_attachment = False
 
     def evaluate(self, user, value, *, has_purchase=False, profile=None):
         return {"status": ACCESS_STATUS_GRANTED}

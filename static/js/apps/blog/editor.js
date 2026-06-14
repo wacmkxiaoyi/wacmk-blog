@@ -1,4 +1,5 @@
 import {
+    closeModal,
     closeActionMenu,
     copyTextToClipboard,
     escapeHtml,
@@ -7,7 +8,8 @@ import {
     openModal,
     showInlineFlash
 } from "../../core/app.js";
-import { bindConditionTooltips, bindInternalPostLinkPreviews, bindVipTooltips } from "./shared.js";
+import { initializeConditionEditorsWithin } from "./manage.js";
+import { bindConditionTooltips, bindInternalPostLinkPreviews, bindStarWidgets } from "./shared.js";
 
 var markdownTextColors = [
     { className: "md-color-berry", label: "Berry", color: "#d9487d" },
@@ -24,6 +26,7 @@ var markdownPreviewCounter = 0;
 var markdownPreviewRequestId = 0;
 var markdownImageInput = null;
 var activeImageEditor = null;
+var activeAttachmentEditor = null;
 var markdownTableImportInput = null;
 var activeTableImportEditor = null;
 var activeTableImportDelimiter = ",";
@@ -81,6 +84,15 @@ function insertMarkdownImage(editor, altText, url) {
         return;
     }
     editor.codemirror.replaceSelection("![" + label + "](" + href + ")");
+    editor.codemirror.focus();
+}
+
+function insertAttachmentPlaceholder(editor, placeholder) {
+    var token = (placeholder || "").trim();
+    if (!editor || !editor.codemirror || !token) {
+        return;
+    }
+    editor.codemirror.replaceSelection(token);
     editor.codemirror.focus();
 }
 
@@ -600,6 +612,7 @@ function openInternalReferenceDialog(editor) {
     input.className = "input-control";
     input.placeholder = searchPlaceholder;
     results.className = "editor-reference-results";
+    results.setAttribute("data-star-results-reload", "true");
     resultsGrid.className = "post-grid editor-reference-grid";
     pagination.className = "editor-dialog-pagination pagination-panel";
     paginationStatus.className = "pagination-status";
@@ -705,9 +718,13 @@ function openInternalReferenceDialog(editor) {
             resultsGrid.appendChild(card);
         });
         bindConditionTooltips(resultsGrid);
-        bindVipTooltips(resultsGrid);
+        bindStarWidgets(resultsGrid);
         syncConfirmButton();
     }
+
+    results.__starReloadResults = function () {
+        fetchResults(latestQuery, activePage);
+    };
 
     function fetchResults(query, page) {
         requestId += 1;
@@ -2192,6 +2209,292 @@ function openMarkdownImagePicker(editor) {
     openImageDialog(editor);
 }
 
+function openAttachmentDialog(editor) {
+    var uploadUrl = getEditorString(editor, "data-attachment-upload-url", "");
+    var container = document.createElement("div");
+    var formShell = document.createElement("form");
+    var topRow = document.createElement("div");
+    var titleField = document.createElement("div");
+    var fileField = document.createElement("div");
+    var titleInput = document.createElement("input");
+    var fileInput = document.createElement("input");
+    var accessLayout = document.createElement("div");
+    var visibilityField = document.createElement("div");
+    var visibilityLabel = document.createElement("label");
+    var visibilitySelect = document.createElement("select");
+    var accessScopeField = document.createElement("div");
+    var accessScopeLabel = document.createElement("label");
+    var accessScopeSelect = document.createElement("select");
+    var conditionField = document.createElement("div");
+    var conditionLabel = document.createElement("label");
+    var conditionInput = document.createElement("input");
+    var conditionEditor = document.createElement("div");
+    var vipField = document.createElement("div");
+    var vipLabel = document.createElement("label");
+    var vipSelect = document.createElement("select");
+    var vipConditionField = document.createElement("div");
+    var vipConditionLabel = document.createElement("label");
+    var vipConditionInput = document.createElement("input");
+    var vipConditionEditor = document.createElement("div");
+    var hint = document.createElement("p");
+    var errorMessage = document.createElement("p");
+    var body = document.body;
+    var maxSizeMb = body ? (body.getAttribute("data-attachment-max-size-mb") || "1") : "1";
+    var visibilityInputId = "id_visibility";
+    var accessScopeInputId = "id_access_scope";
+    var vipPermissionInputId = "id_vip_access_permission";
+    var conditionInputId = "id_condition_rules";
+    var vipConditionInputId = "id_vip_condition_rules";
+
+    if (!uploadUrl) {
+        return;
+    }
+
+    function getUploadFailureMessage(payload, response) {
+        var fallback = getEditorString(editor, "data-attachment-upload-error-message", "Unable to upload the selected attachment right now.");
+        var status = response && typeof response.status === "number" ? response.status : 0;
+        var detail = payload && typeof payload.message === "string" ? payload.message.trim() : "";
+        if (detail) {
+            return detail;
+        }
+        if (status === 401) {
+            return "Please sign in and try uploading again.";
+        }
+        if (status === 403) {
+            return "The upload request was rejected. Refresh the page and try again.";
+        }
+        if (status >= 500) {
+            return fallback + " (Server error " + status + ")";
+        }
+        if (status > 0) {
+            return fallback + " (HTTP " + status + ")";
+        }
+        return fallback;
+    }
+
+    function buildOptions(selectNode) {
+        selectNode.innerHTML = [
+            "<option value='public'>Public</option>",
+            "<option value='private'>Private</option>",
+            "<option value='conditional'>Conditional</option>"
+        ].join("");
+    }
+
+    function parseConditionRules(value) {
+        try {
+            var parsed = JSON.parse(value || "[]");
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (_error) {
+            return [];
+        }
+    }
+
+    function syncLayout() {
+        var visibility = visibilitySelect.value;
+        var rules = parseConditionRules(conditionInput.value || "[]");
+        var isPublic = visibility === "public" && !rules.length;
+        var showAccessScope = visibility === "private" || visibility === "conditional";
+        var showConditions = visibility === "conditional";
+        var showVipConditions = accessScopeSelect.value === "standalone" && vipSelect.value === "conditional";
+        accessScopeField.hidden = !showAccessScope;
+        conditionField.hidden = !showConditions;
+        if (isPublic) {
+            accessScopeSelect.value = "unified";
+        }
+        vipField.hidden = accessScopeSelect.value !== "standalone";
+        vipConditionField.hidden = accessScopeSelect.value !== "standalone" || !showVipConditions;
+    }
+
+    container.className = "editor-modal-form editor-attachment-form";
+    formShell.className = "editor-attachment-form-shell";
+    topRow.className = "editor-attachment-top-row";
+    titleField.className = "field-group editor-attachment-title-field";
+    fileField.className = "field-group editor-attachment-file-field";
+    formShell.addEventListener("submit", function (event) {
+        event.preventDefault();
+    });
+    accessLayout.className = "editor-access-layout";
+    titleInput.className = "input-control";
+    titleInput.placeholder = getEditorString(editor, "data-attachment-name-label", "Attachment title");
+    fileInput.className = "input-control file-input";
+    fileInput.type = "file";
+    visibilityField.className = "field-group editor-access-layout-visibility";
+    visibilityLabel.textContent = getEditorString(editor, "data-attachment-visibility-label", "Access permission");
+    visibilityLabel.setAttribute("for", visibilityInputId);
+    visibilitySelect.className = "input-control";
+    visibilitySelect.id = visibilityInputId;
+    buildOptions(visibilitySelect);
+    accessScopeField.className = "field-group editor-access-layout-additional-permission";
+    accessScopeField.setAttribute("data-access-scope-field", "");
+    accessScopeLabel.textContent = getEditorString(editor, "data-attachment-access-scope-label", "Access scope");
+    accessScopeLabel.setAttribute("for", accessScopeInputId);
+    accessScopeSelect.className = "input-control";
+    accessScopeSelect.id = accessScopeInputId;
+    accessScopeSelect.innerHTML = "<option value='unified'>Unified</option><option value='standalone'>Standalone</option>";
+    conditionField.className = "field-group editor-access-layout-conditions";
+    conditionField.setAttribute("data-condition-editor-field", "");
+    conditionLabel.textContent = "Conditions";
+    conditionInput.type = "hidden";
+    conditionInput.id = conditionInputId;
+    conditionInput.value = "[]";
+    conditionEditor.className = "condition-editor";
+    conditionEditor.setAttribute("data-condition-editor", "");
+    conditionEditor.setAttribute("data-condition-input-id", conditionInputId);
+    conditionEditor.setAttribute("data-condition-visibility-input-id", visibilityInputId);
+    conditionEditor.setAttribute("data-condition-initial", "[]");
+    conditionEditor.setAttribute("data-condition-existing-password-types", "");
+    conditionEditor.setAttribute("data-condition-max-message", "Condition types are full");
+    conditionEditor.setAttribute("data-condition-value-placeholder", "Value");
+    conditionEditor.setAttribute("data-condition-password-placeholder", "Enter password");
+    conditionEditor.setAttribute("data-condition-password-existing-placeholder", "Leave blank to keep current password");
+    conditionEditor.setAttribute("data-condition-money-label", "Money");
+    conditionEditor.setAttribute("data-condition-points-label", "Points");
+    conditionEditor.setAttribute("data-condition-encrypted-label", "Encrypted");
+    conditionEditor.setAttribute("data-condition-types", "money,points,encrypted");
+    conditionEditor.setAttribute("data-condition-password-types", "encrypted");
+    vipField.className = "field-group editor-access-layout-vip-permission";
+    vipField.setAttribute("data-vip-permission-field", "");
+    vipLabel.textContent = getEditorString(editor, "data-attachment-vip-access-label", "VIP access permission");
+    vipLabel.setAttribute("for", vipPermissionInputId);
+    vipSelect.className = "input-control";
+    vipSelect.id = vipPermissionInputId;
+    buildOptions(vipSelect);
+    vipConditionField.className = "field-group editor-access-layout-vip-conditions";
+    vipConditionField.setAttribute("data-vip-condition-editor-field", "");
+    vipConditionLabel.textContent = "VIP conditions";
+    vipConditionInput.type = "hidden";
+    vipConditionInput.id = vipConditionInputId;
+    vipConditionInput.value = "[]";
+    vipConditionEditor.className = "condition-editor";
+    vipConditionEditor.setAttribute("data-vip-condition-editor", "");
+    vipConditionEditor.setAttribute("data-condition-input-id", vipConditionInputId);
+    vipConditionEditor.setAttribute("data-condition-visibility-input-id", vipPermissionInputId);
+    vipConditionEditor.setAttribute("data-condition-initial", "[]");
+    vipConditionEditor.setAttribute("data-condition-existing-password-types", "");
+    vipConditionEditor.setAttribute("data-condition-max-message", "VIP condition types are full");
+    vipConditionEditor.setAttribute("data-condition-value-placeholder", "Value");
+    vipConditionEditor.setAttribute("data-condition-password-placeholder", "Enter password");
+    vipConditionEditor.setAttribute("data-condition-password-existing-placeholder", "Leave blank to keep current password");
+    vipConditionEditor.setAttribute("data-condition-money-label", "Money");
+    vipConditionEditor.setAttribute("data-condition-points-label", "Points");
+    vipConditionEditor.setAttribute("data-condition-encrypted-label", "Encrypted");
+    vipConditionEditor.setAttribute("data-condition-types", "money,points,encrypted");
+    vipConditionEditor.setAttribute("data-condition-password-types", "encrypted");
+    hint.className = "field-help";
+    hint.textContent = getEditorString(editor, "data-attachment-help", "Upload a reusable attachment and insert it into the current content.") + " " + getEditorString(editor, "data-attachment-max-size-label", "Maximum attachment size") + ": " + maxSizeMb + " MB";
+    errorMessage.className = "field-error";
+    errorMessage.hidden = true;
+
+    visibilityField.appendChild(visibilityLabel);
+    visibilityField.appendChild(visibilitySelect);
+    accessScopeField.appendChild(accessScopeLabel);
+    accessScopeField.appendChild(accessScopeSelect);
+    conditionField.appendChild(conditionLabel);
+    conditionField.appendChild(conditionInput);
+    conditionField.appendChild(conditionEditor);
+    vipField.appendChild(vipLabel);
+    vipField.appendChild(vipSelect);
+    vipConditionField.appendChild(vipConditionLabel);
+    vipConditionField.appendChild(vipConditionInput);
+    vipConditionField.appendChild(vipConditionEditor);
+
+    accessLayout.appendChild(visibilityField);
+    accessLayout.appendChild(accessScopeField);
+    accessLayout.appendChild(conditionField);
+    accessLayout.appendChild(vipField);
+    accessLayout.appendChild(vipConditionField);
+
+    titleField.appendChild(titleInput);
+    fileField.appendChild(fileInput);
+    topRow.appendChild(titleField);
+    topRow.appendChild(fileField);
+    formShell.appendChild(topRow);
+    formShell.appendChild(accessLayout);
+    formShell.appendChild(hint);
+    formShell.appendChild(errorMessage);
+    container.appendChild(formShell);
+
+    openModal({
+        kicker: getEditorString(editor, "data-attachment-kicker", "Attachment"),
+        title: getEditorString(editor, "data-attachment-title", "Insert attachment"),
+        contentNode: container,
+        cancelText: getEditorString(editor, "data-link-cancel-label", "Cancel"),
+        confirmText: getEditorString(editor, "data-attachment-confirm-label", "Upload and insert"),
+        keepOpenOnConfirm: true,
+        dialogClass: "is-medium-dialog",
+        onConfirm: function () {
+            var selectedFile = fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+            var formData = null;
+            if (!selectedFile) {
+                errorMessage.textContent = getEditorString(editor, "data-attachment-file-required-message", "Please choose an attachment file first.");
+                errorMessage.hidden = false;
+                return false;
+            }
+            errorMessage.hidden = true;
+            activeAttachmentEditor = editor;
+            formData = new FormData();
+            formData.append("title", titleInput.value || selectedFile.name.replace(/\.[^.]+$/, "") || "Attachment");
+            formData.append("file", selectedFile);
+            formData.append("visibility", visibilitySelect.value);
+            formData.append("access_scope", accessScopeSelect.value);
+            formData.append("condition_rules", conditionInput.value || "[]");
+            formData.append("vip_access_permission", vipSelect.value);
+            formData.append("vip_condition_rules", vipConditionInput.value || "[]");
+            return fetch(uploadUrl, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCsrfToken(),
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData,
+                credentials: "same-origin"
+            }).then(function (response) {
+                return response.json().catch(function () {
+                    return { ok: false, message: "", parseError: true };
+                }).then(function (payload) {
+                    payload.statusOk = response.ok;
+                    payload.responseStatus = response.status;
+                    return payload;
+                });
+            }).then(function (payload) {
+                if (!payload.ok || !payload.statusOk || !payload.attachment || !payload.attachment.placeholder) {
+                    errorMessage.textContent = getUploadFailureMessage(payload, { status: payload.responseStatus });
+                    errorMessage.hidden = false;
+                    return;
+                }
+                insertAttachmentPlaceholder(activeAttachmentEditor, payload.attachment.placeholder);
+                closeModal();
+            }).catch(function (error) {
+                if (window.console && typeof window.console.error === "function") {
+                    window.console.error("Attachment upload flow failed", error);
+                }
+                errorMessage.textContent = getEditorString(editor, "data-attachment-upload-error-message", "Unable to upload the selected attachment right now.");
+                errorMessage.hidden = false;
+            }).finally(function () {
+                activeAttachmentEditor = null;
+            });
+        }
+    });
+
+    window.setTimeout(function () {
+        initializeConditionEditorsWithin(formShell);
+        visibilitySelect.addEventListener("change", syncLayout);
+        accessScopeSelect.addEventListener("change", syncLayout);
+        vipSelect.addEventListener("change", syncLayout);
+        formShell.addEventListener("input", function (event) {
+            if (event.target && (event.target === conditionInput || event.target === vipConditionInput || event.target.id === conditionInputId || event.target.id === vipConditionInputId)) {
+                syncLayout();
+            }
+        });
+        syncLayout();
+        titleInput.focus();
+    }, 0);
+}
+
+function openMarkdownAttachmentPicker(editor) {
+    openAttachmentDialog(editor);
+}
+
 function openMarkdownImageUpload(editor) {
     var imageInput = ensureMarkdownImageInput();
     if (!imageInput) {
@@ -2282,6 +2585,14 @@ function openEditorContextToolbar(event, editor) {
             onClick: function () {
                 restoreActiveContextEditorSelection(editor);
                 openMarkdownImageUpload(editor);
+            }
+        },
+        {
+            label: getEditorString(editor, "data-attachment-upload-label", "Upload attachment"),
+            iconClass: "fa-solid fa-paperclip",
+            onClick: function () {
+                restoreActiveContextEditorSelection(editor);
+                openAttachmentDialog(editor);
             }
         },
         {
@@ -2493,6 +2804,12 @@ function initializeMarkdownEditor(node) {
                 action: openMarkdownImagePicker,
                 className: "fa fa-image no-disable",
                 title: "Insert Image"
+            },
+            {
+                name: "attachment-upload",
+                action: openMarkdownAttachmentPicker,
+                className: "fa fa-paperclip no-disable",
+                title: "Insert Attachment"
             },
             {
                 name: "emoji-picker",

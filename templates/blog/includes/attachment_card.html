@@ -1,0 +1,38 @@
+{% load i18n %}
+{% if attachment_should_render %}
+<div class="attachment-card{% if attachment_compact %} attachment-card-compact{% endif %}" data-attachment-card>
+    <div class="attachment-card-icon access-tone-{{ attachment_access_icon_presentation.tone }}">
+        <i class="fa-solid fa-{{ attachment_icon_name }}" aria-hidden="true"></i>
+    </div>
+    <div class="attachment-card-body">
+        <div class="attachment-card-header">
+            <div class="attachment-card-title-row">
+                <strong class="attachment-card-title">{{ attachment.title }}</strong>
+                <div class="attachment-card-badges">
+                    {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=show_attachment_vip_badge vip_condition_summary_items=attachment_vip_condition_summary_items vip_visibility_presentation=attachment_vip_visibility_presentation %}
+                    {% if attachment_condition_summary_items %}
+                    {% include 'blog/includes/condition_summary.html' with condition_items=attachment_condition_summary_items %}
+                    {% else %}
+                    {% include 'blog/includes/access_badge.html' with access=attachment_access_icon_presentation show_label=True %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="attachment-card-meta">
+            <span>{{ attachment.original_filename|default:attachment.title }}</span>
+            <span>{{ attachment_extension_label|default:_('File') }}</span>
+            <span>{{ attachment_size_label }}</span>
+            <span>{% blocktrans with count=attachment.download_count %}累计下载 {{ count }} 次{% endblocktrans %}</span>
+        </div>
+    </div>
+    <div class="attachment-card-actions">
+        <a
+            class="app-modal-secondary-button attachment-download-button{% if not attachment_is_share_view %} js-access-gate-link{% endif %}"
+            href="{{ attachment_download_url }}"
+            {% if not attachment_is_share_view %}data-object-type="attachment"
+            data-object-id="{{ attachment.pk }}"
+            data-gate-url="{{ attachment_download_url }}"{% endif %}
+        >{% trans "Download" %}</a>
+    </div>
+</div>
+{% endif %}

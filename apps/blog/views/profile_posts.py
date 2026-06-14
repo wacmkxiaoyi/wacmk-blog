@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, TemplateView, UpdateView
 
-from apps.blog.forms import PostDraftForm, PostMarkdownImportForm
+from apps.blog.forms.post import PostDraftForm, PostMarkdownImportForm
 from apps.blog.models import AuditLog, Post, PostDraft
 from apps.blog.utils import build_user_business_identity_summary, get_or_create_site_setting, is_ajax_request, write_audit_log
 from apps.blog.views.post.utils import (
@@ -20,6 +20,7 @@ from apps.blog.views.post.utils import (
     get_post_condition_access_state,
     get_unique_post_slug,
     get_visible_post_queryset,
+    order_posts_by_user_stars,
     post_requires_condition,
     post_requires_password,
     prepare_post_cards,
@@ -32,6 +33,7 @@ from apps.blog.visibility import (
     get_post_visibility_presentation,
     post_has_vip_standalone,
 )
+from apps.blog.views.profile import build_profile_nav
 
 
 class ProfilePostAccessMixin(LoginRequiredMixin):
@@ -39,14 +41,8 @@ class ProfilePostAccessMixin(LoginRequiredMixin):
         site_setting = get_or_create_site_setting()
         context = kwargs
         context["site_setting"] = site_setting
-        context["profile_nav"] = [
-            {"label": _("Basic information"), "url": f"{reverse('profile')}?section=basic", "section": "basic"},
-            {"label": _("Account security"), "url": f"{reverse('profile')}?section=security", "section": "security"},
-            {"label": _("My articles"), "url": reverse("profile-posts"), "section": "articles"},
-            {"label": _("My books"), "url": reverse("profile-books"), "section": "books"},
-            {"label": _("My comments"), "url": reverse("profile-comments"), "section": "comments"},
-        ]
-        context["current_section"] = "articles"
+        context["profile_nav"] = build_profile_nav()
+        context["current_section"] = context.get("current_section") or "articles"
         return context
 
 
@@ -316,9 +312,12 @@ class ProfilePostImportView(ProfilePostWriteMixin, TemplateView):
 
     def get_queryset(self):
         query = (self.request.GET.get("q") or "").strip()
+        user = self.request.user
         queryset = with_post_feedback_counts(
-            get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED)
+            get_visible_post_queryset(user).filter(status=Post.STATUS_PUBLISHED)
         )
+        if not (user.is_staff or user.is_superuser):
+            queryset = queryset.filter(Q(allow_reprint=True) | Q(author=user))
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query)
@@ -327,7 +326,7 @@ class ProfilePostImportView(ProfilePostWriteMixin, TemplateView):
                 | Q(author__username__icontains=query)
                 | Q(author__first_name__icontains=query)
             )
-        return queryset.order_by("-published_at", "-updated_at")
+        return order_posts_by_user_stars(queryset, user, "-published_at", "-updated_at")
 
     def post(self, request, *args, **kwargs):
         source_post = get_object_or_404(Post.objects.filter(status=Post.STATUS_PUBLISHED), pk=request.POST.get("source_post_id"))

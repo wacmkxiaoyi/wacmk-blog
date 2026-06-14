@@ -1,5 +1,6 @@
-from django.db.models import Case, CharField, Count, F, Q, When
+from django.db.models import BooleanField, Case, CharField, Count, DateTimeField, Exists, F, OuterRef, Q, Subquery, Value, When
 
+from apps.blog.models import PostStar
 from apps.blog.access.queryset import get_detail_post_queryset as _get_detail_post_queryset
 from apps.blog.access.queryset import get_reference_post_queryset as _get_reference_post_queryset
 from apps.blog.access.queryset import get_visible_post_queryset as _get_visible_post_queryset
@@ -28,6 +29,27 @@ def with_post_feedback_counts(queryset):
     )
 
 
+def with_user_post_star_state(queryset, user):
+    if not getattr(user, "is_authenticated", False):
+        return queryset.annotate(
+            is_starred=Value(False, output_field=BooleanField()),
+            starred_at=Value(None, output_field=DateTimeField()),
+        )
+
+    user_star_queryset = PostStar.objects.filter(post_id=OuterRef("pk"), user=user)
+    return queryset.annotate(
+        is_starred=Exists(user_star_queryset),
+        starred_at=Subquery(user_star_queryset.values("created_at")[:1]),
+    )
+
+
+def order_posts_by_user_stars(queryset, user, *fallback_ordering):
+    ordered_queryset = with_user_post_star_state(queryset, user)
+    if fallback_ordering:
+        return ordered_queryset.order_by("-is_starred", "-starred_at", *fallback_ordering)
+    return ordered_queryset.order_by("-is_starred", "-starred_at")
+
+
 def prepare_post_cards(posts):
     prepared_posts = decorate_post_tags_for_display(list(posts))
     for post in prepared_posts:
@@ -52,4 +74,13 @@ def get_author_display_name_sort_expression(prefix="author__"):
     )
 
 
-__all__ = ["get_author_display_name_sort_expression", "get_detail_post_queryset", "get_reference_post_queryset", "get_visible_post_queryset", "prepare_post_cards", "with_post_feedback_counts"]
+__all__ = [
+    "get_author_display_name_sort_expression",
+    "get_detail_post_queryset",
+    "get_reference_post_queryset",
+    "get_visible_post_queryset",
+    "order_posts_by_user_stars",
+    "prepare_post_cards",
+    "with_post_feedback_counts",
+    "with_user_post_star_state",
+]

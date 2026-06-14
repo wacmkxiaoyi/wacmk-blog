@@ -16,7 +16,7 @@
                 <h1>{% trans "Books" %}</h1>
             </div>
         </div>
-        <div class="book-listing">
+        <div class="book-listing" data-star-results-reload>
             {% for book in books %}
             <article class="book-list-card">
                 <a href="{{ book.get_absolute_url }}" class="book-list-cover-shell js-access-gate-link" aria-label="{{ book.name }}" data-object-type="book" data-object-id="{{ book.pk }}" data-gate-url="{{ book.get_absolute_url }}">
@@ -40,7 +40,24 @@
                             {% endif %}
                             <span class="soft-tag">{% blocktrans count total=book.post_count %}{{ total }} article{% plural %}{{ total }} articles{% endblocktrans %}</span>
                         </div>
-                        <span class="book-list-date">{{ book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                        <div class="book-list-meta-side">
+                            <span class="book-list-date">{{ book.updated_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+                            <button
+                                type="button"
+                                class="post-card-star-button book-list-star-button{% if book.is_starred %} is-active{% endif %}"
+                                data-book-star-toggle
+                                data-star-endpoint="{% url 'book-star-toggle' book.slug %}"
+                                data-star-active="{% if book.is_starred %}true{% else %}false{% endif %}"
+                                data-star-refresh-mode="closest-grid"
+                                data-star-requires-auth-message="{% trans 'Please sign in to star books.' %}"
+                                data-star-label-inactive="{% trans 'Star book' %}"
+                                data-star-label-active="{% trans 'Unstar book' %}"
+                                aria-pressed="{% if book.is_starred %}true{% else %}false{% endif %}"
+                                aria-label="{% if book.is_starred %}{% trans 'Unstar book' %}{% else %}{% trans 'Star book' %}{% endif %}"
+                            >
+                                <i class="{% if book.is_starred %}fa-solid{% else %}fa-regular{% endif %} fa-star" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="book-list-divider" aria-hidden="true"></div>
                     <p>{{ book.summary|default:_('No summary yet.') }}</p>

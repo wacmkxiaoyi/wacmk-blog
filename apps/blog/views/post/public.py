@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -11,11 +12,18 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 
 from apps.blog.access import build_access_check
-from apps.blog.forms import CommentForm, SearchForm
-from apps.blog.models import Post, PostFeedback
+from apps.blog.forms.comment import CommentForm
+from apps.blog.forms.common import SearchForm
+from apps.blog.models import Post, PostFeedback, PostStar
 from apps.blog.utils import get_safe_next_url, record_post_view
 from apps.blog.views.post.context import annotate_post_feedback, build_post_detail_context
-from apps.blog.views.post.utils import get_detail_post_queryset, get_visible_post_queryset, prepare_post_cards, with_post_feedback_counts
+from apps.blog.views.post.utils import (
+    get_detail_post_queryset,
+    get_visible_post_queryset,
+    order_posts_by_user_stars,
+    prepare_post_cards,
+    with_post_feedback_counts,
+)
 
 
 class BlogDetailView(LoginRequiredMixin, DetailView):
@@ -85,11 +93,9 @@ class ArticleListView(LoginRequiredMixin, ListView):
                 | Q(content__icontains=query)
                 | Q(tags__name__icontains=query)
             ).distinct()
-        return prepare_post_cards(with_post_feedback_counts(
-            queryset
-            .filter(status=Post.STATUS_PUBLISHED)
-            .order_by("-published_at", "-updated_at")
-        ))
+        queryset = with_post_feedback_counts(queryset.filter(status=Post.STATUS_PUBLISHED))
+        queryset = order_posts_by_user_stars(queryset, self.request.user, "-published_at", "-updated_at")
+        return prepare_post_cards(queryset)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -109,7 +115,7 @@ class SearchView(LoginRequiredMixin, ListView):
         queryset = with_post_feedback_counts(get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED))
         if not query:
             return queryset.none()
-        return prepare_post_cards(queryset.filter(
+        queryset = queryset.filter(
             Q(title__icontains=query)
             | Q(summary__icontains=query)
             | Q(content__icontains=query)
@@ -117,7 +123,9 @@ class SearchView(LoginRequiredMixin, ListView):
             | Q(tags__name__icontains=query)
             | Q(author__username__icontains=query)
             | Q(author__first_name__icontains=query)
-        ).distinct())
+        ).distinct()
+        queryset = order_posts_by_user_stars(queryset, self.request.user, "-published_at", "-updated_at")
+        return prepare_post_cards(queryset)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -155,4 +163,24 @@ class PostFeedbackToggleView(LoginRequiredMixin, View):
         )
 
 
-__all__ = ["ArticleListView", "BlogDetailView", "PostFeedbackToggleView", "SearchView"]
+class PostStarToggleView(LoginRequiredMixin, View):
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(get_detail_post_queryset(request.user), slug=kwargs["slug"])
+        if not build_access_check(post, request.user)["all_granted"]:
+            raise Http404
+
+        with transaction.atomic():
+            existing_star = PostStar.objects.select_for_update().filter(post=post, user=request.user).first()
+            if existing_star is not None:
+                existing_star.delete()
+                starred = False
+            else:
+                PostStar.objects.create(post=post, user=request.user)
+                starred = True
+
+        return JsonResponse({"ok": True, "starred": starred, "post_id": post.pk})
+
+
+__all__ = ["ArticleListView", "BlogDetailView", "PostFeedbackToggleView", "PostStarToggleView", "SearchView"]

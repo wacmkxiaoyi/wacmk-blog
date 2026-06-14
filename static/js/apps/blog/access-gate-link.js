@@ -1,4 +1,5 @@
 import { openModal, closeModal, showInlineFlash } from "../../core/app.js";
+import { bindConditionTooltips } from "./shared.js";
 
 var _gateInit = false;
 
@@ -365,6 +366,9 @@ function showGateAsNestedOverlay(checkData, targetUrl, checkUrl, isGate, sourceL
     if (checkData.is_vip) {
         var vipSpan = document.createElement("span");
         vipSpan.className = "vip-access-badge";
+        vipSpan.setAttribute("data-condition-tooltip-trigger", "");
+        vipSpan.setAttribute("tabindex", "0");
+        vipSpan.setAttribute("aria-label", "VIP access permission");
         vipSpan.style.marginLeft = "0.5rem";
         var vipInner = document.createElement("span");
         vipInner.className = "vip-badge-icon";
@@ -372,6 +376,25 @@ function showGateAsNestedOverlay(checkData, targetUrl, checkUrl, isGate, sourceL
         vipSpan.appendChild(vipInner);
         titleEl.appendChild(document.createTextNode(" "));
         titleEl.appendChild(vipSpan);
+        var vipTooltipContent = "";
+        if (checkData.conditions && checkData.conditions.length) {
+            vipTooltipContent = '<span class="condition-badge-group condition-badge-group-inline">' + checkData.conditions.map(function (c) {
+                var icon = c.icon || "circle-question";
+                var label = c.label || "";
+                var type = c.type || "conditional";
+                return '<span class="condition-badge access-tone-' + type + ' condition-badge-' + type + '">' +
+                    '<i class="fa-solid fa-' + icon + '" aria-hidden="true"></i>' +
+                    '<span>' + label + '</span>' +
+                    '</span>';
+            }).join("") + '</span>';
+        }
+        if (vipTooltipContent) {
+            var vipTooltipTemplate = document.createElement("span");
+            vipTooltipTemplate.hidden = true;
+            vipTooltipTemplate.setAttribute("data-condition-tooltip-template", "");
+            vipTooltipTemplate.innerHTML = vipTooltipContent;
+            titleEl.appendChild(vipTooltipTemplate);
+        }
     }
     header.appendChild(titleEl);
     dialog.appendChild(header);
@@ -432,6 +455,7 @@ function showGateAsNestedOverlay(checkData, targetUrl, checkUrl, isGate, sourceL
     overlay.appendChild(backdrop);
     overlay.appendChild(shell);
     document.body.appendChild(overlay);
+    bindConditionTooltips(titleEl);
 
     _gateCtx = {
         contentNode: content,
@@ -480,6 +504,9 @@ function showTableDialog(checkData, targetUrl, checkUrl, isGate, sourceLink) {
         if (checkData.is_vip) {
             var vipSpan = document.createElement("span");
             vipSpan.className = "vip-access-badge";
+            vipSpan.setAttribute("data-condition-tooltip-trigger", "");
+            vipSpan.setAttribute("tabindex", "0");
+            vipSpan.setAttribute("aria-label", "VIP access permission");
             vipSpan.style.marginLeft = "0.5rem";
             var vipInner = document.createElement("span");
             vipInner.className = "vip-badge-icon";
@@ -487,7 +514,27 @@ function showTableDialog(checkData, targetUrl, checkUrl, isGate, sourceLink) {
             vipSpan.appendChild(vipInner);
             titleEl.appendChild(document.createTextNode(" "));
             titleEl.appendChild(vipSpan);
+            var vipTooltipContent = "";
+            if (checkData.conditions && checkData.conditions.length) {
+                vipTooltipContent = '<span class="condition-badge-group condition-badge-group-inline">' + checkData.conditions.map(function (c) {
+                    var icon = c.icon || "circle-question";
+                    var label = c.label || "";
+                    var type = c.type || "conditional";
+                    return '<span class="condition-badge access-tone-' + type + ' condition-badge-' + type + '">' +
+                        '<i class="fa-solid fa-' + icon + '" aria-hidden="true"></i>' +
+                        '<span>' + label + '</span>' +
+                        '</span>';
+                }).join("") + '</span>';
+            }
+            if (vipTooltipContent) {
+                var vipTooltipTemplate = document.createElement("span");
+                vipTooltipTemplate.hidden = true;
+                vipTooltipTemplate.setAttribute("data-condition-tooltip-template", "");
+                vipTooltipTemplate.innerHTML = vipTooltipContent;
+                titleEl.appendChild(vipTooltipTemplate);
+            }
         }
+        bindConditionTooltips(titleEl);
     }
 
     _gateCtx = {

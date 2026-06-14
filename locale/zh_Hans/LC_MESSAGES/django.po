@@ -2207,3 +2207,9 @@ msgstr "如果这不是您的操作，请在登录后尽快联系管理员。"
 #, python-format
 msgid "%(app_name)s temporary password"
 msgstr "%(app_name)s 临时密码"
+
+msgid "Allow reprint"
+msgstr "允许转载"
+
+msgid "Allow quote"
+msgstr "允许引用"

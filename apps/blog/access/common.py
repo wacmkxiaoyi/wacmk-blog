@@ -9,7 +9,7 @@ from apps.blog.auth.constants import (
     ACCESS_STATUS_INVALID_CONDITION,
     ACCESS_STATUS_PURCHASE_REQUIRED,
 )
-from apps.blog.models import ArticlePurchaseRecord, BookPurchaseRecord
+from apps.blog.models import ArticlePurchaseRecord, Attachment, AttachmentPurchaseRecord, BookPurchaseRecord
 from apps.blog.permissions import (
     CONDITION_TYPE_MONEY,
     check_condition_password,
@@ -33,6 +33,8 @@ def _get_purchase_model_and_field(obj):
     from apps.blog.models import PostDraft
     if isinstance(obj, (PostModel, PostDraft)):
         return ArticlePurchaseRecord, "article"
+    if isinstance(obj, Attachment):
+        return AttachmentPurchaseRecord, "attachment"
     return BookPurchaseRecord, "book"
 
 
@@ -95,6 +97,7 @@ class CommonAccess(BaseAccessHandler):
         super().__init__(obj)
         from apps.blog.models import Post as PostModel
         self._is_post = isinstance(obj, PostModel)
+        self._is_attachment = isinstance(obj, Attachment)
 
     def _get_rules_attr(self, name, default=None):
         rules = getattr(self.obj, name, default) or []
@@ -121,6 +124,8 @@ class CommonAccess(BaseAccessHandler):
             return getattr(user, "pk", None) == self.obj.author_id
         if hasattr(self.obj, "created_by_id"):
             return getattr(user, "pk", None) == self.obj.created_by_id
+        if hasattr(self.obj, "uploaded_by_id"):
+            return getattr(user, "pk", None) == self.obj.uploaded_by_id
         return False
 
     def evaluate(self, user):

@@ -1,0 +1,12 @@
+{% load i18n %}
+<div class="attachment-card attachment-card-missing" data-attachment-card>
+    <div class="attachment-card-icon access-tone-private">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+    </div>
+    <div class="attachment-card-body">
+        <strong class="attachment-card-title">{% trans "Attachment unavailable" %}</strong>
+        <div class="attachment-card-meta">
+            <span>{% blocktrans with id=attachment_id %}Attachment #{{ id }} could not be found.{% endblocktrans %}</span>
+        </div>
+    </div>
+</div>

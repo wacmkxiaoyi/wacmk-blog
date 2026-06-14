@@ -1,10 +1,10 @@
 from django.db.models import Count, Q
 from django.utils.translation import gettext_lazy as _
 
-from apps.blog.forms import CommentForm
+from apps.blog.forms.comment import CommentForm
 from apps.blog.models import Post
 from apps.blog.presentation import decorate_post_tags_for_display
-from apps.blog.utils.markdown import render_markdown
+from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import build_share_expiry_options, check_comment_permission
 from apps.blog.access import object_has_vip_standalone
 
@@ -31,6 +31,9 @@ def annotate_post_feedback(post, user):
     post.feedback_value = 0
     if getattr(user, "is_authenticated", False):
         post.feedback_value = post.feedback_entries.filter(user=user).values_list("value", flat=True).first() or 0
+        post.is_starred = post.star_entries.filter(user=user).exists()
+    else:
+        post.is_starred = False
     return post
 
 
@@ -131,7 +134,7 @@ def build_post_detail_context(
         }
 
     return {
-        "rendered_content": render_markdown(post.content),
+        "rendered_content": render_markdown_with_attachments(post.content, user, request=request, is_share_view=is_share_view),
         "condition_summary_items": get_post_condition_summary_items(post),
         "access_icon_presentation": get_post_access_icon_presentation(post),
         "visibility_presentation": get_post_visibility_presentation(post),

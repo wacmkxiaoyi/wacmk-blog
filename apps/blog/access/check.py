@@ -8,6 +8,7 @@ from apps.blog.auth.constants import (
     ACCESS_STATUS_INSUFFICIENT_POINTS,
     ACCESS_STATUS_PURCHASE_REQUIRED,
 )
+from apps.blog.models.attachment import Attachment, AttachmentPasswordRecord
 from apps.blog.models.book import Book, BookPasswordRecord
 from apps.blog.models.post import Post, PostDraft, PostPasswordRecord
 from apps.blog.permissions import (
@@ -31,6 +32,8 @@ def _get_password_record(user, obj):
         return None
     if isinstance(obj, (Post, PostDraft)):
         return PostPasswordRecord.objects.filter(user=user, post=obj).first()
+    if isinstance(obj, Attachment):
+        return AttachmentPasswordRecord.objects.filter(user=user, attachment=obj).first()
     if isinstance(obj, Book):
         return BookPasswordRecord.objects.filter(user=user, book=obj).first()
     return None
@@ -138,6 +141,8 @@ def build_access_check(obj: Model, user, *, in_book_context=False):
 def _get_object_name(obj):
     if isinstance(obj, (Post, PostDraft)):
         return getattr(obj, "title", "") or ""
+    if isinstance(obj, Attachment):
+        return getattr(obj, "title", "") or getattr(obj, "original_filename", "") or ""
     if isinstance(obj, Book):
         return getattr(obj, "name", "") or ""
     return ""
@@ -186,6 +191,8 @@ def _format_requirement(rule_type, rule_value):
 def _resolve_object_type(obj):
     if isinstance(obj, (Post, PostDraft)):
         return "post"
+    if isinstance(obj, Attachment):
+        return "attachment"
     if isinstance(obj, Book):
         return "book"
     return "unknown"

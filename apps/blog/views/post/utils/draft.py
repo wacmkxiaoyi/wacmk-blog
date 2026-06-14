@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Post, PostDraft
-from apps.blog.utils.markdown import render_markdown
+from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import build_share_expiry_options
 
 
@@ -86,7 +86,7 @@ def build_revision_choice_url(request, post, action):
 
 def build_draft_preview_context(draft):
     return {
-        "rendered_content": render_markdown(draft.content),
+        "rendered_content": render_markdown_with_attachments(draft.content, draft.author),
         "related_posts": Post.objects.none(),
         "comment_form": None,
         "comments": [],

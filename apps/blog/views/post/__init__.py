@@ -18,6 +18,7 @@ from .manage import (
     MarkdownPreviewView,
     PostLinkPreviewView,
 )
-from .public import ArticleListView, BlogDetailView, PostFeedbackToggleView, SearchView
+from .public import ArticleListView, BlogDetailView, PostFeedbackToggleView, PostStarToggleView, SearchView
+
 
 __all__ = [name for name in globals() if not name.startswith("_")]

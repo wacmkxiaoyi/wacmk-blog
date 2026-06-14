@@ -2,16 +2,18 @@
 <article class="post-card{% if card_class %} {{ card_class }}{% endif %}">
     <div class="post-card-body">
         {% if post_card_button %}
-        <button type="{{ post_card_button_type|default:'button' }}" class="post-card-link-overlay post-card-button-overlay js-access-gate-link" aria-label="{{ post_card_button_label|default:post.title }}" data-post-card-select{% if post_card_url %} data-post-card-url="{{ post_card_url }}"{% endif %} data-post-card-title="{{ post.title }}" data-object-type="post" data-object-id="{{ post.pk }}" data-gate-url="{% if post_card_url %}{{ post_card_url }}{% else %}{{ post.get_absolute_url }}{% endif %}">
-            <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
-                <div class="card-meta-row card-meta-row-soft">
-                    <span>{{ post.author.first_name|default:post.author.username }}</span>
-                    <span>{{ post.published_at|default:post.updated_at|date:"DATE_FORMAT" }}</span>
+        <div class="post-card-link-shell">
+            <button type="{{ post_card_button_type|default:'button' }}" class="post-card-link-overlay post-card-button-overlay js-access-gate-link" aria-label="{{ post_card_button_label|default:post.title }}" data-post-card-select{% if post_card_url %} data-post-card-url="{{ post_card_url }}"{% endif %} data-post-card-title="{{ post.title }}" data-object-type="post" data-object-id="{{ post.pk }}" data-gate-url="{% if post_card_url %}{{ post_card_url }}{% else %}{{ post.get_absolute_url }}{% endif %}">
+                <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
+                    <div class="card-meta-row card-meta-row-soft">
+                        <span>{{ post.author.first_name|default:post.author.username }}</span>
+                        <span>{{ post.published_at|default:post.updated_at|date:"DATE_FORMAT" }}</span>
+                    </div>
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.summary|default:post.content|truncatechars:summary_length }}</p>
                 </div>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.summary|default:post.content|truncatechars:summary_length }}</p>
-            </div>
-        </button>
+            </button>
+        </div>
         {% else %}
         <a href="{{ post.get_absolute_url }}" class="post-card-link-overlay post-card-content-link js-access-gate-link" aria-label="{{ post.title }}" data-object-type="post" data-object-id="{{ post.pk }}" data-gate-url="{{ post.get_absolute_url }}">
             <div class="post-card-content-panel{% if post.cover_image %} post-card-content-panel-with-cover{% endif %}"{% if post.cover_image %} style="background-image: url('{{ post.cover_image.url }}');"{% endif %}>
@@ -26,13 +28,30 @@
         {% endif %}
         {% if show_visibility|default:False %}
         <div class="tag-row post-card-feedback-row">
-            {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=post.show_vip_badge vip_condition_summary_items=post.vip_condition_summary_items vip_visibility_presentation=post.vip_visibility_presentation %}
-            {% if post.condition_summary_items %}
-            {% include 'blog/includes/condition_summary.html' with condition_items=post.condition_summary_items %}
-            {% else %}
-            {% include 'blog/includes/access_badge.html' with access=post.visibility_presentation %}
-            {% endif %}
+            <span class="post-card-access-row">
+                {% include 'blog/includes/vip_access_badge.html' with show_vip_badge=post.show_vip_badge vip_condition_summary_items=post.vip_condition_summary_items vip_visibility_presentation=post.vip_visibility_presentation %}
+                {% if post.condition_summary_items %}
+                {% include 'blog/includes/condition_summary.html' with condition_items=post.condition_summary_items %}
+                {% else %}
+                {% include 'blog/includes/access_badge.html' with access=post.visibility_presentation %}
+                {% endif %}
+            </span>
             <span class="post-card-feedback-summary" aria-label="{% blocktrans with up=post.up_count|default:0 down=post.down_count|default:0 %}Likes {{ up }}, dislikes {{ down }}{% endblocktrans %}">
+                <button
+                    type="button"
+                    class="post-card-star-button{% if post.is_starred %} is-active{% endif %}"
+                    data-post-star-toggle
+                    data-star-endpoint="{% url 'blog-star-toggle' post.slug %}"
+                    data-star-active="{% if post.is_starred %}true{% else %}false{% endif %}"
+                    data-star-refresh-mode="{% if post_card_button %}results{% else %}closest-grid{% endif %}"
+                    data-star-requires-auth-message="{% trans 'Please sign in to star articles.' %}"
+                    data-star-label-inactive="{% trans 'Star article' %}"
+                    data-star-label-active="{% trans 'Unstar article' %}"
+                    aria-pressed="{% if post.is_starred %}true{% else %}false{% endif %}"
+                    aria-label="{% if post.is_starred %}{% trans 'Unstar article' %}{% else %}{% trans 'Star article' %}{% endif %}"
+                >
+                    <i class="{% if post.is_starred %}fa-solid{% else %}fa-regular{% endif %} fa-star" aria-hidden="true"></i>
+                </button>
                 <span class="post-card-feedback-stat">
                     <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
                     <span>{{ post.up_count|default:0 }}</span>

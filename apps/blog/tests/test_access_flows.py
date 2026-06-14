@@ -1,11 +1,12 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from apps.blog.models import Book, BookShareLink, ContentViewLog, Post, PostShareLink
+from apps.blog.models import Attachment, Book, BookShareLink, ContentViewLog, Post, PostShareLink
 from apps.blog.utils import get_or_create_site_setting
 from apps.blog.permissions import hash_condition_password
 from apps.blog.views.post.utils.draft import clone_post_to_draft, publish_post_draft
@@ -545,6 +546,24 @@ class ContentViewTrackingTests(TestCase):
             1,
         )
 
+    def test_dashboard_content_snapshot_shows_attachment_count(self):
+        Attachment.objects.create(
+            title="Dashboard attachment",
+            original_filename="dashboard.pdf",
+            mime_type="application/pdf",
+            file_size=256,
+            file_ext="pdf",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("dashboard.pdf", b"%PDF-dashboard", content_type="application/pdf"),
+        )
+
+        response = self.client.get(reverse("dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Attachments")
+        self.assertContains(response, '<strong class="stat-value">1</strong>', html=False)
+
     def test_same_ip_deduplicates_site_and_external_post_visits(self):
         post = Post.objects.create(
             title="Unified post",
@@ -640,6 +659,51 @@ class ContentViewTrackingTests(TestCase):
             ).count(),
             1,
         )
+
+    def test_external_post_only_renders_public_attachments_and_allows_download(self):
+        public_attachment = Attachment.objects.create(
+            title="Shared public attachment",
+            original_filename="shared-public.txt",
+            mime_type="text/plain",
+            file_size=12,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("shared-public.txt", b"public-share", content_type="text/plain"),
+        )
+        conditional_attachment = Attachment.objects.create(
+            title="Shared conditional attachment",
+            original_filename="shared-conditional.txt",
+            mime_type="text/plain",
+            file_size=17,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_CONDITIONAL,
+            condition_rules=[{"type": "encrypted", "value": hash_condition_password("hidden-pass")}],
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("shared-conditional.txt", b"conditional-share", content_type="text/plain"),
+        )
+        post = Post.objects.create(
+            title="Shared post with attachments",
+            slug="shared-post-attachments",
+            summary="summary",
+            content="{{attachment:%d}}\n\n{{attachment:%d}}" % (public_attachment.pk, conditional_attachment.pk),
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+        share_link = PostShareLink.objects.create(post=post, token="shared-post-attachments-token", created_by=self.author)
+
+        self.client.logout()
+        response = self.client.get(reverse("blog-share-detail", kwargs={"token": share_link.token}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Shared public attachment")
+        self.assertNotContains(response, "Shared conditional attachment")
+        self.assertContains(response, reverse("attachment-download", kwargs={"pk": public_attachment.pk}))
+        self.assertNotContains(response, "js-access-gate-link")
+
+        download_response = self.client.get(reverse("attachment-download", kwargs={"pk": public_attachment.pk}))
+        self.assertEqual(download_response.status_code, 200)
 
     def test_same_ip_can_count_again_after_cooldown_window(self):
         post = Post.objects.create(

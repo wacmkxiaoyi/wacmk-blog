@@ -1,6 +1,7 @@
 import { onReady, openModal, closeModal } from "../core/app.js";
 import { initBlogShared } from "../apps/blog/shared.js";
 import { initBlogManage } from "../apps/blog/manage.js";
+import { bindConditionTooltips, bindStarWidgets } from "../apps/blog/shared.js";
 
 onReady(function () {
     initBlogShared();
@@ -55,6 +56,7 @@ function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
     input.className = "input-control";
     input.placeholder = getBookEditorString(chapterWorkbench, "data-chapter-search-placeholder", "Search posts");
     results.className = "chapter-post-picker-results";
+    results.setAttribute("data-star-results-reload", "true");
     resultGrid.className = "post-grid editor-reference-grid chapter-post-picker-grid";
     pagination.className = "editor-dialog-pagination pagination-panel";
     paginationStatus.className = "pagination-status";
@@ -158,7 +160,13 @@ function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
             card.appendChild(toggle);
             resultGrid.appendChild(card);
         });
+        bindConditionTooltips(resultGrid);
+        bindStarWidgets(resultGrid);
     }
+
+    results.__starReloadResults = function () {
+        fetchResults(latestQuery, activePage);
+    };
 
     function fetchResults(query, page) {
         requestId += 1;

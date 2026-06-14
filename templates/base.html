@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="app-shell {% block body_class %}{% endblock %}"{% if request.user.is_authenticated and site_setting and site_setting.app_background %} style="--custom-app-background: url('{{ site_setting.app_background.url }}');"{% endif %}>
+<body class="app-shell {% block body_class %}{% endblock %}" data-attachment-max-size-mb="{% if site_setting %}{{ site_setting.attachment_max_size_mb|default:1 }}{% else %}1{% endif %}"{% if request.user.is_authenticated and site_setting and site_setting.app_background %} style="--custom-app-background: url('{{ site_setting.app_background.url }}');"{% endif %}>
     {% if request.user.is_authenticated and not request.resolver_match.url_name == 'login' and not request.resolver_match.url_name == 'register' %}
     <header class="site-header">
         <div class="site-header-inner">

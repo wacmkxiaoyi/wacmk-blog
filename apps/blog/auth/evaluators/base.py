@@ -6,6 +6,7 @@ class BaseConditionEvaluator:
     value_kind: str = ""
     allowed_on_post: bool = True
     allowed_on_book: bool = True
+    allowed_on_attachment: bool = True
 
     def evaluate(self, user, value, *, has_purchase=False, profile=None):
         raise NotImplementedError

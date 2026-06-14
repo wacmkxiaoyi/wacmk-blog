@@ -72,6 +72,14 @@
             </article>
             <article class="stat-card">
                 <div class="stat-card-top">
+                    <span class="stat-icon stat-icon-blue"><i class="fa-solid fa-paperclip" aria-hidden="true"></i></span>
+                    <span class="stat-label">{% trans "Attachments" %}</span>
+                </div>
+                <strong class="stat-value">{{ stats.attachment_count }}</strong>
+                <p>{% trans "All attachments currently stored in the blog." %}</p>
+            </article>
+            <article class="stat-card">
+                <div class="stat-card-top">
                     <span class="stat-icon stat-icon-purple"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
                     <span class="stat-label">{% trans "Authors" %}</span>
                 </div>

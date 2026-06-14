@@ -75,6 +75,17 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
         widget=forms.Select(attrs={"class": "input-control"}),
         required=False,
     )
+    allow_reprint = forms.BooleanField(
+        required=False,
+        label=_("Allow reprint"),
+        widget=forms.CheckboxInput(attrs={"class": "input-checkbox"}),
+    )
+    allow_quote = forms.BooleanField(
+        required=False,
+        initial=True,
+        label=_("Allow quote"),
+        widget=forms.CheckboxInput(attrs={"class": "input-checkbox"}),
+    )
     visibility = forms.ChoiceField(
         label=_("Access permission"),
         choices=VISIBILITY_EDITOR_CHOICES,
@@ -107,7 +118,7 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "slug", "summary", "cover_image", "content", "status", "visibility", "condition_rules", "access_scope", "vip_access_permission", "vip_condition_rules"]
+        fields = ["title", "slug", "summary", "cover_image", "content", "status", "allow_reprint", "allow_quote", "visibility", "condition_rules", "access_scope", "vip_access_permission", "vip_condition_rules"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -140,6 +151,21 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
                 "data-image-help": _("Enter image prompt text and the image URL."),
                 "data-image-confirm-label": _("Insert"),
                 "data-image-upload-label": _("Upload image"),
+                "data-attachment-title": _("Insert attachment"),
+                "data-attachment-kicker": _("Attachment"),
+                "data-attachment-name-label": _("Attachment title"),
+                "data-attachment-file-label": _("Select file"),
+                "data-attachment-help": _("Upload a reusable attachment and insert it into the current content."),
+                "data-attachment-confirm-label": _("Upload and insert"),
+                "data-attachment-upload-label": _("Upload attachment"),
+                "data-attachment-upload-url": reverse_lazy("attachment-upload"),
+                "data-attachment-file-required-message": _("Please choose an attachment file first."),
+                "data-attachment-upload-error-title": _("Attachment upload failed"),
+                "data-attachment-upload-error-message": _("Unable to upload the selected attachment right now."),
+                "data-attachment-visibility-label": _("Access permission"),
+                "data-attachment-access-scope-label": _("Access scope"),
+                "data-attachment-vip-access-label": _("VIP access permission"),
+                "data-attachment-max-size-label": _("Maximum attachment size"),
                 "data-table-title": _("Insert table"),
                 "data-table-size-title": _("Choose table size"),
                 "data-table-kicker": _("Markdown"),

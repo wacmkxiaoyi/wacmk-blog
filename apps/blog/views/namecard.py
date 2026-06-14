@@ -9,10 +9,10 @@ from apps.blog.forms.comment import normalize_comment_content
 from apps.blog.models.book import Book
 from apps.blog.models.comment import Comment, CommentFeedback
 from apps.blog.models.post import Post
-from apps.blog.utils.markdown import render_markdown
+from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import build_user_business_identity_summary, get_site_setting
 from apps.blog.views.comment.utils import _build_author_vip_map
-from apps.blog.views.post.utils import prepare_post_cards, with_post_feedback_counts
+from apps.blog.views.post.utils import order_posts_by_user_stars, prepare_post_cards, with_post_feedback_counts
 from apps.blog.visibility import get_book_condition_summary_items, get_book_visibility_presentation
 from apps.users.models import UserProfile
 
@@ -59,9 +59,9 @@ class UserNamecardView(LoginRequiredMixin, TemplateView):
                     status=Post.STATUS_PUBLISHED,
                     visibility__in=[Post.VISIBILITY_PUBLIC, Post.VISIBILITY_CONDITIONAL],
                 )
-                .order_by("-published_at", "-updated_at")[:10]
             )
-            context["namecard_posts"] = prepare_post_cards(with_post_feedback_counts(posts))
+            posts = order_posts_by_user_stars(with_post_feedback_counts(posts), self.request.user, "-published_at", "-updated_at")[:10]
+            context["namecard_posts"] = prepare_post_cards(posts)
 
         if current_tab == "books":
             books = list(
@@ -125,7 +125,12 @@ class UserNamecardView(LoginRequiredMixin, TemplateView):
                 )
 
                 for c in comments:
-                    c.rendered_content = render_markdown(normalize_comment_content(c.content))
+                    c.rendered_content = render_markdown_with_attachments(
+                        normalize_comment_content(c.content),
+                        self.request.user,
+                        request=self.request,
+                        compact=True,
+                    )
                     c.is_admin = c.author.is_staff or c.author.is_superuser
                     c.author_is_vip, c.author_vip_label = author_vip_map.get(c.author_id, (False, ""))
                     c.reply_target = c.reply_to or c.parent

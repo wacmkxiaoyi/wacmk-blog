@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.blog.views.profile import ProfileView
+from apps.blog.views.profile_attachments import ProfileAttachmentDeleteView, ProfileAttachmentListView, ProfileAttachmentUpdateView
 from apps.blog.views.profile_books import (
     ProfileBookCreateView,
     ProfileBookDeleteView,
@@ -34,6 +35,9 @@ urlpatterns = [
     path("profile/books/new/", ProfileBookCreateView.as_view(), name="profile-book-create"),
     path("profile/books/<int:pk>/edit/", ProfileBookUpdateView.as_view(), name="profile-book-update"),
     path("profile/books/<int:pk>/delete/", ProfileBookDeleteView.as_view(), name="profile-book-delete"),
+    path("profile/attachments/", ProfileAttachmentListView.as_view(), name="profile-attachments"),
+    path("profile/attachments/<int:pk>/edit/", ProfileAttachmentUpdateView.as_view(), name="profile-attachment-update"),
+    path("profile/attachments/<int:pk>/delete/", ProfileAttachmentDeleteView.as_view(), name="profile-attachment-delete"),
     path("profile/books/post-search/", ProfileBookPostSearchView.as_view(), name="profile-book-post-search"),
     path("profile/comments/", ProfileCommentListView.as_view(), name="profile-comments"),
     path("profile/comments/<int:pk>/edit/", ProfileCommentUpdateView.as_view(), name="profile-comment-update"),

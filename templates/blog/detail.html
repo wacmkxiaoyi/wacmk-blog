@@ -80,6 +80,22 @@
             </section>
             <div class="post-feedback-bar"{% if can_interact %} data-feedback-widget data-feedback-endpoint="{% url 'blog-feedback-toggle' post.slug %}"{% endif %}>
                 <div class="feedback-actions">
+                    {% if can_interact %}
+                    <button
+                        type="button"
+                        class="feedback-button feedback-button-star{% if post.is_starred %} is-active{% endif %}"
+                        data-post-star-toggle
+                        data-star-endpoint="{% url 'blog-star-toggle' post.slug %}"
+                        data-star-active="{% if post.is_starred %}true{% else %}false{% endif %}"
+                        data-star-requires-auth-message="{% trans 'Please sign in to star articles.' %}"
+                        data-star-label-inactive="{% trans 'Star article' %}"
+                        data-star-label-active="{% trans 'Unstar article' %}"
+                        aria-pressed="{% if post.is_starred %}true{% else %}false{% endif %}"
+                        aria-label="{% if post.is_starred %}{% trans 'Unstar article' %}{% else %}{% trans 'Star article' %}{% endif %}"
+                    >
+                        <i class="{% if post.is_starred %}fa-solid{% else %}fa-regular{% endif %} fa-star" aria-hidden="true"></i>
+                    </button>
+                    {% endif %}
                     <button type="button" class="feedback-button{% if post.feedback_value == 1 %} is-active{% endif %}" {% if can_interact %}data-feedback-value="1"{% else %}disabled{% endif %} aria-pressed="{% if post.feedback_value == 1 %}true{% else %}false{% endif %}">
                         <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>
                         <span class="feedback-count" data-feedback-count="up">{{ post.up_count }}</span>

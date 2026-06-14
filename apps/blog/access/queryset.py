@@ -78,7 +78,10 @@ def get_reference_post_queryset(user):
         return queryset.none()
 
     q = build_visible_queryset_q(Post, user)
-    return queryset.filter(q).distinct()
+    queryset = queryset.filter(q).distinct()
+    if not (user.is_staff or user.is_superuser):
+        queryset = queryset.filter(Q(allow_quote=True) | Q(author=user))
+    return queryset
 
 
 def get_detail_post_queryset(user):

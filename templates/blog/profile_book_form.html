@@ -233,6 +233,9 @@
                         data-post-access-tone="{{ option.visibility_presentation.tone }}"
                         data-post-access-label="{{ option.visibility_presentation.label }}"
                         data-post-selected="{% if option.checked %}true{% else %}false{% endif %}"
+                        data-post-show-vip-badge="{% if option.show_vip_badge %}true{% else %}false{% endif %}"
+                        data-post-vip-condition-summary-items="{{ option.vip_condition_summary_items|default_if_none:'' }}"
+                        data-post-vip-visibility="{{ option.vip_visibility_presentation|default_if_none:'' }}"
                         {% if option.can_access is not None %}data-post-can-access="{% if option.can_access %}true{% else %}false{% endif %}"{% endif %}
                         {% if option.post_url %}data-post-url="{{ option.post_url }}"{% endif %}
                         {% if option.requires_condition %}data-post-requires-condition="true" data-post-condition-status="{{ option.condition_status }}" data-post-condition-money="{{ option.condition_money }}" data-post-condition-points="{{ option.condition_points }}"{% endif %}

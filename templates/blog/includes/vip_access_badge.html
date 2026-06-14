@@ -1,16 +1,16 @@
 {% load i18n %}
 {% if show_vip_badge and vip_condition_summary_items %}
-<span class="vip-access-badge" data-vip-tooltip-trigger tabindex="0" aria-label="{% trans 'VIP access permission' %}">
+<span class="vip-access-badge" data-condition-tooltip-trigger tabindex="0" aria-label="{% trans 'VIP access permission' %}">
     <span class="vip-badge-icon">VIP</span>
 </span>
-<span data-vip-tooltip-template hidden>
+<span data-condition-tooltip-template hidden>
     {% include 'blog/includes/condition_badges.html' with condition_items=vip_condition_summary_items inline=True show_label=True %}
 </span>
 {% elif show_vip_badge and vip_visibility_presentation %}
-<span class="vip-access-badge" data-vip-tooltip-trigger tabindex="0">
+<span class="vip-access-badge" data-condition-tooltip-trigger tabindex="0" aria-label="{% trans 'VIP access permission' %}">
     <span class="vip-badge-icon">VIP</span>
 </span>
-<span data-vip-tooltip-template hidden>
+<span data-condition-tooltip-template hidden>
     <span class="condition-badge-group condition-badge-group-inline">
         <span class="condition-badge access-tone-{{ vip_visibility_presentation.tone }}">
             <i class="fa-solid fa-{{ vip_visibility_presentation.icon }}" aria-hidden="true"></i>

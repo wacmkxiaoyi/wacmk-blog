@@ -11,7 +11,7 @@ from django.views.generic import ListView, UpdateView
 
 from django.http import JsonResponse
 
-from apps.blog.forms import UserCreateForm, UserManageForm
+from apps.blog.forms.manage import UserCreateForm, UserManageForm
 from apps.blog.models import AuditLog
 from apps.blog.utils import write_audit_log
 from apps.blog.views.manage.base import ManageBaseMixin

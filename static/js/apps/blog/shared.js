@@ -5,6 +5,7 @@ import {
 } from "../../core/app.js";
 
 var conditionTooltip = null;
+var conditionTooltipHideTimer = null;
 var postLinkPreviewTooltip = null;
 var postLinkPreviewBody = null;
 var postLinkPreviewActiveLink = null;
@@ -52,6 +53,19 @@ function buildConditionTooltipContent(conditionItems) {
             '<span>' + escapeConditionTooltipHtml(text) + '</span>' +
             '</span>';
     }).join("") + "</span>";
+}
+
+function buildSingleConditionTooltipContent(presentation) {
+    var item = presentation || null;
+    if (!item || !item.icon || !item.label) {
+        return "";
+    }
+
+    return '<span class="condition-badge-group condition-badge-group-inline">' +
+        '<span class="condition-badge access-tone-' + escapeConditionTooltipHtml(item.tone || "conditional") + '">' +
+        '<i class="fa-solid fa-' + escapeConditionTooltipHtml(item.icon) + '" aria-hidden="true"></i>' +
+        '<span>' + escapeConditionTooltipHtml(item.label) + '</span>' +
+        '</span></span>';
 }
 
 export function appendAccessDisplay(container, accessDisplay, options) {
@@ -113,7 +127,12 @@ export function appendAccessDisplay(container, accessDisplay, options) {
 }
 
 function createConditionTooltip() {
+    var host = getTooltipHost();
+
     if (conditionTooltip) {
+        if (host && conditionTooltip.parentNode !== host) {
+            host.appendChild(conditionTooltip);
+        }
         return conditionTooltip;
     }
 
@@ -121,8 +140,23 @@ function createConditionTooltip() {
     conditionTooltip.className = "condition-tooltip";
     conditionTooltip.hidden = true;
     conditionTooltip.setAttribute("role", "tooltip");
-    document.body.appendChild(conditionTooltip);
+    conditionTooltip.addEventListener("mouseenter", clearConditionTooltipHideTimer);
+    conditionTooltip.addEventListener("mouseleave", scheduleConditionTooltipHide);
+    (host || document.body).appendChild(conditionTooltip);
     return conditionTooltip;
+}
+
+function getTooltipHost() {
+    var nestedOverlay = document.querySelector(".access-gate-nested-overlay");
+    var appModal = document.querySelector("[data-app-modal]");
+
+    if (nestedOverlay && !nestedOverlay.hidden) {
+        return nestedOverlay;
+    }
+    if (appModal && !appModal.hidden) {
+        return appModal;
+    }
+    return document.body;
 }
 
 function hideConditionTooltip() {
@@ -133,6 +167,21 @@ function hideConditionTooltip() {
     conditionTooltip.innerHTML = "";
     conditionTooltip.style.top = "";
     conditionTooltip.style.left = "";
+}
+
+function scheduleConditionTooltipHide() {
+    clearConditionTooltipHideTimer();
+    if (!conditionTooltip) {
+        return;
+    }
+    conditionTooltipHideTimer = setTimeout(hideConditionTooltip, 250);
+}
+
+function clearConditionTooltipHideTimer() {
+    if (conditionTooltipHideTimer) {
+        clearTimeout(conditionTooltipHideTimer);
+        conditionTooltipHideTimer = null;
+    }
 }
 
 function showConditionTooltip(trigger) {
@@ -160,6 +209,7 @@ function showConditionTooltip(trigger) {
         return;
     }
 
+    clearConditionTooltipHideTimer();
     tooltip.innerHTML = contentHtml;
     tooltip.hidden = false;
     rect = trigger.getBoundingClientRect();
@@ -184,60 +234,9 @@ export function bindConditionTooltips(rootNode) {
         trigger.addEventListener("mouseenter", function () {
             showConditionTooltip(trigger);
         });
-        trigger.addEventListener("mouseleave", hideConditionTooltip);
+        trigger.addEventListener("mouseleave", scheduleConditionTooltipHide);
         trigger.addEventListener("focus", function () {
             showConditionTooltip(trigger);
-        });
-        trigger.addEventListener("blur", hideConditionTooltip);
-    });
-}
-
-function showVipTooltip(trigger) {
-    hideConditionTooltip();
-    var template = trigger.nextElementSibling;
-    if (!template || template.getAttribute("data-vip-tooltip-template") === null) {
-        return;
-    }
-    var content = template.innerHTML;
-    if (!content.trim()) {
-        return;
-    }
-    var tooltip = createConditionTooltip();
-    var rect = null;
-    var tooltipRect = null;
-    var top = 0;
-    var left = 0;
-    var minTop = 10;
-    var minLeft = 10;
-    var maxLeft = 0;
-
-    tooltip.innerHTML = '<div class="condition-tooltip-content">' + content + '</div>';
-    tooltip.hidden = false;
-    rect = trigger.getBoundingClientRect();
-    tooltipRect = tooltip.getBoundingClientRect();
-    top = rect.top - tooltipRect.height - 10;
-    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-    if (top < minTop) {
-        top = rect.bottom + 10;
-    }
-    maxLeft = window.innerWidth - tooltipRect.width - minLeft;
-    left = Math.max(minLeft, Math.min(left, maxLeft));
-    tooltip.style.top = top + "px";
-    tooltip.style.left = left + "px";
-}
-
-export function bindVipTooltips(rootNode) {
-    Array.prototype.forEach.call((rootNode || document).querySelectorAll("[data-vip-tooltip-trigger]"), function (trigger) {
-        if (trigger.getAttribute("data-vip-tooltip-bound") === "true") {
-            return;
-        }
-        trigger.setAttribute("data-vip-tooltip-bound", "true");
-        trigger.addEventListener("mouseenter", function () {
-            showVipTooltip(trigger);
-        });
-        trigger.addEventListener("mouseleave", hideConditionTooltip);
-        trigger.addEventListener("focus", function () {
-            showVipTooltip(trigger);
         });
         trigger.addEventListener("blur", hideConditionTooltip);
     });
@@ -261,6 +260,128 @@ function updateFeedbackWidget(widget, payload) {
     if (widget.querySelector("[data-feedback-count='down']")) {
         widget.querySelector("[data-feedback-count='down']").textContent = String(downCount);
     }
+}
+
+function refreshStarResults(button) {
+    var refreshMode = button.getAttribute("data-star-refresh-mode") || "";
+    var reloadTarget = button.closest("[data-star-results-reload]");
+    var reloadFn = reloadTarget && typeof reloadTarget.__starReloadResults === "function"
+        ? reloadTarget.__starReloadResults
+        : null;
+    var grid = null;
+    var card = null;
+    var cards = null;
+    var firstUnstarredCard = null;
+    var lastStarredCard = null;
+
+    if (refreshMode === "results" && reloadFn) {
+        reloadFn();
+        return;
+    }
+
+    if (refreshMode !== "closest-grid") {
+        return;
+    }
+
+    card = button.closest(".post-card, .book-list-card");
+    if (!card || card.parentNode == null) {
+        return;
+    }
+    grid = card.parentNode;
+    if (button.getAttribute("data-star-active") === "true") {
+        cards = Array.prototype.slice.call(grid.children).filter(function (item) {
+            return item !== card && item.classList && (item.classList.contains("post-card") || item.classList.contains("book-list-card"));
+        });
+        firstUnstarredCard = cards.find(function (item) {
+            var starButton = item.querySelector("[data-post-star-toggle], [data-book-star-toggle]");
+            return !starButton || starButton.getAttribute("data-star-active") !== "true";
+        }) || null;
+        grid.insertBefore(card, firstUnstarredCard);
+        return;
+    }
+
+    cards = Array.prototype.slice.call(grid.children).filter(function (item) {
+        return item !== card && item.classList && (item.classList.contains("post-card") || item.classList.contains("book-list-card"));
+    });
+    cards.forEach(function (item) {
+        var starButton = item.querySelector("[data-post-star-toggle], [data-book-star-toggle]");
+        if (starButton && starButton.getAttribute("data-star-active") === "true") {
+            lastStarredCard = item;
+        }
+    });
+    if (lastStarredCard && lastStarredCard.nextSibling) {
+        grid.insertBefore(card, lastStarredCard.nextSibling);
+        return;
+    }
+    if (lastStarredCard) {
+        grid.appendChild(card);
+        return;
+    }
+    grid.appendChild(card);
+}
+
+function updateStarButton(button, starred) {
+    var icon = button.querySelector("i");
+    var pressed = starred ? "true" : "false";
+    var activeLabel = button.getAttribute("data-star-label-active") || "Unstar article";
+    var inactiveLabel = button.getAttribute("data-star-label-inactive") || "Star article";
+
+    button.classList.toggle("is-active", starred);
+    button.setAttribute("data-star-active", starred ? "true" : "false");
+    button.setAttribute("aria-pressed", pressed);
+    button.setAttribute("aria-label", starred ? activeLabel : inactiveLabel);
+    if (icon) {
+        icon.classList.toggle("fa-solid", starred);
+        icon.classList.toggle("fa-regular", !starred);
+    }
+}
+
+export function bindStarWidgets(rootNode) {
+    var csrfToken = getCsrfToken();
+
+    Array.prototype.forEach.call((rootNode || document).querySelectorAll("[data-post-star-toggle][data-star-endpoint], [data-book-star-toggle][data-star-endpoint]"), function (button) {
+        if (button.getAttribute("data-star-bound") === "true") {
+            return;
+        }
+        button.setAttribute("data-star-bound", "true");
+        button.addEventListener("click", function (event) {
+            var endpoint = button.getAttribute("data-star-endpoint") || "";
+            var body = new FormData();
+
+            event.preventDefault();
+            event.stopPropagation();
+            if (!endpoint || !csrfToken) {
+                showInlineFlash(button.getAttribute("data-star-requires-auth-message") || "Please sign in to star articles.", false);
+                return;
+            }
+
+            body.append("csrfmiddlewaretoken", csrfToken);
+            button.disabled = true;
+
+            fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: body,
+                credentials: "same-origin"
+            }).then(function (response) {
+                return response.json().then(function (data) {
+                    return { ok: response.ok, data: data };
+                });
+            }).then(function (result) {
+                if (!result.ok || !result.data.ok) {
+                    throw new Error(result.data.message || "Request failed.");
+                }
+                updateStarButton(button, !!result.data.starred);
+                refreshStarResults(button);
+            }).catch(function (error) {
+                showInlineFlash(error.message || "Request failed.", false);
+            }).finally(function () {
+                button.disabled = false;
+            });
+        });
+    });
 }
 
 function bindFeedbackWidgets() {
@@ -1104,12 +1225,27 @@ function initializeBookOutline() {
                 var vipBadge = document.createElement("span");
                 var vipIcon = document.createElement("span");
                 vipBadge.className = "vip-access-badge";
-                vipBadge.title = "VIP access";
+                vipBadge.setAttribute("data-condition-tooltip-trigger", "");
+                vipBadge.setAttribute("tabindex", "0");
+                vipBadge.setAttribute("aria-label", "VIP access permission");
                 vipIcon.className = "vip-badge-icon";
                 vipIcon.textContent = "VIP";
                 vipBadge.appendChild(vipIcon);
                 link.appendChild(vipBadge);
                 link.appendChild(document.createTextNode(" "));
+                var vipTooltipContent = "";
+                if (node.vipConditionSummaryItems && node.vipConditionSummaryItems.length) {
+                    vipTooltipContent = buildConditionTooltipContent(node.vipConditionSummaryItems);
+                } else {
+                    vipTooltipContent = buildSingleConditionTooltipContent(node.vipVisibilityPresentation);
+                }
+                if (vipTooltipContent) {
+                    var vipTooltipTemplate = document.createElement("span");
+                    vipTooltipTemplate.hidden = true;
+                    vipTooltipTemplate.setAttribute("data-condition-tooltip-template", "");
+                    vipTooltipTemplate.innerHTML = vipTooltipContent;
+                    link.appendChild(vipTooltipTemplate);
+                }
             }
 
             hasStatus = appendAccessDisplay(link, node.accessDisplay || null, {
@@ -1132,7 +1268,6 @@ function initializeBookOutline() {
         nav.innerHTML = "";
         nav.appendChild(renderNodes(items));
         bindConditionTooltips(nav);
-        bindVipTooltips(nav);
     });
 
     if (mobileToggle && mobilePanel) {
@@ -1555,7 +1690,7 @@ export function initBlogShared() {
     }
     sharedInitialized = true;
     bindConditionTooltips(document);
-    bindVipTooltips(document);
+    bindStarWidgets(document);
     bindFeedbackWidgets();
     bindInlineShareControls();
     bindExternalShareEditors();

@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import ListView
 
-from apps.blog.forms import CommentForm
+from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment
 from apps.blog.utils import write_audit_log
 from apps.blog.views.comment.utils import get_comment_edit_allowed

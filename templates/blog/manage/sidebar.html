@@ -8,6 +8,7 @@
         <a href="{% url 'manage-users' %}" class="{% if section == 'users' %}is-active{% endif %}">{% trans "Users" %}</a>
         <a href="{% url 'manage-posts' %}" class="{% if section == 'posts' %}is-active{% endif %}">{% trans "Articles" %}</a>
         <a href="{% url 'manage-books' %}" class="{% if section == 'books' %}is-active{% endif %}">{% trans "Books" %}</a>
+        <a href="{% url 'manage-attachments' %}" class="{% if section == 'attachments' %}is-active{% endif %}">{% trans "Attachments" %}</a>
         <a href="{% url 'manage-comments' %}" class="{% if section == 'comments' %}is-active{% endif %}">{% trans "Comments" %}</a>
         <a href="{% url 'manage-audit' %}" class="{% if section == 'audit' %}is-active{% endif %}">{% trans "Audit" %}</a>
     </nav>

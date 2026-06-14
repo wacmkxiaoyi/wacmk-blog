@@ -16,11 +16,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 
-from apps.blog.forms import PostDraftForm, PostForm, PostMarkdownImportForm
+from apps.blog.forms.post import PostDraftForm, PostForm, PostMarkdownImportForm
 from apps.blog.models import AuditLog, Book, BookShareLink, Post, PostDraft, PostShareLink
 from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils import get_or_create_site_setting, is_ajax_request, write_audit_log
-from apps.blog.utils.markdown import render_markdown
+from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
 from apps.blog.visibility import (
     get_post_access_display,
@@ -51,6 +51,7 @@ from apps.blog.views.post.utils import (
     get_reference_post_queryset,
     get_unique_post_slug,
     get_visible_post_queryset,
+    order_posts_by_user_stars,
     prepare_post_cards,
     publish_post_draft,
     post_requires_password,
@@ -73,7 +74,8 @@ class ManagePostReferenceSearchView(LoginRequiredMixin, View):
                 | Q(author__username__icontains=query)
                 | Q(author__first_name__icontains=query)
             )
-        paginator = Paginator(queryset.select_related("author").order_by("-published_at", "-updated_at"), self.paginate_by)
+        queryset = order_posts_by_user_stars(queryset.select_related("author"), request.user, "-published_at", "-updated_at")
+        paginator = Paginator(queryset, self.paginate_by)
         page_number = (request.GET.get("page") or "1").strip() or "1"
         try:
             page_obj = paginator.page(page_number)
@@ -100,6 +102,9 @@ class ManagePostReferenceSearchView(LoginRequiredMixin, View):
                         "accessDisplay": get_post_access_display(post),
                         "visibility": post.visibility,
                         "visibilityPresentation": get_post_access_icon_presentation(post),
+                        "showVipBadge": getattr(post, "show_vip_badge", False),
+                        "vipConditionSummaryItems": getattr(post, "vip_condition_summary_items", []),
+                        "vipVisibilityPresentation": getattr(post, "vip_visibility_presentation", None),
                         "html": render_to_string(
                             "blog/includes/post_card.html",
                         {
@@ -125,7 +130,7 @@ class ManagePostReferenceSearchView(LoginRequiredMixin, View):
 class MarkdownPreviewView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         content = request.POST.get("content", "")
-        return JsonResponse({"ok": True, "html": render_markdown(content)})
+        return JsonResponse({"ok": True, "html": render_markdown_with_attachments(content, request.user, request=request)})
 
 
 class PostLinkPreviewView(View):
@@ -446,7 +451,10 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
 
     def get_queryset(self):
         query = (self.request.GET.get("q") or "").strip()
-        queryset = with_post_feedback_counts(get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED).select_related("author").prefetch_related("tags", "books"))
+        user = self.request.user
+        queryset = with_post_feedback_counts(get_visible_post_queryset(user).filter(status=Post.STATUS_PUBLISHED).select_related("author").prefetch_related("tags", "books"))
+        if not (user.is_staff or user.is_superuser):
+            queryset = queryset.filter(Q(allow_reprint=True) | Q(author=user))
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query)
@@ -455,7 +463,7 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
                 | Q(author__username__icontains=query)
                 | Q(author__first_name__icontains=query)
             )
-        return queryset.order_by("-published_at", "-updated_at")
+        return order_posts_by_user_stars(queryset, user, "-published_at", "-updated_at")
 
     def post(self, request, *args, **kwargs):
         source_post = get_object_or_404(get_visible_post_queryset(request.user).filter(status=Post.STATUS_PUBLISHED), pk=request.POST.get("source_post_id"))
