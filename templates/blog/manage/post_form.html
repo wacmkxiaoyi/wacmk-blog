@@ -26,7 +26,7 @@
     {% include 'blog/manage/sidebar.html' with section='posts' %}
     {% endif %}
     <section class="manage-content">
-        <form method="post" enctype="multipart/form-data" class="section-panel panel-form editor-panel" data-post-editor-form data-unsaved-guard data-post-id="{{ editor_mode }}-{{ form.instance.pk|default:'new' }}" data-autosave-enabled="{% if site_setting and site_setting.post_editor_autosave_enabled %}true{% else %}false{% endif %}" data-autosave-interval-ms="{% if site_setting %}{% widthratio site_setting.post_editor_autosave_interval_minutes|default:5 1 60000 %}{% else %}300000{% endif %}" data-attachment-max-size-mb="{{ site_setting.attachment_max_size_mb|default:1 }}">
+        <form method="post" enctype="multipart/form-data" class="section-panel panel-form editor-panel" data-post-editor-form data-unsaved-guard data-post-id="{{ editor_mode }}-{{ form.instance.pk|default:'new' }}" data-autosave-enabled="{% if post_editor_autosave_enabled %}true{% else %}false{% endif %}" data-autosave-interval-ms="{% widthratio post_editor_autosave_interval_minutes|default:5 1 60000 %}" data-attachment-max-size-mb="{{ attachment_max_size_mb|default:1 }}">
             {% csrf_token %}
             {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
             <div class="section-heading-row">

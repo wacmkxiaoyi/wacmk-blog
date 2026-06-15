@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.auth import get_allowed_types_for_post
 from apps.blog.models import Post, PostDraft, Tag
+from apps.blog.utils.site import check_attachment_upload_permission
 
 from .common import MarkdownTextarea
 from .mixins import AccessScopeFormMixin
@@ -15,6 +16,34 @@ from .mixins import AccessScopeFormMixin
 
 class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
     CONDITIONAL_ALLOWED_TYPES = get_allowed_types_for_post()
+    ATTACHMENT_WIDGET_ATTRS = {
+        "data-attachment-title": _("Upload attachment"),
+        "data-attachment-kicker": _("Attachment"),
+        "data-attachment-name-label": _("Attachment title"),
+        "data-attachment-file-label": _("Select file"),
+        "data-attachment-help": _("Upload a reusable attachment and insert it into the current content."),
+        "data-attachment-confirm-label": _("Upload and insert"),
+        "data-attachment-upload-label": _("Upload attachment"),
+        "data-attachment-upload-url": reverse_lazy("attachment-upload"),
+        "data-attachment-browser-url": reverse_lazy("attachment-mine"),
+        "data-attachment-insert-uploaded-label": _("My attachments"),
+        "data-attachment-browser-title": _("My attachments"),
+        "data-attachment-browser-kicker": _("My attachments"),
+        "data-attachment-browser-search-placeholder": _("Search attachments"),
+        "data-attachment-browser-empty-label": _("No attachments found."),
+        "data-attachment-browser-insert-label": _("Insert"),
+        "data-attachment-browser-title-column-label": _("Title"),
+        "data-attachment-browser-access-column-label": _("Access permission"),
+        "data-attachment-browser-updated-column-label": _("Updated"),
+        "data-attachment-browser-actions-column-label": _("Actions"),
+        "data-attachment-file-required-message": _("Please choose an attachment file first."),
+        "data-attachment-upload-error-title": _("Attachment upload failed"),
+        "data-attachment-upload-error-message": _("Unable to upload the selected attachment right now."),
+        "data-attachment-visibility-label": _("Access permission"),
+        "data-attachment-access-scope-label": _("Access scope"),
+        "data-attachment-vip-access-label": _("VIP access permission"),
+        "data-attachment-max-size-label": _("Maximum attachment size"),
+    }
     VISIBILITY_EDITOR_CHOICES = [
         (Post.VISIBILITY_PUBLIC, _("Public")),
         (Post.VISIBILITY_PRIVATE, _("Private")),
@@ -121,70 +150,60 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
         fields = ["title", "slug", "summary", "cover_image", "content", "status", "allow_reprint", "allow_quote", "visibility", "condition_rules", "access_scope", "vip_access_permission", "vip_condition_rules"]
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         self._remove_cover_image = False
         self.fields["visibility"].choices = self.VISIBILITY_EDITOR_CHOICES
         self.fields["vip_access_permission"].choices = self.VISIBILITY_EDITOR_CHOICES
         self._init_condition_rules_fields()
         content_widget = self.fields["content"].widget
-        content_widget.attrs.update(
-            {
-                "data-link-title": _("Insert link"),
-                "data-link-kicker": _("Markdown"),
-                "data-link-display-name-label": _("Display name"),
-                "data-link-url-label": _("URL"),
-                "data-link-help": _("Enter display text and the target URL."),
-                "data-link-confirm-label": _("Insert"),
-                "data-link-cancel-label": _("Cancel"),
-                "data-link-reference-label": _("Reference internal article"),
-                "data-reference-title": _("Reference internal article"),
-                "data-reference-kicker": _("Articles"),
-                "data-reference-search-placeholder": _("Search articles"),
-                "data-reference-empty-label": _("No articles found."),
-                "data-reference-select-label": _("Select"),
-                "data-reference-selected-label": _("Selected"),
-                "data-reference-confirm-label": _("Insert selected"),
-                "data-image-title": _("Insert image"),
-                "data-image-kicker": _("Markdown"),
-                "data-image-alt-label": _("Prompt"),
-                "data-image-url-label": _("Image URL"),
-                "data-image-help": _("Enter image prompt text and the image URL."),
-                "data-image-confirm-label": _("Insert"),
-                "data-image-upload-label": _("Upload image"),
-                "data-attachment-title": _("Insert attachment"),
-                "data-attachment-kicker": _("Attachment"),
-                "data-attachment-name-label": _("Attachment title"),
-                "data-attachment-file-label": _("Select file"),
-                "data-attachment-help": _("Upload a reusable attachment and insert it into the current content."),
-                "data-attachment-confirm-label": _("Upload and insert"),
-                "data-attachment-upload-label": _("Upload attachment"),
-                "data-attachment-upload-url": reverse_lazy("attachment-upload"),
-                "data-attachment-file-required-message": _("Please choose an attachment file first."),
-                "data-attachment-upload-error-title": _("Attachment upload failed"),
-                "data-attachment-upload-error-message": _("Unable to upload the selected attachment right now."),
-                "data-attachment-visibility-label": _("Access permission"),
-                "data-attachment-access-scope-label": _("Access scope"),
-                "data-attachment-vip-access-label": _("VIP access permission"),
-                "data-attachment-max-size-label": _("Maximum attachment size"),
-                "data-table-title": _("Insert table"),
-                "data-table-size-title": _("Choose table size"),
-                "data-table-kicker": _("Markdown"),
-                "data-table-import-csv-label": _("Import from .csv"),
-                "data-table-import-tsv-label": _("Import from .tsv"),
-                "data-table-import-error-title": _("Table import failed"),
-                "data-table-import-error-message": _("Please choose a valid CSV or TSV file and try again."),
-                "data-table-import-empty-message": _("The selected file does not contain any table data."),
-                "data-table-help-context-label": _("Right-click a cell to insert or remove rows and columns."),
-                "data-table-help-paste-label": _("Use tabs or | to paste cells, one row per line."),
-                "data-table-confirm-label": _("Insert"),
-                "data-table-insert-row-above-label": _("Insert row above"),
-                "data-table-insert-row-below-label": _("Insert row below"),
-                "data-table-insert-column-left-label": _("Insert column left"),
-                "data-table-insert-column-right-label": _("Insert column right"),
-                "data-table-remove-row-label": _("Remove row"),
-                "data-table-remove-column-label": _("Remove column"),
-            }
-        )
+        widget_attrs = {
+            "data-link-title": _("Insert link"),
+            "data-link-kicker": _("Markdown"),
+            "data-link-display-name-label": _("Display name"),
+            "data-link-url-label": _("URL"),
+            "data-link-help": _("Enter display text and the target URL."),
+            "data-link-confirm-label": _("Insert"),
+            "data-link-cancel-label": _("Cancel"),
+            "data-link-reference-label": _("Reference internal article"),
+            "data-reference-title": _("Reference internal article"),
+            "data-reference-kicker": _("Articles"),
+            "data-reference-search-placeholder": _("Search articles"),
+            "data-reference-empty-label": _("No articles found."),
+            "data-reference-select-label": _("Select"),
+            "data-reference-selected-label": _("Selected"),
+            "data-reference-confirm-label": _("Insert selected"),
+            "data-image-title": _("Insert image"),
+            "data-image-kicker": _("Markdown"),
+            "data-image-alt-label": _("Prompt"),
+            "data-image-url-label": _("Image URL"),
+            "data-image-help": _("Enter image prompt text and the image URL."),
+            "data-image-confirm-label": _("Insert"),
+            "data-image-upload-label": _("Upload image"),
+            "data-browser-previous-label": _("Previous"),
+            "data-browser-next-label": _("Next"),
+            "data-browser-page-label": _("Page"),
+            "data-table-title": _("Insert table"),
+            "data-table-size-title": _("Choose table size"),
+            "data-table-kicker": _("Markdown"),
+            "data-table-import-csv-label": _("Import from .csv"),
+            "data-table-import-tsv-label": _("Import from .tsv"),
+            "data-table-import-error-title": _("Table import failed"),
+            "data-table-import-error-message": _("Please choose a valid CSV or TSV file and try again."),
+            "data-table-import-empty-message": _("The selected file does not contain any table data."),
+            "data-table-help-context-label": _("Right-click a cell to insert or remove rows and columns."),
+            "data-table-help-paste-label": _("Use tabs or | to paste cells, one row per line."),
+            "data-table-confirm-label": _("Insert"),
+            "data-table-insert-row-above-label": _("Insert row above"),
+            "data-table-insert-row-below-label": _("Insert row below"),
+            "data-table-insert-column-left-label": _("Insert column left"),
+            "data-table-insert-column-right-label": _("Insert column right"),
+            "data-table-remove-row-label": _("Remove row"),
+            "data-table-remove-column-label": _("Remove column"),
+        }
+        if check_attachment_upload_permission(self.user):
+            widget_attrs.update(self.ATTACHMENT_WIDGET_ATTRS)
+        content_widget.attrs.update(widget_attrs)
         if self.instance.pk:
             self.fields["tag_names"].initial = ", ".join(self.instance.tags.values_list("name", flat=True))
 

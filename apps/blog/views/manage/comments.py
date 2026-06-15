@@ -38,7 +38,7 @@ class ManageCommentListView(ManageBaseMixin, ListView):
         context = super().get_context_data(**kwargs)
         query = (self.request.GET.get("q") or "").strip()
         context.update(self.get_manage_context(section="comments", query=query))
-        context["edit_form"] = CommentForm()
+        context["edit_form"] = CommentForm(user=self.request.user)
         return context
 
 
@@ -51,7 +51,7 @@ class ManageCommentUpdateView(ManageBaseMixin, View):
             messages.error(request, _("You do not have permission to edit this comment."))
             return redirect("manage-comments")
 
-        form = CommentForm(request.POST, instance=comment)
+        form = CommentForm(request.POST, instance=comment, user=request.user)
         if not form.is_valid():
             messages.error(request, _("Comment content cannot be empty."))
             return redirect("manage-comments")

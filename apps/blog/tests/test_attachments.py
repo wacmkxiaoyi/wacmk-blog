@@ -4,8 +4,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from apps.blog.forms import AttachmentUploadForm, SiteSettingForm
-from apps.blog.models import Attachment, SiteSetting
+from apps.blog.constants import get_default_business_group_name
+from apps.blog.forms import AttachmentUploadForm, CommentForm, PostForm, SiteSettingForm
+from apps.blog.models import Attachment
+from apps.blog.utils import DASHBOARD_VISIT_TREND_DAYS_7, set_settings
 from apps.blog.utils.attachments import build_attachment_placeholder, render_markdown_with_attachments
 from apps.users.models import UserProfile
 
@@ -16,7 +18,7 @@ User = get_user_model()
 class AttachmentUploadFormTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="author", password="pass12345")
-        self.site_setting = SiteSetting.objects.create(attachment_max_size_mb=1)
+        set_settings({"attachment_max_size_mb": 1})
 
     def test_rejects_attachment_larger_than_site_setting_limit(self):
         uploaded = SimpleUploadedFile("too-large.pdf", b"a" * (1024 * 1024 + 1), content_type="application/pdf")
@@ -63,7 +65,13 @@ class AttachmentFlowTests(TestCase):
         self.admin = User.objects.create_superuser(username="attachment-admin", email="admin@example.com", password="pass12345")
         UserProfile.objects.get_or_create(user=self.reader)
         UserProfile.objects.get_or_create(user=self.vip_reader)
-        self.site_setting = SiteSetting.objects.create(attachment_max_size_mb=1, vip_max_level=1, vip_level_names=["VIP 1"])
+        set_settings({
+            "attachment_max_size_mb": 1,
+            "vip_max_level": 1,
+            "vip_configs": [{"display_name": "VIP 1", "money_discount": 0.10, "points_discount": 0.05}],
+            "allow_user_upload_attachment": True,
+            "vip_only_upload_attachment": False,
+        })
         self.vip_reader.groups.add(Group.objects.get_or_create(name="vip_1")[0])
 
     def upload_file(self, user, **overrides):
@@ -81,6 +89,7 @@ class AttachmentFlowTests(TestCase):
         return self.client.post(reverse("attachment-upload"), payload)
 
     def test_attachment_upload_returns_placeholder(self):
+        set_settings({"allow_user_upload_attachment": True})
         response = self.upload_file(self.author)
 
         self.assertEqual(response.status_code, 200)
@@ -108,6 +117,40 @@ class AttachmentFlowTests(TestCase):
         payload = response.json()
         self.assertFalse(payload["ok"])
         self.assertIn("sign in", payload["message"].lower())
+
+    def test_attachment_upload_forbidden_when_user_upload_disabled(self):
+        set_settings({"allow_user_upload_attachment": False, "vip_only_upload_attachment": False})
+        self.client.force_login(self.author)
+        response = self.client.post(
+            reverse("attachment-upload"),
+            {
+                "title": "Project brief",
+                "visibility": "public",
+                "condition_rules": "[]",
+                "access_scope": "unified",
+                "vip_access_permission": "public",
+                "vip_condition_rules": "[]",
+                "file": SimpleUploadedFile("brief.pdf", b"%PDF-demo", content_type="application/pdf"),
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("permission", response.json()["message"].lower())
+
+    def test_attachment_upload_allowed_for_vip_when_vip_only_enabled(self):
+        set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
+        response = self.upload_file(self.vip_reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["ok"])
+
+    def test_attachment_upload_forbidden_for_non_vip_when_vip_only_enabled(self):
+        set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
+        response = self.upload_file(self.reader)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("permission", response.json()["message"].lower())
 
     def test_private_attachment_download_denied_for_other_user(self):
         upload_response = self.upload_file(self.author, visibility="private")
@@ -400,6 +443,158 @@ class AttachmentFlowTests(TestCase):
         self.assertNotContains(response, "Other file")
         self.assertNotContains(response, "Uploader")
 
+    def test_attachment_mine_requires_login_for_ajax_requests(self):
+        response = self.client.get(reverse("attachment-mine"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 401)
+        payload = response.json()
+        self.assertFalse(payload["ok"])
+        self.assertIn("sign in", payload["message"].lower())
+
+    def test_attachment_mine_returns_only_current_users_attachments(self):
+        set_settings({"allow_user_upload_attachment": True})
+        own_attachment = Attachment.objects.create(
+            title="Own library",
+            original_filename="own-library.pdf",
+            mime_type="application/pdf",
+            file_size=4096,
+            file_ext="pdf",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("own-library.pdf", b"%PDF-own-library", content_type="application/pdf"),
+        )
+        Attachment.objects.create(
+            title="Reader library",
+            original_filename="reader-library.pdf",
+            mime_type="application/pdf",
+            file_size=2048,
+            file_ext="pdf",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.reader,
+            file=SimpleUploadedFile("reader-library.pdf", b"%PDF-reader-library", content_type="application/pdf"),
+        )
+
+        self.client.force_login(self.author)
+        response = self.client.get(reverse("attachment-mine"))
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(len(payload["attachments"]), 1)
+        self.assertEqual(payload["attachments"][0]["id"], own_attachment.pk)
+        self.assertEqual(payload["attachments"][0]["placeholder"], build_attachment_placeholder(own_attachment.pk))
+        self.assertEqual(payload["attachments"][0]["fileSizeLabel"], "4.0 KB")
+        self.assertIn("visibilityPresentation", payload["attachments"][0])
+        self.assertIn("conditionSummaryItems", payload["attachments"][0])
+        self.assertIn("showVipBadge", payload["attachments"][0])
+
+    def test_attachment_mine_filters_by_title_and_file_name(self):
+        set_settings({"allow_user_upload_attachment": True})
+        Attachment.objects.create(
+            title="Design notes",
+            original_filename="roadmap.pdf",
+            mime_type="application/pdf",
+            file_size=500,
+            file_ext="pdf",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("roadmap.pdf", b"%PDF-roadmap", content_type="application/pdf"),
+        )
+        target_attachment = Attachment.objects.create(
+            title="Meeting archive",
+            original_filename="sprint-plan.txt",
+            mime_type="text/plain",
+            file_size=120,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_PUBLIC,
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("sprint-plan.txt", b"plan", content_type="text/plain"),
+        )
+
+        self.client.force_login(self.author)
+        response = self.client.get(reverse("attachment-mine"), {"q": "sprint"})
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(len(payload["attachments"]), 1)
+        self.assertEqual(payload["attachments"][0]["id"], target_attachment.pk)
+
+    def test_attachment_mine_forbidden_when_user_upload_disabled(self):
+        set_settings({"allow_user_upload_attachment": False, "vip_only_upload_attachment": False})
+        self.client.force_login(self.author)
+        response = self.client.get(reverse("attachment-mine"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("permission", response.json()["message"].lower())
+
+    def test_attachment_mine_allowed_for_admin_even_when_user_upload_disabled(self):
+        self.client.force_login(self.admin)
+        response = self.client.get(reverse("attachment-mine"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["ok"])
+
+
+class EditorAttachmentBrowserMetadataTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(username="editor-attachment-author", password="pass12345")
+        self.reader = User.objects.create_user(username="editor-attachment-reader", password="pass12345")
+        self.vip_reader = User.objects.create_user(username="editor-attachment-vip", password="pass12345")
+        Group.objects.get_or_create(name=get_default_business_group_name())
+        self.vip_reader.groups.add(Group.objects.get_or_create(name="vip_1")[0])
+        set_settings({
+            "vip_max_level": 1,
+            "vip_configs": [{"display_name": "VIP 1", "money_discount": 0.10, "points_discount": 0.05}],
+            "allow_user_upload_attachment": False,
+            "vip_only_upload_attachment": False,
+        })
+
+    def test_comment_form_exposes_uploaded_attachment_browser_metadata(self):
+        set_settings({"allow_user_upload_attachment": True})
+        form = CommentForm(user=self.author)
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+        self.assertEqual(str(attrs["data-attachment-insert-uploaded-label"]), "My attachments")
+        self.assertEqual(str(attrs["data-attachment-browser-title"]), "My attachments")
+        self.assertEqual(str(attrs["data-attachment-browser-kicker"]), "My attachments")
+
+    def test_post_form_exposes_uploaded_attachment_browser_metadata(self):
+        set_settings({"allow_user_upload_attachment": True})
+        form = PostForm(user=self.author)
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+        self.assertEqual(str(attrs["data-attachment-browser-empty-label"]), "No attachments found.")
+        self.assertEqual(str(attrs["data-attachment-browser-insert-label"]), "插入")
+        self.assertEqual(str(attrs["data-attachment-browser-title-column-label"]), "标题")
+        self.assertEqual(str(attrs["data-attachment-browser-access-column-label"]), "访问权限")
+        self.assertEqual(str(attrs["data-attachment-browser-updated-column-label"]), "更新时间")
+        self.assertEqual(str(attrs["data-attachment-browser-actions-column-label"]), "操作")
+        self.assertTrue(str(attrs["data-browser-page-label"]))
+
+    def test_comment_form_hides_attachment_metadata_when_upload_disabled(self):
+        form = CommentForm(user=self.author)
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertNotIn("data-attachment-upload-url", attrs)
+        self.assertNotIn("data-attachment-browser-url", attrs)
+
+    def test_post_form_hides_attachment_metadata_for_non_vip_when_vip_only_enabled(self):
+        set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
+        form = PostForm(user=self.reader)
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertNotIn("data-attachment-upload-url", attrs)
+        self.assertNotIn("data-attachment-browser-url", attrs)
+
+    def test_post_form_exposes_attachment_metadata_for_vip_when_vip_only_enabled(self):
+        set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
+        form = PostForm(user=self.vip_reader)
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+
     def test_attachment_update_can_change_metadata_without_reupload(self):
         attachment = Attachment.objects.create(
             title="Old title",
@@ -520,7 +715,6 @@ class AttachmentFlowTests(TestCase):
 
 class SiteSettingAttachmentFieldTests(TestCase):
     def test_attachment_size_field_is_saved(self):
-        site_setting = SiteSetting.objects.create()
         form = SiteSettingForm(
             data={
                 "site_title": "",
@@ -531,14 +725,26 @@ class SiteSettingAttachmentFieldTests(TestCase):
                 "audit_log_cleanup_enabled": "on",
                 "audit_log_retention_days": 30,
                 "vip_max_level": 0,
-                "dashboard_visit_trend_days": SiteSetting.DASHBOARD_VISIT_TREND_DAYS_7,
+                "dashboard_visit_trend_days": DASHBOARD_VISIT_TREND_DAYS_7,
                 "non_admin_max_post_count": 10,
                 "non_admin_max_book_count": 3,
                 "attachment_max_size_mb": 8,
+                "allow_user_upload_attachment": "on",
+                "vip_only_upload_attachment": "on",
+                "allow_user_comment": "on",
+                "comment_first_reward_money": "1",
+                "comment_first_reward_points": "1",
+                "article_author_reward_money_ratio": "0.8",
+                "article_author_reward_points_ratio": "0",
+                "book_author_reward_money_ratio": "0.8",
+                "book_author_reward_points_ratio": "0",
+                "attachment_author_reward_money_ratio": "0.8",
+                "attachment_author_reward_points_ratio": "0",
             },
-            instance=site_setting,
         )
 
         self.assertTrue(form.is_valid(), form.errors)
         saved = form.save()
-        self.assertEqual(saved.attachment_max_size_mb, 8)
+        self.assertEqual(saved["attachment_max_size_mb"], 8)
+        self.assertTrue(saved["allow_user_upload_attachment"])
+        self.assertTrue(saved["vip_only_upload_attachment"])

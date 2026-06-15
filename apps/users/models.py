@@ -47,6 +47,7 @@ class UserProfile(models.Model):
     description = models.TextField(blank=True, default="", max_length=500)
     money = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
+    last_login_reward_date = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=16, choices=GENDER_CHOICES, blank=True, default="")
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     github = models.URLField(max_length=255, blank=True, default="")

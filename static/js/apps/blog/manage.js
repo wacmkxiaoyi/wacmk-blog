@@ -1,4 +1,4 @@
-import { closeModal, escapeHtml, getCsrfToken, markGuardClean, openActionMenu, openModal, showInlineFlash } from "../../core/app.js";
+import { escapeHtml, getCsrfToken, markGuardClean, openActionMenu, openModal, showInlineFlash } from "../../core/app.js";
 import { appendAccessDisplay, bindConditionTooltips, bindStarWidgets } from "./shared.js";
 import { getPrimaryPostMarkdownEditor } from "./editor.js";
 
@@ -1129,7 +1129,7 @@ function initializeBookEditor() {
         hint.className = "field-help";
         hint.textContent = getBookEditorString("data-chapter-rename-help", "Enter a new group name.");
 
-        openModal({
+        var modal = openModal({
             kicker: getBookEditorString("data-chapter-kicker", "Chapters"),
             title: title,
             contentNode: (function () {
@@ -1151,7 +1151,9 @@ function initializeBookEditor() {
                 if (onConfirm) {
                     onConfirm(value);
                 }
-                closeModal();
+                if (modal) {
+                    modal.close();
+                }
             }
         });
 
@@ -2058,7 +2060,22 @@ function initManageUserForm() {
 
 function initSiteSettingsForm() {
     var vipMaxLevelInput = document.querySelector('[data-vip-max-level-input="true"]');
-    var vipLevelFieldsWrapper = document.querySelector('[data-vip-level-name-fields]');
+    var vipLevelFieldsWrapper = document.querySelector('[data-vip-config-fields]');
+
+    function syncVipConfigToggle(card, expanded) {
+        var toggle = card ? card.querySelector('[data-vip-config-toggle]') : null;
+        var body = card ? card.querySelector('[data-vip-config-body]') : null;
+        var icon = toggle ? toggle.querySelector('i') : null;
+        if (!toggle || !body) {
+            return;
+        }
+        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        body.hidden = !expanded;
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !expanded);
+            icon.classList.toggle('fa-chevron-up', expanded);
+        }
+    }
 
     function syncVipLevelFieldVisibility() {
         var maxLevel = 0;
@@ -2068,15 +2085,30 @@ function initSiteSettingsForm() {
         maxLevel = parseInt(vipMaxLevelInput.value || '0', 10);
         if (isNaN(maxLevel) || maxLevel <= 0) {
             vipLevelFieldsWrapper.hidden = true;
-            vipLevelFieldsWrapper.querySelectorAll('[data-vip-level-name-field]').forEach(function (field) {
+            vipLevelFieldsWrapper.querySelectorAll('[data-vip-config-card]').forEach(function (field) {
                 field.hidden = true;
+                syncVipConfigToggle(field, false);
             });
             return;
         }
         vipLevelFieldsWrapper.hidden = false;
-        vipLevelFieldsWrapper.querySelectorAll('[data-vip-level-name-field]').forEach(function (field) {
+        vipLevelFieldsWrapper.querySelectorAll('[data-vip-config-card]').forEach(function (field) {
             var level = parseInt(field.getAttribute('data-vip-level') || '0', 10);
             field.hidden = isNaN(level) || level > maxLevel;
+            if (field.hidden) {
+                syncVipConfigToggle(field, false);
+            }
+        });
+    }
+
+    if (vipLevelFieldsWrapper) {
+        vipLevelFieldsWrapper.querySelectorAll('[data-vip-config-toggle]').forEach(function (toggle) {
+            var card = toggle.closest('[data-vip-config-card]');
+            syncVipConfigToggle(card, false);
+            toggle.addEventListener('click', function () {
+                var expanded = toggle.getAttribute('aria-expanded') === 'true';
+                syncVipConfigToggle(card, !expanded);
+            });
         });
     }
 
@@ -2318,7 +2350,7 @@ function initAddUserButton() {
             });
         }
 
-        openModal({
+        var modal = openModal({
             kicker: escapeHtml(trigger.getAttribute("data-add-user-kicker") || "Users"),
             title: escapeHtml(trigger.getAttribute("data-add-user-title") || "Add user"),
             contentNode: container,
@@ -2380,7 +2412,9 @@ function initAddUserButton() {
                     });
                 }).then(function (data) {
                     if (data.ok) {
-                        closeModal();
+                        if (modal) {
+                            modal.close();
+                        }
                         window.location.reload();
                     } else if (data.errors) {
                         showErrors(data.errors);

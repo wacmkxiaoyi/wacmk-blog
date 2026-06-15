@@ -13,15 +13,9 @@
 {% endblock %}
 
 {% block content %}
-<main class="auth-layout"{% if site_setting and site_setting.auth_background %} style="--custom-auth-background: url('{{ site_setting.auth_background.url }}');"{% endif %}>
+<main class="auth-layout"{% if auth_background_url %} style="--custom-auth-background: url('{{ auth_background_url }}');"{% endif %}>
     <div class="auth-toolbar">
-        <form action="{% url 'set_language' %}" method="post" class="language-switcher">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <button type="submit" name="language" value="zh-hans" class="language-option{% if LANGUAGE_CODE == 'zh-hans' %} is-active{% endif %}">中文</button>
-            <span class="language-divider" aria-hidden="true">|</span>
-            <button type="submit" name="language" value="en" class="language-option{% if LANGUAGE_CODE == 'en' %} is-active{% endif %}">EN</button>
-        </form>
+        {% include 'includes/language_switcher.html' %}
     </div>
     <section class="auth-card auth-card-wide">
         <span class="card-spark" aria-hidden="true"></span>

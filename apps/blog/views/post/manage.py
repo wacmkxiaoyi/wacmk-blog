@@ -296,6 +296,9 @@ class ManagePostListView(ManageBaseMixin, TemplateView):
         active_tab = self.get_active_tab()
         context.update(self.get_manage_context(section="posts", query=query, active_tab=active_tab))
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["items"] = page_obj.object_list
         if active_tab == "published":
             for item in context["items"]:
@@ -329,6 +332,11 @@ class ManagePostCreateView(ManageBaseMixin, CreateView):
     form_class = PostDraftForm
     success_url = reverse_lazy("manage-posts")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         self.object = form.save()
@@ -350,6 +358,9 @@ class ManagePostCreateView(ManageBaseMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context.update(self.get_manage_context(section="posts", page_title=_("Create article")))
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["editor_mode"] = "draft"
         context["editor_object"] = self.object
         context["next_url"] = self.get_next_url()
@@ -363,6 +374,11 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
     queryset = Post.objects.prefetch_related("tags", "books")
     success_url = reverse_lazy("manage-posts")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def get_object(self, queryset=None):
         post = super().get_object(queryset)
         self.revision_draft = getattr(post, "revision_draft", None)
@@ -372,7 +388,7 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
         self.object = self.get_object()
         if (request.POST.get("status") or "").strip() == Post.STATUS_DRAFT:
             draft = self.revision_draft or clone_post_to_draft(self.object, request.user)
-            saved_draft_form = PostDraftForm(request.POST, request.FILES, instance=draft)
+            saved_draft_form = PostDraftForm(request.POST, request.FILES, instance=draft, user=request.user)
             if not saved_draft_form.is_valid():
                 return self.render_to_response(self.get_context_data(form=saved_draft_form))
             saved_draft_form.instance.author = request.user
@@ -394,6 +410,9 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context.update(self.get_manage_context(section="posts", page_title=_("Edit article")))
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["editor_mode"] = "published"
         context["editor_object"] = self.object
         context["revision_draft"] = self.revision_draft
@@ -409,6 +428,11 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
     template_name = "blog/manage/post_form.html"
     form_class = PostDraftForm
     queryset = PostDraft.objects.select_related("source_post").prefetch_related("tags", "books")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
@@ -437,6 +461,9 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
         title = _("Edit revision") if self.object.source_post_id else _("Edit draft")
         context.update(self.get_manage_context(section="posts", page_title=title))
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["editor_mode"] = "draft"
         context["editor_object"] = self.object
         context["revision_draft"] = self.object if self.object.source_post_id else None

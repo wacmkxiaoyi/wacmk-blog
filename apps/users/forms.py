@@ -157,6 +157,5 @@ class RegistrationForm(forms.Form):
 
     @property
     def register_available(self):
-        from apps.blog.utils import get_site_setting
-        site_setting = get_site_setting()
-        return site_setting is not None and site_setting.enable_register and settings.REGISTER_EMAIL_SETTINGS_READY
+        from apps.blog.utils import get_setting
+        return get_setting("enable_register") and settings.REGISTER_EMAIL_SETTINGS_READY

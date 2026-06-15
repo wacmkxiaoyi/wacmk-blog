@@ -423,6 +423,21 @@
     background: rgba(248, 244, 252, 0.55);
 }
 
+.site-settings-vip-group {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.site-settings-vip-group-header {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.site-settings-vip-group-body {
+    margin-top: 0;
+    margin-left: 0.35rem;
+}
+
 .site-settings-asset-card {
     width: 100%;
     min-width: 0;

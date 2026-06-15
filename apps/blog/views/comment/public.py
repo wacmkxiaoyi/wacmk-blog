@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -9,6 +10,7 @@ from django.views import View
 
 from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment, CommentFeedback
+from apps.blog.services.comment_rewards import grant_first_comment_reward_once
 from apps.blog.utils import get_safe_next_url, with_fragment, write_audit_log
 from apps.blog.utils.request import get_feedback_value_from_request
 from apps.blog.utils.site import check_comment_permission
@@ -69,13 +71,13 @@ class CommentCreateView(LoginRequiredMixin, View):
             parent = target_comment if target_comment.parent_id is None else target_comment.parent
             form_prefix = f"reply-{target_comment.pk}"
 
-        form = CommentForm(request.POST, prefix=form_prefix)
+        form = CommentForm(request.POST, prefix=form_prefix, user=request.user)
 
         if not form.is_valid():
             detail_view = get_comment_detail_view(post, request)
             return detail_view.render_to_response(
                 detail_view.get_context_data(
-                    comment_form=form if parent is None else CommentForm(),
+                    comment_form=form if parent is None else CommentForm(user=request.user),
                     reply_parent_id=parent_id,
                     reply_form=form if parent is not None else None,
                 )
@@ -96,11 +98,37 @@ class CommentCreateView(LoginRequiredMixin, View):
             messages.error(request, _("Replies can only target a top-level comment or one of its direct replies."))
             return redirect(f"{post.get_absolute_url()}#comments")
 
-        comment.save()
+        with transaction.atomic():
+            comment.save()
+            reward_result = grant_first_comment_reward_once(comment)
         action_message = _("Reply posted successfully.") if parent else _("Comment posted successfully.")
         audit_message = _("Comment created on %(title)s") % {"title": post.title}
         write_audit_log(request, AuditLog.ACTION_COMMENT_CREATE, str(audit_message), user=request.user)
-        messages.success(request, action_message)
+        if reward_result["granted"]:
+            base_money = reward_result.get("base_reward_money", 0)
+            base_points = reward_result.get("base_reward_points", 0)
+            vip_money = reward_result.get("vip_reward_money", 0)
+            vip_points = reward_result.get("vip_reward_points", 0)
+            vip_display_name = reward_result.get("vip_display_name") or _("VIP")
+            reward_message = _("%(action)s First comment reward: +%(money)s money, +%(points)s points.") % {
+                "action": action_message,
+                "money": reward_result["reward_money"],
+                "points": reward_result["reward_points"],
+            }
+            if vip_money > 0 or vip_points > 0:
+                reward_message += " " + _("Base: +%(base_money)s money, +%(base_points)s points; %(vip_name)s bonus: +%(vip_money)s money, +%(vip_points)s points.") % {
+                    "base_money": base_money,
+                    "base_points": base_points,
+                    "vip_name": vip_display_name,
+                    "vip_money": vip_money,
+                    "vip_points": vip_points,
+                }
+            messages.success(
+                request,
+                reward_message,
+            )
+        else:
+            messages.success(request, action_message)
         return redirect(with_fragment(get_safe_next_url(request) or post.get_absolute_url(), f"comment-{comment.pk}"))
 
 
@@ -133,12 +161,12 @@ class CommentUpdateView(LoginRequiredMixin, View):
             messages.error(request, _("You do not have permission to edit comments."))
             return redirect(with_fragment(get_safe_next_url(request) or comment.post.get_absolute_url(), f"comment-{comment.pk}"))
 
-        form = CommentForm(request.POST, instance=comment, prefix=f"edit-{comment.pk}")
+        form = CommentForm(request.POST, instance=comment, prefix=f"edit-{comment.pk}", user=request.user)
         if not form.is_valid():
             detail_view = get_comment_detail_view(comment.post, request)
             return detail_view.render_to_response(
                 detail_view.get_context_data(
-                    comment_form=CommentForm(),
+                    comment_form=CommentForm(user=request.user),
                     reply_parent_id="",
                     edit_comment_id=comment.pk,
                     edit_form=form,

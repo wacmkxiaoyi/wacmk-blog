@@ -9,7 +9,7 @@
                     <strong>{{ comment.author.first_name|default:comment.author.username }}</strong>
                 </a>
                 {% if comment.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                {% if comment.author_is_vip and not comment.is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.author_vip_label }}</span></span>{% endif %}
+                {% if comment.author_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.author_vip_label }}</span></span>{% endif %}
                 {% if comment.reply_target %}
                 <span class="comment-reply-label">{% trans "Reply" %}</span>
                 <a href="{% if comment.reply_target.author_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' comment.reply_target.author_id %}{% endif %}" class="comment-author-link">
@@ -17,7 +17,7 @@
                     <strong>{{ comment.reply_target.author.first_name|default:comment.reply_target.author.username }}</strong>
                 </a>
                 {% if comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                {% if comment.reply_target_is_vip and not comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.reply_target_vip_label }}</span></span>{% endif %}
+                {% if comment.reply_target_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.reply_target_vip_label }}</span></span>{% endif %}
                 {% endif %}
             </div>
         </div>

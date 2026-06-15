@@ -1,13 +1,17 @@
 from datetime import timedelta
 
+from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from apps.blog.models import Attachment, Book, BookShareLink, ContentViewLog, Post, PostShareLink
-from apps.blog.utils import get_or_create_site_setting
+from decimal import Decimal
+
+from apps.blog.models import Attachment, AuthorRewardRecord, Book, BookShareLink, Comment, CommentRewardRecord, ContentViewLog, Post, PostShareLink, UserMoneyHistory, UserPointsHistory
+from apps.blog.utils import get_or_create_site_setting, set_settings
 from apps.blog.permissions import hash_condition_password
 from apps.blog.views.post.utils.draft import clone_post_to_draft, publish_post_draft
 from apps.users.models import UserProfile
@@ -101,7 +105,7 @@ class EncryptedAccessFlowTests(TestCase):
         detail_response = self.client.get(post.get_absolute_url())
 
         self.assertEqual(detail_response.status_code, 200)
-        self.assertContains(detail_response, 'data-encrypted-post-modal')
+        self.assertContains(detail_response, 'data-gate-password-form')
         self.assertNotContains(detail_response, 'data-conditional-access-modal')
 
         purchase_response = self.client.post(
@@ -110,7 +114,8 @@ class EncryptedAccessFlowTests(TestCase):
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
 
-        self.assertEqual(purchase_response.status_code, 400)
+        self.assertEqual(purchase_response.status_code, 200)
+        self.assertEqual(purchase_response.json()["message"], "Password is required.")
         self.assertEqual(purchase_response.json()["message"], "Password is required.")
 
     def test_multi_condition_book_requires_password_before_condition_modal(self):
@@ -132,7 +137,7 @@ class EncryptedAccessFlowTests(TestCase):
         detail_response = self.client.get(book.get_absolute_url())
 
         self.assertEqual(detail_response.status_code, 200)
-        self.assertContains(detail_response, 'data-encrypted-post-modal')
+        self.assertContains(detail_response, 'data-gate-password-form')
         self.assertNotContains(detail_response, 'data-conditional-access-modal')
 
         purchase_response = self.client.post(
@@ -141,7 +146,8 @@ class EncryptedAccessFlowTests(TestCase):
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
 
-        self.assertEqual(purchase_response.status_code, 400)
+        self.assertEqual(purchase_response.status_code, 200)
+        self.assertEqual(purchase_response.json()["message"], "Password is required.")
         self.assertEqual(purchase_response.json()["message"], "Password is required.")
 
     def test_book_gate_priority_prefers_book_condition_over_post_password(self):
@@ -172,8 +178,8 @@ class EncryptedAccessFlowTests(TestCase):
         response = self.client.get(f"{book.get_absolute_url()}?post={locked_post.slug}")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'data-conditional-access-modal')
-        self.assertNotContains(response, 'data-encrypted-post-modal')
+        self.assertContains(response, 'data-gate-table-wrapper')
+        self.assertNotContains(response, 'data-gate-password-form')
 
     def test_book_gate_priority_prefers_post_condition_after_book_passes(self):
         post_author = User.objects.create_user(username="post-condition-author", password="login-pass")
@@ -208,10 +214,10 @@ class EncryptedAccessFlowTests(TestCase):
         response = self.client.get(f"{book.get_absolute_url()}?post={conditional_post.slug}")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'data-conditional-access-modal')
+        self.assertContains(response, 'data-gate-table-wrapper')
         self.assertContains(response, f'data-conditional-access-url="{conditional_post.get_absolute_url()}?next=', html=False)
         self.assertContains(response, 'nested-conditional-post', html=False)
-        self.assertNotContains(response, 'data-encrypted-post-modal')
+        self.assertNotContains(response, 'data-gate-password-form')
 
     def test_encrypted_post_unlock_honors_next_url(self):
         author = User.objects.create_user(username="author", password="login-pass")
@@ -234,6 +240,509 @@ class EncryptedAccessFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["redirect_url"], "/book/demo/?post=post-with-next")
+
+
+class AuthorRewardFlowTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(username="reward-author", password="login-pass")
+        self.reader = User.objects.create_user(username="reward-reader", password="login-pass")
+        self.vip_reader = User.objects.create_user(username="reward-vip-reader", password="login-pass")
+        UserProfile.objects.get_or_create(user=self.author)
+        UserProfile.objects.get_or_create(user=self.reader)
+        UserProfile.objects.get_or_create(user=self.vip_reader)
+        vip_group, _created = Group.objects.get_or_create(name="vip_1")
+        self.vip_reader.groups.add(vip_group)
+        self.client.force_login(self.reader)
+        set_settings(
+            {
+                "article_author_reward_money_ratio": Decimal("0.80"),
+                "article_author_reward_points_ratio": Decimal("0.00"),
+                "book_author_reward_money_ratio": Decimal("0.80"),
+                "book_author_reward_points_ratio": Decimal("0.00"),
+                "attachment_author_reward_money_ratio": Decimal("0.80"),
+                "attachment_author_reward_points_ratio": Decimal("0.00"),
+                "vip_max_level": 1,
+                "vip_configs": [{"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05"}],
+            }
+        )
+
+    def test_first_post_access_rewards_author_money_once(self):
+        post = Post.objects.create(
+            title="Rewarded post",
+            slug="rewarded-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "money", "value": 5}],
+        )
+        self.reader.profile.money = 20
+        self.reader.profile.save(update_fields=["money"])
+        self.client.post(reverse("access-check", kwargs={"object_type": "post", "object_id": post.pk}), {"action": "purchase"})
+
+        first_response = self.client.get(post.get_absolute_url())
+        second_response = self.client.get(post.get_absolute_url())
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 4)
+        self.assertEqual(self.author.profile.points, 0)
+        self.assertEqual(AuthorRewardRecord.objects.filter(object_type="post", object_id=post.pk, reader=self.reader).count(), 1)
+        record = UserMoneyHistory.objects.get(user=self.author, reason_type=UserMoneyHistory.REASON_AUTHOR_REWARD)
+        self.assertEqual(record.change_amount, 4)
+        self.assertEqual(record.balance_after, 4)
+
+    def test_first_book_access_rewards_author_points_with_rounding_up(self):
+        set_settings({"book_author_reward_money_ratio": Decimal("0.00"), "book_author_reward_points_ratio": Decimal("0.10")})
+        book = Book.objects.create(
+            name="Rewarded book",
+            slug="rewarded-book",
+            summary="summary",
+            visibility=Book.VISIBILITY_CONDITIONAL,
+            created_by=self.author,
+            condition_rules=[{"type": "points", "value": 1}],
+        )
+        self.reader.profile.points = 5
+        self.reader.profile.save(update_fields=["points"])
+
+        response = self.client.get(book.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 0)
+        self.assertEqual(self.author.profile.points, 1)
+        record = AuthorRewardRecord.objects.get(object_type="book", object_id=book.pk, reader=self.reader)
+        self.assertEqual(record.reward_points, 1)
+        points_history = UserPointsHistory.objects.get(user=self.author, reason_type=UserPointsHistory.REASON_AUTHOR_REWARD)
+        self.assertEqual(points_history.change_amount, 1)
+        self.assertEqual(points_history.balance_after, 1)
+
+    def test_attachment_download_rewards_author_for_money_and_points_once(self):
+        set_settings({"attachment_author_reward_money_ratio": Decimal("0.50"), "attachment_author_reward_points_ratio": Decimal("0.25")})
+        attachment = Attachment.objects.create(
+            title="Rewarded attachment",
+            original_filename="rewarded.txt",
+            mime_type="text/plain",
+            file_size=12,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_CONDITIONAL,
+            condition_rules=[{"type": "money", "value": 5}, {"type": "points", "value": 3}],
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("rewarded.txt", b"rewarded-file", content_type="text/plain"),
+        )
+        self.reader.profile.money = 20
+        self.reader.profile.points = 20
+        self.reader.profile.save(update_fields=["money", "points"])
+        self.client.post(reverse("attachment-access-check", kwargs={"pk": attachment.pk}), {"action": "purchase"})
+
+        first_response = self.client.get(reverse("attachment-download", kwargs={"pk": attachment.pk}))
+        second_response = self.client.get(reverse("attachment-download", kwargs={"pk": attachment.pk}))
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 3)
+        self.assertEqual(self.author.profile.points, 1)
+        record = AuthorRewardRecord.objects.get(object_type="attachment", object_id=attachment.pk, reader=self.reader)
+        self.assertEqual(record.reward_money, 3)
+        self.assertEqual(record.reward_points, 1)
+
+    def test_author_visiting_own_content_does_not_create_reward(self):
+        self.client.force_login(self.author)
+        post = Post.objects.create(
+            title="Own post",
+            slug="own-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "points", "value": 4}],
+        )
+        self.author.profile.points = 10
+        self.author.profile.save(update_fields=["points"])
+
+        response = self.client.get(post.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(AuthorRewardRecord.objects.filter(object_type="post", object_id=post.pk).exists())
+
+    def test_first_standalone_post_access_rewards_vip_author_based_on_vip_rules(self):
+        set_settings({"article_author_reward_money_ratio": Decimal("0.50"), "article_author_reward_points_ratio": Decimal("0.50")})
+        post = Post.objects.create(
+            title="VIP rewarded post",
+            slug="vip-rewarded-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            access_scope=Post.ACCESS_SCOPE_STANDALONE,
+            vip_access_permission=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "money", "value": 10}],
+            vip_condition_rules=[{"type": "points", "value": 1}],
+        )
+        self.vip_reader.profile.points = 5
+        self.vip_reader.profile.save(update_fields=["points"])
+
+        self.client.force_login(self.vip_reader)
+        response = self.client.get(post.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 0)
+        self.assertEqual(self.author.profile.points, 1)
+        record = AuthorRewardRecord.objects.get(object_type="post", object_id=post.pk, reader=self.vip_reader)
+        self.assertEqual(record.reward_money, 0)
+        self.assertEqual(record.reward_points, 1)
+
+    def test_first_standalone_book_access_with_vip_public_does_not_reward_author(self):
+        book = Book.objects.create(
+            name="VIP public rewarded book",
+            slug="vip-public-rewarded-book",
+            summary="summary",
+            visibility=Book.VISIBILITY_CONDITIONAL,
+            access_scope=Book.ACCESS_SCOPE_STANDALONE,
+            vip_access_permission=Book.VISIBILITY_PUBLIC,
+            created_by=self.author,
+            condition_rules=[{"type": "money", "value": 10}],
+        )
+        self.vip_reader.profile.money = 20
+        self.vip_reader.profile.save(update_fields=["money"])
+
+        self.client.force_login(self.vip_reader)
+        response = self.client.get(book.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 0)
+        self.assertEqual(self.author.profile.points, 0)
+        self.assertFalse(AuthorRewardRecord.objects.filter(object_type="book", object_id=book.pk, reader=self.vip_reader).exists())
+
+    def test_vip_money_discount_applies_outside_standalone_scope(self):
+        post = Post.objects.create(
+            title="Discounted post",
+            slug="discounted-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "money", "value": 100}],
+        )
+        self.vip_reader.profile.money = 90
+        self.vip_reader.profile.save(update_fields=["money"])
+        self.client.force_login(self.vip_reader)
+
+        check = self.client.get(reverse("access-check", kwargs={"object_type": "post", "object_id": post.pk})).json()
+
+        self.assertEqual(check["conditions"][0]["requirement"], "90")
+        self.assertTrue(check["conditions"][0]["discount_applied"])
+        purchase_response = self.client.post(reverse("access-check", kwargs={"object_type": "post", "object_id": post.pk}), {"action": "purchase"})
+        self.assertEqual(purchase_response.status_code, 200)
+        self.vip_reader.profile.refresh_from_db()
+        self.assertEqual(self.vip_reader.profile.money, 0)
+        record = UserMoneyHistory.objects.get(user=self.vip_reader, reason_type=UserMoneyHistory.REASON_CONTENT_PURCHASE)
+        self.assertEqual(record.change_amount, -90)
+        self.assertEqual(record.balance_after, 0)
+
+    def test_vip_points_discount_applies_outside_standalone_scope(self):
+        post = Post.objects.create(
+            title="Discounted points post",
+            slug="discounted-points-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "points", "value": 100}],
+        )
+        self.vip_reader.profile.points = 95
+        self.vip_reader.profile.save(update_fields=["points"])
+        self.client.force_login(self.vip_reader)
+
+        check = self.client.get(reverse("access-check", kwargs={"object_type": "post", "object_id": post.pk})).json()
+
+        self.assertEqual(check["conditions"][0]["requirement"], "95")
+        self.assertTrue(check["all_granted"])
+
+    def test_first_standalone_attachment_access_non_vip_still_rewards_from_common_rules(self):
+        set_settings({"attachment_author_reward_money_ratio": Decimal("0.50"), "attachment_author_reward_points_ratio": Decimal("0.50")})
+        attachment = Attachment.objects.create(
+            title="Standalone rewarded attachment",
+            original_filename="standalone-rewarded.txt",
+            mime_type="text/plain",
+            file_size=12,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_CONDITIONAL,
+            access_scope=Attachment.ACCESS_SCOPE_STANDALONE,
+            vip_access_permission=Attachment.VISIBILITY_PUBLIC,
+            condition_rules=[{"type": "money", "value": 5}, {"type": "points", "value": 3}],
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("standalone-rewarded.txt", b"rewarded-file", content_type="text/plain"),
+        )
+        self.reader.profile.money = 20
+        self.reader.profile.points = 20
+        self.reader.profile.save(update_fields=["money", "points"])
+        self.client.force_login(self.reader)
+        self.client.post(reverse("attachment-access-check", kwargs={"pk": attachment.pk}), {"action": "purchase"})
+
+        response = self.client.get(reverse("attachment-download", kwargs={"pk": attachment.pk}))
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 3)
+        self.assertEqual(self.author.profile.points, 2)
+        record = AuthorRewardRecord.objects.get(object_type="attachment", object_id=attachment.pk, reader=self.reader)
+        self.assertEqual(record.reward_money, 3)
+        self.assertEqual(record.reward_points, 2)
+
+
+class CommentRewardFlowTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(username="comment-author", password="login-pass")
+        self.reader = User.objects.create_user(username="comment-reader", password="login-pass")
+        UserProfile.objects.get_or_create(user=self.author)
+        UserProfile.objects.get_or_create(user=self.reader)
+        self.client.force_login(self.reader)
+        set_settings({"allow_user_comment": True, "comment_first_reward_money": 1, "comment_first_reward_points": 1})
+
+    def test_first_comment_rewards_user_once_on_post(self):
+        post = Post.objects.create(
+            title="Comment reward post",
+            slug="comment-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+
+        first_response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "first comment"})
+        second_response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "second comment"})
+
+        self.assertEqual(first_response.status_code, 302)
+        self.assertEqual(second_response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 1)
+        self.assertEqual(self.reader.profile.points, 1)
+        record = UserMoneyHistory.objects.get(user=self.reader, reason_type=UserMoneyHistory.REASON_FIRST_COMMENT_REWARD)
+        self.assertEqual(record.change_amount, 1)
+        self.assertEqual(record.balance_after, 1)
+        points_history = UserPointsHistory.objects.get(user=self.reader, reason_type=UserPointsHistory.REASON_FIRST_COMMENT_REWARD)
+        self.assertEqual(points_history.change_amount, 1)
+        self.assertEqual(points_history.balance_after, 1)
+
+
+class CommentVipBadgeRenderingTests(TestCase):
+    def setUp(self):
+        set_settings(
+            {
+                "allow_user_comment": True,
+                "vip_max_level": 2,
+                "vip_configs": [
+                    {"display_name": "Silver", "money_discount": "0.10", "points_discount": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
+                    {"display_name": "Gold", "money_discount": "0.20", "points_discount": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
+                ],
+            }
+        )
+        self.viewer = User.objects.create_user(username="comment-viewer", password="login-pass")
+        self.post_author = User.objects.create_user(username="comment-post-author", password="login-pass")
+        self.admin_vip = User.objects.create_superuser(username="comment-admin-vip", email="admin-vip@example.com", password="login-pass")
+        UserProfile.objects.get_or_create(user=self.viewer)
+        UserProfile.objects.get_or_create(user=self.post_author)
+        UserProfile.objects.get_or_create(user=self.admin_vip)
+        self.admin_vip.groups.add(Group.objects.get_or_create(name="vip_2")[0])
+        self.client.force_login(self.viewer)
+
+    def test_blog_detail_comment_shows_admin_and_vip_labels(self):
+        post = Post.objects.create(
+            title="Admin VIP comment post",
+            slug="admin-vip-comment-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.post_author,
+        )
+        Comment.objects.create(post=post, author=self.admin_vip, content="admin vip comment")
+
+        response = self.client.get(reverse("blog-detail", kwargs={"slug": post.slug}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Administrator")
+        self.assertContains(response, "Gold")
+        self.assertContains(response, "comment-role-tag-vip")
+
+    def test_blog_detail_comment_shows_vip_label_for_admin_author(self):
+        self.admin_vip.first_name = "administrator"
+        self.admin_vip.save(update_fields=["first_name"])
+        post = Post.objects.create(
+            title="Admin VIP author post",
+            slug="admin-vip-author-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.admin_vip,
+        )
+        Comment.objects.create(post=post, author=self.admin_vip, content="admin vip author comment")
+
+        response = self.client.get(reverse("blog-detail", kwargs={"slug": post.slug}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "comment-role-tag-author")
+        self.assertContains(response, "Administrator")
+        self.assertContains(response, "Gold")
+        self.assertContains(response, "comment-role-tag-vip")
+        self.assertEqual(CommentRewardRecord.objects.filter(user=self.reader, post=post).count(), 1)
+
+    def test_vip_first_comment_adds_extra_rewards(self):
+        set_settings(
+            {
+                "allow_user_comment": True,
+                "comment_first_reward_money": 1,
+                "comment_first_reward_points": 1,
+                "vip_max_level": 2,
+                "vip_configs": [
+                    {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
+                    {"display_name": "VIP 2", "money_discount": "0.20", "points_discount": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
+                ],
+            }
+        )
+        self.reader.groups.add(Group.objects.get_or_create(name="vip_2")[0])
+        post = Post.objects.create(
+            title="VIP comment reward post",
+            slug="vip-comment-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+
+        response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "vip first comment"})
+
+        self.assertEqual(response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 5)
+        self.assertEqual(self.reader.profile.points, 5)
+        record = CommentRewardRecord.objects.get(user=self.reader, post=post)
+        self.assertEqual(record.reward_money, 5)
+        self.assertEqual(record.reward_points, 5)
+        message_texts = [message.message for message in get_messages(response.wsgi_request)]
+        self.assertIn(
+            "Comment posted successfully. First comment reward: +5 money, +5 points. Base: +1 money, +1 points; VIP 2 bonus: +4 money, +4 points.",
+            message_texts,
+        )
+
+    def test_first_reply_also_counts_for_reward(self):
+        post = Post.objects.create(
+            title="Reply reward post",
+            slug="reply-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+        parent_author = User.objects.create_user(username="parent-author", password="login-pass")
+        UserProfile.objects.get_or_create(user=parent_author)
+        parent_comment = Comment.objects.create(post=post, author=parent_author, content="parent")
+
+        response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"reply-%s-content" % parent_comment.pk: "reply", "parent_id": str(parent_comment.pk)})
+
+        self.assertEqual(response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 1)
+        self.assertEqual(self.reader.profile.points, 1)
+        record = CommentRewardRecord.objects.get(user=self.reader, post=post)
+        self.assertEqual(record.comment.parent_id, parent_comment.pk)
+
+    def test_book_embedded_post_comment_rewards_user(self):
+        post = Post.objects.create(
+            title="Book comment post",
+            slug="book-comment-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+        book = Book.objects.create(
+            name="Comment reward book",
+            slug="comment-reward-book",
+            summary="summary",
+            visibility=Book.VISIBILITY_PUBLIC,
+            created_by=self.author,
+            structure=[{"type": "post", "post_id": post.pk}],
+        )
+
+        response = self.client.post(
+            f"{reverse('comment-create', kwargs={'slug': post.slug})}?next={book.get_absolute_url()}?post={post.slug}",
+            {"content": "book comment"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 1)
+        self.assertEqual(self.reader.profile.points, 1)
+        self.assertTrue(CommentRewardRecord.objects.filter(user=self.reader, post=post).exists())
+
+    def test_zero_reward_settings_skip_reward_record(self):
+        set_settings({"allow_user_comment": True, "comment_first_reward_money": 0, "comment_first_reward_points": 0})
+        post = Post.objects.create(
+            title="Zero reward post",
+            slug="zero-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+
+        response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "first comment"})
+
+        self.assertEqual(response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 0)
+        self.assertEqual(self.reader.profile.points, 0)
+        self.assertFalse(CommentRewardRecord.objects.filter(user=self.reader, post=post).exists())
+
+    def test_vip_bonus_can_reward_when_base_first_comment_reward_is_zero(self):
+        set_settings(
+            {
+                "allow_user_comment": True,
+                "comment_first_reward_money": 0,
+                "comment_first_reward_points": 0,
+                "vip_max_level": 1,
+                "vip_configs": [
+                    {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2}
+                ],
+            }
+        )
+        self.reader.groups.add(Group.objects.get_or_create(name="vip_1")[0])
+        post = Post.objects.create(
+            title="VIP zero base reward post",
+            slug="vip-zero-base-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+
+        response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "vip bonus comment"})
+
+        self.assertEqual(response.status_code, 302)
+        self.reader.profile.refresh_from_db()
+        self.assertEqual(self.reader.profile.money, 2)
+        self.assertEqual(self.reader.profile.points, 2)
+        record = CommentRewardRecord.objects.get(user=self.reader, post=post)
+        self.assertEqual(record.reward_money, 2)
+        self.assertEqual(record.reward_points, 2)
 
 
 class BookStructureSyncTests(TestCase):
@@ -325,16 +834,12 @@ class ProfileBookLimitAccessTests(TestCase):
         self.user = User.objects.create_user(username="book-owner", password="login-pass")
         self.client.force_login(self.user)
         UserProfile.objects.get_or_create(user=self.user)
-        self.site_setting = get_or_create_site_setting()
-        self.site_setting.allow_non_admin_create_book = True
-        self.site_setting.vip_only_create_book = False
-        self.site_setting.non_admin_max_book_count = 1
-        self.site_setting.save(
-            update_fields=[
-                "allow_non_admin_create_book",
-                "vip_only_create_book",
-                "non_admin_max_book_count",
-            ]
+        set_settings(
+            {
+                "allow_non_admin_create_book": True,
+                "vip_only_create_book": False,
+                "non_admin_max_book_count": 1,
+            }
         )
         self.book = Book.objects.create(
             name="Owned book",
@@ -373,6 +878,7 @@ class ProfileBookAccessRuleTests(TestCase):
         self.reader = User.objects.create_user(username="book-rule-reader", password="login-pass")
         self.client.force_login(self.reader)
         self.profile, _created = UserProfile.objects.get_or_create(user=self.reader)
+        set_settings({"allow_non_admin_create_book": True})
         self.book = Book.objects.create(
             name="Reader book",
             slug="reader-book",
@@ -861,13 +1367,11 @@ class ManagePostListViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="post-manager", password="login-pass", is_staff=True)
         self.client.force_login(self.user)
-        self.site_setting = get_or_create_site_setting()
-        self.site_setting.allow_non_admin_create_post = False
-        self.site_setting.save(update_fields=["allow_non_admin_create_post"])
+        set_settings({"allow_non_admin_create_post": False})
 
     def test_new_article_button_is_visible_for_admin_when_non_admin_creation_disabled(self):
         response = self.client.get(reverse("manage-posts"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reverse("manage-post-create"))
-        self.assertContains(response, "New article")
+        self.assertContains(response, "新建文章")

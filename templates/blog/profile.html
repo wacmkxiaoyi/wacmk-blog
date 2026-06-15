@@ -28,6 +28,8 @@
                         <h1>
                             {% if current_section == 'security' %}
                             {% trans "Account security" %}
+                            {% elif current_section == 'user-group' %}
+                            {% trans "User group" %}
                             {% else %}
                             {% trans "Basic information" %}
                             {% endif %}
@@ -222,6 +224,35 @@
                         </div>
                     </div>
                 </form>
+                {% endif %}
+
+                {% if current_section == 'user-group' %}
+                <div class="profile-user-group-table-wrap">
+                    <table class="profile-user-group-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{% trans "Feature" %}</th>
+                                {% for column in profile_group_capability_table.columns %}
+                                <th scope="col" class="{% if column.is_current %}is-current{% endif %}">
+                                    <span class="profile-user-group-heading{% if column.is_vip %} is-vip{% endif %}">{{ column.label }}</span>
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in profile_group_capability_table.rows %}
+                            <tr>
+                                <th scope="row">{{ row.label }}</th>
+                                {% for cell in row.cells %}
+                                <td class="{% if cell.is_current %}is-current{% endif %}">
+                                    <span class="profile-user-group-cell{% if cell.supported %} is-supported{% else %} is-unsupported{% endif %}{% if cell.kind == 'value' and cell.supported %} is-value{% endif %}">{{ cell.display }}</span>
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% endif %}
             </div>
         </div>

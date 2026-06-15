@@ -47,7 +47,7 @@
                         {% if namecard_is_admin %}
                         <span class="soft-tag namecard-role-tag">{% trans "Administrator" %}</span>
                         {% endif %}
-                        {% if namecard_business_identity.is_vip and not namecard_is_admin %}
+                        {% if namecard_business_identity.is_vip %}
                         <span class="soft-tag namecard-role-tag namecard-role-tag-vip"><span class="comment-role-tag-vip-text">{{ namecard_business_identity.label }}</span></span>
                         {% endif %}
                     </div>

@@ -75,3 +75,24 @@ class CommentFeedback(TimeStampedModel):
         super().clean()
         if self.value not in {-1, 1}:
             raise ValidationError({"value": _("Feedback value must be either 1 or -1.")})
+
+
+class CommentRewardRecord(TimeStampedModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comment_reward_records")
+    post = models.ForeignKey("blog.Post", on_delete=models.CASCADE, related_name="comment_reward_records")
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="reward_records")
+    reward_money = models.PositiveIntegerField(default=0)
+    reward_points = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "post"], name="blog_commentreward_user_post_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["user", "post"]),
+            models.Index(fields=["post", "created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Comment reward for {self.user_id} on {self.post_id}"

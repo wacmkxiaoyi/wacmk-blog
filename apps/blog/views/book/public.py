@@ -13,6 +13,7 @@ from django.views.generic import DetailView, ListView
 from apps.blog.access import build_access_check
 from apps.blog.forms.comment import CommentForm
 from apps.blog.models import Book, BookStar, Post
+from apps.blog.services.author_rewards import grant_author_reward_once
 from apps.blog.utils import get_safe_next_url, record_book_view
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
 from apps.blog.visibility import (
@@ -79,6 +80,7 @@ class BookDetailView(LoginRequiredMixin, DetailView):
         access_check = build_access_check(self.object, request.user)
 
         if access_check["all_granted"]:
+            grant_author_reward_once(self.object, request.user)
             return super().dispatch(request, *args, **kwargs)
 
         self._access_check = access_check
@@ -130,7 +132,7 @@ class BookDetailView(LoginRequiredMixin, DetailView):
                     build_post_detail_context(
                         post,
                         self.request.user,
-                        comment_form=kwargs.get("comment_form") or CommentForm(),
+                        comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user),
                         reply_parent_id=kwargs.get("reply_parent_id"),
                         reply_form=kwargs.get("reply_form"),
                         edit_comment_id=kwargs.get("edit_comment_id"),

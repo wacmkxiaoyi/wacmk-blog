@@ -34,8 +34,8 @@ class UserNamecardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         target_user = self.get_target_user()
         profile = UserProfile.objects.get_or_create(user=target_user)[0]
-        site_setting = get_site_setting()
-        business_identity = build_user_business_identity_summary(target_user, site_setting)
+        settings_map = get_site_setting()
+        business_identity = build_user_business_identity_summary(target_user, settings_map)
 
         current_tab = self.get_current_tab()
         context["namecard_user"] = target_user

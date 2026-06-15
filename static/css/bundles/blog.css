@@ -312,7 +312,8 @@
 .post-card-access-row {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    flex-wrap: wrap;
+    gap: 0.45rem;
     min-width: 0;
     position: relative;
     z-index: 4;
@@ -410,13 +411,20 @@
 
 .soft-tag-visibility,
 .soft-tag-access {
+    display: inline-flex;
+    align-items: center;
     gap: 0.42rem;
+    padding: 0.38rem 0.72rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
     background: var(--access-tone-background, rgba(76, 196, 120, 0.14));
     color: var(--access-tone-color, #2f8f56);
 }
 
 .soft-tag-visibility i {
-    font-size: 0.82em;
+    font-size: 0.88em;
 }
 
 .soft-tag-private {
@@ -425,6 +433,14 @@
 }
 
 .soft-tag-conditional-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.72rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
     background: rgba(234, 179, 8, 0.18);
     color: #a16207;
 }
@@ -556,11 +572,6 @@
 
 .post-detail-title-row .vip-access-badge {
     vertical-align: bottom;
-}
-
-.post-card-feedback-row .vip-access-badge,
-.book-list-title-main .vip-access-badge {
-    margin-right: 0.3rem;
 }
 
 .editor-access-layout-vip-permission,
@@ -892,37 +903,8 @@
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.45rem;
     min-width: 0;
-}
-
-.attachment-card-title-row .soft-tag-access,
-.attachment-card-title-row .soft-tag-conditional-summary,
-.attachment-card-title-row .vip-access-badge {
-    min-height: 1.7rem;
-    padding-top: 0.18rem;
-    padding-bottom: 0.18rem;
-}
-
-.attachment-card-title-row .soft-tag-access,
-.attachment-card-title-row .soft-tag-conditional-summary {
-    padding-left: 0.52rem;
-    padding-right: 0.52rem;
-    font-size: 0.78rem;
-    line-height: 1.1;
-}
-
-.attachment-card-title-row .soft-tag-access i {
-    font-size: 0.72em;
-}
-
-.attachment-card-title-row .vip-access-badge {
-    padding: 0.2rem 0.42rem;
-    border-radius: 999px;
-}
-
-.attachment-card-title-row .vip-badge-icon {
-    font-size: 0.7rem;
 }
 
 .attachment-card-meta {
@@ -949,6 +931,15 @@
 .attachment-card-compact .attachment-card-actions {
     grid-column: 2;
     justify-content: flex-start;
+}
+
+.comment-markdown-content .attachment-card-compact {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.comment-markdown-content .attachment-card-compact .attachment-card-actions {
+    grid-column: auto;
+    justify-content: flex-end;
 }
 
 .blog-markdown-content a.attachment-download-button,
@@ -1076,7 +1067,9 @@
 }
 
 .blog-markdown-content table {
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
     margin: 1.15rem 0;
     border-collapse: separate;
     border-spacing: 0;
@@ -1126,7 +1119,22 @@
 
 .blog-markdown-content li table {
     margin-top: 0.85rem;
-    width: 100%;
+}
+
+.blog-markdown-content .markdown-table-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1.15rem 0;
+    padding-bottom: 0.2rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.blog-markdown-content li .markdown-table-scroll {
+    margin-top: 0.85rem;
+}
+
+.blog-markdown-content .markdown-table-scroll table {
+    margin: 0;
 }
 
 .blog-markdown-content .markdown-tabs {
@@ -1304,7 +1312,6 @@
 
 .blog-markdown-content .markdown-table-overflow {
     position: relative;
-    margin: 1.15rem 0;
 }
 
 .blog-markdown-content .markdown-table-overflow table {
@@ -3052,6 +3059,56 @@
     grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
+.editor-attachment-browser-table {
+    width: 100%;
+    min-width: 100%;
+    table-layout: fixed;
+}
+
+.editor-attachment-browser-table th,
+.editor-attachment-browser-table td {
+    text-align: left;
+}
+
+.editor-attachment-browser-table thead th {
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.editor-attachment-browser-table th:nth-child(1),
+.editor-attachment-browser-table td:nth-child(1) {
+    width: 32%;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.editor-attachment-browser-table th:nth-child(2),
+.editor-attachment-browser-table td:nth-child(2) {
+    width: 34%;
+    white-space: normal;
+}
+
+.editor-attachment-browser-table th:nth-child(3),
+.editor-attachment-browser-table td:nth-child(3) {
+    width: 18%;
+}
+
+.editor-attachment-browser-table th:nth-child(4),
+.editor-attachment-browser-table td:nth-child(4) {
+    width: 16%;
+}
+
+.editor-attachment-browser-table td:nth-child(4) .table-button {
+    min-width: 5.25rem;
+    padding-inline: 0.9rem;
+}
+
+.attachment-access-cell-group {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
 .editor-reference-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
@@ -3113,6 +3170,20 @@
 
     .editor-reference-grid {
         grid-template-columns: 1fr;
+    }
+
+    .editor-attachment-browser-table {
+        table-layout: auto;
+    }
+
+    .editor-attachment-browser-table th,
+    .editor-attachment-browser-table td {
+        white-space: normal;
+    }
+
+    .editor-attachment-browser-table th:nth-child(4),
+    .editor-attachment-browser-table td:nth-child(4) {
+        text-align: left;
     }
 }
 
@@ -3538,9 +3609,15 @@
 .book-list-title-main {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.45rem;
     min-width: 0;
     flex-wrap: wrap;
+}
+
+.book-list-title-main .soft-tag {
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 .book-list-date {

@@ -15,6 +15,7 @@ from apps.blog.access import build_access_check
 from apps.blog.forms.comment import CommentForm
 from apps.blog.forms.common import SearchForm
 from apps.blog.models import Post, PostFeedback, PostStar
+from apps.blog.services.author_rewards import grant_author_reward_once
 from apps.blog.utils import get_safe_next_url, record_post_view
 from apps.blog.views.post.context import annotate_post_feedback, build_post_detail_context
 from apps.blog.views.post.utils import (
@@ -38,6 +39,7 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
         access_check = build_access_check(self.object, request.user)
 
         if access_check["all_granted"]:
+            grant_author_reward_once(self.object, request.user)
             return super().dispatch(request, *args, **kwargs)
 
         self._access_check = access_check
@@ -65,7 +67,7 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
             build_post_detail_context(
                 self.object,
                 self.request.user,
-                comment_form=kwargs.get("comment_form") or CommentForm(),
+                comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user),
                 reply_parent_id=kwargs.get("reply_parent_id"),
                 reply_form=kwargs.get("reply_form"),
                 edit_comment_id=kwargs.get("edit_comment_id"),

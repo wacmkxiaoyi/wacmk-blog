@@ -1,4 +1,3 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -6,55 +5,13 @@ from .base import TimeStampedModel
 
 
 class SiteSetting(TimeStampedModel):
-    VIP_MAX_LEVEL_LIMIT = 20
-    DASHBOARD_VISIT_TREND_DAYS_7 = 7
-    DASHBOARD_VISIT_TREND_DAYS_14 = 14
-    DASHBOARD_VISIT_TREND_DAYS_30 = 30
-    DASHBOARD_VISIT_TREND_DAY_CHOICES = [
-        (DASHBOARD_VISIT_TREND_DAYS_7, _("7 days")),
-        (DASHBOARD_VISIT_TREND_DAYS_14, _("14 days")),
-        (DASHBOARD_VISIT_TREND_DAYS_30, _("30 days")),
-    ]
-
-    enable_register = models.BooleanField(default=False)
-    code_expire_seconds = models.PositiveIntegerField(default=600)
-    code_resend_seconds = models.PositiveIntegerField(default=60)
-    site_title = models.CharField(max_length=120, blank=True)
-    site_icon = models.ImageField(upload_to="site/", blank=True)
-    auth_background = models.ImageField(upload_to="site/", blank=True)
-    app_background = models.ImageField(upload_to="site/", blank=True)
-    post_editor_autosave_enabled = models.BooleanField(default=True)
-    post_editor_autosave_interval_minutes = models.PositiveSmallIntegerField(
-        default=5,
-        validators=[MinValueValidator(1), MaxValueValidator(60)],
-    )
-    audit_log_cleanup_enabled = models.BooleanField(default=True)
-    audit_log_retention_days = models.PositiveSmallIntegerField(
-        default=30,
-        validators=[MinValueValidator(1), MaxValueValidator(3650)],
-    )
-    vip_max_level = models.PositiveSmallIntegerField(
-        default=3,
-        validators=[MaxValueValidator(VIP_MAX_LEVEL_LIMIT)],
-    )
-    vip_level_names = models.JSONField(default=list, blank=True)
-    dashboard_visit_trend_days = models.PositiveSmallIntegerField(
-        default=DASHBOARD_VISIT_TREND_DAYS_7,
-        choices=DASHBOARD_VISIT_TREND_DAY_CHOICES,
-    )
-    allow_non_admin_create_post = models.BooleanField(default=False)
-    non_admin_max_post_count = models.PositiveIntegerField(default=10)
-    vip_only_create_post = models.BooleanField(default=False)
-    allow_non_admin_create_book = models.BooleanField(default=False)
-    non_admin_max_book_count = models.PositiveIntegerField(default=3)
-    vip_only_create_book = models.BooleanField(default=False)
-    attachment_max_size_mb = models.PositiveSmallIntegerField(default=1)
-    allow_comment = models.BooleanField(default=True)
-    vip_only_comment = models.BooleanField(default=False)
+    key = models.CharField(max_length=100, unique=True)
+    value = models.TextField(blank=True, default="")
 
     class Meta:
         verbose_name = _("Site setting")
         verbose_name_plural = _("Site settings")
+        ordering = ["key"]
 
     def __str__(self):
-        return self.site_title or "Site settings"
+        return self.key

@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Q
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -111,7 +112,7 @@ class ProfileCommentListView(LoginRequiredMixin, TemplateView):
         context["sort_headers"] = self.get_sort_headers()
         context["pagination_query"] = self.build_query()
         context["query"] = (self.request.GET.get("q") or "").strip()
-        context["edit_form"] = CommentForm()
+        context["edit_form"] = CommentForm(user=self.request.user)
         return context
 
 
@@ -126,7 +127,7 @@ class ProfileCommentUpdateView(LoginRequiredMixin, View):
         if not check_comment_permission(request.user):
             messages.error(request, _("You do not have permission to edit comments."))
             return redirect(self.get_success_url())
-        form = CommentForm(request.POST, instance=comment)
+        form = CommentForm(request.POST, instance=comment, user=request.user)
         if not form.is_valid():
             messages.error(request, _("Comment content cannot be empty."))
             return redirect(self.get_success_url())

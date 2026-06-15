@@ -126,6 +126,132 @@
     gap: 1.25rem;
 }
 
+.profile-user-group-section {
+    gap: 1rem;
+}
+
+.profile-user-group-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(219, 190, 234, 0.58);
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 248, 252, 0.94) 100%);
+    box-shadow: 0 18px 34px rgba(184, 154, 216, 0.12);
+}
+
+.profile-user-group-table {
+    width: 100%;
+    min-width: 860px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.profile-user-group-table th,
+.profile-user-group-table td {
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba(224, 205, 236, 0.72);
+}
+
+.profile-user-group-table thead th {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 244, 250, 0.98) 0%, rgba(247, 243, 255, 0.96) 100%);
+    color: var(--text-main);
+    font-size: 0.96rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.profile-user-group-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    width: 1%;
+    text-align: left;
+    box-shadow: 10px 0 18px rgba(214, 196, 231, 0.16);
+}
+
+.profile-user-group-table tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+    box-shadow: 10px 0 18px rgba(214, 196, 231, 0.12);
+}
+
+.profile-user-group-table tbody td {
+    background: rgba(255, 255, 255, 0.48);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.profile-user-group-table tbody tr:last-child th,
+.profile-user-group-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.profile-user-group-table th.is-current,
+.profile-user-group-table td.is-current {
+    background: linear-gradient(180deg, rgba(255, 235, 246, 0.96) 0%, rgba(241, 238, 255, 0.94) 100%);
+}
+
+.profile-user-group-heading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-user-group-cell {
+    display: inline;
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.profile-user-group-cell.is-supported {
+    color: #179c63;
+}
+
+.profile-user-group-cell.is-unsupported {
+    color: #d63d68;
+}
+
+.profile-user-group-cell.is-value {
+    color: #6f4df5;
+    font-weight: 400;
+}
+
+.profile-money-history-table-wrap {
+    overflow-x: auto;
+}
+
+.profile-money-history-amount {
+    font-weight: 700;
+}
+
+.profile-money-history-amount.is-positive {
+    color: #179c63;
+}
+
+.profile-money-history-amount.is-negative {
+    color: #d63d68;
+}
+
+@media (max-width: 767px) {
+    .profile-user-group-table th,
+    .profile-user-group-table td {
+        padding: 0.85rem 0.9rem;
+    }
+
+    .profile-user-group-table thead th:first-child {
+        width: 1%;
+    }
+}
+
 
 .user-manage-fields-row {
     display: grid;

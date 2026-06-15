@@ -35,23 +35,6 @@
                             {{ form.site_title }}
                             {% if form.site_title.errors %}<div class="field-error">{{ form.site_title.errors|striptags }}</div>{% endif %}
                         </div>
-                        <div class="field-group site-settings-field">
-                            <div class="user-manage-toggle-row">
-                                <label for="{{ form.enable_register.id_for_label }}">{{ form.enable_register.label }}{% if form.enable_register.help_text %}<span class="label-tip-icon" data-tip="{{ form.enable_register.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                                {{ form.enable_register }}
-                            </div>
-                            {% if form.enable_register.errors %}<div class="field-error">{{ form.enable_register.errors|striptags }}</div>{% endif %}
-                        </div>
-                        <div class="field-group site-settings-field">
-                            <label for="{{ form.code_expire_seconds.id_for_label }}">{{ form.code_expire_seconds.label }}{% if form.code_expire_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_expire_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                            {{ form.code_expire_seconds }}
-                            {% if form.code_expire_seconds.errors %}<div class="field-error">{{ form.code_expire_seconds.errors|striptags }}</div>{% endif %}
-                        </div>
-                        <div class="field-group site-settings-field">
-                            <label for="{{ form.code_resend_seconds.id_for_label }}">{{ form.code_resend_seconds.label }}{% if form.code_resend_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_resend_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                            {{ form.code_resend_seconds }}
-                            {% if form.code_resend_seconds.errors %}<div class="field-error">{{ form.code_resend_seconds.errors|striptags }}</div>{% endif %}
-                        </div>
                     </div>
                 </section>
 
@@ -64,19 +47,19 @@
                             <label for="{{ form.site_icon.id_for_label }}">{{ form.site_icon.label }}{% if form.site_icon.help_text %}<span class="label-tip-icon" data-tip="{{ form.site_icon.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_site_icon" value="0" data-site-setting-remove-input="site_icon">
                             <div class="site-settings-asset-layout">
-                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.site_icon %} is-empty{% endif %}" data-site-setting-preview-wrapper="site_icon"{% if not site_setting.site_icon %} hidden{% endif %}>
+                                <div class="site-settings-asset-preview-wrapper{% if not site_icon_url %} is-empty{% endif %}" data-site-setting-preview-wrapper="site_icon"{% if not site_icon_url %} hidden{% endif %}>
                                     <div class="site-settings-asset-card site-settings-asset-card-icon">
                                         <div class="site-settings-asset-preview-row">
-                                            <img src="{% if site_setting.site_icon %}{{ site_setting.site_icon.url }}{% endif %}" alt="{% trans 'Website icon preview' %}" class="site-settings-icon-preview" data-site-setting-preview-image="site_icon">
+                                            <img src="{{ site_icon_url }}" alt="{% trans 'Website icon preview' %}" class="site-settings-icon-preview" data-site-setting-preview-image="site_icon">
                                             <div class="site-settings-asset-actions">
                                                 <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="site_icon">{% trans "Remove icon" %}</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="site-settings-upload-row{% if site_setting.site_icon %} is-hidden{% endif %}" data-site-setting-upload-row="site_icon">
+                                <div class="site-settings-upload-row{% if site_icon_url %} is-hidden{% endif %}" data-site-setting-upload-row="site_icon">
                                     {{ form.site_icon }}
-                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.site_icon %} is-hidden{% endif %}" data-site-setting-undo="site_icon">{% trans "Undo remove" %}</button>
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_icon_url %} is-hidden{% endif %}" data-site-setting-undo="site_icon">{% trans "Undo remove" %}</button>
                                 </div>
                             </div>
                             {% if form.site_icon.errors %}<div class="field-error">{{ form.site_icon.errors|striptags }}</div>{% endif %}
@@ -86,19 +69,19 @@
                             <label for="{{ form.auth_background.id_for_label }}">{{ form.auth_background.label }}{% if form.auth_background.help_text %}<span class="label-tip-icon" data-tip="{{ form.auth_background.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_auth_background" value="0" data-site-setting-remove-input="auth_background">
                             <div class="site-settings-asset-layout">
-                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.auth_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="auth_background"{% if not site_setting.auth_background %} hidden{% endif %}>
+                                <div class="site-settings-asset-preview-wrapper{% if not auth_background_url %} is-empty{% endif %}" data-site-setting-preview-wrapper="auth_background"{% if not auth_background_url %} hidden{% endif %}>
                                     <div class="site-settings-asset-card">
                                         <div class="site-settings-asset-preview-row site-settings-background-row">
-                                            <img src="{% if site_setting.auth_background %}{{ site_setting.auth_background.url }}{% endif %}" alt="{% trans 'Login page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="auth_background">
+                                            <img src="{{ auth_background_url }}" alt="{% trans 'Login page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="auth_background">
                                             <div class="site-settings-asset-actions">
                                                 <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="auth_background">{% trans "Remove background" %}</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="site-settings-upload-row{% if site_setting.auth_background %} is-hidden{% endif %}" data-site-setting-upload-row="auth_background">
+                                <div class="site-settings-upload-row{% if auth_background_url %} is-hidden{% endif %}" data-site-setting-upload-row="auth_background">
                                     {{ form.auth_background }}
-                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.auth_background %} is-hidden{% endif %}" data-site-setting-undo="auth_background">{% trans "Undo remove" %}</button>
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not auth_background_url %} is-hidden{% endif %}" data-site-setting-undo="auth_background">{% trans "Undo remove" %}</button>
                                 </div>
                             </div>
                             {% if form.auth_background.errors %}<div class="field-error">{{ form.auth_background.errors|striptags }}</div>{% endif %}
@@ -108,19 +91,19 @@
                             <label for="{{ form.app_background.id_for_label }}">{{ form.app_background.label }}{% if form.app_background.help_text %}<span class="label-tip-icon" data-tip="{{ form.app_background.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
                             <input type="hidden" name="remove_app_background" value="0" data-site-setting-remove-input="app_background">
                             <div class="site-settings-asset-layout">
-                                <div class="site-settings-asset-preview-wrapper{% if not site_setting.app_background %} is-empty{% endif %}" data-site-setting-preview-wrapper="app_background"{% if not site_setting.app_background %} hidden{% endif %}>
+                                <div class="site-settings-asset-preview-wrapper{% if not app_background_url %} is-empty{% endif %}" data-site-setting-preview-wrapper="app_background"{% if not app_background_url %} hidden{% endif %}>
                                     <div class="site-settings-asset-card">
                                         <div class="site-settings-asset-preview-row site-settings-background-row">
-                                            <img src="{% if site_setting.app_background %}{{ site_setting.app_background.url }}{% endif %}" alt="{% trans 'Authenticated page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="app_background">
+                                            <img src="{{ app_background_url }}" alt="{% trans 'Authenticated page background preview' %}" class="site-settings-background-preview" data-site-setting-preview-image="app_background">
                                             <div class="site-settings-asset-actions">
                                                 <button type="button" class="secondary-button site-settings-remove-button" data-site-setting-remove-toggle="app_background">{% trans "Remove background" %}</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="site-settings-upload-row{% if site_setting.app_background %} is-hidden{% endif %}" data-site-setting-upload-row="app_background">
+                                <div class="site-settings-upload-row{% if app_background_url %} is-hidden{% endif %}" data-site-setting-upload-row="app_background">
                                     {{ form.app_background }}
-                                    <button type="button" class="secondary-button site-settings-undo-button{% if not site_setting.app_background %} is-hidden{% endif %}" data-site-setting-undo="app_background">{% trans "Undo remove" %}</button>
+                                    <button type="button" class="secondary-button site-settings-undo-button{% if not app_background_url %} is-hidden{% endif %}" data-site-setting-undo="app_background">{% trans "Undo remove" %}</button>
                                 </div>
                             </div>
                             {% if form.app_background.errors %}<div class="field-error">{{ form.app_background.errors|striptags }}</div>{% endif %}
@@ -141,9 +124,44 @@
                     </div>
                 </section>
 
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "User" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.enable_register.id_for_label }}">{{ form.enable_register.label }}{% if form.enable_register.help_text %}<span class="label-tip-icon" data-tip="{{ form.enable_register.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.enable_register }}
+                            </div>
+                            {% if form.enable_register.errors %}<div class="field-error">{{ form.enable_register.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.code_expire_seconds.id_for_label }}">{{ form.code_expire_seconds.label }}{% if form.code_expire_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_expire_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.code_expire_seconds }}
+                            {% if form.code_expire_seconds.errors %}<div class="field-error">{{ form.code_expire_seconds.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.code_resend_seconds.id_for_label }}">{{ form.code_resend_seconds.label }}{% if form.code_resend_seconds.help_text %}<span class="label-tip-icon" data-tip="{{ form.code_resend_seconds.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.code_resend_seconds }}
+                            {% if form.code_resend_seconds.errors %}<div class="field-error">{{ form.code_resend_seconds.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.daily_login_reward_money.id_for_label }}">{{ form.daily_login_reward_money.label }}{% if form.daily_login_reward_money.help_text %}<span class="label-tip-icon" data-tip="{{ form.daily_login_reward_money.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.daily_login_reward_money }}
+                            {% if form.daily_login_reward_money.errors %}<div class="field-error">{{ form.daily_login_reward_money.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.daily_login_reward_points.id_for_label }}">{{ form.daily_login_reward_points.label }}{% if form.daily_login_reward_points.help_text %}<span class="label-tip-icon" data-tip="{{ form.daily_login_reward_points.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.daily_login_reward_points }}
+                            {% if form.daily_login_reward_points.errors %}<div class="field-error">{{ form.daily_login_reward_points.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
                 <section class="site-settings-section" data-vip-settings-section>
                     <div class="site-settings-section-header">
-                        <h2>{% trans "VIP settings" %}</h2>
+                        <h2>VIP</h2>
                     </div>
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field">
@@ -151,13 +169,53 @@
                             {{ form.vip_max_level }}
                             {% if form.vip_max_level.errors %}<div class="field-error">{{ form.vip_max_level.errors|striptags }}</div>{% endif %}
                         </div>
-                        <div class="site-settings-subgroup" data-vip-level-name-fields{% if not form.current_vip_max_level %} hidden{% endif %}>
+                        <div class="site-settings-subgroup" data-vip-config-fields{% if not form.current_vip_max_level %} hidden{% endif %}>
                             <div class="site-settings-fields">
-                                {% for row in form.vip_level_name_rows %}
-                                <div class="field-group site-settings-field" data-vip-level-name-field data-vip-level="{{ row.level }}"{% if row.hidden %} hidden{% endif %}>
-                                    <label for="{{ row.field.id_for_label }}">{{ row.field.label }}{% if row.field.help_text %}<span class="label-tip-icon" data-tip="{{ row.field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                                    {{ row.field }}
-                                    {% if row.field.errors %}<div class="field-error">{{ row.field.errors|striptags }}</div>{% endif %}
+                                {% for row in form.vip_level_rows %}
+                                <div class="site-settings-vip-group" data-vip-config-card data-vip-level="{{ row.level }}"{% if row.hidden %} hidden{% endif %}>
+                                    <div class="site-settings-vip-group-header">
+                                        <span>VIP {{ row.level }}</span>
+                                        <button type="button" class="site-settings-subgroup-toggle-button" data-vip-config-toggle aria-expanded="false" aria-label="Expand VIP {{ row.level }} settings">
+                                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="site-settings-subgroup site-settings-vip-group-body" data-vip-config-body hidden>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.display_name_field.id_for_label }}">{{ row.display_name_field.label }}{% if row.display_name_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.display_name_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.display_name_field }}
+                                            {% if row.display_name_field.errors %}<div class="field-error">{{ row.display_name_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.money_discount_field.id_for_label }}">{{ row.money_discount_field.label }}{% if row.money_discount_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.money_discount_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.money_discount_field }}
+                                            {% if row.money_discount_field.errors %}<div class="field-error">{{ row.money_discount_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.points_discount_field.id_for_label }}">{{ row.points_discount_field.label }}{% if row.points_discount_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.points_discount_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.points_discount_field }}
+                                            {% if row.points_discount_field.errors %}<div class="field-error">{{ row.points_discount_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.daily_login_bonus_money_field.id_for_label }}">{{ row.daily_login_bonus_money_field.label }}{% if row.daily_login_bonus_money_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.daily_login_bonus_money_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.daily_login_bonus_money_field }}
+                                            {% if row.daily_login_bonus_money_field.errors %}<div class="field-error">{{ row.daily_login_bonus_money_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.daily_login_bonus_points_field.id_for_label }}">{{ row.daily_login_bonus_points_field.label }}{% if row.daily_login_bonus_points_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.daily_login_bonus_points_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.daily_login_bonus_points_field }}
+                                            {% if row.daily_login_bonus_points_field.errors %}<div class="field-error">{{ row.daily_login_bonus_points_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.first_comment_bonus_money_field.id_for_label }}">{{ row.first_comment_bonus_money_field.label }}{% if row.first_comment_bonus_money_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.first_comment_bonus_money_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.first_comment_bonus_money_field }}
+                                            {% if row.first_comment_bonus_money_field.errors %}<div class="field-error">{{ row.first_comment_bonus_money_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                        <div class="field-group site-settings-field">
+                                            <label for="{{ row.first_comment_bonus_points_field.id_for_label }}">{{ row.first_comment_bonus_points_field.label }}{% if row.first_comment_bonus_points_field.help_text %}<span class="label-tip-icon" data-tip="{{ row.first_comment_bonus_points_field.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                            {{ row.first_comment_bonus_points_field }}
+                                            {% if row.first_comment_bonus_points_field.errors %}<div class="field-error">{{ row.first_comment_bonus_points_field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -205,6 +263,16 @@
                                 {% if form.post_editor_autosave_interval_minutes.errors %}<div class="field-error">{{ form.post_editor_autosave_interval_minutes.errors|striptags }}</div>{% endif %}
                             </div>
                         </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.article_author_reward_money_ratio.id_for_label }}">{{ form.article_author_reward_money_ratio.label }}{% if form.article_author_reward_money_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.article_author_reward_money_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.article_author_reward_money_ratio }}
+                            {% if form.article_author_reward_money_ratio.errors %}<div class="field-error">{{ form.article_author_reward_money_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.article_author_reward_points_ratio.id_for_label }}">{{ form.article_author_reward_points_ratio.label }}{% if form.article_author_reward_points_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.article_author_reward_points_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.article_author_reward_points_ratio }}
+                            {% if form.article_author_reward_points_ratio.errors %}<div class="field-error">{{ form.article_author_reward_points_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
                     </div>
                 </section>
 
@@ -234,6 +302,55 @@
                                 {% if form.vip_only_create_book.errors %}<div class="field-error">{{ form.vip_only_create_book.errors|striptags }}</div>{% endif %}
                             </div>
                         </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.book_author_reward_money_ratio.id_for_label }}">{{ form.book_author_reward_money_ratio.label }}{% if form.book_author_reward_money_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.book_author_reward_money_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.book_author_reward_money_ratio }}
+                            {% if form.book_author_reward_money_ratio.errors %}<div class="field-error">{{ form.book_author_reward_money_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.book_author_reward_points_ratio.id_for_label }}">{{ form.book_author_reward_points_ratio.label }}{% if form.book_author_reward_points_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.book_author_reward_points_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.book_author_reward_points_ratio }}
+                            {% if form.book_author_reward_points_ratio.errors %}<div class="field-error">{{ form.book_author_reward_points_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="site-settings-section">
+                    <div class="site-settings-section-header">
+                        <h2>{% trans "Attachment" %}</h2>
+                    </div>
+                    <div class="site-settings-fields">
+                        <div class="field-group site-settings-field">
+                            <div class="user-manage-toggle-row">
+                                <label for="{{ form.allow_user_upload_attachment.id_for_label }}">{{ form.allow_user_upload_attachment.label }}{% if form.allow_user_upload_attachment.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_user_upload_attachment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.allow_user_upload_attachment }}
+                            </div>
+                            {% if form.allow_user_upload_attachment.errors %}<div class="field-error">{{ form.allow_user_upload_attachment.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div id="allow-upload-attachment-dependent" class="site-settings-subgroup" style="display:none;">
+                            <div class="field-group site-settings-field">
+                                <div class="user-manage-toggle-row">
+                                    <label for="{{ form.vip_only_upload_attachment.id_for_label }}">{{ form.vip_only_upload_attachment.label }}{% if form.vip_only_upload_attachment.help_text %}<span class="label-tip-icon" data-tip="{{ form.vip_only_upload_attachment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                    {{ form.vip_only_upload_attachment }}
+                                </div>
+                                {% if form.vip_only_upload_attachment.errors %}<div class="field-error">{{ form.vip_only_upload_attachment.errors|striptags }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.attachment_max_size_mb.id_for_label }}">{{ form.attachment_max_size_mb.label }}{% if form.attachment_max_size_mb.help_text %}<span class="label-tip-icon" data-tip="{{ form.attachment_max_size_mb.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.attachment_max_size_mb }}
+                            {% if form.attachment_max_size_mb.errors %}<div class="field-error">{{ form.attachment_max_size_mb.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.attachment_author_reward_money_ratio.id_for_label }}">{{ form.attachment_author_reward_money_ratio.label }}{% if form.attachment_author_reward_money_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.attachment_author_reward_money_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.attachment_author_reward_money_ratio }}
+                            {% if form.attachment_author_reward_money_ratio.errors %}<div class="field-error">{{ form.attachment_author_reward_money_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.attachment_author_reward_points_ratio.id_for_label }}">{{ form.attachment_author_reward_points_ratio.label }}{% if form.attachment_author_reward_points_ratio.help_text %}<span class="label-tip-icon" data-tip="{{ form.attachment_author_reward_points_ratio.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.attachment_author_reward_points_ratio }}
+                            {% if form.attachment_author_reward_points_ratio.errors %}<div class="field-error">{{ form.attachment_author_reward_points_ratio.errors|striptags }}</div>{% endif %}
+                        </div>
                     </div>
                 </section>
 
@@ -244,10 +361,10 @@
                     <div class="site-settings-fields">
                         <div class="field-group site-settings-field">
                             <div class="user-manage-toggle-row">
-                                <label for="{{ form.allow_comment.id_for_label }}">{{ form.allow_comment.label }}{% if form.allow_comment.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_comment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                                {{ form.allow_comment }}
+                                <label for="{{ form.allow_user_comment.id_for_label }}">{{ form.allow_user_comment.label }}{% if form.allow_user_comment.help_text %}<span class="label-tip-icon" data-tip="{{ form.allow_user_comment.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                                {{ form.allow_user_comment }}
                             </div>
-                            {% if form.allow_comment.errors %}<div class="field-error">{{ form.allow_comment.errors|striptags }}</div>{% endif %}
+                            {% if form.allow_user_comment.errors %}<div class="field-error">{{ form.allow_user_comment.errors|striptags }}</div>{% endif %}
                         </div>
                         <div id="allow-comment-dependent" class="site-settings-subgroup" style="display:none;">
                             <div class="field-group site-settings-field">
@@ -257,6 +374,16 @@
                                 </div>
                                 {% if form.vip_only_comment.errors %}<div class="field-error">{{ form.vip_only_comment.errors|striptags }}</div>{% endif %}
                             </div>
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.comment_first_reward_money.id_for_label }}">{{ form.comment_first_reward_money.label }}{% if form.comment_first_reward_money.help_text %}<span class="label-tip-icon" data-tip="{{ form.comment_first_reward_money.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.comment_first_reward_money }}
+                            {% if form.comment_first_reward_money.errors %}<div class="field-error">{{ form.comment_first_reward_money.errors|striptags }}</div>{% endif %}
+                        </div>
+                        <div class="field-group site-settings-field">
+                            <label for="{{ form.comment_first_reward_points.id_for_label }}">{{ form.comment_first_reward_points.label }}{% if form.comment_first_reward_points.help_text %}<span class="label-tip-icon" data-tip="{{ form.comment_first_reward_points.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
+                            {{ form.comment_first_reward_points }}
+                            {% if form.comment_first_reward_points.errors %}<div class="field-error">{{ form.comment_first_reward_points.errors|striptags }}</div>{% endif %}
                         </div>
                     </div>
                 </section>
@@ -283,18 +410,6 @@
                     </div>
                 </section>
 
-                <section class="site-settings-section">
-                    <div class="site-settings-section-header">
-                        <h2>{% trans "Attachment" %}</h2>
-                    </div>
-                    <div class="site-settings-fields">
-                        <div class="field-group site-settings-field">
-                            <label for="{{ form.attachment_max_size_mb.id_for_label }}">{{ form.attachment_max_size_mb.label }}{% if form.attachment_max_size_mb.help_text %}<span class="label-tip-icon" data-tip="{{ form.attachment_max_size_mb.help_text }}" aria-label="Help" tabindex="0"><i class="fa-solid fa-circle-question" aria-hidden="true"></i></span>{% endif %}</label>
-                            {{ form.attachment_max_size_mb }}
-                            {% if form.attachment_max_size_mb.errors %}<div class="field-error">{{ form.attachment_max_size_mb.errors|striptags }}</div>{% endif %}
-                        </div>
-                    </div>
-                </section>
 
                 <div class="panel-actions site-settings-actions">
                     <button type="submit" name="action" value="restore_defaults" class="secondary-button destructive-button site-settings-restore-button"
@@ -331,7 +446,8 @@
     bindDependentToggle('{{ form.post_editor_autosave_enabled.id_for_label }}', 'post-editor-autosave-dependent');
     bindDependentToggle('{{ form.audit_log_cleanup_enabled.id_for_label }}', 'audit-log-retention-dependent');
     bindDependentToggle('{{ form.allow_non_admin_create_book.id_for_label }}', 'allow-create-book-dependent');
-    bindDependentToggle('{{ form.allow_comment.id_for_label }}', 'allow-comment-dependent');
+    bindDependentToggle('{{ form.allow_user_upload_attachment.id_for_label }}', 'allow-upload-attachment-dependent');
+    bindDependentToggle('{{ form.allow_user_comment.id_for_label }}', 'allow-comment-dependent');
 })();
 </script>
 <script type="module" src="{% static 'js/entrypoints/blog-manage-general.js' %}"></script>

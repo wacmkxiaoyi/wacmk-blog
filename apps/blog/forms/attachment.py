@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.blog.auth import get_allowed_types_for_attachment
 from apps.blog.models import Attachment
-from apps.blog.utils import get_or_create_site_setting
+from apps.blog.utils import get_setting
 
 from .mixins import AccessScopeFormMixin
 
@@ -66,13 +66,13 @@ class AttachmentUploadForm(AccessScopeFormMixin, forms.ModelForm):
 
     def clean_file(self):
         uploaded_file = self.cleaned_data["file"]
-        site_setting = get_or_create_site_setting()
-        max_size_bytes = int((site_setting.attachment_max_size_mb or 1) * 1024 * 1024)
+        max_size_mb = get_setting("attachment_max_size_mb") or 1
+        max_size_bytes = int(max_size_mb * 1024 * 1024)
         if not uploaded_file.size:
             raise forms.ValidationError(_("The uploaded attachment is empty."))
         if uploaded_file.size > max_size_bytes:
             raise forms.ValidationError(
-                _("The attachment exceeds the maximum size of %(size)s MB.") % {"size": site_setting.attachment_max_size_mb or 1}
+                _("The attachment exceeds the maximum size of %(size)s MB.") % {"size": max_size_mb}
             )
         return uploaded_file
 

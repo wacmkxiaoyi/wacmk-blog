@@ -20,7 +20,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import FormView
 
-from apps.blog.utils import get_site_setting
+from apps.blog.services.login_rewards import grant_daily_login_reward_once
+from apps.blog.utils import get_setting
 from .forms import PrettyAuthenticationForm, RegistrationForm
 from .models import EmailVerificationCode
 
@@ -29,8 +30,7 @@ User = get_user_model()
 
 
 def get_register_code_expire_minutes():
-    site_setting = get_site_setting()
-    seconds = site_setting.code_expire_seconds if site_setting else 600
+    seconds = get_setting("code_expire_seconds")
     return max(1, ceil(seconds / 60))
 
 
@@ -84,9 +84,8 @@ def get_user_by_identifier(identifier):
 
 
 def send_verification_code_email(email, purpose, text_template, html_template, subject_text, intro_context=None):
-    site_setting = get_site_setting()
-    code_resend_seconds = site_setting.code_resend_seconds if site_setting else 60
-    code_expire_seconds = site_setting.code_expire_seconds if site_setting else 600
+    code_resend_seconds = get_setting("code_resend_seconds")
+    code_expire_seconds = get_setting("code_expire_seconds")
     latest_code = (
         EmailVerificationCode.objects.filter(email__iexact=email, purpose=purpose)
         .order_by("-created_at")
@@ -120,8 +119,7 @@ def send_verification_code_email(email, purpose, text_template, html_template, s
 
 
 def _is_register_available():
-    site_setting = get_site_setting()
-    return (site_setting is not None and site_setting.enable_register and settings.REGISTER_EMAIL_SETTINGS_READY)
+    return get_setting("enable_register") and settings.REGISTER_EMAIL_SETTINGS_READY
 
 
 class RegisterAvailabilityMixin:
@@ -148,10 +146,38 @@ class CuteLoginView(LoginView):
     def form_valid(self, form):
         remember_me = form.cleaned_data.get("remember_me")
         response = super().form_valid(form)
+        reward_result = grant_daily_login_reward_once(self.request.user)
         if remember_me:
             self.request.session.set_expiry(60 * 60 * 24 * 14)
         else:
             self.request.session.set_expiry(0)
+        if reward_result["granted"]:
+            reward_parts = []
+            base_parts = []
+            vip_parts = []
+            if reward_result["base_reward_money"] > 0:
+                base_parts.append(_("+%(money)s money") % {"money": reward_result["base_reward_money"]})
+            if reward_result["base_reward_points"] > 0:
+                base_parts.append(_("+%(points)s points") % {"points": reward_result["base_reward_points"]})
+            if reward_result["vip_bonus_money"] > 0:
+                vip_parts.append(_("+%(money)s money") % {"money": reward_result["vip_bonus_money"]})
+            if reward_result["vip_bonus_points"] > 0:
+                vip_parts.append(_("+%(points)s points") % {"points": reward_result["vip_bonus_points"]})
+            if base_parts:
+                reward_parts.append(_("Daily first login reward: %(rewards)s.") % {"rewards": ", ".join(base_parts)})
+            if vip_parts:
+                reward_parts.append(
+                    _("%(vip_name)s bonus: %(rewards)s.")
+                    % {
+                        "vip_name": reward_result["vip_bonus_name"] or _("VIP"),
+                        "rewards": ", ".join(vip_parts),
+                    }
+                )
+            if reward_parts:
+                messages.success(
+                    self.request,
+                    " ".join(reward_parts),
+                )
         return response
 
 

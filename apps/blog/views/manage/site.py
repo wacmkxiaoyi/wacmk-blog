@@ -11,9 +11,18 @@ from django.views.generic import ListView, TemplateView
 
 from apps.blog.forms.common import SearchForm
 from apps.blog.forms.site import SiteSettingForm
-from apps.blog.models import Attachment, AuditLog, Book, ContentViewLog, Post, PostDraft, SiteSetting, Tag
-from apps.blog.utils import get_normalized_vip_level_names, get_or_create_site_setting, write_audit_log
-from apps.blog.utils.site import build_visit_trend
+from apps.blog.models import Attachment, AuditLog, Book, ContentViewLog, Post, PostDraft, Tag
+from apps.blog.utils import (
+    DASHBOARD_VISIT_TREND_DAYS_7,
+    get_normalized_vip_configs,
+    build_visit_trend,
+    delete_setting_file,
+    get_normalized_vip_level_names,
+    get_or_create_site_setting,
+    get_setting_file_url,
+    reset_site_settings,
+    write_audit_log,
+)
 from apps.blog.views.manage.base import ManageBaseMixin
 from apps.blog.views.post.utils import get_visible_post_queryset, order_posts_by_user_stars, prepare_post_cards, with_post_feedback_counts
 
@@ -40,7 +49,7 @@ class BlogHomeView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         site_setting = get_or_create_site_setting()
-        trend_days = site_setting.dashboard_visit_trend_days or SiteSetting.DASHBOARD_VISIT_TREND_DAYS_7
+        trend_days = site_setting.get("dashboard_visit_trend_days") or DASHBOARD_VISIT_TREND_DAYS_7
         published_posts = get_visible_post_queryset(self.request.user).filter(status=Post.STATUS_PUBLISHED)
         draft_posts = PostDraft.objects.select_related("author", "source_post")
         now = timezone.now()
@@ -81,24 +90,26 @@ class ManageSiteSettingView(ManageBaseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         site_setting = kwargs.get("site_setting") or self.get_site_setting()
-        form = kwargs.get("form") or SiteSettingForm(instance=site_setting)
+        form = kwargs.get("form") or SiteSettingForm(settings=site_setting)
         context.update(self.get_manage_context(section="basic", page_title=_("Basic settings")))
         context["form"] = form
         context["site_setting"] = site_setting
         context["vip_level_names"] = get_normalized_vip_level_names(site_setting)
+        context["vip_configs"] = get_normalized_vip_configs(site_setting)
+        context["site_icon_url"] = get_setting_file_url("site_icon")
+        context["auth_background_url"] = get_setting_file_url("auth_background")
+        context["app_background_url"] = get_setting_file_url("app_background")
         return context
 
     def post(self, request, *args, **kwargs):
         if request.POST.get("action") == "restore_defaults":
-            site_setting = self.get_site_setting()
-            if site_setting and site_setting.pk:
-                site_setting.delete()
+            reset_site_settings()
             write_audit_log(request, AuditLog.ACTION_POST_UPDATE, str(_("Basic site settings restored to defaults.")), user=request.user)
             messages.success(request, _("Basic settings restored to defaults."))
             return redirect("manage-site-settings")
 
         site_setting = self.get_site_setting()
-        form = SiteSettingForm(request.POST, request.FILES, instance=site_setting)
+        form = SiteSettingForm(request.POST, request.FILES, settings=site_setting)
         if not form.is_valid():
             return self.render_to_response(self.get_context_data(form=form, site_setting=site_setting))
 
@@ -111,10 +122,8 @@ class ManageSiteSettingView(ManageBaseMixin, TemplateView):
         for remove_key, field_name in remove_field_map.items():
             marked_for_removal = (request.POST.get(remove_key) or "0").strip() == "1"
             uploaded_replacement = request.FILES.get(field_name)
-            file_field = getattr(site_setting, field_name)
-            if marked_for_removal and not uploaded_replacement and file_field:
-                file_field.delete(save=False)
-                setattr(form.instance, field_name, "")
+            if marked_for_removal and not uploaded_replacement and site_setting.get(field_name):
+                delete_setting_file(field_name)
                 removed_labels.append(field_name)
 
         form.save()

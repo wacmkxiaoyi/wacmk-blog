@@ -24,7 +24,17 @@
                     <tr class="access-gate-row" data-condition-type="{{ condition.type }}" data-condition-status="{{ condition.status }}">
                         <td class="access-gate-col-icon access-gate-icon-{{ condition.type }}"><i class="fa-solid fa-{{ condition.icon }}" aria-hidden="true"></i></td>
                         <td><strong>{{ condition.label }}</strong></td>
-                        <td class="access-gate-col-requirement">{{ condition.requirement }}</td>
+                        <td class="access-gate-col-requirement">
+                            {% if condition.discount_applied %}
+                            <span class="access-gate-price-stack">
+                                <span class="access-gate-price-original">{{ condition.original_requirement }}</span>
+                                <span class="access-gate-price-discounted">{{ condition.requirement }}</span>
+                                <span class="access-gate-price-note">(<span class="is-vip">{{ condition.vip_label }}</span> -{{ condition.discount_percent }}%)</span>
+                            </span>
+                            {% else %}
+                            {{ condition.requirement }}
+                            {% endif %}
+                        </td>
                         <td class="access-gate-col-action">
                             {% if condition.status == "granted" %}
                             <span class="access-gate-status-granted" title="{% trans 'Granted' %}"><i class="fa-solid fa-circle-check"></i></span>

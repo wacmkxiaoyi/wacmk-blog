@@ -53,16 +53,16 @@ class ProfilePostWriteMixin(ProfilePostAccessMixin):
         if request.user.is_staff or request.user.is_superuser:
             return super().dispatch(request, *args, **kwargs)
         site_setting = get_or_create_site_setting()
-        if not site_setting.allow_non_admin_create_post:
+        if not site_setting["allow_non_admin_create_post"]:
             raise PermissionDenied()
-        if site_setting.vip_only_create_post:
+        if site_setting["vip_only_create_post"]:
             identity = build_user_business_identity_summary(request.user, site_setting)
             if not identity["is_vip"]:
                 raise PermissionDenied()
-        if self.enforce_post_limit and site_setting.non_admin_max_post_count > 0:
+        if self.enforce_post_limit and site_setting["non_admin_max_post_count"] > 0:
             post_count = Post.objects.filter(author=request.user).count()
             pure_draft_count = PostDraft.objects.filter(author=request.user, source_post__isnull=True).count()
-            if post_count + pure_draft_count >= site_setting.non_admin_max_post_count:
+            if post_count + pure_draft_count >= site_setting["non_admin_max_post_count"]:
                 raise PermissionDenied()
         return super().dispatch(request, *args, **kwargs)
 
@@ -181,17 +181,17 @@ class ProfilePostListView(ProfilePostAccessMixin, TemplateView):
         site_setting = context.get("site_setting") or get_or_create_site_setting()
         if self.request.user.is_staff or self.request.user.is_superuser:
             can_create = True
-        elif site_setting.allow_non_admin_create_post:
-            if site_setting.vip_only_create_post:
+        elif site_setting["allow_non_admin_create_post"]:
+            if site_setting["vip_only_create_post"]:
                 identity = build_user_business_identity_summary(self.request.user, site_setting)
                 if identity["is_vip"]:
                     can_create = True
             else:
                 can_create = True
-            if can_create and site_setting.non_admin_max_post_count > 0:
+            if can_create and site_setting["non_admin_max_post_count"] > 0:
                 post_count = Post.objects.filter(author=self.request.user).count()
                 pure_draft_count = PostDraft.objects.filter(author=self.request.user, source_post__isnull=True).count()
-                can_create = (post_count + pure_draft_count) < site_setting.non_admin_max_post_count
+                can_create = (post_count + pure_draft_count) < site_setting["non_admin_max_post_count"]
         context["can_create_post"] = can_create
         queryset = self.get_queryset()
         paginator = Paginator(queryset, self.paginate_by)
@@ -234,6 +234,11 @@ class ProfilePostCreateView(ProfilePostWriteMixin, CreateView):
     template_name = "blog/manage/post_form.html"
     form_class = PostDraftForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         self.object = form.save()
@@ -251,6 +256,9 @@ class ProfilePostCreateView(ProfilePostWriteMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context.update(self.get_profile_context())
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["editor_mode"] = "draft"
         context["editor_object"] = self.object
         context["hide_publish"] = True
@@ -264,6 +272,11 @@ class ProfilePostDraftUpdateView(ProfilePostWriteMixin, UpdateView):
     template_name = "blog/manage/post_form.html"
     form_class = PostDraftForm
     queryset = PostDraft.objects.select_related("source_post").prefetch_related("tags", "books")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_queryset(self):
         return super().get_queryset().filter(author=self.request.user)
@@ -284,6 +297,9 @@ class ProfilePostDraftUpdateView(ProfilePostWriteMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context.update(self.get_profile_context())
         context["site_setting"] = get_or_create_site_setting()
+        context["post_editor_autosave_enabled"] = context["site_setting"]["post_editor_autosave_enabled"]
+        context["post_editor_autosave_interval_minutes"] = context["site_setting"]["post_editor_autosave_interval_minutes"]
+        context["attachment_max_size_mb"] = context["site_setting"]["attachment_max_size_mb"]
         context["editor_mode"] = "draft"
         context["editor_object"] = self.object
         context["hide_publish"] = True

@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}{% if site_display_title %} - {{ site_display_title }}{% endif %}</title>
-    {% if site_setting and site_setting.site_icon %}
-    <link rel="icon" href="{{ site_setting.site_icon.url }}">
+    {% if site_icon_url %}
+    <link rel="icon" href="{{ site_icon_url }}">
     {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="app-shell {% block body_class %}{% endblock %}" data-attachment-max-size-mb="{% if site_setting %}{{ site_setting.attachment_max_size_mb|default:1 }}{% else %}1{% endif %}"{% if request.user.is_authenticated and site_setting and site_setting.app_background %} style="--custom-app-background: url('{{ site_setting.app_background.url }}');"{% endif %}>
+<body class="app-shell {% block body_class %}{% endblock %}" data-attachment-max-size-mb="{{ attachment_max_size_mb|default:1 }}"{% if request.user.is_authenticated and app_background_url %} style="--custom-app-background: url('{{ app_background_url }}');"{% endif %}>
     {% if request.user.is_authenticated and not request.resolver_match.url_name == 'login' and not request.resolver_match.url_name == 'register' %}
     <header class="site-header">
         <div class="site-header-inner">
@@ -121,6 +121,12 @@
             </div>
         </div>
     </header>
+    {% elif not request.user.is_authenticated %}
+        {% if request.resolver_match.url_name == 'blog-share-detail' or request.resolver_match.url_name == 'book-share-detail' %}
+    <div class="public-page-toolbar">
+        {% include 'includes/language_switcher.html' %}
+    </div>
+        {% endif %}
     {% endif %}
     <section class="site-flash-stack" aria-label="{% trans 'Notifications' %}" data-flash-stack>
         {% if messages and request.user.is_authenticated and not request.resolver_match.url_name == 'login' and not request.resolver_match.url_name == 'register' %}
@@ -131,8 +137,8 @@
     </section>
     {% block content %}{% endblock %}
     <div
-        class="app-modal"
-        data-app-modal
+        class="app-modal-host"
+        data-app-modal-host
         data-delete-default-title="{% trans 'Delete item' %}"
         data-remove-default-title="{% trans 'Remove item' %}"
         data-delete-default-message="{% trans 'Are you sure you want to continue? This action cannot be undone.' %}"
@@ -146,22 +152,24 @@
         data-unsaved-default-cancel="{% trans 'Keep editing' %}"
         hidden
     >
-        <div class="app-modal-backdrop" data-app-modal-close></div>
-        <div class="app-modal-shell">
-            <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="app-modal-title" aria-describedby="app-modal-message" tabindex="-1" data-app-modal-dialog>
-                <div class="app-modal-header">
-                    <div class="app-modal-kicker" data-app-modal-kicker></div>
-                    <button type="button" class="app-modal-close" aria-label="{% trans 'Close' %}" data-app-modal-close>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="app-modal-body">
-                    <h2 id="app-modal-title" class="app-modal-title" data-app-modal-title></h2>
-                    <div id="app-modal-message" class="app-modal-message" data-app-modal-message></div>
-                </div>
-                <div class="app-modal-actions">
-                    <div class="app-modal-actions-left" data-app-modal-cancel-slot></div>
-                    <div class="app-modal-actions-right" data-app-modal-confirm-slot></div>
+        <div class="app-modal app-modal-frame" data-app-modal-template hidden>
+            <div class="app-modal-backdrop" data-app-modal-close="backdrop"></div>
+            <div class="app-modal-shell">
+                <div class="app-modal-dialog" role="dialog" aria-modal="true" tabindex="-1" data-app-modal-dialog>
+                    <div class="app-modal-header">
+                        <div class="app-modal-kicker" data-app-modal-kicker></div>
+                        <button type="button" class="app-modal-close" aria-label="{% trans 'Close' %}" data-app-modal-close="close-button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="app-modal-body">
+                        <h2 class="app-modal-title" data-app-modal-title></h2>
+                        <div class="app-modal-message" data-app-modal-message></div>
+                    </div>
+                    <div class="app-modal-actions" data-app-modal-actions>
+                        <div class="app-modal-actions-left" data-app-modal-cancel-slot></div>
+                        <div class="app-modal-actions-right" data-app-modal-confirm-slot></div>
+                    </div>
                 </div>
             </div>
         </div>

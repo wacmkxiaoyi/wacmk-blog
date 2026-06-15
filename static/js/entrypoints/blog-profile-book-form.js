@@ -1,4 +1,4 @@
-import { onReady, openModal, closeModal } from "../core/app.js";
+import { onReady, openModal } from "../core/app.js";
 import { initBlogShared } from "../apps/blog/shared.js";
 import { initBlogManage } from "../apps/blog/manage.js";
 import { bindConditionTooltips, bindStarWidgets } from "../apps/blog/shared.js";
@@ -210,7 +210,7 @@ function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
         fetchResults(latestQuery, activePage + 1);
     });
 
-    openModal({
+    var modal = openModal({
         kicker: getBookEditorString(chapterWorkbench, "data-chapter-kicker", "Chapters"),
         title: getBookEditorString(chapterWorkbench, "data-chapter-add-posts-label", "Add article"),
         contentNode: container,
@@ -222,7 +222,9 @@ function openProfilePostPicker(bookEditorForm, chapterWorkbench) {
             var selectedItem = postItemCache[String(selectedPostId)];
             if (!selectedItem) return;
             doAddPost(selectedItem);
-            closeModal();
+            if (modal) {
+                modal.close();
+            }
         },
         dialogClass: "is-wide-dialog"
     });

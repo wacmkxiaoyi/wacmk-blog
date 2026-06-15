@@ -106,3 +106,128 @@ class AttachmentPurchaseRecord(TimeStampedModel):
 
     def __str__(self):
         return f"Attachment purchase {self.attachment_id} by {self.user_id}"
+
+
+class AuthorRewardRecord(TimeStampedModel):
+    OBJECT_TYPE_POST = "post"
+    OBJECT_TYPE_BOOK = "book"
+    OBJECT_TYPE_ATTACHMENT = "attachment"
+    OBJECT_TYPE_CHOICES = [
+        (OBJECT_TYPE_POST, _("Post")),
+        (OBJECT_TYPE_BOOK, _("Book")),
+        (OBJECT_TYPE_ATTACHMENT, _("Attachment")),
+    ]
+
+    reader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="author_reward_records")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="earned_author_reward_records")
+    object_type = models.CharField(max_length=16, choices=OBJECT_TYPE_CHOICES)
+    object_id = models.PositiveIntegerField()
+    reward_money = models.PositiveIntegerField(default=0)
+    reward_points = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["reader", "object_type", "object_id"], name="blog_authorreward_reader_object_unique"),
+        ]
+        indexes = [
+            models.Index(fields=["reader", "object_type", "object_id"]),
+            models.Index(fields=["author", "created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Author reward {self.object_type}:{self.object_id} for {self.author_id} by {self.reader_id}"
+
+
+class UserMoneyHistory(TimeStampedModel):
+    REASON_DAILY_LOGIN_REWARD = "daily_login_reward"
+    REASON_FIRST_COMMENT_REWARD = "first_comment_reward"
+    REASON_AUTHOR_REWARD = "author_reward"
+    REASON_CONTENT_PURCHASE = "content_purchase"
+    REASON_ADMIN_ADJUSTMENT = "admin_adjustment"
+    REASON_CHOICES = [
+        (REASON_DAILY_LOGIN_REWARD, _("Daily login reward")),
+        (REASON_FIRST_COMMENT_REWARD, _("First comment reward")),
+        (REASON_AUTHOR_REWARD, _("Author reward")),
+        (REASON_CONTENT_PURCHASE, _("Content purchase")),
+        (REASON_ADMIN_ADJUSTMENT, _("Admin adjustment")),
+    ]
+
+    RELATED_OBJECT_TYPE_POST = "post"
+    RELATED_OBJECT_TYPE_BOOK = "book"
+    RELATED_OBJECT_TYPE_ATTACHMENT = "attachment"
+    RELATED_OBJECT_TYPE_COMMENT = "comment"
+    RELATED_OBJECT_TYPE_USER = "user"
+    RELATED_OBJECT_TYPE_CHOICES = [
+        (RELATED_OBJECT_TYPE_POST, _("Post")),
+        (RELATED_OBJECT_TYPE_BOOK, _("Book")),
+        (RELATED_OBJECT_TYPE_ATTACHMENT, _("Attachment")),
+        (RELATED_OBJECT_TYPE_COMMENT, _("Comment")),
+        (RELATED_OBJECT_TYPE_USER, _("User")),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="money_histories")
+    change_amount = models.IntegerField()
+    balance_after = models.IntegerField()
+    reason_type = models.CharField(max_length=32, choices=REASON_CHOICES)
+    reason_text = models.CharField(max_length=255)
+    related_object_type = models.CharField(max_length=16, choices=RELATED_OBJECT_TYPE_CHOICES, blank=True, default="")
+    related_object_id = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        indexes = [
+            models.Index(fields=["user", "created_at"]),
+            models.Index(fields=["reason_type", "created_at"]),
+            models.Index(fields=["related_object_type", "related_object_id"]),
+        ]
+
+    def __str__(self):
+        sign = "+" if self.change_amount >= 0 else ""
+        return f"Money history {self.user_id}: {sign}{self.change_amount}"
+
+
+class UserPointsHistory(TimeStampedModel):
+    REASON_DAILY_LOGIN_REWARD = "daily_login_reward"
+    REASON_FIRST_COMMENT_REWARD = "first_comment_reward"
+    REASON_AUTHOR_REWARD = "author_reward"
+    REASON_ADMIN_ADJUSTMENT = "admin_adjustment"
+    REASON_CHOICES = [
+        (REASON_DAILY_LOGIN_REWARD, _("Daily login reward")),
+        (REASON_FIRST_COMMENT_REWARD, _("First comment reward")),
+        (REASON_AUTHOR_REWARD, _("Author reward")),
+        (REASON_ADMIN_ADJUSTMENT, _("Admin adjustment")),
+    ]
+
+    RELATED_OBJECT_TYPE_POST = "post"
+    RELATED_OBJECT_TYPE_BOOK = "book"
+    RELATED_OBJECT_TYPE_ATTACHMENT = "attachment"
+    RELATED_OBJECT_TYPE_COMMENT = "comment"
+    RELATED_OBJECT_TYPE_USER = "user"
+    RELATED_OBJECT_TYPE_CHOICES = [
+        (RELATED_OBJECT_TYPE_POST, _("Post")),
+        (RELATED_OBJECT_TYPE_BOOK, _("Book")),
+        (RELATED_OBJECT_TYPE_ATTACHMENT, _("Attachment")),
+        (RELATED_OBJECT_TYPE_COMMENT, _("Comment")),
+        (RELATED_OBJECT_TYPE_USER, _("User")),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="points_histories")
+    change_amount = models.IntegerField()
+    balance_after = models.IntegerField()
+    reason_type = models.CharField(max_length=32, choices=REASON_CHOICES)
+    reason_text = models.CharField(max_length=255)
+    related_object_type = models.CharField(max_length=16, choices=RELATED_OBJECT_TYPE_CHOICES, blank=True, default="")
+    related_object_id = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+        indexes = [
+            models.Index(fields=["user", "created_at"]),
+            models.Index(fields=["reason_type", "created_at"]),
+            models.Index(fields=["related_object_type", "related_object_id"]),
+        ]
+
+    def __str__(self):
+        sign = "+" if self.change_amount >= 0 else ""
+        return f"Points history {self.user_id}: {sign}{self.change_amount}"

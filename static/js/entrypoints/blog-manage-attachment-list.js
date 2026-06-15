@@ -1,4 +1,4 @@
-import { onReady, closeModal, getCsrfToken, openModal, showInlineFlash } from "../core/app.js";
+import { onReady, getCsrfToken, openModal, showInlineFlash } from "../core/app.js";
 import { bindConditionTooltips, initBlogShared } from "../apps/blog/shared.js";
 import { initBlogManage, initializeConditionEditorsWithin } from "../apps/blog/manage.js";
 
@@ -272,7 +272,7 @@ function bindAttachmentEditButtons() {
             form.appendChild(errorMessage);
             container.appendChild(form);
 
-            openModal({
+            var modal = openModal({
                 kicker: getText("[data-attachment-modal-kicker]", "Attachment"),
                 title: getText("[data-attachment-modal-title]", "Update attachment"),
                 contentNode: container,
@@ -335,7 +335,9 @@ function bindAttachmentEditButtons() {
                         button.setAttribute("data-attachment-existing-vip-password-types", serializeRuleTypes(parseJsonArray(vipConditionInput.value || "[]")));
 
                         showInlineFlash(getText("[data-attachment-modal-success]", "Attachment updated successfully."), true);
-                        closeModal();
+                        if (modal) {
+                            modal.close();
+                        }
                     }).catch(function () {
                         errorMessage.textContent = getText("[data-attachment-modal-request-error]", "Unable to update the selected attachment right now.");
                         errorMessage.hidden = false;

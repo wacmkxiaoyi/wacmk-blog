@@ -6,6 +6,7 @@ from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, TemplateView, UpdateView
@@ -50,15 +51,15 @@ class ProfileBookWriteMixin(ProfileBookAccessMixin):
         if request.user.is_staff or request.user.is_superuser:
             return super().dispatch(request, *args, **kwargs)
         site_setting = get_or_create_site_setting()
-        if not site_setting.allow_non_admin_create_book:
+        if not site_setting["allow_non_admin_create_book"]:
             raise PermissionDenied()
-        if site_setting.vip_only_create_book:
+        if site_setting["vip_only_create_book"]:
             identity = build_user_business_identity_summary(request.user, site_setting)
             if not identity["is_vip"]:
                 raise PermissionDenied()
-        if self.enforce_book_limit and site_setting.non_admin_max_book_count > 0:
+        if self.enforce_book_limit and site_setting["non_admin_max_book_count"] > 0:
             book_count = Book.objects.filter(created_by=request.user).count()
-            if book_count >= site_setting.non_admin_max_book_count:
+            if book_count >= site_setting["non_admin_max_book_count"]:
                 raise PermissionDenied()
         return super().dispatch(request, *args, **kwargs)
 
@@ -67,15 +68,15 @@ def _compute_can_create_book(request):
     site_setting = get_or_create_site_setting()
     if request.user.is_staff or request.user.is_superuser:
         return True
-    if not site_setting.allow_non_admin_create_book:
+    if not site_setting["allow_non_admin_create_book"]:
         return False
-    if site_setting.vip_only_create_book:
+    if site_setting["vip_only_create_book"]:
         identity = build_user_business_identity_summary(request.user, site_setting)
         if not identity["is_vip"]:
             return False
-    if site_setting.non_admin_max_book_count > 0:
+    if site_setting["non_admin_max_book_count"] > 0:
         book_count = Book.objects.filter(created_by=request.user).count()
-        if book_count >= site_setting.non_admin_max_book_count:
+        if book_count >= site_setting["non_admin_max_book_count"]:
             return False
     return True
 

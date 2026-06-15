@@ -63,6 +63,10 @@
     function updateRow(row, condition) {
         row.setAttribute("data-condition-status", condition.status);
         var actionCell = row.querySelector(".access-gate-col-action");
+        var requirementCell = row.querySelector(".access-gate-col-requirement");
+        if (requirementCell) {
+            requirementCell.innerHTML = buildRequirementHtml(condition);
+        }
         if (condition.status === "granted") {
             actionCell.innerHTML =
                 '<span class="access-gate-status-granted" title="Granted">' +
@@ -168,7 +172,8 @@
     function bindPurchaseBtn(btn) {
         btn.addEventListener("click", function () {
             var row = btn.closest(".access-gate-row");
-            var cost = row.querySelector(".access-gate-col-requirement").textContent.trim();
+            var requirementCell = row.querySelector(".access-gate-col-requirement");
+            var cost = requirementCell ? requirementCell.childNodes[0].textContent.trim() : "";
             purchaseInfo.textContent = "Cost: " + cost + " coins";
             purchaseError.hidden = true;
             showInlineForm(row, purchaseForm);
@@ -206,4 +211,15 @@
     card.querySelectorAll(".access-gate-purchase-btn").forEach(bindPurchaseBtn);
 
     updateAllGranted();
+    function buildRequirementHtml(condition) {
+        var requirement = condition && condition.requirement ? condition.requirement : "";
+        if (!(condition && condition.discount_applied)) {
+            return requirement;
+        }
+        return '<span class="access-gate-price-stack">'
+            + '<span class="access-gate-price-original">' + condition.original_requirement + '</span>'
+            + '<span class="access-gate-price-discounted">' + requirement + '</span>'
+            + '<span class="access-gate-price-note">(<span class="is-vip">' + (condition.vip_label || "") + '</span> -' + condition.discount_percent + '%)</span>'
+            + '</span>';
+    }
 })();

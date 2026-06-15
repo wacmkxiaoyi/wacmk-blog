@@ -7,6 +7,7 @@ import json
 
 from apps.blog.forms.attachment import AttachmentUpdateForm
 from apps.blog.models import Attachment
+from apps.blog.utils import get_setting
 from apps.blog.utils.attachments import build_attachment_render_context
 from apps.blog.views.attachment import AttachmentDeleteView, AttachmentUpdateView
 from apps.blog.views.profile_posts import ProfilePostAccessMixin
@@ -111,6 +112,7 @@ class ProfileAttachmentListView(ProfilePostAccessMixin, TemplateView):
         context["sort_headers"] = self.get_sort_headers()
         context["pagination_query"] = self.build_query()
         context["query"] = (self.request.GET.get("q") or "").strip()
+        context["attachment_max_size_mb"] = get_setting("attachment_max_size_mb")
         return context
 
 

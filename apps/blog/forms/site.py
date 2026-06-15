@@ -1,14 +1,23 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from apps.blog.models import SiteSetting
+from apps.blog.utils.site import (
+    DASHBOARD_VISIT_TREND_DAY_CHOICES,
+    SITE_SETTING_DEFINITIONS,
+    VIP_MAX_LEVEL_LIMIT,
+    build_default_vip_config,
+    get_normalized_vip_configs,
+    get_site_setting,
+    save_setting_file,
+    set_settings,
+)
 
 
 def build_default_vip_name(level):
     return f"VIP {level}"
 
 
-class SiteSettingForm(forms.ModelForm):
+class SiteSettingForm(forms.Form):
     enable_register = forms.BooleanField(
         required=False,
         label=_("Enable registration"),
@@ -86,14 +95,14 @@ class SiteSettingForm(forms.ModelForm):
     )
     vip_max_level = forms.IntegerField(
         min_value=0,
-        max_value=SiteSetting.VIP_MAX_LEVEL_LIMIT,
+        max_value=VIP_MAX_LEVEL_LIMIT,
         label=_("Maximum VIP level"),
-        help_text=_("Set to 0 to disable VIP support. Choose up to %(max_level)s levels.") % {"max_level": SiteSetting.VIP_MAX_LEVEL_LIMIT},
+        help_text=_("Set to 0 to disable VIP support. Choose up to %(max_level)s levels.") % {"max_level": VIP_MAX_LEVEL_LIMIT},
         widget=forms.NumberInput(
             attrs={
                 "class": "input-control",
                 "min": 0,
-                "max": SiteSetting.VIP_MAX_LEVEL_LIMIT,
+                "max": VIP_MAX_LEVEL_LIMIT,
                 "step": 1,
                 "data-vip-max-level-input": "true",
             }
@@ -102,7 +111,7 @@ class SiteSettingForm(forms.ModelForm):
     dashboard_visit_trend_days = forms.TypedChoiceField(
         label=_("Homepage visit trend range"),
         help_text=_("Choose how many recent days to show in the homepage visit chart."),
-        choices=SiteSetting.DASHBOARD_VISIT_TREND_DAY_CHOICES,
+        choices=DASHBOARD_VISIT_TREND_DAY_CHOICES,
         coerce=int,
         widget=forms.Select(attrs={"class": "input-control"}),
     )
@@ -151,9 +160,21 @@ class SiteSettingForm(forms.ModelForm):
         help_text=_("Maximum allowed size for a single uploaded attachment. Default is 1 MB."),
         widget=forms.NumberInput(attrs={"class": "input-control", "min": 1, "step": 1}),
     )
-    allow_comment = forms.BooleanField(
+    allow_user_upload_attachment = forms.BooleanField(
         required=False,
-        label=_("Enable comment feature"),
+        label=_("Allow users to upload attachments"),
+        help_text=_("When enabled, non-admin users can upload and reuse attachments from article and comment editors."),
+        widget=forms.CheckboxInput(attrs={"class": "switch-input"}),
+    )
+    vip_only_upload_attachment = forms.BooleanField(
+        required=False,
+        label=_("Only VIP upload"),
+        help_text=_("When enabled, only VIP users can upload and insert attachments. Admins are unaffected."),
+        widget=forms.CheckboxInput(attrs={"class": "switch-input"}),
+    )
+    allow_user_comment = forms.BooleanField(
+        required=False,
+        label=_("Allow users to comment"),
         help_text=_("When disabled, users cannot post, reply, or edit comments on articles and books. Admins are unaffected."),
         widget=forms.CheckboxInput(attrs={"class": "switch-input"}),
     )
@@ -163,63 +184,277 @@ class SiteSettingForm(forms.ModelForm):
         help_text=_("When enabled, only VIP users can post, reply, and edit comments. Admins are unaffected."),
         widget=forms.CheckboxInput(attrs={"class": "switch-input"}),
     )
+    comment_first_reward_money = forms.IntegerField(
+        required=False,
+        min_value=0,
+        initial=1,
+        label=_("First comment reward money"),
+        help_text=_("When a user posts their first comment on an article, reward this amount of money. Set to 0 to disable."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "step": 1}),
+    )
+    comment_first_reward_points = forms.IntegerField(
+        required=False,
+        min_value=0,
+        initial=1,
+        label=_("First comment reward points"),
+        help_text=_("When a user posts their first comment on an article, reward this amount of points. Set to 0 to disable."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "step": 1}),
+    )
+    daily_login_reward_money = forms.IntegerField(
+        required=False,
+        min_value=0,
+        initial=10,
+        label=_("Daily first login reward money"),
+        help_text=_("When a user logs in for the first time each day, reward this amount of money. Set to 0 to disable money rewards."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "step": 1}),
+    )
+    daily_login_reward_points = forms.IntegerField(
+        required=False,
+        min_value=0,
+        initial=10,
+        label=_("Daily first login reward points"),
+        help_text=_("When a user logs in for the first time each day, reward this amount of points. Set to 0 to disable points rewards."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "step": 1}),
+    )
+    article_author_reward_money_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Article author money reward ratio"),
+        help_text=_("When a reader first enters an article, reward the author this share of the money requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
+    article_author_reward_points_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Article author points reward ratio"),
+        help_text=_("When a reader first enters an article, reward the author this share of the points requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
+    book_author_reward_money_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Book author money reward ratio"),
+        help_text=_("When a reader first enters a book, reward the author this share of the money requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
+    book_author_reward_points_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Book author points reward ratio"),
+        help_text=_("When a reader first enters a book, reward the author this share of the points requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
+    attachment_author_reward_money_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Attachment author money reward ratio"),
+        help_text=_("When a reader first downloads an attachment, reward the author this share of the money requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
+    attachment_author_reward_points_ratio = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_value=1,
+        decimal_places=2,
+        label=_("Attachment author points reward ratio"),
+        help_text=_("When a reader first downloads an attachment, reward the author this share of the points requirement. Enter a value between 0 and 1."),
+        widget=forms.NumberInput(attrs={"class": "input-control", "min": 0, "max": 1, "step": 0.01}),
+    )
 
-    class Meta:
-        model = SiteSetting
-        fields = [
-            "enable_register",
-            "code_expire_seconds",
-            "code_resend_seconds",
-            "site_title",
-            "site_icon",
-            "auth_background",
-            "app_background",
-            "post_editor_autosave_enabled",
-            "post_editor_autosave_interval_minutes",
-            "audit_log_cleanup_enabled",
-            "audit_log_retention_days",
-            "vip_max_level",
-            "dashboard_visit_trend_days",
-            "allow_non_admin_create_post",
-            "non_admin_max_post_count",
-            "vip_only_create_post",
-            "allow_non_admin_create_book",
-            "non_admin_max_book_count",
-            "vip_only_create_book",
-            "attachment_max_size_mb",
-            "allow_comment",
-            "vip_only_comment",
-        ]
+    SETTING_FIELDS = [
+        "enable_register",
+        "code_expire_seconds",
+        "code_resend_seconds",
+        "site_title",
+        "post_editor_autosave_enabled",
+        "post_editor_autosave_interval_minutes",
+        "audit_log_cleanup_enabled",
+        "audit_log_retention_days",
+        "vip_max_level",
+        "dashboard_visit_trend_days",
+        "allow_non_admin_create_post",
+        "non_admin_max_post_count",
+        "vip_only_create_post",
+        "allow_non_admin_create_book",
+        "non_admin_max_book_count",
+        "vip_only_create_book",
+        "attachment_max_size_mb",
+        "allow_user_upload_attachment",
+        "vip_only_upload_attachment",
+        "allow_user_comment",
+        "vip_only_comment",
+        "comment_first_reward_money",
+        "comment_first_reward_points",
+        "daily_login_reward_money",
+        "daily_login_reward_points",
+        "article_author_reward_money_ratio",
+        "article_author_reward_points_ratio",
+        "book_author_reward_money_ratio",
+        "book_author_reward_points_ratio",
+        "attachment_author_reward_money_ratio",
+        "attachment_author_reward_points_ratio",
+    ]
 
     def __init__(self, *args, **kwargs):
+        self.settings = kwargs.pop("settings", None) or get_site_setting()
         super().__init__(*args, **kwargs)
-        self.vip_level_name_fields = []
-        self.vip_level_name_rows = []
+        for field_name in self.SETTING_FIELDS:
+            initial_value = self.settings.get(field_name, SITE_SETTING_DEFINITIONS[field_name]["default"])
+            self.fields[field_name].initial = initial_value
+            self.initial[field_name] = initial_value
+        self.vip_level_rows = []
         vip_max_level = self._get_requested_vip_max_level()
-        vip_level_names = self._normalize_vip_level_names(SiteSetting.VIP_MAX_LEVEL_LIMIT)
+        vip_configs = get_normalized_vip_configs(self.settings)
 
-        for level in range(1, SiteSetting.VIP_MAX_LEVEL_LIMIT + 1):
-            field_name = f"vip_level_name_{level}"
-            self.fields[field_name] = forms.CharField(
+        for level in range(1, VIP_MAX_LEVEL_LIMIT + 1):
+            default_config = build_default_vip_config(level)
+            config = vip_configs[level - 1] if level - 1 < len(vip_configs) else default_config
+            display_name_field_name = f"vip_level_display_name_{level}"
+            money_discount_field_name = f"vip_level_money_discount_{level}"
+            points_discount_field_name = f"vip_level_points_discount_{level}"
+            daily_login_bonus_money_field_name = f"vip_level_daily_login_bonus_money_{level}"
+            daily_login_bonus_points_field_name = f"vip_level_daily_login_bonus_points_{level}"
+            first_comment_bonus_money_field_name = f"vip_level_first_comment_bonus_money_{level}"
+            first_comment_bonus_points_field_name = f"vip_level_first_comment_bonus_points_{level}"
+
+            self.fields[display_name_field_name] = forms.CharField(
                 required=False,
-                label=_("VIP %(level)s display name") % {"level": level},
+                label=_("Display name"),
                 help_text="",
-                initial=vip_level_names[level - 1],
+                initial=config["display_name"],
                 widget=forms.TextInput(
                     attrs={
                         "class": "input-control",
                         "placeholder": build_default_vip_name(level),
-                        "data-vip-level-name-input": "true",
+                        "data-vip-config-input": "display_name",
                         "data-vip-level": str(level),
                     }
                 ),
             )
-            self.vip_level_name_fields.append(field_name)
-            self.vip_level_name_rows.append(
+            self.fields[money_discount_field_name] = forms.DecimalField(
+                required=False,
+                min_value=0,
+                max_value=1,
+                decimal_places=2,
+                label=_("Money discount"),
+                help_text=_("Enter a value between 0 and 1. For example, 0.10 means the user pays 90%% of the original money requirement."),
+                initial=config["money_discount"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "max": 1,
+                        "step": 0.01,
+                        "data-vip-config-input": "money_discount",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.fields[points_discount_field_name] = forms.DecimalField(
+                required=False,
+                min_value=0,
+                max_value=1,
+                decimal_places=2,
+                label=_("Points discount"),
+                help_text=_("Enter a value between 0 and 1. For example, 0.05 means the user needs 95%% of the original points requirement."),
+                initial=config["points_discount"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "max": 1,
+                        "step": 0.01,
+                        "data-vip-config-input": "points_discount",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.fields[daily_login_bonus_money_field_name] = forms.IntegerField(
+                required=False,
+                min_value=0,
+                label=_("Daily login extra money"),
+                help_text=_("Extra daily login money granted to users at this VIP level. Leave blank to use the default of level x 5."),
+                initial=config["daily_login_bonus_money"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "step": 1,
+                        "data-vip-config-input": "daily_login_bonus_money",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.fields[daily_login_bonus_points_field_name] = forms.IntegerField(
+                required=False,
+                min_value=0,
+                label=_("Daily login extra points"),
+                help_text=_("Extra daily login points granted to users at this VIP level. Leave blank to use the default of level x 5."),
+                initial=config["daily_login_bonus_points"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "step": 1,
+                        "data-vip-config-input": "daily_login_bonus_points",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.fields[first_comment_bonus_money_field_name] = forms.IntegerField(
+                required=False,
+                min_value=0,
+                label=_("First comment extra money"),
+                help_text=_("Extra first comment money granted to users at this VIP level. Leave blank to use the default of level x 2."),
+                initial=config["first_comment_bonus_money"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "step": 1,
+                        "data-vip-config-input": "first_comment_bonus_money",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.fields[first_comment_bonus_points_field_name] = forms.IntegerField(
+                required=False,
+                min_value=0,
+                label=_("First comment extra points"),
+                help_text=_("Extra first comment points granted to users at this VIP level. Leave blank to use the default of level x 2."),
+                initial=config["first_comment_bonus_points"],
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "input-control",
+                        "min": 0,
+                        "step": 1,
+                        "data-vip-config-input": "first_comment_bonus_points",
+                        "data-vip-level": str(level),
+                    }
+                ),
+            )
+            self.vip_level_rows.append(
                 {
-                    "field": self[field_name],
                     "level": level,
                     "hidden": level > vip_max_level,
+                    "title": config["display_name"] or build_default_vip_name(level),
+                    "display_name_field": self[display_name_field_name],
+                    "money_discount_field": self[money_discount_field_name],
+                    "points_discount_field": self[points_discount_field_name],
+                    "daily_login_bonus_money_field": self[daily_login_bonus_money_field_name],
+                    "daily_login_bonus_points_field": self[daily_login_bonus_points_field_name],
+                    "first_comment_bonus_money_field": self[first_comment_bonus_money_field_name],
+                    "first_comment_bonus_points_field": self[first_comment_bonus_points_field_name],
                 }
             )
         self.current_vip_max_level = vip_max_level
@@ -228,40 +463,83 @@ class SiteSettingForm(forms.ModelForm):
         if self.is_bound:
             raw_value = self.data.get(self.add_prefix("vip_max_level"), self.initial.get("vip_max_level", 0))
         else:
-            raw_value = self.initial.get("vip_max_level", getattr(self.instance, "vip_max_level", 0))
+            raw_value = self.initial.get("vip_max_level", self.settings.get("vip_max_level", 0))
         try:
             vip_max_level = int(raw_value)
         except (TypeError, ValueError):
-            vip_max_level = getattr(self.instance, "vip_max_level", 0) or 0
-        return max(0, min(vip_max_level, SiteSetting.VIP_MAX_LEVEL_LIMIT))
-
-    def _normalize_vip_level_names(self, vip_max_level):
-        stored_names = list(getattr(self.instance, "vip_level_names", []) or [])
-        normalized = []
-        for level in range(1, vip_max_level + 1):
-            configured_name = ""
-            if level - 1 < len(stored_names):
-                configured_name = (stored_names[level - 1] or "").strip()
-            normalized.append(configured_name or build_default_vip_name(level))
-        return normalized
+            vip_max_level = self.settings.get("vip_max_level", 0) or 0
+        return max(0, min(vip_max_level, VIP_MAX_LEVEL_LIMIT))
 
     def clean(self):
         cleaned_data = super().clean()
         vip_max_level = cleaned_data.get("vip_max_level")
+        ratio_defaults = {
+            "comment_first_reward_money": 1,
+            "comment_first_reward_points": 1,
+            "daily_login_reward_money": 10,
+            "daily_login_reward_points": 10,
+            "article_author_reward_money_ratio": 0.8,
+            "article_author_reward_points_ratio": 0,
+            "book_author_reward_money_ratio": 0.8,
+            "book_author_reward_points_ratio": 0,
+            "attachment_author_reward_money_ratio": 0.8,
+            "attachment_author_reward_points_ratio": 0,
+        }
+        for field_name, fallback in ratio_defaults.items():
+            if cleaned_data.get(field_name) in (None, ""):
+                cleaned_data[field_name] = self.settings.get(field_name, fallback)
         if vip_max_level is None:
             return cleaned_data
-        cleaned_data["vip_level_names"] = [
-            (cleaned_data.get(field_name) or "").strip() or build_default_vip_name(index)
-            for index, field_name in enumerate(self.vip_level_name_fields, start=1)
-        ][:vip_max_level]
+        vip_configs = []
+        for level in range(1, vip_max_level + 1):
+            default_config = build_default_vip_config(level)
+            display_name = (cleaned_data.get(f"vip_level_display_name_{level}") or "").strip() or build_default_vip_name(level)
+            money_discount = cleaned_data.get(f"vip_level_money_discount_{level}")
+            points_discount = cleaned_data.get(f"vip_level_points_discount_{level}")
+            daily_login_bonus_money = cleaned_data.get(f"vip_level_daily_login_bonus_money_{level}")
+            daily_login_bonus_points = cleaned_data.get(f"vip_level_daily_login_bonus_points_{level}")
+            first_comment_bonus_money = cleaned_data.get(f"vip_level_first_comment_bonus_money_{level}")
+            first_comment_bonus_points = cleaned_data.get(f"vip_level_first_comment_bonus_points_{level}")
+            vip_configs.append(
+                {
+                    "display_name": display_name,
+                    "money_discount": money_discount if money_discount not in (None, "") else default_config["money_discount"],
+                    "points_discount": points_discount if points_discount not in (None, "") else default_config["points_discount"],
+                    "daily_login_bonus_money": (
+                        daily_login_bonus_money
+                        if daily_login_bonus_money not in (None, "")
+                        else default_config["daily_login_bonus_money"]
+                    ),
+                    "daily_login_bonus_points": (
+                        daily_login_bonus_points
+                        if daily_login_bonus_points not in (None, "")
+                        else default_config["daily_login_bonus_points"]
+                    ),
+                    "first_comment_bonus_money": (
+                        first_comment_bonus_money
+                        if first_comment_bonus_money not in (None, "")
+                        else default_config["first_comment_bonus_money"]
+                    ),
+                    "first_comment_bonus_points": (
+                        first_comment_bonus_points
+                        if first_comment_bonus_points not in (None, "")
+                        else default_config["first_comment_bonus_points"]
+                    ),
+                }
+            )
+        cleaned_data["vip_configs"] = vip_configs
         return cleaned_data
 
-    def save(self, commit=True):
-        site_setting = super().save(commit=False)
-        site_setting.vip_level_names = self.cleaned_data.get("vip_level_names", [])
+    def save(self):
+        payload = {field_name: self.cleaned_data[field_name] for field_name in self.SETTING_FIELDS}
+        payload["vip_configs"] = self.cleaned_data.get("vip_configs", [])
+        payload["vip_level_names"] = [config["display_name"] for config in payload["vip_configs"]]
 
-        if commit:
-            site_setting.save()
-            self.save_m2m()
+        for file_field in ("site_icon", "auth_background", "app_background"):
+            uploaded = self.cleaned_data.get(file_field)
+            if uploaded:
+                save_setting_file(file_field, uploaded)
 
-        return site_setting
+        set_settings(payload)
+        self.settings = get_site_setting()
+        return self.settings

@@ -9,13 +9,16 @@ from apps.blog.auth.constants import (
     ACCESS_STATUS_INVALID_CONDITION,
     ACCESS_STATUS_PURCHASE_REQUIRED,
 )
-from apps.blog.models import ArticlePurchaseRecord, Attachment, AttachmentPurchaseRecord, BookPurchaseRecord
+from apps.blog.models import ArticlePurchaseRecord, Attachment, AttachmentPurchaseRecord, BookPurchaseRecord, UserMoneyHistory
 from apps.blog.permissions import (
     CONDITION_TYPE_MONEY,
+    CONDITION_TYPE_POINTS,
     check_condition_password,
     get_condition_rule_value,
     normalize_condition_rules,
 )
+from apps.blog.services.money import apply_user_money_change
+from apps.blog.utils.site import apply_vip_discount_to_requirement, get_user_vip_discounts
 from apps.users.models import UserProfile
 
 from .base import BaseAccessHandler
@@ -57,15 +60,22 @@ def evaluate_condition_access(user, *, rules, has_purchase):
         }
 
     money_required = get_condition_rule_value(normalized_rules, CONDITION_TYPE_MONEY)
-    points_required = get_condition_rule_value(normalized_rules, "points")
+    points_required = get_condition_rule_value(normalized_rules, CONDITION_TYPE_POINTS)
     if points_required is None:
-        points_required = get_condition_rule_value(normalized_rules, "points")
+        points_required = get_condition_rule_value(normalized_rules, CONDITION_TYPE_POINTS)
     profile = _get_user_profile(user)
+    vip_discounts = get_user_vip_discounts(user)
+    discounted_money_required = apply_vip_discount_to_requirement(money_required, vip_discounts["money_discount"])
+    discounted_points_required = apply_vip_discount_to_requirement(points_required, vip_discounts["points_discount"])
 
     result = {
         "status": ACCESS_STATUS_GRANTED,
-        "money_required": money_required,
-        "points_required": points_required,
+        "money_required": discounted_money_required,
+        "points_required": discounted_points_required,
+        "original_money_required": money_required,
+        "original_points_required": points_required,
+        "money_discount": vip_discounts["money_discount"],
+        "points_discount": vip_discounts["points_discount"],
         "has_purchase": bool(has_purchase),
     }
 
@@ -141,7 +151,9 @@ class CommonAccess(BaseAccessHandler):
     def purchase(self, user):
         PurchaseModel, field_name = _get_purchase_model_and_field(self.obj)
 
-        money_required = get_condition_rule_value(self.condition_rules, CONDITION_TYPE_MONEY)
+        raw_money_required = get_condition_rule_value(self.condition_rules, CONDITION_TYPE_MONEY)
+        money_discount = get_user_vip_discounts(user)["money_discount"]
+        money_required = apply_vip_discount_to_requirement(raw_money_required, money_discount)
         if not money_required:
             return {"ok": True, "created": False, "message": ""}
 
@@ -154,8 +166,21 @@ class CommonAccess(BaseAccessHandler):
                 return {"ok": True, "created": False, "message": ""}
             if profile.money < 0 or profile.money < money_required:
                 return {"ok": False, "created": False, "message": str(_("Insufficient balance."))}
-            profile.money -= money_required
-            profile.save(update_fields=["money"])
+            object_label = getattr(self.obj, "title", "") or getattr(self.obj, "name", "") or str(self.obj)
+            reason_text = str(_("Content purchase"))
+            if object_label:
+                reason_text = str(_("Purchase content: %(title)s")) % {"title": object_label}
+            related_object_type = "post" if field_name == "article" else field_name
+            _history, profile = apply_user_money_change(
+                user=user,
+                amount=-money_required,
+                reason_type=UserMoneyHistory.REASON_CONTENT_PURCHASE,
+                reason_text=reason_text,
+                related_object_type=related_object_type,
+                related_object_id=self.obj.pk,
+                profile=profile,
+                save_profile=False,
+            )
             PurchaseModel.objects.create(
                 user=user, **{field_name: self.obj, "cost_money": money_required}
             )

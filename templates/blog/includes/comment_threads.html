@@ -11,7 +11,7 @@
                     </a>
                     {% if comment.is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
                     {% if comment.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                    {% if comment.author_is_vip and not comment.is_post_author and not comment.is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.author_vip_label }}</span></span>{% endif %}
+                    {% if comment.author_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.author_vip_label }}</span></span>{% endif %}
                     {% if comment.is_reply and comment.reply_target %}
                     <span class="comment-reply-label">{% trans "Reply" %}</span>
                     <a href="{% if comment.reply_target.author_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' comment.reply_target.author_id %}{% endif %}" class="comment-author-link">
@@ -20,7 +20,7 @@
                     </a>
                     {% if comment.reply_target_is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
                     {% if comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                    {% if comment.reply_target_is_vip and not comment.reply_target_is_post_author and not comment.reply_target_is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.reply_target_vip_label }}</span></span>{% endif %}
+                    {% if comment.reply_target_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ comment.reply_target_vip_label }}</span></span>{% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         </a>
                         {% if reply.is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
                         {% if reply.is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                        {% if reply.author_is_vip and not reply.is_post_author and not reply.is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ reply.author_vip_label }}</span></span>{% endif %}
+                        {% if reply.author_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ reply.author_vip_label }}</span></span>{% endif %}
                         {% if reply.reply_target %}
                         <span class="comment-reply-label">{% trans "Reply" %}</span>
                         <a href="{% if reply.reply_target.author_id == request.user.id %}{% url 'profile' %}{% else %}{% url 'user-namecard' reply.reply_target.author_id %}{% endif %}" class="comment-author-link">
@@ -184,7 +184,7 @@
                         </a>
                         {% if reply.reply_target_is_post_author %}<span class="soft-tag comment-role-tag comment-role-tag-author">{% trans "Author" %}</span>{% endif %}
                         {% if reply.reply_target_is_admin %}<span class="soft-tag comment-role-tag">{% trans "Administrator" %}</span>{% endif %}
-                        {% if reply.reply_target_is_vip and not reply.reply_target_is_post_author and not reply.reply_target_is_admin %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ reply.reply_target_vip_label }}</span></span>{% endif %}
+                        {% if reply.reply_target_is_vip %}<span class="soft-tag comment-role-tag comment-role-tag-vip"><span class="comment-role-tag-vip-text">{{ reply.reply_target_vip_label }}</span></span>{% endif %}
                         {% endif %}
                     </div>
                 </div>

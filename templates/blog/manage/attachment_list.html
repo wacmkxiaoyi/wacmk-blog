@@ -109,7 +109,7 @@
     <span data-attachment-modal-request-error>{% trans "Unable to update the selected attachment right now." %}</span>
     <span data-attachment-modal-file-required>{% trans "Please choose an attachment file first." %}</span>
     <span data-attachment-modal-success>{% trans "Attachment updated successfully." %}</span>
-    <span data-attachment-modal-max-size>{% blocktrans with size=site_setting.attachment_max_size_mb|default:1 %}Maximum attachment size: {{ size }} MB{% endblocktrans %}</span>
+    <span data-attachment-modal-max-size>{% blocktrans with size=attachment_max_size_mb|default:1 %}Maximum attachment size: {{ size }} MB{% endblocktrans %}</span>
 </div>
 {% endblock %}
 

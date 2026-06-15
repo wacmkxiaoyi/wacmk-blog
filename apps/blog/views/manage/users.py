@@ -12,7 +12,9 @@ from django.views.generic import ListView, UpdateView
 from django.http import JsonResponse
 
 from apps.blog.forms.manage import UserCreateForm, UserManageForm
-from apps.blog.models import AuditLog
+from apps.blog.models import AuditLog, UserMoneyHistory, UserPointsHistory
+from apps.blog.services.money import apply_user_money_change
+from apps.blog.services.points import apply_user_points_change
 from apps.blog.utils import write_audit_log
 from apps.blog.views.manage.base import ManageBaseMixin
 from apps.users.models import UserProfile
@@ -87,13 +89,37 @@ class ManageUserUpdateView(ManageBaseMixin, UpdateView):
         profile.description = form.cleaned_data.get("description", "") or ""
         profile.gender = form.cleaned_data.get("gender", "") or ""
         profile.age = form.cleaned_data.get("age") or None
-        profile.money = max(form.cleaned_data.get("money", 0), 0)
-        profile.points = max(form.cleaned_data.get("points", 0), 0)
+        target_money = max(form.cleaned_data.get("money", 0), 0)
+        target_points = max(form.cleaned_data.get("points", 0), 0)
         profile.github = form.cleaned_data.get("github", "") or ""
         profile.website = form.cleaned_data.get("website", "") or ""
         profile.twitter = form.cleaned_data.get("twitter", "") or ""
         profile.qq = form.cleaned_data.get("qq", "") or ""
-        profile.save(update_fields=["description", "gender", "age", "money", "points", "github", "website", "twitter", "qq"])
+        profile.save(update_fields=["description", "gender", "age", "github", "website", "twitter", "qq"])
+        money_delta = target_money - previous_money
+        if money_delta:
+            reason_text = str(_("Admin adjusted balance: %(before)s -> %(after)s")) % {"before": previous_money, "after": target_money}
+            _history, profile = apply_user_money_change(
+                user=self.object,
+                amount=money_delta,
+                reason_type=UserMoneyHistory.REASON_ADMIN_ADJUSTMENT,
+                reason_text=reason_text,
+                related_object_type=UserMoneyHistory.RELATED_OBJECT_TYPE_USER,
+                related_object_id=self.request.user.pk,
+                profile=profile,
+            )
+        points_delta = target_points - previous_points
+        if points_delta:
+            reason_text = str(_("Admin adjusted points: %(before)s -> %(after)s")) % {"before": previous_points, "after": target_points}
+            _history, profile = apply_user_points_change(
+                user=self.object,
+                amount=points_delta,
+                reason_type=UserPointsHistory.REASON_ADMIN_ADJUSTMENT,
+                reason_text=reason_text,
+                related_object_type=UserPointsHistory.RELATED_OBJECT_TYPE_USER,
+                related_object_id=self.request.user.pk,
+                profile=profile,
+            )
         if password_changed and self.object.pk == self.request.user.pk:
             update_session_auth_hash(self.request, self.object)
         write_audit_log(self.request, AuditLog.ACTION_USER_UPDATE, str(_("User updated: %(username)s")) % {"username": self.object.username}, user=self.request.user)

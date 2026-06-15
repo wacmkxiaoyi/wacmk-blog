@@ -7,6 +7,7 @@ from apps.blog.auth.constants import (
 )
 from apps.blog.auth.registry import register
 from apps.blog.permissions import CONDITION_TYPE_MONEY
+from apps.blog.utils.site import apply_vip_discount_to_requirement, get_user_vip_discounts
 from .base import BaseConditionEvaluator
 
 
@@ -18,11 +19,12 @@ class MoneyEvaluator(BaseConditionEvaluator):
     value_kind = "integer"
 
     def evaluate(self, user, value, *, has_purchase=False, profile=None):
+        discounted_value = apply_vip_discount_to_requirement(value, get_user_vip_discounts(user)["money_discount"])
         if has_purchase:
             return {"status": ACCESS_STATUS_GRANTED}
-        if not profile or profile.money < value:
-            return {"status": ACCESS_STATUS_INSUFFICIENT_MONEY, "money_required": value}
-        return {"status": ACCESS_STATUS_PURCHASE_REQUIRED, "money_required": value}
+        if not profile or profile.money < discounted_value:
+            return {"status": ACCESS_STATUS_INSUFFICIENT_MONEY, "money_required": discounted_value}
+        return {"status": ACCESS_STATUS_PURCHASE_REQUIRED, "money_required": discounted_value}
 
 
 register(MoneyEvaluator())

@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
@@ -19,6 +21,7 @@ from apps.blog.permissions import (
     get_condition_rule_value,
     has_condition_rule,
 )
+from apps.blog.utils.site import apply_vip_discount_to_requirement, build_user_business_identity_summary, get_user_vip_discounts
 from apps.users.models import UserProfile
 
 from .resolver import get_access_handler
@@ -44,6 +47,15 @@ def build_access_check(obj: Model, user, *, in_book_context=False):
     conditions = []
     all_granted = True
     is_vip = check_is_vip_user(user) if user and getattr(user, "is_authenticated", False) else False
+    vip_discounts = get_user_vip_discounts(user) if user and getattr(user, "is_authenticated", False) else {
+        "vip_level": 0,
+        "money_discount": 0,
+        "points_discount": 0,
+    }
+    if user and getattr(user, "is_authenticated", False):
+        vip_discounts["vip_label"] = build_user_business_identity_summary(user).get("label", "")
+    else:
+        vip_discounts["vip_label"] = ""
 
     if handler.is_author_or_staff(user):
         has_book_only = (
@@ -52,7 +64,7 @@ def build_access_check(obj: Model, user, *, in_book_context=False):
         )
         all_granted = True
         for rule in _iter_evaluatable_rules(handler):
-            item = _build_condition_item(rule["type"], rule.get("value"))
+            item = _build_condition_item(rule["type"], rule.get("value"), vip_discounts=vip_discounts)
             item["status"] = "granted"
             item["action"] = "none"
             conditions.append(item)
@@ -83,7 +95,7 @@ def build_access_check(obj: Model, user, *, in_book_context=False):
     for rule in _iter_evaluatable_rules(handler):
         rule_type = rule["type"]
         rule_value = rule.get("value")
-        item = _build_condition_item(rule_type, rule_value)
+        item = _build_condition_item(rule_type, rule_value, vip_discounts=vip_discounts)
         evaluator = get_evaluator(rule_type)
 
         if rule_type == CONDITION_TYPE_ENCRYPTED:
@@ -159,14 +171,46 @@ def _iter_evaluatable_rules(handler):
         yield rule
 
 
-def _build_condition_item(rule_type, rule_value=None):
+def _build_condition_item(rule_type, rule_value=None, vip_discounts=None):
     evaluator = get_evaluator(rule_type)
+    vip_discounts = vip_discounts or {"money_discount": 0, "points_discount": 0}
+    requirement_value = rule_value
+    original_requirement = rule_value
+    discount_rate = None
+    discount_applied = False
+    if rule_type == CONDITION_TYPE_MONEY and rule_value is not None:
+        discount_rate = vip_discounts.get("money_discount", 0)
+        requirement_value = apply_vip_discount_to_requirement(rule_value, discount_rate)
+        discount_applied = requirement_value != rule_value
+    elif rule_type == CONDITION_TYPE_POINTS and rule_value is not None:
+        discount_rate = vip_discounts.get("points_discount", 0)
+        requirement_value = apply_vip_discount_to_requirement(rule_value, discount_rate)
+        discount_applied = requirement_value != rule_value
+    discount_percent = ""
+    vip_label = ""
+    if discount_rate not in (None, "", 0) and discount_applied:
+        try:
+            discount_percent_value = Decimal(str(discount_rate)) * Decimal("100")
+            discount_percent = format(discount_percent_value.normalize(), "f")
+            if "." in discount_percent:
+                discount_percent = discount_percent.rstrip("0").rstrip(".")
+            if not discount_percent:
+                discount_percent = "0"
+        except (InvalidOperation, TypeError, ValueError):
+            discount_percent = ""
+        vip_label = str(vip_discounts.get("vip_label") or "")
     if evaluator is not None:
         return {
             "type": rule_type,
             "icon": evaluator.icon,
             "label": str(evaluator.label),
-            "requirement": _format_requirement(rule_type, rule_value),
+            "requirement": _format_requirement(rule_type, requirement_value),
+            "original_requirement": original_requirement,
+            "discounted_requirement": requirement_value,
+            "discount_rate": str(discount_rate) if discount_rate is not None else "",
+            "discount_percent": discount_percent,
+            "vip_label": vip_label,
+            "discount_applied": discount_applied,
             "status": "pending",
             "action": "none",
         }
@@ -174,7 +218,13 @@ def _build_condition_item(rule_type, rule_value=None):
         "type": rule_type,
         "icon": "circle-question",
         "label": rule_type,
-        "requirement": str(rule_value or "—"),
+        "requirement": str(requirement_value or "—"),
+        "original_requirement": original_requirement,
+        "discounted_requirement": requirement_value,
+        "discount_rate": str(discount_rate) if discount_rate is not None else "",
+        "discount_percent": discount_percent,
+        "vip_label": vip_label,
+        "discount_applied": discount_applied,
         "status": "pending",
         "action": "none",
     }

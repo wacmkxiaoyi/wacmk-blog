@@ -99,28 +99,28 @@ def build_post_detail_context(
         if reply_form is not None and active_reply_parent_id == str(comment.pk):
             current_reply_form = reply_form
         else:
-            current_reply_form = CommentForm(prefix=f"reply-{comment.pk}")
+            current_reply_form = CommentForm(prefix=f"reply-{comment.pk}", user=user)
         current_reply_form.fields["content"].label = _("Reply")
         current_reply_form.fields["content"].widget.attrs["placeholder"] = _("Write a reply")
         comment.reply_form = current_reply_form
         if edit_form is not None and active_edit_comment_id == str(comment.pk):
             comment.edit_form = edit_form
         else:
-            comment.edit_form = CommentForm(instance=comment, prefix=f"edit-{comment.pk}")
+            comment.edit_form = CommentForm(instance=comment, prefix=f"edit-{comment.pk}", user=user)
         comment.edit_form.fields["content"].label = _("Edit comment")
         comment.edit_form.fields["content"].widget.attrs["placeholder"] = _("Update your comment")
         for reply in comment.replies_list:
             if reply_form is not None and active_reply_parent_id == str(reply.pk):
                 nested_reply_form = reply_form
             else:
-                nested_reply_form = CommentForm(prefix=f"reply-{reply.pk}")
+                nested_reply_form = CommentForm(prefix=f"reply-{reply.pk}", user=user)
             nested_reply_form.fields["content"].label = _("Reply")
             nested_reply_form.fields["content"].widget.attrs["placeholder"] = _("Write a reply")
             reply.reply_form = nested_reply_form
             if edit_form is not None and active_edit_comment_id == str(reply.pk):
                 reply.edit_form = edit_form
             else:
-                reply.edit_form = CommentForm(instance=reply, prefix=f"edit-{reply.pk}")
+                reply.edit_form = CommentForm(instance=reply, prefix=f"edit-{reply.pk}", user=user)
             reply.edit_form.fields["content"].label = _("Edit comment")
             reply.edit_form.fields["content"].widget.attrs["placeholder"] = _("Update your comment")
 

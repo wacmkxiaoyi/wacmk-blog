@@ -14,6 +14,8 @@ from apps.blog.views.profile_comments import (
     ProfileCommentListView,
     ProfileCommentUpdateView,
 )
+from apps.blog.views.profile_money_history import ProfileMoneyHistoryListView
+from apps.blog.views.profile_points_history import ProfilePointsHistoryListView
 from apps.blog.views.profile_posts import (
     ProfilePostCreateView,
     ProfilePostDraftDeleteView,
@@ -25,6 +27,8 @@ from apps.blog.views.profile_posts import (
 
 urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),
+    path("profile/money-history/", ProfileMoneyHistoryListView.as_view(), name="profile-money-history"),
+    path("profile/points-history/", ProfilePointsHistoryListView.as_view(), name="profile-points-history"),
     path("profile/posts/", ProfilePostListView.as_view(), name="profile-posts"),
     path("profile/posts/new/", ProfilePostCreateView.as_view(), name="profile-post-create"),
     path("profile/posts/import/", ProfilePostImportView.as_view(), name="profile-post-import"),

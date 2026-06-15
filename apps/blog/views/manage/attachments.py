@@ -8,7 +8,7 @@ import json
 
 from apps.blog.models import Attachment
 from apps.blog.forms.attachment import AttachmentUpdateForm
-from apps.blog.utils import get_or_create_site_setting
+from apps.blog.utils import get_setting
 from apps.blog.utils.attachments import build_attachment_render_context
 from apps.blog.views.attachment import AttachmentDeleteView, AttachmentUpdateView
 from apps.blog.views.manage.base import ManageBaseMixin
@@ -41,7 +41,7 @@ class ManageAttachmentListView(ManageBaseMixin, ListView):
         context = super().get_context_data(**kwargs)
         query = (self.request.GET.get("q") or "").strip()
         context.update(self.get_manage_context(section="attachments", query=query))
-        context["site_setting"] = get_or_create_site_setting()
+        context["attachment_max_size_mb"] = get_setting("attachment_max_size_mb")
         for attachment in context["attachments"]:
             edit_form = AttachmentUpdateForm(instance=attachment, user=self.request.user)
             attachment.render_context = build_attachment_render_context(attachment, self.request.user)

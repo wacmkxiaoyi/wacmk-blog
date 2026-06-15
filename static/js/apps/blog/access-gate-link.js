@@ -1,4 +1,4 @@
-import { openModal, closeModal, showInlineFlash } from "../../core/app.js";
+import { openModal, showInlineFlash } from "../../core/app.js";
 import { bindConditionTooltips } from "./shared.js";
 
 var _gateInit = false;
@@ -18,7 +18,7 @@ function buildConditionRow(c) {
 
     var tdReq = document.createElement("td");
     tdReq.className = "access-gate-col-requirement";
-    tdReq.textContent = c.requirement;
+    tdReq.innerHTML = buildRequirementHtml(c);
 
     var tdAction = document.createElement("td");
     tdAction.className = "access-gate-col-action";
@@ -43,6 +43,10 @@ function buildConditionRow(c) {
 function updateRow(row, c) {
     row.setAttribute("data-condition-status", c.status);
     var cell = row.querySelector(".access-gate-col-action");
+    var requirementCell = row.querySelector(".access-gate-col-requirement");
+    if (requirementCell) {
+        requirementCell.innerHTML = buildRequirementHtml(c);
+    }
     if (c.status === "granted") {
         cell.innerHTML = '<span class="access-gate-status-granted"><i class="fa-solid fa-circle-check"></i></span>';
     } else if (c.action === "password") {
@@ -65,7 +69,8 @@ function isAllGranted(contentNode) {
 }
 
 function refreshEnter(contentNode) {
-    var enter = document.querySelector("[data-inline-enter]");
+    var modalRoot = contentNode ? contentNode.closest(".app-modal") : null;
+    var enter = modalRoot ? modalRoot.querySelector("[data-inline-enter]") : null;
     if (!enter) return;
     var allGranted = isAllGranted(contentNode);
     enter.hidden = !allGranted;
@@ -95,103 +100,60 @@ function doPost(url, action, extraData, onSuccess, onError) {
 
 var _gateCtx = {};
 
-function showNestedModal(opts) {
-    var existing = document.querySelector(".access-gate-nested-overlay:not(.access-gate-table-overlay)");
-    if (existing) existing.parentNode.removeChild(existing);
-
-    var overlay = document.createElement("div");
-    overlay.className = "access-gate-nested-overlay";
-
-    var backdrop = document.createElement("div");
-    backdrop.className = "access-gate-nested-backdrop";
-    backdrop.addEventListener("click", function () {
-        overlay.parentNode.removeChild(overlay);
-        if (opts.onCancel) opts.onCancel();
-    });
-
-    var shell = document.createElement("div");
-    shell.className = "access-gate-nested-shell";
-
-    var dialog = document.createElement("div");
-    dialog.className = "app-modal-dialog access-gate-nested-dialog";
-
-    var header = document.createElement("div");
-    header.className = "app-modal-header";
-    if (opts.title) {
-        var titleEl = document.createElement("h2");
-        titleEl.className = "app-modal-title";
-        titleEl.textContent = opts.title;
-        header.appendChild(titleEl);
-    }
-    dialog.appendChild(header);
-
+function openGateNestedModal(opts) {
     var body = document.createElement("div");
-    body.className = "app-modal-body";
+    var message = null;
+    var error = null;
+    var modal = null;
+    body.className = "editor-modal-form";
     if (opts.message) {
-        var msgEl = document.createElement("p");
-        msgEl.className = "access-gate-nested-message";
-        msgEl.textContent = opts.message;
-        body.appendChild(msgEl);
+        message = document.createElement("p");
+        message.className = "access-gate-nested-message";
+        message.textContent = opts.message;
+        body.appendChild(message);
     }
     if (opts.error !== undefined) {
-        var errEl = document.createElement("p");
-        errEl.className = "access-gate-inline-error";
-        errEl.textContent = opts.error;
-        errEl.setAttribute("data-nested-error", "");
-        errEl.hidden = !opts.error;
-        body.appendChild(errEl);
+        error = document.createElement("p");
+        error.className = "access-gate-inline-error";
+        error.setAttribute("data-nested-error", "");
+        error.textContent = opts.error;
+        error.hidden = !opts.error;
+        body.appendChild(error);
     }
     if (opts.contentNode) {
         body.appendChild(opts.contentNode);
     }
-    dialog.appendChild(body);
-
-    if (opts.confirmText || opts.cancelText) {
-        var actions = document.createElement("div");
-        actions.className = "app-modal-actions";
-
-        var actionsLeft = document.createElement("div");
-        actionsLeft.className = "app-modal-actions-left";
-        var actionsRight = document.createElement("div");
-        actionsRight.className = "app-modal-actions-right";
-
-        if (opts.cancelText) {
-            var cancelBtn = document.createElement("button");
-            cancelBtn.type = "button";
-            cancelBtn.className = "app-modal-secondary-button";
-            cancelBtn.textContent = opts.cancelText;
-            cancelBtn.addEventListener("click", function () {
-                overlay.parentNode.removeChild(overlay);
-                if (opts.onCancel) opts.onCancel();
-            });
-            actionsLeft.appendChild(cancelBtn);
-        }
-        if (opts.confirmText) {
-            var confirmBtn = document.createElement("button");
-            confirmBtn.type = "button";
-            confirmBtn.className = "primary-button";
-            confirmBtn.textContent = opts.confirmText;
-            confirmBtn.addEventListener("click", function () {
-                if (opts.onConfirm) opts.onConfirm(overlay);
-            });
-            actionsRight.appendChild(confirmBtn);
-        }
-        actions.appendChild(actionsLeft);
-        actions.appendChild(actionsRight);
-        dialog.appendChild(actions);
-    }
-
-    shell.appendChild(dialog);
-    overlay.appendChild(backdrop);
-    overlay.appendChild(shell);
-    document.body.appendChild(overlay);
-
-    overlay.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-            overlay.parentNode.removeChild(overlay);
-            if (opts.onCancel) opts.onCancel();
+    modal = openModal({
+        title: opts.title || "",
+        contentNode: body,
+        cancelText: opts.cancelText || "",
+        confirmText: opts.confirmText || "",
+        keepOpenOnConfirm: opts.keepOpenOnConfirm === true,
+        onConfirm: function (api) {
+            if (opts.onConfirm) {
+                return opts.onConfirm(api, body);
+            }
+        },
+        onCancel: function (api, reason) {
+            if (opts.onCancel) {
+                opts.onCancel(api, reason, body);
+            }
         }
     });
+    return { modal: modal, body: body };
+}
+
+function updateGateConditions(updated) {
+    if (!(updated && updated.conditions && _gateCtx.contentNode)) {
+        return;
+    }
+    updated.conditions.forEach(function (condition) {
+        var row = _gateCtx.contentNode.querySelector('.access-gate-row[data-condition-type="' + condition.type + '"]');
+        if (row) {
+            updateRow(row, condition);
+        }
+    });
+    refreshEnter(_gateCtx.contentNode);
 }
 
 function showPasswordNested(row) {
@@ -203,16 +165,17 @@ function showPasswordNested(row) {
     input.autocomplete = "current-password";
     form.appendChild(input);
 
-    showNestedModal({
+    openGateNestedModal({
         title: "Enter password",
         error: "",
         contentNode: form,
         confirmText: "Confirm",
         cancelText: "Cancel",
-        onConfirm: function (overlay) {
+        keepOpenOnConfirm: true,
+        onConfirm: function (api, modalBody) {
             var pw = input.value.trim();
+            var err = modalBody ? modalBody.querySelector("[data-nested-error]") : null;
             if (!pw) {
-                var err = overlay.querySelector("[data-nested-error]");
                 if (err) { err.textContent = "Password is required"; err.hidden = false; }
                 showInlineFlash("Password is required", false);
                 return;
@@ -220,18 +183,10 @@ function showPasswordNested(row) {
             row.classList.add("access-gate-row-updating");
             doPost(_gateCtx.checkUrl, "password", { password: pw }, function (updated) {
                 row.classList.remove("access-gate-row-updating");
-                overlay.parentNode.removeChild(overlay);
-                if (updated?.conditions) {
-                    var content = _gateCtx.contentNode;
-                    updated.conditions.forEach(function (c) {
-                        var r = content.querySelector('.access-gate-row[data-condition-type="' + c.type + '"]');
-                        if (r) updateRow(r, c);
-                    });
-                }
-                refreshEnter(_gateCtx.contentNode);
+                api.close();
+                updateGateConditions(updated);
             }, function (msg) {
                 row.classList.remove("access-gate-row-updating");
-                var err = overlay.querySelector("[data-nested-error]");
                 if (err) { err.textContent = msg; err.hidden = false; }
                 showInlineFlash(msg, false);
             });
@@ -243,36 +198,43 @@ function showPasswordNested(row) {
 }
 
 function showPurchaseNested(row) {
-    var cost = row.querySelector(".access-gate-col-requirement").textContent.trim();
+    var requirementCell = row.querySelector(".access-gate-col-requirement");
+    var cost = requirementCell ? requirementCell.childNodes[0].textContent.trim() : "";
 
-    showNestedModal({
+    openGateNestedModal({
         title: "Confirm purchase",
         error: "",
         message: "Cost: " + cost + " coins",
         confirmText: "Confirm",
         cancelText: "Cancel",
-        onConfirm: function (overlay) {
+        keepOpenOnConfirm: true,
+        onConfirm: function (api, modalBody) {
+            var err = modalBody ? modalBody.querySelector("[data-nested-error]") : null;
             row.classList.add("access-gate-row-updating");
             doPost(_gateCtx.checkUrl, "purchase", null, function (updated) {
                 row.classList.remove("access-gate-row-updating");
-                overlay.parentNode.removeChild(overlay);
-                if (updated?.conditions) {
-                    var content = _gateCtx.contentNode;
-                    updated.conditions.forEach(function (c) {
-                        var r = content.querySelector('.access-gate-row[data-condition-type="' + c.type + '"]');
-                        if (r) updateRow(r, c);
-                    });
-                }
-                refreshEnter(_gateCtx.contentNode);
+                api.close();
+                updateGateConditions(updated);
             }, function (msg) {
                 row.classList.remove("access-gate-row-updating");
-                var err = overlay.querySelector("[data-nested-error]");
                 if (err) { err.textContent = msg; err.hidden = false; }
                 showInlineFlash(msg, false);
             });
         },
         onCancel: function () {}
     });
+}
+
+function buildRequirementHtml(condition) {
+    var requirement = condition && condition.requirement ? condition.requirement : "";
+    if (!(condition && condition.discount_applied)) {
+        return requirement;
+    }
+    return '<span class="access-gate-price-stack">'
+        + '<span class="access-gate-price-original">' + condition.original_requirement + '</span>'
+        + '<span class="access-gate-price-discounted">' + requirement + '</span>'
+        + '<span class="access-gate-price-note">(<span class="is-vip">' + (condition.vip_label || "") + '</span> -' + condition.discount_percent + '%)</span>'
+        + '</span>';
 }
 
 function onVerifyClick(e) {
@@ -310,195 +272,61 @@ function buildContentNode(checkData) {
     return root;
 }
 
-function injectEnterButton(allGranted) {
-    var slot = document.querySelector("[data-app-modal-confirm-slot]");
+function injectEnterButton(allGranted, modalApi) {
+    var slot = modalApi && modalApi.getElements ? modalApi.getElements().confirmSlot : null;
     if (!slot) return;
-    slot.innerHTML = "";
-    var enterBtn = document.createElement("button");
-    enterBtn.type = "button";
-    enterBtn.className = "primary-button";
-    enterBtn.textContent = "Continue";
-    enterBtn.setAttribute("data-inline-enter", "");
-    enterBtn.hidden = !allGranted;
-    enterBtn.addEventListener("click", function () {
-        if (!isAllGranted(_gateCtx.contentNode)) return;
-        closeModal();
-        var src = _gateCtx.sourceLink;
-        if (src) {
-            src.classList.remove("js-access-gate-link");
-            var importForm = src.closest(".import-post-form");
-            if (importForm) {
-                importForm.requestSubmit();
-            } else {
-                src.click();
-            }
-        } else {
-            window.location.href = _gateCtx.targetUrl;
-        }
+    modalApi.setActions(function () {
+        return {
+            cancelText: _gateCtx.sourceLink ? "Cancel" : "",
+            confirmText: "",
+            extraActions: [
+                {
+                    label: "Continue",
+                    className: "primary-button",
+                    keepOpen: true,
+                    onClick: function () {
+                        var src = null;
+                        if (!isAllGranted(_gateCtx.contentNode)) {
+                            return;
+                        }
+                        modalApi.close();
+                        src = _gateCtx.sourceLink;
+                        if (src) {
+                            src.classList.remove("js-access-gate-link");
+                            var importForm = src.closest(".import-post-form");
+                            if (importForm) {
+                                importForm.requestSubmit();
+                            } else {
+                                src.click();
+                            }
+                        } else {
+                            window.location.href = _gateCtx.targetUrl;
+                        }
+                    }
+                }
+            ]
+        };
     });
-    slot.appendChild(enterBtn);
-}
-
-function showGateAsNestedOverlay(checkData, targetUrl, checkUrl, isGate, sourceLink, content) {
-    var existing = document.querySelector(".access-gate-table-overlay");
-    if (existing) existing.parentNode.removeChild(existing);
-
-    var overlay = document.createElement("div");
-    overlay.className = "access-gate-nested-overlay access-gate-table-overlay";
-
-    var backdrop = document.createElement("div");
-    backdrop.className = "access-gate-nested-backdrop";
-    backdrop.addEventListener("click", function () {
-        overlay.parentNode.removeChild(overlay);
-    });
-
-    var shell = document.createElement("div");
-    shell.className = "access-gate-nested-shell";
-
-    var dialog = document.createElement("div");
-    dialog.className = "app-modal-dialog access-gate-nested-dialog is-table-dialog";
-
-    var header = document.createElement("div");
-    header.className = "app-modal-header";
-    var titleEl = document.createElement("h2");
-    titleEl.className = "app-modal-title";
-    titleEl.textContent = checkData.object_name || "";
-    if (checkData.is_vip) {
-        var vipSpan = document.createElement("span");
-        vipSpan.className = "vip-access-badge";
-        vipSpan.setAttribute("data-condition-tooltip-trigger", "");
-        vipSpan.setAttribute("tabindex", "0");
-        vipSpan.setAttribute("aria-label", "VIP access permission");
-        vipSpan.style.marginLeft = "0.5rem";
-        var vipInner = document.createElement("span");
-        vipInner.className = "vip-badge-icon";
-        vipInner.textContent = "VIP";
-        vipSpan.appendChild(vipInner);
-        titleEl.appendChild(document.createTextNode(" "));
-        titleEl.appendChild(vipSpan);
-        var vipTooltipContent = "";
-        if (checkData.conditions && checkData.conditions.length) {
-            vipTooltipContent = '<span class="condition-badge-group condition-badge-group-inline">' + checkData.conditions.map(function (c) {
-                var icon = c.icon || "circle-question";
-                var label = c.label || "";
-                var type = c.type || "conditional";
-                return '<span class="condition-badge access-tone-' + type + ' condition-badge-' + type + '">' +
-                    '<i class="fa-solid fa-' + icon + '" aria-hidden="true"></i>' +
-                    '<span>' + label + '</span>' +
-                    '</span>';
-            }).join("") + '</span>';
-        }
-        if (vipTooltipContent) {
-            var vipTooltipTemplate = document.createElement("span");
-            vipTooltipTemplate.hidden = true;
-            vipTooltipTemplate.setAttribute("data-condition-tooltip-template", "");
-            vipTooltipTemplate.innerHTML = vipTooltipContent;
-            titleEl.appendChild(vipTooltipTemplate);
-        }
+    var enterBtn = slot.querySelector("button.primary-button");
+    if (enterBtn) {
+        enterBtn.setAttribute("data-inline-enter", "");
+        enterBtn.hidden = !allGranted;
     }
-    header.appendChild(titleEl);
-    dialog.appendChild(header);
-
-    var body = document.createElement("div");
-    body.className = "app-modal-body";
-    body.appendChild(content);
-    dialog.appendChild(body);
-
-    var actions = document.createElement("div");
-    actions.className = "app-modal-actions";
-
-    var actionsLeft = document.createElement("div");
-    actionsLeft.className = "app-modal-actions-left";
-    var actionsRight = document.createElement("div");
-    actionsRight.className = "app-modal-actions-right";
-
-    if (!isGate) {
-        var cancelBtn = document.createElement("button");
-        cancelBtn.type = "button";
-        cancelBtn.className = "app-modal-secondary-button";
-        cancelBtn.textContent = "Cancel";
-        cancelBtn.addEventListener("click", function () {
-            overlay.parentNode.removeChild(overlay);
-        });
-        actionsLeft.appendChild(cancelBtn);
-    }
-
-    var enterBtn = document.createElement("button");
-    enterBtn.type = "button";
-    enterBtn.className = "primary-button";
-    enterBtn.setAttribute("data-inline-enter", "");
-    enterBtn.textContent = "Continue";
-    enterBtn.hidden = !checkData.all_granted;
-    enterBtn.addEventListener("click", function () {
-        if (!isAllGranted(content)) return;
-        overlay.parentNode.removeChild(overlay);
-        var src = sourceLink;
-        if (src) {
-            src.classList.remove("js-access-gate-link");
-            var importForm = src.closest(".import-post-form");
-            if (importForm) {
-                importForm.requestSubmit();
-            } else {
-                src.click();
-            }
-        } else {
-            window.location.href = targetUrl;
-        }
-    });
-    actionsRight.appendChild(enterBtn);
-
-    actions.appendChild(actionsLeft);
-    actions.appendChild(actionsRight);
-    dialog.appendChild(actions);
-
-    shell.appendChild(dialog);
-    overlay.appendChild(backdrop);
-    overlay.appendChild(shell);
-    document.body.appendChild(overlay);
-    bindConditionTooltips(titleEl);
-
-    _gateCtx = {
-        contentNode: content,
-        targetUrl: targetUrl,
-        checkUrl: checkUrl,
-        sourceLink: sourceLink || null,
-    };
-
-    overlay.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-            e.stopPropagation();
-            overlay.parentNode.removeChild(overlay);
-        }
-    });
-
-    window.requestAnimationFrame(function () {
-        var firstButton = overlay.querySelector("button:not([hidden]):not([disabled])");
-        if (firstButton) firstButton.focus();
-        else dialog.focus();
-    });
 }
 
 function showTableDialog(checkData, targetUrl, checkUrl, isGate, sourceLink) {
     var content = buildContentNode(checkData);
-    var appModal = document.querySelector("[data-app-modal]");
-    var isMainModalOpen = appModal && !appModal.hidden;
-
-    if (isMainModalOpen) {
-        showGateAsNestedOverlay(checkData, targetUrl, checkUrl, isGate, sourceLink, content);
-        return;
-    }
-
-    openModal({
+    var modal = openModal({
         dialogClass: "is-table-dialog",
         kicker: "Access verification",
         title: "",
         contentNode: content,
         confirmText: "",
         cancelText: isGate ? "" : "Cancel",
-        onCancel: function () { closeModal(); }
+        mode: "push"
     });
 
-    var titleEl = document.querySelector("[data-app-modal-title]");
+    var titleEl = modal && modal.getElements ? modal.getElements().title : null;
     if (titleEl) {
         titleEl.textContent = checkData.object_name || "";
         if (checkData.is_vip) {
@@ -542,9 +370,37 @@ function showTableDialog(checkData, targetUrl, checkUrl, isGate, sourceLink) {
         targetUrl: targetUrl,
         checkUrl: checkUrl,
         sourceLink: sourceLink || null,
+        modalApi: modal || null
     };
 
-    injectEnterButton(checkData.all_granted);
+    injectEnterButton(checkData.all_granted, modal);
+    if (modal && isGate) {
+        modal.setActions(function () {
+            return {
+                cancelText: "",
+                confirmText: "",
+                extraActions: [
+                    {
+                        label: "Continue",
+                        className: "primary-button",
+                        keepOpen: true,
+                        onClick: function () {
+                            if (!isAllGranted(_gateCtx.contentNode)) {
+                                return;
+                            }
+                            modal.close();
+                            window.location.href = _gateCtx.targetUrl;
+                        }
+                    }
+                ]
+            };
+        });
+        var gateButton = modal.getElements().confirmSlot.querySelector("button.primary-button");
+        if (gateButton) {
+            gateButton.setAttribute("data-inline-enter", "");
+            gateButton.hidden = !checkData.all_granted;
+        }
+    }
 }
 
 function autoOpenEmbeddedGate() {

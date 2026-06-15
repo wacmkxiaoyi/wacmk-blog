@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
+from django.core.paginator import EmptyPage, Paginator
+from django.db.models import Q
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -12,8 +14,10 @@ from apps.blog.access.resolver import get_access_handler
 from apps.blog.forms.attachment import AttachmentUpdateForm, AttachmentUploadForm
 from apps.blog.models import Attachment, AttachmentPasswordRecord, AuditLog
 from apps.blog.permissions import CONDITION_TYPE_ENCRYPTED, CONDITION_TYPE_MONEY
+from apps.blog.services.author_rewards import grant_author_reward_once
 from apps.blog.utils import is_ajax_request, write_audit_log
-from apps.blog.utils.attachments import build_attachment_placeholder, build_attachment_render_context
+from apps.blog.utils.attachments import build_attachment_placeholder, build_attachment_render_context, format_file_size
+from apps.blog.utils.site import check_attachment_upload_permission
 
 
 class AttachmentUploadView(LoginRequiredMixin, View):
@@ -27,6 +31,8 @@ class AttachmentUploadView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        if not check_attachment_upload_permission(request.user):
+            return JsonResponse({"ok": False, "message": str(_("You do not have permission to upload attachments."))}, status=403)
         form = AttachmentUploadForm(request.POST, request.FILES, user=request.user)
         if not form.is_valid():
             error_data = form.errors.get_json_data() if hasattr(form.errors, "get_json_data") else {}
@@ -60,6 +66,71 @@ class AttachmentUploadView(LoginRequiredMixin, View):
         )
 
 
+class UserAttachmentListView(LoginRequiredMixin, View):
+    http_method_names = ["get"]
+    login_url = None
+    paginate_by = 8
+
+    def dispatch(self, request, *args, **kwargs):
+        if not getattr(request.user, "is_authenticated", False):
+            if is_ajax_request(request):
+                return JsonResponse({"ok": False, "message": str(_("Please sign in and try again."))}, status=401)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        query = (self.request.GET.get("q") or "").strip()
+        queryset = Attachment.objects.select_related("uploaded_by").filter(uploaded_by=self.request.user)
+        if query:
+            queryset = queryset.filter(Q(title__icontains=query) | Q(original_filename__icontains=query))
+        return queryset.order_by("-updated_at", "-pk")
+
+    def serialize_attachment(self, attachment):
+        context = build_attachment_render_context(attachment, self.request.user)
+        return {
+            "id": attachment.pk,
+            "title": attachment.title,
+            "fileName": attachment.original_filename,
+            "fileSizeLabel": format_file_size(attachment.file_size),
+            "fileExt": str(attachment.file_ext or "").upper(),
+            "updatedAt": attachment.updated_at.strftime("%Y-%m-%d %H:%M") if attachment.updated_at else "",
+            "placeholder": build_attachment_placeholder(attachment.pk),
+            "visibilityPresentation": context["attachment_access_icon_presentation"],
+            "conditionSummaryItems": context["attachment_condition_summary_items"],
+            "showVipBadge": context["show_attachment_vip_badge"],
+            "vipConditionSummaryItems": context["attachment_vip_condition_summary_items"],
+            "vipVisibilityPresentation": context["attachment_vip_visibility_presentation"],
+        }
+
+    def get(self, request, *args, **kwargs):
+        if not check_attachment_upload_permission(request.user):
+            return JsonResponse({"ok": False, "message": str(_("You do not have permission to view uploaded attachments."))}, status=403)
+        query = (request.GET.get("q") or "").strip()
+        queryset = self.get_queryset()
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = (request.GET.get("page") or "1").strip() or "1"
+        try:
+            page_obj = paginator.page(page_number)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages or 1)
+
+        return JsonResponse(
+            {
+                "ok": True,
+                "attachments": [self.serialize_attachment(attachment) for attachment in page_obj.object_list],
+                "pagination": {
+                    "page": page_obj.number,
+                    "totalPages": paginator.num_pages,
+                    "hasPrevious": page_obj.has_previous(),
+                    "hasNext": page_obj.has_next(),
+                    "previousPage": page_obj.previous_page_number() if page_obj.has_previous() else None,
+                    "nextPage": page_obj.next_page_number() if page_obj.has_next() else None,
+                    "count": paginator.count,
+                },
+                "query": query,
+            }
+        )
+
+
 class AttachmentDownloadView(View):
     http_method_names = ["get"]
 
@@ -74,6 +145,7 @@ class AttachmentDownloadView(View):
             file_handle = attachment.file.open("rb")
         except FileNotFoundError as exc:
             raise Http404 from exc
+        grant_author_reward_once(attachment, request.user)
         Attachment.objects.filter(pk=attachment.pk).update(download_count=F("download_count") + 1)
         response = FileResponse(file_handle, as_attachment=True, filename=attachment.original_filename or attachment.title)
         return response
@@ -236,4 +308,5 @@ __all__ = [
     "AttachmentDownloadView",
     "AttachmentUpdateView",
     "AttachmentUploadView",
+    "UserAttachmentListView",
 ]

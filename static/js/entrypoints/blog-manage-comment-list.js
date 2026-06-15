@@ -1,4 +1,4 @@
-import { onReady, openModal, closeModal } from "../core/app.js";
+import { onReady, openModal } from "../core/app.js";
 import { initBlogShared } from "../apps/blog/shared.js";
 import { initBlogEditor, syncEditorFromTextarea } from "../apps/blog/editor.js";
 import { initBlogManage } from "../apps/blog/manage.js";
@@ -19,10 +19,13 @@ function bindCommentEditButtons() {
 
     if (closeBtn) {
         closeBtn.addEventListener("click", function () {
-            if (form.parentNode !== formContainer) {
+            var modalRoot = form.closest(".app-modal");
+            var modalApi = modalRoot && modalRoot.__modalApi ? modalRoot.__modalApi : null;
+            if (modalApi) {
+                modalApi.close();
+            } else if (form.parentNode !== formContainer) {
                 formContainer.appendChild(form);
             }
-            closeModal();
         });
     }
 

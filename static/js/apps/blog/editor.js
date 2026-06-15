@@ -602,6 +602,7 @@ function openInternalReferenceDialog(editor) {
     var latestQuery = "";
     var selectedItem = null;
     var selectedToggle = null;
+    var modalApi = null;
 
     if (!searchUrl) {
         return;
@@ -633,7 +634,7 @@ function openInternalReferenceDialog(editor) {
     container.appendChild(pagination);
 
     function getConfirmButton() {
-        return document.querySelector("[data-app-modal-confirm-slot] .primary-button");
+        return modalApi && typeof modalApi.getPrimaryButton === "function" ? modalApi.getPrimaryButton() : null;
     }
 
     function syncConfirmButton() {
@@ -772,7 +773,7 @@ function openInternalReferenceDialog(editor) {
         fetchResults(latestQuery, activePage + 1);
     });
 
-    openModal({
+    modalApi = openModal({
         kicker: kicker,
         title: title,
         contentNode: container,
@@ -789,6 +790,248 @@ function openInternalReferenceDialog(editor) {
     });
 
     syncConfirmButton();
+
+    fetchResults("", 1);
+    window.setTimeout(function () {
+        input.focus();
+    }, 0);
+}
+
+function openUploadedAttachmentDialog(editor) {
+    var searchUrl = getEditorString(editor, "data-attachment-browser-url", "");
+    var container = document.createElement("div");
+    var input = document.createElement("input");
+    var results = document.createElement("div");
+    var tableShell = document.createElement("div");
+    var table = document.createElement("table");
+    var tableHead = document.createElement("thead");
+    var tableHeadRow = document.createElement("tr");
+    var titleHead = document.createElement("th");
+    var accessHead = document.createElement("th");
+    var updatedHead = document.createElement("th");
+    var actionsHead = document.createElement("th");
+    var tableBody = document.createElement("tbody");
+    var pagination = document.createElement("div");
+    var paginationStatus = document.createElement("div");
+    var paginationActions = document.createElement("div");
+    var previousButton = document.createElement("button");
+    var nextButton = document.createElement("button");
+    var emptyLabel = getEditorString(editor, "data-attachment-browser-empty-label", "No attachments found.");
+    var title = getEditorString(editor, "data-attachment-browser-title", "My attachments");
+    var kicker = getEditorString(editor, "data-attachment-browser-kicker", "Attachment");
+    var cancelLabel = getEditorString(editor, "data-link-cancel-label", "Cancel");
+    var searchPlaceholder = getEditorString(editor, "data-attachment-browser-search-placeholder", "Search attachments");
+    var insertLabel = getEditorString(editor, "data-attachment-browser-insert-label", "Insert");
+    var previousLabel = getEditorString(editor, "data-browser-previous-label", "Previous");
+    var nextLabel = getEditorString(editor, "data-browser-next-label", "Next");
+    var pageLabel = getEditorString(editor, "data-browser-page-label", "Page");
+    var titleLabel = getEditorString(editor, "data-attachment-browser-title-column-label", "Title");
+    var accessLabel = getEditorString(editor, "data-attachment-browser-access-column-label", "Access permission");
+    var updatedLabel = getEditorString(editor, "data-attachment-browser-updated-column-label", "Updated");
+    var actionsLabel = getEditorString(editor, "data-attachment-browser-actions-column-label", "Actions");
+    var requestId = 0;
+    var activePage = 1;
+    var latestQuery = "";
+    var modalApi = null;
+
+    if (!searchUrl) {
+        return;
+    }
+
+    activeAttachmentEditor = editor;
+    container.className = "editor-modal-form editor-reference-dialog";
+    input.className = "input-control";
+    input.placeholder = searchPlaceholder;
+    results.className = "editor-reference-results";
+    tableShell.className = "data-table-shell";
+    table.className = "data-table editor-attachment-browser-table";
+    pagination.className = "editor-dialog-pagination pagination-panel";
+    paginationStatus.className = "pagination-status";
+    paginationActions.className = "pagination-actions";
+    titleHead.textContent = titleLabel;
+    accessHead.textContent = accessLabel;
+    updatedHead.textContent = updatedLabel;
+    actionsHead.textContent = actionsLabel;
+    tableHeadRow.appendChild(titleHead);
+    tableHeadRow.appendChild(accessHead);
+    tableHeadRow.appendChild(updatedHead);
+    tableHeadRow.appendChild(actionsHead);
+    tableHead.appendChild(tableHeadRow);
+    table.appendChild(tableHead);
+    table.appendChild(tableBody);
+    tableShell.appendChild(table);
+    previousButton.type = "button";
+    previousButton.className = "secondary-button pagination-button";
+    previousButton.textContent = previousLabel;
+    nextButton.type = "button";
+    nextButton.className = "secondary-button pagination-button";
+    nextButton.textContent = nextLabel;
+    paginationActions.appendChild(previousButton);
+    paginationActions.appendChild(nextButton);
+    pagination.appendChild(paginationStatus);
+    pagination.appendChild(paginationActions);
+    results.appendChild(tableShell);
+    container.appendChild(input);
+    container.appendChild(results);
+    container.appendChild(pagination);
+
+    function updatePagination(paginationData, hasItems) {
+        var page = paginationData && paginationData.page ? paginationData.page : 1;
+        var totalPages = paginationData && paginationData.totalPages ? paginationData.totalPages : 1;
+        var hasPrevious = Boolean(paginationData && paginationData.hasPrevious);
+        var hasNext = Boolean(paginationData && paginationData.hasNext);
+
+        activePage = page;
+        pagination.hidden = !hasItems && totalPages <= 1;
+        paginationStatus.textContent = pageLabel + ": " + page + " / " + totalPages;
+        previousButton.disabled = !hasPrevious;
+        nextButton.disabled = !hasNext;
+        previousButton.classList.toggle("is-disabled", !hasPrevious);
+        nextButton.classList.toggle("is-disabled", !hasNext);
+    }
+
+    function renderAccessCell(payload) {
+        var html = "";
+        var visibilityPresentation = payload && payload.visibilityPresentation ? payload.visibilityPresentation : null;
+        var conditionSummaryItems = payload && payload.conditionSummaryItems ? payload.conditionSummaryItems : [];
+        var vipConditionSummaryItems = payload && payload.vipConditionSummaryItems ? payload.vipConditionSummaryItems : [];
+        var vipVisibilityPresentation = payload && payload.vipVisibilityPresentation ? payload.vipVisibilityPresentation : null;
+        var showVipBadge = Boolean(payload && payload.showVipBadge);
+
+        if (showVipBadge) {
+            html += '<span class="vip-access-badge" data-condition-tooltip-trigger tabindex="0" aria-label="VIP access permission"><span class="vip-badge-icon">VIP</span></span>';
+            if (vipConditionSummaryItems.length) {
+                html += '<span data-condition-tooltip-template hidden><span class="condition-badge-group condition-badge-group-inline">' + vipConditionSummaryItems.map(function (item) {
+                    return '<span class="condition-badge access-tone-' + escapeHtml(item.tone || 'conditional') + ' condition-badge-' + escapeHtml(item.type || 'conditional') + '"><i class="fa-solid fa-' + escapeHtml(item.icon || 'circle-question') + '" aria-hidden="true"></i><span>' + escapeHtml(item.value ? (item.label + ' ' + item.value) : item.label) + '</span></span>';
+                }).join("") + '</span></span>';
+            } else if (vipVisibilityPresentation) {
+                html += '<span data-condition-tooltip-template hidden><span class="condition-badge-group condition-badge-group-inline"><span class="condition-badge access-tone-' + escapeHtml(vipVisibilityPresentation.tone || 'conditional') + '"><i class="fa-solid fa-' + escapeHtml(vipVisibilityPresentation.icon) + '" aria-hidden="true"></i><span>' + escapeHtml(vipVisibilityPresentation.label) + '</span></span></span></span>';
+            }
+        }
+
+        if (conditionSummaryItems.length === 1) {
+            var item = conditionSummaryItems[0];
+            html += '<span class="condition-badge-group condition-badge-group-inline"><span class="condition-badge access-tone-' + escapeHtml(item.tone || 'conditional') + ' condition-badge-' + escapeHtml(item.type || 'conditional') + '"><i class="fa-solid fa-' + escapeHtml(item.icon || 'circle-question') + '" aria-hidden="true"></i><span>' + escapeHtml(item.value ? (item.label + ' ' + item.value) : item.label) + '</span></span></span>';
+        } else if (conditionSummaryItems.length > 1) {
+            html += '<span class="soft-tag soft-tag-conditional-summary" data-condition-tooltip-trigger tabindex="0">' + conditionSummaryItems.length + ' conditions</span>';
+            html += '<div data-condition-tooltip-template hidden><span class="condition-badge-group condition-badge-group-inline">' + conditionSummaryItems.map(function (item) {
+                return '<span class="condition-badge access-tone-' + escapeHtml(item.tone || 'conditional') + ' condition-badge-' + escapeHtml(item.type || 'conditional') + '"><i class="fa-solid fa-' + escapeHtml(item.icon || 'circle-question') + '" aria-hidden="true"></i><span>' + escapeHtml(item.value ? (item.label + ' ' + item.value) : item.label) + '</span></span>';
+            }).join("") + '</span></div>';
+        } else if (visibilityPresentation) {
+            html += '<span class="soft-tag soft-tag-visibility soft-tag-access access-tone-' + escapeHtml(visibilityPresentation.tone || 'public') + '"><i class="fa-solid fa-' + escapeHtml(visibilityPresentation.icon) + '" aria-hidden="true"></i>' + escapeHtml(visibilityPresentation.label) + '</span>';
+        }
+
+        if (!html) {
+            return "";
+        }
+
+        return '<span class="attachment-access-cell-group">' + html + '</span>';
+    }
+
+    function renderResults(items) {
+        results.innerHTML = "";
+        if (!items.length) {
+            tableShell.hidden = true;
+            var empty = document.createElement("p");
+            empty.className = "field-help";
+            empty.textContent = emptyLabel;
+            results.appendChild(empty);
+            return;
+        }
+
+        tableShell.hidden = false;
+        tableBody.innerHTML = "";
+        items.forEach(function (item) {
+            var row = document.createElement("tr");
+            var titleCell = document.createElement("td");
+            var accessCell = document.createElement("td");
+            var updatedCell = document.createElement("td");
+            var actionsCell = document.createElement("td");
+            var action = document.createElement("button");
+
+            action.type = "button";
+            action.className = "secondary-button table-button";
+            action.textContent = insertLabel;
+
+            titleCell.textContent = item.title || "Attachment";
+            accessCell.innerHTML = renderAccessCell(item);
+            updatedCell.textContent = item.updatedAt || "";
+            action.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                insertAttachmentPlaceholder(activeAttachmentEditor, item.placeholder || "");
+                if (modalApi) {
+                    modalApi.close();
+                }
+            });
+
+            actionsCell.appendChild(action);
+            row.appendChild(titleCell);
+            row.appendChild(accessCell);
+            row.appendChild(updatedCell);
+            row.appendChild(actionsCell);
+            tableBody.appendChild(row);
+        });
+        results.appendChild(tableShell);
+        bindConditionTooltips(tableBody);
+    }
+
+    function fetchResults(query, page) {
+        requestId += 1;
+        var currentRequestId = requestId;
+        var queryText = typeof query === "string" ? query : "";
+        var targetPage = page || 1;
+        latestQuery = queryText;
+
+        fetch(searchUrl + "?q=" + encodeURIComponent(queryText) + "&page=" + encodeURIComponent(String(targetPage)), { credentials: "same-origin" })
+            .then(function (response) {
+                return response.json().catch(function () {
+                    return { ok: false, attachments: [], pagination: null };
+                });
+            })
+            .then(function (payload) {
+                if (currentRequestId !== requestId) {
+                    return;
+                }
+                var items = payload.ok ? (payload.attachments || []) : [];
+                renderResults(items);
+                updatePagination(payload.ok ? payload.pagination : null, items.length > 0);
+            })
+            .catch(function () {
+                if (currentRequestId !== requestId) {
+                    return;
+                }
+                renderResults([]);
+                updatePagination(null, false);
+            });
+    }
+
+    input.addEventListener("input", function () {
+        fetchResults(input.value, 1);
+    });
+    previousButton.addEventListener("click", function () {
+        if (previousButton.disabled || activePage <= 1) {
+            return;
+        }
+        fetchResults(latestQuery, activePage - 1);
+    });
+    nextButton.addEventListener("click", function () {
+        if (nextButton.disabled) {
+            return;
+        }
+        fetchResults(latestQuery, activePage + 1);
+    });
+
+    modalApi = openModal({
+        kicker: kicker,
+        title: title,
+        contentNode: container,
+        cancelText: cancelLabel,
+        dialogClass: "is-attachment-browser-dialog",
+        onCancel: function () {
+            activeAttachmentEditor = null;
+        }
+    });
 
     fetchResults("", 1);
     window.setTimeout(function () {
@@ -1673,7 +1916,8 @@ function enhanceCollapsibleTables(rootNode) {
     Array.prototype.forEach.call(rootNode.querySelectorAll("table"), function (tableNode) {
         var body = tableNode.tBodies && tableNode.tBodies.length ? tableNode.tBodies[0] : null;
         var rows = body ? body.rows : [];
-        var wrapper = null;
+        var scrollWrapper = null;
+        var collapseWrapper = null;
         var hiddenCount = 0;
         var overlayParts = null;
 
@@ -1682,22 +1926,27 @@ function enhanceCollapsibleTables(rootNode) {
         }
 
         tableNode.setAttribute("data-overflow-ready", "true");
+        scrollWrapper = document.createElement("div");
+        scrollWrapper.className = "markdown-table-scroll";
+        tableNode.parentNode.insertBefore(scrollWrapper, tableNode);
+        scrollWrapper.appendChild(tableNode);
+
         if (!rows.length || rows.length <= tableRowLimit) {
             return;
         }
 
         hiddenCount = rows.length - tableRowLimit;
-        wrapper = document.createElement("div");
-        wrapper.className = "markdown-table-overflow is-collapsed";
-        wrapper.style.setProperty("--table-visible-rows", String(tableRowLimit));
-        tableNode.parentNode.insertBefore(wrapper, tableNode);
-        wrapper.appendChild(tableNode);
+        collapseWrapper = document.createElement("div");
+        collapseWrapper.className = "markdown-table-overflow is-collapsed";
+        collapseWrapper.style.setProperty("--table-visible-rows", String(tableRowLimit));
+        scrollWrapper.appendChild(collapseWrapper);
+        collapseWrapper.appendChild(tableNode);
         overlayParts = buildOverflowToggle(rootNode, hiddenCount, "markdown-overflow-button table-overflow-button");
         overlayParts.button.addEventListener("click", function () {
-            wrapper.classList.remove("is-collapsed");
+            collapseWrapper.classList.remove("is-collapsed");
             overlayParts.overlay.remove();
         });
-        wrapper.appendChild(overlayParts.overlay);
+        collapseWrapper.appendChild(overlayParts.overlay);
     });
 }
 
@@ -2414,9 +2663,9 @@ function openAttachmentDialog(editor) {
     formShell.appendChild(errorMessage);
     container.appendChild(formShell);
 
-    openModal({
+    var modalApi = openModal({
         kicker: getEditorString(editor, "data-attachment-kicker", "Attachment"),
-        title: getEditorString(editor, "data-attachment-title", "Insert attachment"),
+        title: getEditorString(editor, "data-attachment-title", "Upload attachment"),
         contentNode: container,
         cancelText: getEditorString(editor, "data-link-cancel-label", "Cancel"),
         confirmText: getEditorString(editor, "data-attachment-confirm-label", "Upload and insert"),
@@ -2463,7 +2712,9 @@ function openAttachmentDialog(editor) {
                     return;
                 }
                 insertAttachmentPlaceholder(activeAttachmentEditor, payload.attachment.placeholder);
-                closeModal();
+                if (modalApi) {
+                    modalApi.close();
+                }
             }).catch(function (error) {
                 if (window.console && typeof window.console.error === "function") {
                     window.console.error("Attachment upload flow failed", error);
@@ -2495,6 +2746,10 @@ function openMarkdownAttachmentPicker(editor) {
     openAttachmentDialog(editor);
 }
 
+function openUploadedMarkdownAttachmentPicker(editor) {
+    openUploadedAttachmentDialog(editor);
+}
+
 function openMarkdownImageUpload(editor) {
     var imageInput = ensureMarkdownImageInput();
     if (!imageInput) {
@@ -2519,6 +2774,7 @@ function openMarkdownTableImport(editor, delimiter, accept) {
 }
 
 function attachEditorHoverMenus(editor) {
+    var attachmentBrowserUrl = getEditorString(editor, "data-attachment-browser-url", "");
     bindToolbarHoverMenu(editor, "link", [
         {
             label: getEditorString(editor, "data-link-reference-label", "Reference internal post"),
@@ -2539,6 +2795,18 @@ function attachEditorHoverMenus(editor) {
         }
     ]);
 
+    if (attachmentBrowserUrl) {
+        bindToolbarHoverMenu(editor, "attachment-upload", [
+            {
+                label: getEditorString(editor, "data-attachment-insert-uploaded-label", "My attachments"),
+                iconClass: "fa-solid fa-box-archive",
+                onClick: function () {
+                    openUploadedMarkdownAttachmentPicker(editor);
+                }
+            }
+        ]);
+    }
+
     bindToolbarHoverMenu(editor, "table-grid", [
         buildTableImportAction(editor, ",", "data-table-import-csv-label", "Import from .csv", "csv", ".csv,text/csv"),
         buildTableImportAction(editor, "\t", "data-table-import-tsv-label", "Import from .tsv", "tsv", ".tsv,text/tab-separated-values,text/plain")
@@ -2548,6 +2816,8 @@ function attachEditorHoverMenus(editor) {
 function openEditorContextToolbar(event, editor) {
     var menu = ensureEditorContextToolbar();
     var actions = [];
+    var attachmentUploadUrl = getEditorString(editor, "data-attachment-upload-url", "");
+    var attachmentBrowserUrl = getEditorString(editor, "data-attachment-browser-url", "");
     if (!menu || !editor || !editor.codemirror) {
         return;
     }
@@ -2585,14 +2855,6 @@ function openEditorContextToolbar(event, editor) {
             onClick: function () {
                 restoreActiveContextEditorSelection(editor);
                 openMarkdownImageUpload(editor);
-            }
-        },
-        {
-            label: getEditorString(editor, "data-attachment-upload-label", "Upload attachment"),
-            iconClass: "fa-solid fa-paperclip",
-            onClick: function () {
-                restoreActiveContextEditorSelection(editor);
-                openAttachmentDialog(editor);
             }
         },
         {
@@ -2644,6 +2906,31 @@ function openEditorContextToolbar(event, editor) {
             }
         }
     ];
+
+    if (attachmentUploadUrl || attachmentBrowserUrl) {
+        actions.splice(6, 0, { type: "separator" });
+        if (attachmentUploadUrl) {
+            actions.splice(7, 0, {
+                label: getEditorString(editor, "data-attachment-upload-label", "Upload attachment"),
+                iconClass: "fa-solid fa-paperclip",
+                onClick: function () {
+                    restoreActiveContextEditorSelection(editor);
+                    openAttachmentDialog(editor);
+                }
+            });
+        }
+        if (attachmentBrowserUrl) {
+            actions.splice(attachmentUploadUrl ? 8 : 7, 0, {
+                label: getEditorString(editor, "data-attachment-insert-uploaded-label", "My attachments"),
+                iconClass: "fa-solid fa-box-archive",
+                onClick: function () {
+                    restoreActiveContextEditorSelection(editor);
+                    openUploadedAttachmentDialog(editor);
+                }
+            });
+        }
+        actions.splice(attachmentUploadUrl && attachmentBrowserUrl ? 9 : 8, 0, { type: "separator" });
+    }
 
     event.preventDefault();
     event.stopPropagation();
@@ -2737,6 +3024,7 @@ function requestRenderedMarkdown(previewElement, plainText, previewUrl, fallback
 
 function initializeMarkdownEditor(node) {
     var editor = null;
+    var toolbar = null;
     var previewUrl = "";
     var previewTimer = 0;
     var initialValue = "";
@@ -2748,6 +3036,58 @@ function initializeMarkdownEditor(node) {
     }
     previewUrl = node.getAttribute("data-preview-url") || "";
     initialValue = node.value || "";
+    toolbar = [
+        "bold",
+        "italic",
+        "heading",
+        {
+            name: "text-color",
+            action: openColorPicker,
+            className: "fa fa-palette no-disable",
+            title: "Text Color"
+        },
+        "|",
+        "quote",
+        "unordered-list",
+        "ordered-list",
+        {
+            name: "table-grid",
+            action: openTablePicker,
+            className: "fa fa-table no-disable",
+            title: "Insert Table"
+        },
+        "|",
+        {
+            name: "link",
+            action: openLinkDialog,
+            className: "fa fa-link no-disable",
+            title: "Insert Link"
+        },
+        {
+            name: "image-upload",
+            action: openMarkdownImagePicker,
+            className: "fa fa-image no-disable",
+            title: "Insert Image"
+        },
+        {
+            name: "emoji-picker",
+            action: openEmojiPicker,
+            className: "fa fa-face-smile no-disable",
+            title: "Insert Emoji"
+        },
+        "code",
+        "|",
+        "side-by-side",
+        "guide"
+    ];
+    if ((node.getAttribute("data-attachment-upload-url") || "").trim()) {
+        toolbar.splice(12, 0, {
+            name: "attachment-upload",
+            action: openMarkdownAttachmentPicker,
+            className: "fa fa-paperclip no-disable",
+            title: "Insert Attachment"
+        });
+    }
 
     editor = new EasyMDE({
         element: node,
@@ -2772,56 +3112,7 @@ function initializeMarkdownEditor(node) {
             }, 220);
             return preview.innerHTML;
         },
-        toolbar: [
-            "bold",
-            "italic",
-            "heading",
-            {
-                name: "text-color",
-                action: openColorPicker,
-                className: "fa fa-palette no-disable",
-                title: "Text Color"
-            },
-            "|",
-            "quote",
-            "unordered-list",
-            "ordered-list",
-            {
-                name: "table-grid",
-                action: openTablePicker,
-                className: "fa fa-table no-disable",
-                title: "Insert Table"
-            },
-            "|",
-            {
-                name: "link",
-                action: openLinkDialog,
-                className: "fa fa-link no-disable",
-                title: "Insert Link"
-            },
-            {
-                name: "image-upload",
-                action: openMarkdownImagePicker,
-                className: "fa fa-image no-disable",
-                title: "Insert Image"
-            },
-            {
-                name: "attachment-upload",
-                action: openMarkdownAttachmentPicker,
-                className: "fa fa-paperclip no-disable",
-                title: "Insert Attachment"
-            },
-            {
-                name: "emoji-picker",
-                action: openEmojiPicker,
-                className: "fa fa-face-smile no-disable",
-                title: "Insert Emoji"
-            },
-            "code",
-            "|",
-            "side-by-side",
-            "guide"
-        ],
+        toolbar: toolbar,
         renderingConfig: {
             singleLineBreaks: false,
             codeSyntaxHighlighting: false

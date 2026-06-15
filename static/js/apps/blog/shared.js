@@ -1,5 +1,6 @@
 import {
     getCsrfToken,
+    getTopModalRoot,
     openModal,
     showInlineFlash
 } from "../../core/app.js";
@@ -147,14 +148,10 @@ function createConditionTooltip() {
 }
 
 function getTooltipHost() {
-    var nestedOverlay = document.querySelector(".access-gate-nested-overlay");
-    var appModal = document.querySelector("[data-app-modal]");
+    var topModalRoot = getTopModalRoot();
 
-    if (nestedOverlay && !nestedOverlay.hidden) {
-        return nestedOverlay;
-    }
-    if (appModal && !appModal.hidden) {
-        return appModal;
+    if (topModalRoot && !topModalRoot.hidden) {
+        return topModalRoot;
     }
     return document.body;
 }
@@ -650,16 +647,16 @@ function bindExternalShareEditors() {
             content.appendChild(urlField);
             content.appendChild(expiresField);
 
-            openModal({
+            var modal = openModal({
                 kicker: kicker,
                 title: title,
                 contentNode: content,
                 cancelText: closeLabel,
                 confirmText: generateLabel,
                 keepOpenOnConfirm: true,
-                onConfirm: function () {
+                onConfirm: function (api) {
                     var body = new FormData();
-                    var confirmButton = document.querySelector("[data-app-modal-confirm-slot] .primary-button");
+                    var confirmButton = api && typeof api.getPrimaryButton === "function" ? api.getPrimaryButton() : null;
                     body.append("expiry", expirySelect.value || "");
                     body.append("csrfmiddlewaretoken", csrfToken);
 
@@ -703,6 +700,10 @@ function bindExternalShareEditors() {
                     });
                 }
             });
+
+            if (!modal) {
+                return;
+            }
         });
     });
 }

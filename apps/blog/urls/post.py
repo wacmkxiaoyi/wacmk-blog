@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.blog.views.access_check import AccessCheckView
-from apps.blog.views.attachment import AttachmentAccessCheckView, AttachmentDownloadView, AttachmentUploadView
+from apps.blog.views.attachment import AttachmentAccessCheckView, AttachmentDownloadView, AttachmentUploadView, UserAttachmentListView
 from apps.blog.views.post import (
     ArticleListView,
     BlogDetailView,
@@ -32,6 +32,7 @@ from apps.blog.views.post import (
 urlpatterns = [
     path("api/access-check/<str:object_type>/<int:object_id>/", AccessCheckView.as_view(), name="access-check"),
     path("attachments/upload/", AttachmentUploadView.as_view(), name="attachment-upload"),
+    path("attachments/mine/", UserAttachmentListView.as_view(), name="attachment-mine"),
     path("attachments/<int:pk>/download/", AttachmentDownloadView.as_view(), name="attachment-download"),
     path("attachments/<int:pk>/access-check/", AttachmentAccessCheckView.as_view(), name="attachment-access-check"),
     path("articles/", ArticleListView.as_view(), name="article-list"),

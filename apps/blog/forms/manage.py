@@ -207,9 +207,7 @@ class UserManageForm(forms.ModelForm):
 
         existing_groups = list(self.instance.groups.all()) if self.instance.pk else []
         preserved_group_ids = [group.pk for group in existing_groups if not is_business_group_name(group.name)]
-        if role_type == self.ROLE_ADMIN:
-            cleaned_data["groups"] = Group.objects.filter(pk__in=preserved_group_ids)
-        elif self.current_unavailable_business_group_name and not business_identity_touched:
+        if self.current_unavailable_business_group_name and not business_identity_touched:
             cleaned_data["groups"] = Group.objects.filter(pk__in=[group.pk for group in existing_groups]).order_by("name")
         else:
             business_group_name = cleaned_data.get("business_identity") or self.default_business_identity_value

@@ -155,18 +155,6 @@
     margin-bottom: 1.8rem;
 }
 
-.language-switcher {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.45rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    box-shadow: 0 12px 30px rgba(151, 121, 198, 0.12);
-    backdrop-filter: blur(16px);
-}
-
 .auth-title-wrap {
     display: flex;
     flex-direction: column;
@@ -233,35 +221,6 @@
     line-height: 0.95;
     color: #5c4678;
     text-shadow: 0 6px 20px rgba(255, 137, 182, 0.18);
-}
-
-.language-option {
-    min-width: 2.4rem;
-    padding: 0.2rem 0.4rem;
-    border: 0;
-    background: transparent;
-    color: var(--text-soft);
-    font-size: 0.95rem;
-    font-weight: 700;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.language-option:hover {
-    color: var(--accent-deep);
-    background: rgba(255, 236, 245, 0.9);
-    transform: translateY(-1px);
-}
-
-.language-option.is-active {
-    color: var(--accent-deep);
-    font-weight: 700;
-    background: rgba(255, 236, 245, 0.95);
-}
-
-.language-divider {
-    color: rgba(114, 126, 163, 0.55);
 }
 
 .auth-form {
