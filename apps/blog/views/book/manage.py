@@ -55,7 +55,7 @@ class ManageBookListView(ManageBaseMixin, ListView):
 
 
 class ManageBookCreateView(ManageBaseMixin, CreateView):
-    template_name = "blog/manage/book_form.html"
+    template_name = "blog/editor/book_form.html"
     form_class = BookForm
     success_url = reverse_lazy("manage-books")
 
@@ -89,7 +89,7 @@ class ManageBookCreateView(ManageBaseMixin, CreateView):
 
 
 class ManageBookUpdateView(ManageBaseMixin, UpdateView):
-    template_name = "blog/manage/book_form.html"
+    template_name = "blog/editor/book_form.html"
     context_object_name = "book"
     form_class = BookForm
     queryset = Book.objects.select_related("created_by").prefetch_related("posts__author")

@@ -7,7 +7,7 @@ from apps.blog.views.profile import build_profile_nav
 
 
 class ProfilePointsHistoryListView(LoginRequiredMixin, TemplateView):
-    template_name = "blog/profile_points_history.html"
+    template_name = "blog/profile/points_history.html"
     paginate_by = 20
 
     def get_queryset(self):

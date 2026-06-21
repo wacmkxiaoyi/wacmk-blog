@@ -7,7 +7,7 @@ from apps.blog.views.profile import build_profile_nav
 
 
 class ProfileMoneyHistoryListView(LoginRequiredMixin, TemplateView):
-    template_name = "blog/profile_money_history.html"
+    template_name = "blog/profile/money_history.html"
     paginate_by = 20
 
     def get_queryset(self):

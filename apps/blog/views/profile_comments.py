@@ -12,11 +12,12 @@ from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment
 from apps.blog.utils import write_audit_log
 from apps.blog.utils.site import check_comment_permission
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.views.profile import build_profile_nav
 
 
 class ProfileCommentListView(LoginRequiredMixin, TemplateView):
-    template_name = "blog/profile_comments.html"
+    template_name = "blog/profile/comments.html"
     paginate_by = 20
     default_sort = "created_at"
     sortable_fields = {
@@ -112,7 +113,7 @@ class ProfileCommentListView(LoginRequiredMixin, TemplateView):
         context["sort_headers"] = self.get_sort_headers()
         context["pagination_query"] = self.build_query()
         context["query"] = (self.request.GET.get("q") or "").strip()
-        context["edit_form"] = CommentForm(user=self.request.user)
+        context["edit_form"] = CommentForm(user=self.request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
         return context
 
 
@@ -127,7 +128,7 @@ class ProfileCommentUpdateView(LoginRequiredMixin, View):
         if not check_comment_permission(request.user):
             messages.error(request, _("You do not have permission to edit comments."))
             return redirect(self.get_success_url())
-        form = CommentForm(request.POST, instance=comment, user=request.user)
+        form = CommentForm(request.POST, instance=comment, user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
         if not form.is_valid():
             messages.error(request, _("Comment content cannot be empty."))
             return redirect(self.get_success_url())

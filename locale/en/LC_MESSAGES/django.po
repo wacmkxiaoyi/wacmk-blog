@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: wacmk-blog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 20:27+0800\n"
+"POT-Creation-Date: 2026-06-22 00:17+0800\n"
 "PO-Revision-Date: 2026-05-23 00:00+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,333 +13,784 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Insufficient balance."
-msgstr ""
+#: .\apps\blog\access\check.py:75 .\apps\blog\access\check.py:134
+#: .\apps\blog\auth\evaluators\book_only.py:11 .\apps\blog\permissions.py:17
+#: .\templates\blog\editor\post_form.html:122
+#: .\templates\blog\editor\post_form.html:150
+msgid "Book only"
+msgstr "Book only"
 
+#: .\apps\blog\access\check.py:234 .\apps\blog\forms\manage.py:251
+#: .\apps\blog\forms\manage.py:252 .\apps\users\forms.py:27
+#: .\apps\users\forms.py:84 .\templates\blog\access_gate.html:83
+#: .\templates\blog\includes\attachment_access_gate.html:56
+#: .\templates\blog\profile\overview.html:193
+msgid "Password"
+msgstr "Password"
+
+#: .\apps\blog\access\common.py:165
+msgid "Insufficient balance."
+msgstr "Insufficient balance."
+
+#: .\apps\blog\access\common.py:167 .\apps\blog\models\attachment.py:154
+msgid "Content purchase"
+msgstr "Content purchase"
+
+#: .\apps\blog\access\common.py:169
+#, python-format
+msgid "Purchase content: %(title)s"
+msgstr "Purchase content: %(title)s"
+
+#: .\apps\blog\auth\evaluators\encrypted.py:11 .\apps\blog\permissions.py:16
+#: .\templates\blog\editor\book_form.html:104
+#: .\templates\blog\editor\book_form.html:130
+#: .\templates\blog\editor\post_form.html:121
+#: .\templates\blog\editor\post_form.html:149
+msgid "Encrypted"
+msgstr "Encrypted"
+
+#: .\apps\blog\auth\evaluators\money.py:16 .\apps\blog\forms\manage.py:86
+#: .\apps\blog\permissions.py:14 .\templates\blog\editor\book_form.html:102
+#: .\templates\blog\editor\book_form.html:128
+#: .\templates\blog\editor\post_form.html:119
+#: .\templates\blog\editor\post_form.html:147
+msgid "Money"
+msgstr "Money"
+
+#: .\apps\blog\auth\evaluators\points.py:12 .\apps\blog\forms\manage.py:92
+#: .\apps\blog\permissions.py:15 .\templates\blog\editor\book_form.html:103
+#: .\templates\blog\editor\book_form.html:129
+#: .\templates\blog\editor\post_form.html:120
+#: .\templates\blog\editor\post_form.html:148
+msgid "Points"
+msgstr "Points"
+
+#: .\apps\blog\forms\attachment.py:14 .\apps\blog\forms\book.py:26
+#: .\apps\blog\forms\post.py:67 .\apps\blog\models\attachment.py:18
+#: .\apps\blog\models\book.py:17 .\apps\blog\models\post.py:27
+#: .\apps\blog\permissions.py:25
 msgid "Public"
 msgstr "Public"
 
+#: .\apps\blog\forms\attachment.py:15 .\apps\blog\forms\book.py:27
+#: .\apps\blog\forms\post.py:68 .\apps\blog\models\attachment.py:19
+#: .\apps\blog\models\book.py:18 .\apps\blog\models\post.py:28
+#: .\apps\blog\permissions.py:26
 msgid "Private"
 msgstr "Private"
 
+#: .\apps\blog\forms\attachment.py:16 .\apps\blog\forms\book.py:28
+#: .\apps\blog\forms\post.py:69 .\apps\blog\models\attachment.py:20
+#: .\apps\blog\models\book.py:19 .\apps\blog\models\post.py:29
 msgid "Conditional"
-msgstr ""
+msgstr "Conditional"
 
-msgid "Book name"
-msgstr "Book name"
+#: .\apps\blog\forms\attachment.py:21 .\apps\blog\forms\comment.py:21
+#: .\apps\blog\forms\post.py:28
+#: .\templates\blog\manage\attachment_list.html:110
+msgid "Attachment title"
+msgstr "Attachment title"
 
-msgid "Enter book name"
-msgstr "Enter book name"
+#: .\apps\blog\forms\attachment.py:26
+msgid "Enter attachment title"
+msgstr "Enter attachment title"
 
-msgid "Slug"
-msgstr "Slug"
-
-msgid "Book slug"
-msgstr "Book slug"
-
-msgid "Summary"
-msgstr "Summary"
-
-msgid "Short summary shown on the books page."
-msgstr "Short summary shown on the books page."
-
-msgid "Cover image"
-msgstr "Cover image"
-
+#: .\apps\blog\forms\attachment.py:31 .\apps\blog\forms\book.py:67
+#: .\apps\blog\forms\comment.py:35 .\apps\blog\forms\comment.py:41
+#: .\apps\blog\forms\post.py:42 .\apps\blog\forms\post.py:48
+#: .\apps\blog\forms\post.py:138
+#: .\templates\blog\manage\attachment_list.html:45
+#: .\templates\blog\manage\attachment_list.html:114
+#: .\templates\blog\manage\book_list.html:37
+#: .\templates\blog\manage\post_list.html:68
+#: .\templates\blog\profile\attachments.html:37
+#: .\templates\blog\profile\books.html:41
+#: .\templates\blog\profile\posts.html:67
 msgid "Access permission"
 msgstr "Access permission"
 
+#: .\apps\blog\forms\attachment.py:38 .\apps\blog\forms\book.py:74
+#: .\apps\blog\forms\comment.py:42 .\apps\blog\forms\post.py:49
+#: .\apps\blog\forms\post.py:145 .\templates\blog\editor\book_form.html:87
+#: .\templates\blog\editor\post_form.html:104
+#: .\templates\blog\manage\attachment_list.html:115
+msgid "Access scope"
+msgstr "Access scope"
+
+#: .\apps\blog\forms\attachment.py:44 .\apps\blog\forms\book.py:80
+#: .\apps\blog\forms\comment.py:43 .\apps\blog\forms\post.py:50
+#: .\apps\blog\forms\post.py:151 .\templates\blog\editor\book_form.html:111
+#: .\templates\blog\editor\post_form.html:130
+#: .\templates\blog\includes\vip_access_badge.html:3
+#: .\templates\blog\includes\vip_access_badge.html:10
+#: .\templates\blog\manage\attachment_list.html:116
+msgid "VIP access permission"
+msgstr "VIP access permission"
+
+#: .\apps\blog\forms\attachment.py:72
+msgid "The uploaded attachment is empty."
+msgstr "The uploaded attachment is empty."
+
+#: .\apps\blog\forms\attachment.py:75
+#, python-format
+msgid "The attachment exceeds the maximum size of %(size)s MB."
+msgstr "The attachment exceeds the maximum size of %(size)s MB."
+
+#: .\apps\blog\forms\book.py:32
+msgid "Book name"
+msgstr "Book name"
+
+#: .\apps\blog\forms\book.py:36
+msgid "Enter book name"
+msgstr "Enter book name"
+
+#: .\apps\blog\forms\book.py:42 .\apps\blog\forms\post.py:83
+msgid "Slug"
+msgstr "Slug"
+
+#: .\apps\blog\forms\book.py:46
+msgid "Book slug"
+msgstr "Book slug"
+
+#: .\apps\blog\forms\book.py:52 .\apps\blog\forms\post.py:93
+msgid "Summary"
+msgstr "Summary"
+
+#: .\apps\blog\forms\book.py:57
+msgid "Short summary shown on the books page."
+msgstr "Short summary shown on the books page."
+
+#: .\apps\blog\forms\book.py:63 .\apps\blog\forms\post.py:117
+msgid "Cover image"
+msgstr "Cover image"
+
+#: .\apps\blog\forms\book.py:87 .\apps\blog\forms\comment.py:95
+#: .\apps\blog\forms\post.py:191 .\apps\blog\views\manage\base.py:86
+#: .\templates\base.html:27 .\templates\base.html:29
+#: .\templates\blog\article_list.html:4 .\templates\blog\article_list.html:15
+#: .\templates\blog\article_list.html:16 .\templates\blog\home.html:100
+#: .\templates\blog\home.html:107 .\templates\blog\home.html:120
+#: .\templates\blog\manage\book_list.html:36
+#: .\templates\blog\manage\post_list.html:19
+#: .\templates\blog\manage\sidebar.html:9
+#: .\templates\blog\profile\books.html:40
 msgid "Articles"
 msgstr "Articles"
 
-#, fuzzy
-#| msgid "Invalid book structure data."
-msgid "Invalid condition data."
-msgstr "Invalid book structure data."
+#: .\apps\blog\forms\book.py:313 .\apps\blog\forms\book.py:317
+#, python-format
+msgid "You do not have permission to add \"%(title)s\" to this book."
+msgstr "You do not have permission to add \"%(title)s\" to this book."
 
+#: .\apps\blog\forms\book.py:327
 msgid "Invalid book structure data."
 msgstr "Invalid book structure data."
 
+#: .\apps\blog\forms\book.py:329
 msgid "Book structure must be a list."
 msgstr "Book structure must be a list."
 
-msgid "At least one complete condition is required."
-msgstr ""
-
-msgid "Password cannot be empty for encrypted books."
-msgstr "Password cannot be empty for encrypted books."
-
+#: .\apps\blog\forms\book.py:348
 msgid "Selected articles must match the book structure."
 msgstr "Selected articles must match the book structure."
 
+#: .\apps\blog\forms\book.py:378
 msgid "Each book structure node must be an object."
 msgstr "Each book structure node must be an object."
 
+#: .\apps\blog\forms\book.py:383
 msgid "Article nodes must include a post id."
 msgstr "Article nodes must include a post id."
 
+#: .\apps\blog\forms\book.py:389
 msgid "Group nodes must include a title."
 msgstr "Group nodes must include a title."
 
+#: .\apps\blog\forms\book.py:398
 msgid "Unknown book structure node type."
 msgstr "Unknown book structure node type."
 
-msgid "Comment"
-msgstr "Comment"
+#: .\apps\blog\forms\comment.py:19 .\apps\blog\forms\comment.py:25
+#: .\apps\blog\forms\post.py:26 .\apps\blog\forms\post.py:32
+msgid "Upload attachment"
+msgstr "Upload attachment"
 
-msgid "Write a comment"
-msgstr "Write a comment"
+#: .\apps\blog\forms\comment.py:20 .\apps\blog\forms\post.py:27
+#: .\apps\blog\models\attachment.py:120 .\apps\blog\models\attachment.py:166
+#: .\apps\blog\models\attachment.py:212
+#: .\templates\blog\manage\attachment_list.html:106
+#: .\templates\blog\manage\site_settings.html:587
+msgid "Attachment"
+msgstr "Attachment"
 
-msgid "Insert link"
-msgstr "Insert link"
+#: .\apps\blog\forms\comment.py:22 .\apps\blog\forms\post.py:29
+#: .\templates\blog\manage\attachment_list.html:111
+msgid "Select file"
+msgstr "Select file"
 
-msgid "Markdown"
-msgstr "Markdown"
+#: .\apps\blog\forms\comment.py:23 .\apps\blog\forms\post.py:30
+msgid "Upload a reusable attachment and insert it into the current content."
+msgstr "Upload a reusable attachment and insert it into the current content."
 
-msgid "Display name"
-msgstr "Display name"
+#: .\apps\blog\forms\comment.py:24 .\apps\blog\forms\post.py:31
+msgid "Upload and insert"
+msgstr "Upload and insert"
 
-msgid "URL"
-msgstr "URL"
+#: .\apps\blog\forms\comment.py:28 .\apps\blog\forms\comment.py:29
+#: .\apps\blog\forms\comment.py:30 .\apps\blog\forms\post.py:35
+#: .\apps\blog\forms\post.py:36 .\apps\blog\forms\post.py:37
+#: .\apps\blog\views\profile.py:27 .\templates\blog\profile\attachments.html:4
+#: .\templates\blog\profile\attachments.html:21
+msgid "My attachments"
+msgstr "My attachments"
 
-msgid "Enter display text and the target URL."
-msgstr "Enter display text and the target URL."
+#: .\apps\blog\forms\comment.py:31 .\apps\blog\forms\post.py:38
+#: .\templates\blog\manage\attachment_list.html:33
+#: .\templates\blog\profile\attachments.html:25
+msgid "Search attachments"
+msgstr "Search attachments"
 
+#: .\apps\blog\forms\comment.py:32 .\apps\blog\forms\post.py:39
+#: .\templates\blog\manage\attachment_list.html:94
+#: .\templates\blog\profile\attachments.html:83
+msgid "No attachments found."
+msgstr "No attachments found."
+
+#: .\apps\blog\forms\comment.py:33 .\apps\blog\forms\comment.py:51
+#: .\apps\blog\forms\comment.py:91 .\apps\blog\forms\comment.py:106
+#: .\apps\blog\forms\comment.py:112 .\apps\blog\forms\comment.py:126
+#: .\apps\blog\forms\post.py:40 .\apps\blog\forms\post.py:58
+#: .\apps\blog\forms\post.py:187 .\apps\blog\forms\post.py:202
+#: .\apps\blog\forms\post.py:208 .\apps\blog\forms\post.py:222
 msgid "Insert"
 msgstr "Insert"
 
+#: .\apps\blog\forms\comment.py:34 .\apps\blog\forms\post.py:41
+#: .\apps\blog\forms\post.py:73 .\templates\blog\manage\attachment_list.html:44
+#: .\templates\blog\manage\post_list.html:63
+#: .\templates\blog\profile\attachments.html:36
+#: .\templates\blog\profile\posts.html:65
+msgid "Title"
+msgstr "Title"
+
+#: .\apps\blog\forms\comment.py:36 .\apps\blog\forms\post.py:43
+#: .\apps\blog\views\post\utils\draft.py:108
+#: .\templates\blog\manage\attachment_list.html:47
+#: .\templates\blog\manage\book_list.html:38
+#: .\templates\blog\manage\post_list.html:76
+#: .\templates\blog\profile\attachments.html:38
+#: .\templates\blog\profile\books.html:42
+#: .\templates\blog\profile\posts.html:71
+msgid "Updated"
+msgstr "Updated"
+
+#: .\apps\blog\forms\comment.py:37 .\apps\blog\forms\post.py:44
+#: .\templates\blog\manage\attachment_list.html:48
+#: .\templates\blog\manage\book_list.html:39
+#: .\templates\blog\manage\comment_list.html:37
+#: .\templates\blog\manage\post_list.html:78
+#: .\templates\blog\manage\user_list.html:39
+#: .\templates\blog\profile\attachments.html:39
+#: .\templates\blog\profile\books.html:43
+#: .\templates\blog\profile\comments.html:39
+#: .\templates\blog\profile\posts.html:72
+msgid "Actions"
+msgstr "Actions"
+
+#: .\apps\blog\forms\comment.py:38 .\apps\blog\forms\post.py:45
+#: .\templates\blog\manage\attachment_list.html:120
+msgid "Please choose an attachment file first."
+msgstr "Please choose an attachment file first."
+
+#: .\apps\blog\forms\comment.py:39 .\apps\blog\forms\post.py:46
+msgid "Attachment upload failed"
+msgstr "Attachment upload failed"
+
+#: .\apps\blog\forms\comment.py:40 .\apps\blog\forms\post.py:47
+msgid "Unable to upload the selected attachment right now."
+msgstr "Unable to upload the selected attachment right now."
+
+#: .\apps\blog\forms\comment.py:44 .\apps\blog\forms\post.py:51
+msgid "Maximum attachment size"
+msgstr "Maximum attachment size"
+
+#: .\apps\blog\forms\comment.py:47 .\apps\blog\forms\comment.py:108
+#: .\apps\blog\forms\post.py:54 .\apps\blog\forms\post.py:204
+msgid "Insert video"
+msgstr "Insert video"
+
+#: .\apps\blog\forms\comment.py:48 .\apps\blog\forms\comment.py:87
+#: .\apps\blog\forms\comment.py:102 .\apps\blog\forms\comment.py:109
+#: .\apps\blog\forms\comment.py:118 .\apps\blog\forms\post.py:55
+#: .\apps\blog\forms\post.py:183 .\apps\blog\forms\post.py:198
+#: .\apps\blog\forms\post.py:205 .\apps\blog\forms\post.py:214
+msgid "Markdown"
+msgstr "Markdown"
+
+#: .\apps\blog\forms\comment.py:49 .\apps\blog\forms\comment.py:110
+#: .\apps\blog\forms\post.py:56 .\apps\blog\forms\post.py:206
+msgid "Video URL"
+msgstr "Video URL"
+
+#: .\apps\blog\forms\comment.py:50 .\apps\blog\forms\comment.py:111
+#: .\apps\blog\forms\post.py:57 .\apps\blog\forms\post.py:207
+msgid "Enter the video URL to insert an embedded player."
+msgstr "Enter the video URL to insert an embedded player."
+
+#: .\apps\blog\forms\comment.py:52 .\apps\blog\forms\post.py:59
+msgid "Upload video"
+msgstr "Upload video"
+
+#: .\apps\blog\forms\comment.py:54 .\apps\blog\forms\post.py:61
+msgid "Video upload failed"
+msgstr "Video upload failed"
+
+#: .\apps\blog\forms\comment.py:55 .\apps\blog\forms\post.py:62
+msgid "Unable to upload the selected video right now."
+msgstr "Unable to upload the selected video right now."
+
+#: .\apps\blog\forms\comment.py:56 .\apps\blog\forms\post.py:63
+msgid "Maximum video size"
+msgstr "Maximum video size"
+
+#: .\apps\blog\forms\comment.py:57 .\apps\blog\forms\post.py:64
+msgid "Please choose a video file first."
+msgstr "Please choose a video file first."
+
+#: .\apps\blog\forms\comment.py:61 .\apps\blog\models\attachment.py:167
+#: .\apps\blog\models\attachment.py:213
+#: .\templates\blog\manage\site_settings.html:655
+msgid "Comment"
+msgstr "Comment"
+
+#: .\apps\blog\forms\comment.py:70
+msgid "Write a comment"
+msgstr "Write a comment"
+
+#: .\apps\blog\forms\comment.py:86 .\apps\blog\forms\post.py:182
+msgid "Insert link"
+msgstr "Insert link"
+
+#: .\apps\blog\forms\comment.py:88 .\apps\blog\forms\manage.py:27
+#: .\apps\blog\forms\post.py:184 .\apps\blog\forms\profile.py:18
+#: .\apps\blog\forms\site.py:511
+msgid "Display name"
+msgstr "Display name"
+
+#: .\apps\blog\forms\comment.py:89 .\apps\blog\forms\post.py:185
+msgid "URL"
+msgstr "URL"
+
+#: .\apps\blog\forms\comment.py:90 .\apps\blog\forms\post.py:186
+msgid "Enter display text and the target URL."
+msgstr "Enter display text and the target URL."
+
+#: .\apps\blog\forms\comment.py:92 .\apps\blog\forms\post.py:188
+#: .\templates\base.html:145 .\templates\blog\access_gate.html:89
+#: .\templates\blog\access_gate.html:100
+#: .\templates\blog\editor\book_form.html:196
+#: .\templates\blog\includes\attachment_access_gate.html:59
+#: .\templates\blog\includes\attachment_access_gate.html:69
+#: .\templates\blog\includes\comment_threads.html:64
+#: .\templates\blog\includes\comment_threads.html:231
+#: .\templates\blog\manage\attachment_list.html:83
+#: .\templates\blog\manage\attachment_list.html:109
+#: .\templates\blog\manage\audit_list.html:28
+#: .\templates\blog\manage\book_list.html:67
+#: .\templates\blog\manage\comment_list.html:58
+#: .\templates\blog\manage\post_list.html:151
+#: .\templates\blog\manage\post_list.html:167
+#: .\templates\blog\manage\post_list.html:181
+#: .\templates\blog\manage\post_list.html:196
+#: .\templates\blog\manage\site_settings.html:716
+#: .\templates\blog\manage\user_form.html:204
+#: .\templates\blog\profile\attachments.html:73
+#: .\templates\blog\profile\books.html:71
+#: .\templates\blog\profile\comments.html:62
+#: .\templates\blog\profile\posts.html:107
 msgid "Cancel"
 msgstr "Cancel"
 
-#, fuzzy
-#| msgid "Reference internal article"
-msgid "Reference internal post"
+#: .\apps\blog\forms\comment.py:93 .\apps\blog\forms\comment.py:94
+#: .\apps\blog\forms\post.py:189 .\apps\blog\forms\post.py:190
+msgid "Reference internal article"
 msgstr "Reference internal article"
 
-#, fuzzy
-#| msgid "Posts"
-msgid "Posts"
-msgstr "Posts"
+#: .\apps\blog\forms\comment.py:96 .\apps\blog\forms\post.py:192
+#: .\apps\blog\views\post\manage.py:321 .\apps\blog\views\profile_posts.py:222
+#: .\templates\blog\editor\book_form.html:197
+msgid "Search articles"
+msgstr "Search articles"
 
-#, fuzzy
-#| msgid "Search posts"
-msgid "Search posts"
-msgstr "Search posts"
+#: .\apps\blog\forms\comment.py:97 .\apps\blog\forms\post.py:193
+#: .\templates\blog\editor\book_form.html:198
+msgid "No articles found."
+msgstr "No articles found."
 
-#, fuzzy
-#| msgid "No books found."
-msgid "No posts found."
-msgstr "No books found."
-
+#: .\apps\blog\forms\comment.py:98 .\apps\blog\forms\post.py:194
+#: .\templates\blog\editor\book_form.html:199
 msgid "Select"
 msgstr "Select"
 
+#: .\apps\blog\forms\comment.py:99 .\apps\blog\forms\post.py:195
+#: .\templates\blog\editor\book_form.html:200
 msgid "Selected"
 msgstr "Selected"
 
-#, fuzzy
-#| msgid "Add selected"
+#: .\apps\blog\forms\comment.py:100 .\apps\blog\forms\post.py:196
 msgid "Insert selected"
-msgstr "Add selected"
+msgstr "Insert selected"
 
-#, fuzzy
-#| msgid "Insert table"
+#: .\apps\blog\forms\comment.py:101 .\apps\blog\forms\post.py:197
 msgid "Insert image"
-msgstr "Insert table"
+msgstr "Insert image"
 
+#: .\apps\blog\forms\comment.py:103 .\apps\blog\forms\post.py:199
 msgid "Prompt"
-msgstr ""
+msgstr "Prompt"
 
+#: .\apps\blog\forms\comment.py:104 .\apps\blog\forms\post.py:200
 msgid "Image URL"
-msgstr ""
+msgstr "Image URL"
 
-#, fuzzy
-#| msgid "Enter display text and the target URL."
+#: .\apps\blog\forms\comment.py:105 .\apps\blog\forms\post.py:201
 msgid "Enter image prompt text and the image URL."
-msgstr "Enter display text and the target URL."
+msgstr "Enter image prompt text and the image URL."
 
+#: .\apps\blog\forms\comment.py:107 .\apps\blog\forms\post.py:203
 msgid "Upload image"
 msgstr "Upload image"
 
+#: .\apps\blog\forms\comment.py:113 .\apps\blog\forms\post.py:209
+#: .\templates\blog\includes\comment_threads.html:328
+#: .\templates\blog\includes\comment_threads.html:330
+#: .\templates\blog\includes\pagination.html:9
+#: .\templates\blog\includes\pagination.html:11
+msgid "Previous"
+msgstr "Previous"
+
+#: .\apps\blog\forms\comment.py:114 .\apps\blog\forms\post.py:210
+#: .\templates\blog\includes\comment_threads.html:333
+#: .\templates\blog\includes\comment_threads.html:335
+#: .\templates\blog\includes\pagination.html:14
+#: .\templates\blog\includes\pagination.html:16
+msgid "Next"
+msgstr "Next"
+
+#: .\apps\blog\forms\comment.py:115 .\apps\blog\forms\post.py:211
+msgid "Page"
+msgstr "Page"
+
+#: .\apps\blog\forms\comment.py:116 .\apps\blog\forms\post.py:212
 msgid "Insert table"
 msgstr "Insert table"
 
+#: .\apps\blog\forms\comment.py:117 .\apps\blog\forms\post.py:213
 msgid "Choose table size"
 msgstr "Choose table size"
 
-#, fuzzy
-#| msgid "Import from .md file"
+#: .\apps\blog\forms\comment.py:119 .\apps\blog\forms\post.py:215
 msgid "Import from .csv"
-msgstr "Import from .md file"
+msgstr "Import from .csv"
 
-#, fuzzy
-#| msgid "Import from .md file"
+#: .\apps\blog\forms\comment.py:120 .\apps\blog\forms\post.py:216
 msgid "Import from .tsv"
-msgstr "Import from .md file"
+msgstr "Import from .tsv"
 
+#: .\apps\blog\forms\comment.py:121 .\apps\blog\forms\post.py:217
 msgid "Table import failed"
-msgstr ""
+msgstr "Table import failed"
 
+#: .\apps\blog\forms\comment.py:122 .\apps\blog\forms\post.py:218
 msgid "Please choose a valid CSV or TSV file and try again."
-msgstr ""
+msgstr "Please choose a valid CSV or TSV file and try again."
 
+#: .\apps\blog\forms\comment.py:123 .\apps\blog\forms\post.py:219
 msgid "The selected file does not contain any table data."
-msgstr ""
+msgstr "The selected file does not contain any table data."
 
+#: .\apps\blog\forms\comment.py:124 .\apps\blog\forms\post.py:220
 msgid "Right-click a cell to insert or remove rows and columns."
 msgstr "Right-click a cell to insert or remove rows and columns."
 
+#: .\apps\blog\forms\comment.py:125 .\apps\blog\forms\post.py:221
 msgid "Use tabs or | to paste cells, one row per line."
 msgstr "Use tabs or | to paste cells, one row per line."
 
+#: .\apps\blog\forms\comment.py:127 .\apps\blog\forms\post.py:223
 msgid "Insert row above"
 msgstr "Insert row above"
 
+#: .\apps\blog\forms\comment.py:128 .\apps\blog\forms\post.py:224
 msgid "Insert row below"
 msgstr "Insert row below"
 
+#: .\apps\blog\forms\comment.py:129 .\apps\blog\forms\post.py:225
 msgid "Insert column left"
 msgstr "Insert column left"
 
+#: .\apps\blog\forms\comment.py:130 .\apps\blog\forms\post.py:226
 msgid "Insert column right"
 msgstr "Insert column right"
 
+#: .\apps\blog\forms\comment.py:131 .\apps\blog\forms\post.py:227
 msgid "Remove row"
 msgstr "Remove row"
 
+#: .\apps\blog\forms\comment.py:132 .\apps\blog\forms\post.py:228
 msgid "Remove column"
 msgstr "Remove column"
 
+#: .\apps\blog\forms\comment.py:153 .\apps\blog\views\manage\comments.py:57
+#: .\apps\blog\views\profile_comments.py:133
 msgid "Comment content cannot be empty."
 msgstr "Comment content cannot be empty."
 
-#, fuzzy
-#| msgid "Search posts"
+#: .\apps\blog\forms\common.py:13 .\templates\base.html:48
+#: .\templates\base.html:57 .\templates\blog\editor\post_import_manage.html:26
+#: .\templates\blog\editor\post_import_profile.html:27
+#: .\templates\blog\manage\attachment_list.html:38
+#: .\templates\blog\manage\audit_list.html:40
+#: .\templates\blog\manage\book_list.html:29
+#: .\templates\blog\manage\comment_list.html:28
+#: .\templates\blog\manage\post_list.html:57
+#: .\templates\blog\manage\user_list.html:29
+#: .\templates\blog\profile\attachments.html:30
+#: .\templates\blog\profile\books.html:33
+#: .\templates\blog\profile\comments.html:30
+#: .\templates\blog\profile\posts.html:59 .\templates\blog\search.html:4
+#: .\templates\blog\search.html:15
 msgid "Search"
-msgstr "Search posts"
+msgstr "Search"
 
+#: .\apps\blog\forms\common.py:17
 msgid "Search posts, books, tags, authors..."
 msgstr "Search posts, books, tags, authors..."
 
+#: .\apps\blog\forms\manage.py:19
+#: .\templates\blog\includes\comment_threads.html:13
+#: .\templates\blog\includes\comment_threads.html:22
+#: .\templates\blog\includes\comment_threads.html:180
+#: .\templates\blog\includes\comment_threads.html:189
+#: .\templates\blog\includes\namecard_comments.html:11
+#: .\templates\blog\includes\namecard_comments.html:19
+#: .\templates\blog\namecard.html:48
 msgid "Administrator"
 msgstr "Administrator"
 
+#: .\apps\blog\forms\manage.py:20 .\apps\blog\tests\test_vip_management.py:348
+#: .\apps\blog\tests\test_vip_management.py:717 .\apps\blog\utils\site.py:1590
+#: .\apps\blog\utils\site.py:1622 .\apps\blog\views\profile.py:51
+#: .\templates\base.html:88
 msgid "Normal user"
 msgstr "Normal user"
 
+#: .\apps\blog\forms\manage.py:25 .\apps\blog\forms\manage.py:242
+#: .\apps\blog\forms\profile.py:16
 msgid "Nickname"
-msgstr ""
+msgstr "Nickname"
 
-#, fuzzy
-#| msgid "Personal settings"
+#: .\apps\blog\forms\manage.py:31
 msgid "Personal introduction"
-msgstr "Personal settings"
+msgstr "Personal introduction"
 
+#: .\apps\blog\forms\manage.py:37 .\apps\blog\forms\profile.py:50
+#: .\templates\blog\namecard.html:68
+msgid "Gender"
+msgstr "Gender"
+
+#: .\apps\blog\forms\manage.py:43 .\apps\blog\forms\profile.py:56
+#: .\templates\blog\namecard.html:76
+msgid "Age"
+msgstr "Age"
+
+#: .\apps\blog\forms\manage.py:49 .\apps\blog\forms\manage.py:247
+#: .\apps\blog\forms\profile.py:21 .\apps\users\forms.py:62
+#: .\templates\blog\manage\user_list.html:36
 msgid "Email"
 msgstr "Email"
 
-#, fuzzy
-#| msgid "New email address"
+#: .\apps\blog\forms\manage.py:50 .\apps\blog\forms\manage.py:248
+#: .\apps\blog\forms\profile.py:22 .\templates\blog\profile\overview.html:150
 msgid "Email address"
-msgstr "New email address"
+msgstr "Email address"
 
+#: .\apps\blog\forms\manage.py:54 .\templates\emails\password_changed.html:25
+#: .\templates\emails\password_changed.txt:7
 msgid "New password"
 msgstr "New password"
 
+#: .\apps\blog\forms\manage.py:55
 msgid "Leave blank to keep the current password."
 msgstr "Leave blank to keep the current password."
 
+#: .\apps\blog\forms\manage.py:60
 msgid "Confirm new password"
 msgstr "Confirm new password"
 
+#: .\apps\blog\forms\manage.py:64
 msgid "User role"
 msgstr "User role"
 
+#: .\apps\blog\forms\manage.py:69
 msgid "Business identity"
-msgstr ""
+msgstr "Business identity"
 
+#: .\apps\blog\forms\manage.py:74 .\templates\blog\manage\user_list.html:53
 msgid "Active"
 msgstr "Active"
 
+#: .\apps\blog\forms\manage.py:75 .\templates\blog\manage\user_list.html:49
 msgid "Staff"
 msgstr "Staff"
 
+#: .\apps\blog\forms\manage.py:76 .\templates\blog\manage\user_list.html:48
 msgid "Superuser"
 msgstr "Superuser"
 
+#: .\apps\blog\forms\manage.py:79
 msgid "Groups"
 msgstr "Groups"
 
-msgid "Money"
-msgstr ""
+#: .\apps\blog\forms\manage.py:97 .\apps\blog\forms\profile.py:63
+msgid "GitHub"
+msgstr "GitHub"
 
-msgid "Points"
-msgstr ""
+#: .\apps\blog\forms\manage.py:102 .\apps\blog\forms\profile.py:68
+#: .\templates\blog\manage\site_settings.html:20
+#: .\templates\blog\namecard.html:104
+msgid "Website"
+msgstr "Website"
 
+#: .\apps\blog\forms\manage.py:107 .\apps\blog\forms\profile.py:73
+msgid "Twitter"
+msgstr "Twitter"
+
+#: .\apps\blog\forms\manage.py:112 .\apps\blog\forms\profile.py:78
+msgid "QQ"
+msgstr "QQ"
+
+#: .\apps\blog\forms\manage.py:114 .\apps\blog\forms\profile.py:80
+msgid "QQ number"
+msgstr "QQ number"
+
+#: .\apps\blog\forms\manage.py:140
 #, python-format
 msgid ""
 "Current business identity %(identity)s is preserved until you manually "
 "choose a new one."
 msgstr ""
+"Current business identity %(identity)s is preserved until you manually "
+"choose a new one."
 
-#, fuzzy
-#| msgid "This email is already registered."
+#: .\apps\blog\forms\manage.py:182 .\apps\blog\forms\manage.py:268
+#: .\apps\blog\forms\profile.py:118
 msgid "This email is already in use."
-msgstr "This email is already registered."
+msgstr "This email is already in use."
 
+#: .\apps\blog\forms\manage.py:199 .\apps\blog\forms\manage.py:276
+#: .\apps\users\forms.py:133
 msgid "The two passwords do not match."
 msgstr "The two passwords do not match."
 
+#: .\apps\blog\forms\manage.py:204
 msgid "Choose a valid business identity."
-msgstr ""
+msgstr "Choose a valid business identity."
 
-msgid "Title"
-msgstr "Title"
+#: .\apps\blog\forms\manage.py:236 .\apps\blog\forms\manage.py:238
+#: .\apps\users\forms.py:51 .\templates\blog\profile\overview.html:70
+msgid "Username"
+msgstr "Username"
 
+#: .\apps\blog\forms\manage.py:244
+msgid "Display name (optional)"
+msgstr "Display name (optional)"
+
+#: .\apps\blog\forms\manage.py:255 .\apps\blog\forms\manage.py:256
+#: .\apps\users\forms.py:95
+msgid "Confirm password"
+msgstr "Confirm password"
+
+#: .\apps\blog\forms\manage.py:262 .\apps\users\forms.py:109
+msgid "This username is already taken."
+msgstr "This username is already taken."
+
+#: .\apps\blog\forms\mixins.py:61
+msgid "Invalid condition data."
+msgstr "Invalid condition data."
+
+#: .\apps\blog\forms\mixins.py:94
+msgid "At least one complete condition is required."
+msgstr "At least one complete condition is required."
+
+#: .\apps\blog\forms\mixins.py:100
+msgid "VIP conditions require Standalone access scope."
+msgstr "VIP conditions require Standalone access scope."
+
+#: .\apps\blog\forms\mixins.py:102
+msgid "At least one complete VIP condition is required."
+msgstr "At least one complete VIP condition is required."
+
+#: .\apps\blog\forms\mixins.py:113
+msgid "Password cannot be empty for VIP-encrypted content."
+msgstr "Password cannot be empty for VIP-encrypted content."
+
+#: .\apps\blog\forms\mixins.py:123
+msgid "Password cannot be empty for encrypted content."
+msgstr "Password cannot be empty for encrypted content."
+
+#: .\apps\blog\forms\post.py:77
 msgid "Article title"
 msgstr "Article title"
 
+#: .\apps\blog\forms\post.py:87
 msgid "Article slug"
 msgstr "Article slug"
 
+#: .\apps\blog\forms\post.py:98
 msgid "Short summary shown on the homepage."
 msgstr "Short summary shown on the homepage."
 
+#: .\apps\blog\forms\post.py:103 .\templates\blog\manage\comment_list.html:35
+#: .\templates\blog\profile\comments.html:37
 msgid "Content"
 msgstr "Content"
 
+#: .\apps\blog\forms\post.py:121
 msgid "Status"
 msgstr "Status"
 
+#: .\apps\blog\forms\post.py:128
+msgid "Allow reprint"
+msgstr "Allow reprint"
+
+#: .\apps\blog\forms\post.py:134
+msgid "Allow quote"
+msgstr "Allow quote"
+
+#: .\apps\blog\forms\post.py:158 .\templates\base.html:35
+#: .\templates\base.html:37 .\templates\blog\home.html:60
+#: .\templates\blog\tags.html:4 .\templates\blog\tags.html:15
 msgid "Tags"
 msgstr "Tags"
 
+#: .\apps\blog\forms\post.py:159
 msgid "Separate tags with commas."
 msgstr "Separate tags with commas."
 
+#: .\apps\blog\forms\post.py:163
 msgid "Example: Django, Diary, Update"
 msgstr "Example: Django, Diary, Update"
 
-msgid "Reference internal article"
-msgstr "Reference internal article"
-
-msgid "Search articles"
-msgstr "Search articles"
-
-msgid "No articles found."
-msgstr "No articles found."
-
-#, fuzzy
-#| msgid "Password cannot be empty for encrypted books."
-msgid "Password cannot be empty for encrypted articles."
-msgstr "Password cannot be empty for encrypted articles."
-
+#: .\apps\blog\forms\post.py:322
 msgid "A published article already uses this slug."
 msgstr "A published article already uses this slug."
 
+#: .\apps\blog\forms\post.py:328
 msgid "Markdown file"
 msgstr "Markdown file"
 
+#: .\apps\blog\forms\post.py:330
 msgid ""
 "Supports .md files with optional front matter fields: title, summary, tags, "
 "and slug."
@@ -346,71 +798,367 @@ msgstr ""
 "Supports .md files with optional front matter fields: title, summary, tags, "
 "and slug."
 
+#: .\apps\blog\forms\profile.py:26
 msgid "Description"
 msgstr "Description"
 
+#: .\apps\blog\forms\profile.py:31
 msgid "Write a brief introduction about yourself"
 msgstr "Write a brief introduction about yourself"
 
+#: .\apps\blog\forms\profile.py:37 .\apps\users\forms.py:72
 msgid "Verification code"
 msgstr "Verification code"
 
+#: .\apps\blog\forms\profile.py:42 .\apps\users\forms.py:77
 msgid "Enter verification code"
 msgstr "Enter verification code"
 
+#: .\apps\blog\forms\profile.py:59
+msgid "Your age"
+msgstr "Your age"
+
+#: .\apps\blog\forms\profile.py:84
+msgid "Show email on my namecard"
+msgstr "Show email on my namecard"
+
+#: .\apps\blog\forms\profile.py:124 .\apps\users\forms.py:121
 msgid "Enter a valid 6-digit verification code."
 msgstr "Enter a valid 6-digit verification code."
 
+#: .\apps\blog\forms\profile.py:136
 msgid "Verification code is required when changing email."
 msgstr "Verification code is required when changing email."
 
+#: .\apps\blog\forms\profile.py:148 .\apps\users\forms.py:152
 msgid "The verification code is invalid or expired."
 msgstr "The verification code is invalid or expired."
 
-#, fuzzy
-#| msgid "Post title"
-msgid "Website title"
-msgstr "Post title"
+#: .\apps\blog\forms\site.py:46
+msgid "Enable registration"
+msgstr "Enable registration"
 
-#, fuzzy
-#| msgid "Leave blank to keep the current password."
-msgid "Leave blank to use the default site title"
-msgstr "Leave blank to keep the current password."
+#: .\apps\blog\forms\site.py:47
+msgid "When enabled, users can register new accounts via email verification."
+msgstr "When enabled, users can register new accounts via email verification."
 
-msgid "Shown in the browser tab and site header context where applicable."
+#: .\apps\blog\forms\site.py:53
+msgid "Verification code expiry (seconds)"
+msgstr "Verification code expiry (seconds)"
+
+#: .\apps\blog\forms\site.py:54
+msgid ""
+"How long before a verification code sent via email becomes invalid. Enter a "
+"value between 60 and 3600 seconds."
 msgstr ""
+"How long before a verification code sent via email becomes invalid. Enter a "
+"value between 60 and 3600 seconds."
 
-#, fuzzy
-#| msgid "Website management"
+#: .\apps\blog\forms\site.py:60
+msgid "Resend cooldown (seconds)"
+msgstr "Resend cooldown (seconds)"
+
+#: .\apps\blog\forms\site.py:61
+msgid ""
+"How long a user must wait before requesting another verification code. Enter "
+"a value between 10 and 600 seconds."
+msgstr ""
+"How long a user must wait before requesting another verification code. Enter "
+"a value between 10 and 600 seconds."
+
+#: .\apps\blog\forms\site.py:66
+msgid "Website title"
+msgstr "Website title"
+
+#: .\apps\blog\forms\site.py:70
+msgid "Leave blank to use the default site title"
+msgstr "Leave blank to use the default site title"
+
+#: .\apps\blog\forms\site.py:73
+msgid "Shown in the browser tab and site header context where applicable."
+msgstr "Shown in the browser tab and site header context where applicable."
+
+#: .\apps\blog\forms\site.py:77
 msgid "Website icon"
-msgstr "Website management"
+msgstr "Website icon"
 
+#: .\apps\blog\forms\site.py:79
 msgid ""
 "Used as the browser tab icon. Leave empty to keep the current icon or use "
 "the default."
 msgstr ""
+"Used as the browser tab icon. Leave empty to keep the current icon or use "
+"the default."
 
+#: .\apps\blog\forms\site.py:83
 msgid "Login page background"
-msgstr ""
+msgstr "Login page background"
 
+#: .\apps\blog\forms\site.py:85
 msgid "Used on login, register, and other unauthenticated auth pages."
-msgstr ""
+msgstr "Used on login, register, and other unauthenticated auth pages."
 
+#: .\apps\blog\forms\site.py:89
 msgid "Authenticated page background"
-msgstr ""
+msgstr "Authenticated page background"
 
+#: .\apps\blog\forms\site.py:91
 msgid "Used after sign-in across the main site and management pages."
-msgstr ""
+msgstr "Used after sign-in across the main site and management pages."
 
+#: .\apps\blog\forms\site.py:95
+msgid "Enable Live2D assistant"
+msgstr "Enable Live2D assistant"
+
+#: .\apps\blog\forms\site.py:96
+msgid "Show a Live2D assistant on supported desktop pages."
+msgstr "Show a Live2D assistant on supported desktop pages."
+
+#: .\apps\blog\forms\site.py:100
+msgid "Assistant source"
+msgstr "Assistant source"
+
+#: .\apps\blog\forms\site.py:101
+msgid ""
+"Choose whether the assistant resources come from a CDN, a Live2D widget "
+"bundle, or a standard Cubism runtime bundle."
+msgstr ""
+"Choose whether the assistant resources come from a CDN, a Live2D widget "
+"bundle, or a standard Cubism runtime bundle."
+
+#: .\apps\blog\forms\site.py:103
+msgid "CDN"
+msgstr "CDN"
+
+#: .\apps\blog\forms\site.py:104 .\apps\blog\forms\site.py:152
+#: .\templates\blog\manage\site_settings.html:153
+msgid "Live2D widget bundle"
+msgstr "Live2D widget bundle"
+
+#: .\apps\blog\forms\site.py:105 .\apps\blog\forms\site.py:158
+#: .\templates\blog\manage\site_settings.html:183
+msgid "Cubism runtime bundle"
+msgstr "Cubism runtime bundle"
+
+#: .\apps\blog\forms\site.py:111
+msgid "Assistant model id"
+msgstr "Assistant model id"
+
+#: .\apps\blog\forms\site.py:112
+msgid ""
+"Used when random assistant model is disabled. For CDN mode, this is the zero-"
+"based index in model_list.json. Bundle sources expose the available ids "
+"below."
+msgstr ""
+"Used when random assistant model is disabled. For CDN mode, this is the zero-"
+"based index in model_list.json. Bundle sources expose the available ids "
+"below."
+
+#: .\apps\blog\forms\site.py:118
+msgid "Random assistant model"
+msgstr "Random assistant model"
+
+#: .\apps\blog\forms\site.py:119
+msgid "When enabled, the current assistant source picks a model at random."
+msgstr "When enabled, the current assistant source picks a model at random."
+
+#: .\apps\blog\forms\site.py:122
+msgid "Show on homepage"
+msgstr "Show on homepage"
+
+#: .\apps\blog\forms\site.py:123
+msgid "Show on article lists"
+msgstr "Show on article lists"
+
+#: .\apps\blog\forms\site.py:124
+msgid "Show on article detail pages"
+msgstr "Show on article detail pages"
+
+#: .\apps\blog\forms\site.py:125
+msgid "Show on book lists"
+msgstr "Show on book lists"
+
+#: .\apps\blog\forms\site.py:126
+msgid "Show on book detail pages"
+msgstr "Show on book detail pages"
+
+#: .\apps\blog\forms\site.py:127
+msgid "Show on tag pages"
+msgstr "Show on tag pages"
+
+#: .\apps\blog\forms\site.py:128
+msgid "Show on search pages"
+msgstr "Show on search pages"
+
+#: .\apps\blog\forms\site.py:129
+msgid "Show on profile pages"
+msgstr "Show on profile pages"
+
+#: .\apps\blog\forms\site.py:130
+msgid "Show on public share pages"
+msgstr "Show on public share pages"
+
+#: .\apps\blog\forms\site.py:131
+msgid "Show on management pages"
+msgstr "Show on management pages"
+
+#: .\apps\blog\forms\site.py:134
+msgid "CDN autoload URL"
+msgstr "CDN autoload URL"
+
+#: .\apps\blog\forms\site.py:135
+msgid "Leave blank to use the default supported autoload script URL."
+msgstr "Leave blank to use the default supported autoload script URL."
+
+#: .\apps\blog\forms\site.py:140
+msgid "CDN tips JSON URL (optional)"
+msgstr "CDN tips JSON URL (optional)"
+
+#: .\apps\blog\forms\site.py:141
+msgid "Optional override for the tips JSON file loaded by the assistant."
+msgstr "Optional override for the tips JSON file loaded by the assistant."
+
+#: .\apps\blog\forms\site.py:146
+msgid "CDN model assets base URL"
+msgstr "CDN model assets base URL"
+
+#: .\apps\blog\forms\site.py:147
+msgid "Optional override for the remote model assets base URL."
+msgstr "Optional override for the remote model assets base URL."
+
+#: .\apps\blog\forms\site.py:153
+msgid ""
+"Upload a zip bundle that includes manifest.json and the required Live2D "
+"resource files."
+msgstr ""
+"Upload a zip bundle that includes manifest.json and the required Live2D "
+"resource files."
+
+#: .\apps\blog\forms\site.py:159
+msgid ""
+"Upload a standard Cubism runtime zip bundle. It may include "
+"manifest.json, .model3.json, .moc3, "
+"textures, .motion3.json, .exp3.json, .physics3.json, and related runtime "
+"files referenced by model3.json."
+msgstr ""
+"Upload a standard Cubism runtime zip bundle. It may include "
+"manifest.json, .model3.json, .moc3, "
+"textures, .motion3.json, .exp3.json, .physics3.json, and related runtime "
+"files referenced by model3.json."
+
+#: .\apps\blog\forms\site.py:164
+msgid "Enable assistant tips"
+msgstr "Enable assistant tips"
+
+#: .\apps\blog\forms\site.py:165
+msgid "Allow the assistant to show welcome, idle, and hover tips."
+msgstr "Allow the assistant to show welcome, idle, and hover tips."
+
+#: .\apps\blog\forms\site.py:169
+msgid "Tip source mode"
+msgstr "Tip source mode"
+
+#: .\apps\blog\forms\site.py:170
+msgid ""
+"Built-in uses the default tips, custom uses only your own tips, and hybrid "
+"merges both."
+msgstr ""
+"Built-in uses the default tips, custom uses only your own tips, and hybrid "
+"merges both."
+
+#: .\apps\blog\forms\site.py:172
+msgid "Built-in only"
+msgstr "Built-in only"
+
+#: .\apps\blog\forms\site.py:173
+msgid "Custom only"
+msgstr "Custom only"
+
+#: .\apps\blog\forms\site.py:174
+msgid "Hybrid"
+msgstr "Hybrid"
+
+#: .\apps\blog\forms\site.py:178
+msgid "Welcome tips"
+msgstr "Welcome tips"
+
+#: .\apps\blog\forms\site.py:178
+msgid "Enter one welcome message per line."
+msgstr "Enter one welcome message per line."
+
+#: .\apps\blog\forms\site.py:179
+msgid "Idle tips"
+msgstr "Idle tips"
+
+#: .\apps\blog\forms\site.py:179
+msgid "Enter one idle message per line."
+msgstr "Enter one idle message per line."
+
+#: .\apps\blog\forms\site.py:180
+msgid "Touch tips"
+msgstr "Touch tips"
+
+#: .\apps\blog\forms\site.py:180
+msgid "Enter one touch response per line."
+msgstr "Enter one touch response per line."
+
+#: .\apps\blog\forms\site.py:181
+msgid "Homepage tips"
+msgstr "Homepage tips"
+
+#: .\apps\blog\forms\site.py:181
+msgid "Enter one homepage-specific message per line."
+msgstr "Enter one homepage-specific message per line."
+
+#: .\apps\blog\forms\site.py:182
+msgid "Article page tips"
+msgstr "Article page tips"
+
+#: .\apps\blog\forms\site.py:182
+msgid "Enter one article-detail message per line."
+msgstr "Enter one article-detail message per line."
+
+#: .\apps\blog\forms\site.py:183
+msgid "Book page tips"
+msgstr "Book page tips"
+
+#: .\apps\blog\forms\site.py:183
+msgid "Enter one book-detail message per line."
+msgstr "Enter one book-detail message per line."
+
+#: .\apps\blog\forms\site.py:184
+msgid "Profile page tips"
+msgstr "Profile page tips"
+
+#: .\apps\blog\forms\site.py:184
+msgid "Enter one profile-specific message per line."
+msgstr "Enter one profile-specific message per line."
+
+#: .\apps\blog\forms\site.py:187
+msgid "Advanced hover rules (JSON)"
+msgstr "Advanced hover rules (JSON)"
+
+#: .\apps\blog\forms\site.py:188
+msgid ""
+"Enter a JSON array of rule objects. Each rule supports selector, texts, and "
+"optional pageGroups."
+msgstr ""
+"Enter a JSON array of rule objects. Each rule supports selector, texts, and "
+"optional pageGroups."
+
+#: .\apps\blog\forms\site.py:193
 msgid "Enable draft autosave"
 msgstr "Enable draft autosave"
 
+#: .\apps\blog\forms\site.py:194
 msgid "Automatically save article drafts in this browser while editing."
 msgstr "Automatically save article drafts in this browser while editing."
 
+#: .\apps\blog\forms\site.py:200
 msgid "Draft autosave interval (minutes)"
 msgstr "Draft autosave interval (minutes)"
 
+#: .\apps\blog\forms\site.py:201
 msgid ""
 "How often the editor should save a local recovery draft. Enter a value "
 "between 1 and 60 minutes."
@@ -418,595 +1166,1615 @@ msgstr ""
 "How often the editor should save a local recovery draft. Enter a value "
 "between 1 and 60 minutes."
 
+#: .\apps\blog\forms\site.py:206
 msgid "Enable scheduled audit log cleanup"
-msgstr ""
+msgstr "Enable scheduled audit log cleanup"
 
+#: .\apps\blog\forms\site.py:207
 msgid "Allow the system task to automatically delete expired audit logs."
-msgstr ""
+msgstr "Allow the system task to automatically delete expired audit logs."
 
+#: .\apps\blog\forms\site.py:213
 msgid "Audit log retention (days)"
-msgstr ""
+msgstr "Audit log retention (days)"
 
+#: .\apps\blog\forms\site.py:214
 msgid ""
 "Audit logs older than this number of days will be removed when the cleanup "
 "task runs."
 msgstr ""
+"Audit logs older than this number of days will be removed when the cleanup "
+"task runs."
 
+#: .\apps\blog\forms\site.py:220
 msgid "Maximum VIP level"
-msgstr ""
+msgstr "Maximum VIP level"
 
+#: .\apps\blog\forms\site.py:221
 #, python-format
 msgid "Set to 0 to disable VIP support. Choose up to %(max_level)s levels."
-msgstr ""
+msgstr "Set to 0 to disable VIP support. Choose up to %(max_level)s levels."
 
+#: .\apps\blog\forms\site.py:233
 msgid "Homepage visit trend range"
-msgstr ""
+msgstr "Homepage visit trend range"
 
+#: .\apps\blog\forms\site.py:234
 msgid "Choose how many recent days to show in the homepage visit chart."
-msgstr ""
+msgstr "Choose how many recent days to show in the homepage visit chart."
 
-#, fuzzy
-#| msgid "Books used to organize related articles."
+#: .\apps\blog\forms\site.py:241
 msgid "Allow users to create articles"
-msgstr "Books used to organize related articles."
+msgstr "Allow users to create articles"
 
+#: .\apps\blog\forms\site.py:242
 msgid ""
 "When enabled, non-admin users can create draft articles from their profile. "
 "When disabled, article creation is hidden for everyone."
 msgstr ""
+"When enabled, non-admin users can create draft articles from their profile. "
+"When disabled, article creation is hidden for everyone."
 
-#, python-format
-msgid "VIP %(level)s display name"
+#: .\apps\blog\forms\site.py:248
+msgid "Maximum articles for non-admin users"
+msgstr "Maximum articles for non-admin users"
+
+#: .\apps\blog\forms\site.py:249
+msgid ""
+"Maximum number of articles (including drafts) that non-admin users can "
+"create. Set to 0 for no limit."
 msgstr ""
+"Maximum number of articles (including drafts) that non-admin users can "
+"create. Set to 0 for no limit."
 
-#, fuzzy
-#| msgid "Leave blank to keep the current password."
-msgid "Leave blank to use the default name."
-msgstr "Leave blank to keep the current password."
+#: .\apps\blog\forms\site.py:254
+msgid "Only VIP posting"
+msgstr "Only VIP posting"
 
-#, fuzzy
-#| msgid "Posts"
+#: .\apps\blog\forms\site.py:255
+msgid "When enabled, only VIP users can create articles."
+msgstr "When enabled, only VIP users can create articles."
+
+#: .\apps\blog\forms\site.py:260
+msgid "Allow users to create books"
+msgstr "Allow users to create books"
+
+#: .\apps\blog\forms\site.py:261
+msgid ""
+"When enabled, non-admin users can create books from their profile. When "
+"disabled, book creation is hidden for everyone."
+msgstr ""
+"When enabled, non-admin users can create books from their profile. When "
+"disabled, book creation is hidden for everyone."
+
+#: .\apps\blog\forms\site.py:267
+msgid "Maximum books for non-admin users"
+msgstr "Maximum books for non-admin users"
+
+#: .\apps\blog\forms\site.py:268
+msgid ""
+"Maximum number of books that non-admin users can create. Set to 0 for no "
+"limit."
+msgstr ""
+"Maximum number of books that non-admin users can create. Set to 0 for no "
+"limit."
+
+#: .\apps\blog\forms\site.py:273
+msgid "Only VIP create"
+msgstr "Only VIP create"
+
+#: .\apps\blog\forms\site.py:274
+msgid "When enabled, only VIP users can create books."
+msgstr "When enabled, only VIP users can create books."
+
+#: .\apps\blog\forms\site.py:280
+msgid "Maximum attachment size (MB)"
+msgstr "Maximum attachment size (MB)"
+
+#: .\apps\blog\forms\site.py:281
+msgid "Maximum allowed size for a single uploaded attachment. Default is 1 MB."
+msgstr ""
+"Maximum allowed size for a single uploaded attachment. Default is 1 MB."
+
+#: .\apps\blog\forms\site.py:287
+msgid "Maximum video size (MB)"
+msgstr "Maximum video size (MB)"
+
+#: .\apps\blog\forms\site.py:288
+msgid "Maximum allowed size for a single uploaded video. Default is 100 MB."
+msgstr "Maximum allowed size for a single uploaded video. Default is 100 MB."
+
+#: .\apps\blog\forms\site.py:293
+msgid "Allow users to upload attachments"
+msgstr "Allow users to upload attachments"
+
+#: .\apps\blog\forms\site.py:294
+msgid ""
+"When enabled, non-admin users can upload and reuse attachments from article "
+"and comment editors."
+msgstr ""
+"When enabled, non-admin users can upload and reuse attachments from article "
+"and comment editors."
+
+#: .\apps\blog\forms\site.py:299 .\apps\blog\forms\site.py:311
+msgid "Only VIP upload"
+msgstr "Only VIP upload"
+
+#: .\apps\blog\forms\site.py:300
+msgid ""
+"When enabled, only VIP users can upload and insert attachments. Admins are "
+"unaffected."
+msgstr ""
+"When enabled, only VIP users can upload and insert attachments. Admins are "
+"unaffected."
+
+#: .\apps\blog\forms\site.py:305
+msgid "Allow users to upload video"
+msgstr "Allow users to upload video"
+
+#: .\apps\blog\forms\site.py:306
+msgid ""
+"When enabled, non-admin users can upload and insert videos from article and "
+"comment editors."
+msgstr ""
+"When enabled, non-admin users can upload and insert videos from article and "
+"comment editors."
+
+#: .\apps\blog\forms\site.py:312
+msgid ""
+"When enabled, only VIP users can upload and insert videos. Admins are "
+"unaffected."
+msgstr ""
+"When enabled, only VIP users can upload and insert videos. Admins are "
+"unaffected."
+
+#: .\apps\blog\forms\site.py:317
+msgid "Allow users to comment"
+msgstr "Allow users to comment"
+
+#: .\apps\blog\forms\site.py:318
+msgid ""
+"When disabled, users cannot post, reply, or edit comments on articles and "
+"books. Admins are unaffected."
+msgstr ""
+"When disabled, users cannot post, reply, or edit comments on articles and "
+"books. Admins are unaffected."
+
+#: .\apps\blog\forms\site.py:323
+msgid "Only VIP commenting"
+msgstr "Only VIP commenting"
+
+#: .\apps\blog\forms\site.py:324
+msgid ""
+"When enabled, only VIP users can post, reply, and edit comments. Admins are "
+"unaffected."
+msgstr ""
+"When enabled, only VIP users can post, reply, and edit comments. Admins are "
+"unaffected."
+
+#: .\apps\blog\forms\site.py:331
+msgid "First comment reward money"
+msgstr "First comment reward money"
+
+#: .\apps\blog\forms\site.py:332
+msgid ""
+"When a user posts their first comment on an article, reward this amount of "
+"money. Set to 0 to disable."
+msgstr ""
+"When a user posts their first comment on an article, reward this amount of "
+"money. Set to 0 to disable."
+
+#: .\apps\blog\forms\site.py:339
+msgid "First comment reward points"
+msgstr "First comment reward points"
+
+#: .\apps\blog\forms\site.py:340
+msgid ""
+"When a user posts their first comment on an article, reward this amount of "
+"points. Set to 0 to disable."
+msgstr ""
+"When a user posts their first comment on an article, reward this amount of "
+"points. Set to 0 to disable."
+
+#: .\apps\blog\forms\site.py:347
+msgid "Daily first login reward money"
+msgstr "Daily first login reward money"
+
+#: .\apps\blog\forms\site.py:348
+msgid ""
+"When a user logs in for the first time each day, reward this amount of "
+"money. Set to 0 to disable money rewards."
+msgstr ""
+"When a user logs in for the first time each day, reward this amount of "
+"money. Set to 0 to disable money rewards."
+
+#: .\apps\blog\forms\site.py:355
+msgid "Daily first login reward points"
+msgstr "Daily first login reward points"
+
+#: .\apps\blog\forms\site.py:356
+msgid ""
+"When a user logs in for the first time each day, reward this amount of "
+"points. Set to 0 to disable points rewards."
+msgstr ""
+"When a user logs in for the first time each day, reward this amount of "
+"points. Set to 0 to disable points rewards."
+
+#: .\apps\blog\forms\site.py:364
+msgid "Article author money reward ratio"
+msgstr "Article author money reward ratio"
+
+#: .\apps\blog\forms\site.py:365
+msgid ""
+"When a reader first enters an article, reward the author this share of the "
+"money requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first enters an article, reward the author this share of the "
+"money requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:373
+msgid "Article author points reward ratio"
+msgstr "Article author points reward ratio"
+
+#: .\apps\blog\forms\site.py:374
+msgid ""
+"When a reader first enters an article, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first enters an article, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:382
+msgid "Book author money reward ratio"
+msgstr "Book author money reward ratio"
+
+#: .\apps\blog\forms\site.py:383
+msgid ""
+"When a reader first enters a book, reward the author this share of the money "
+"requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first enters a book, reward the author this share of the money "
+"requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:391
+msgid "Book author points reward ratio"
+msgstr "Book author points reward ratio"
+
+#: .\apps\blog\forms\site.py:392
+msgid ""
+"When a reader first enters a book, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first enters a book, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:400
+msgid "Attachment author money reward ratio"
+msgstr "Attachment author money reward ratio"
+
+#: .\apps\blog\forms\site.py:401
+msgid ""
+"When a reader first downloads an attachment, reward the author this share of "
+"the money requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first downloads an attachment, reward the author this share of "
+"the money requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:409
+msgid "Attachment author points reward ratio"
+msgstr "Attachment author points reward ratio"
+
+#: .\apps\blog\forms\site.py:410
+msgid ""
+"When a reader first downloads an attachment, reward the author this share of "
+"the points requirement. Enter a value between 0 and 1."
+msgstr ""
+"When a reader first downloads an attachment, reward the author this share of "
+"the points requirement. Enter a value between 0 and 1."
+
+#: .\apps\blog\forms\site.py:528
+msgid "Money discount"
+msgstr "Money discount"
+
+#: .\apps\blog\forms\site.py:529
+#, python-format
+msgid ""
+"Enter a value between 0 and 1. For example, 0.10 means the user pays 90%% of "
+"the original money requirement."
+msgstr ""
+"Enter a value between 0 and 1. For example, 0.10 means the user pays 90%% of "
+"the original money requirement."
+
+#: .\apps\blog\forms\site.py:547
+msgid "Points discount"
+msgstr "Points discount"
+
+#: .\apps\blog\forms\site.py:548
+#, python-format
+msgid ""
+"Enter a value between 0 and 1. For example, 0.05 means the user needs 95%% "
+"of the original points requirement."
+msgstr ""
+"Enter a value between 0 and 1. For example, 0.05 means the user needs 95%% "
+"of the original points requirement."
+
+#: .\apps\blog\forms\site.py:566
+msgid "Money reward"
+msgstr "Money reward"
+
+#: .\apps\blog\forms\site.py:567
+#, python-format
+msgid ""
+"Extra author money reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.10 means 10%% extra reward."
+msgstr ""
+"Extra author money reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.10 means 10%% extra reward."
+
+#: .\apps\blog\forms\site.py:585
+msgid "Points reward"
+msgstr "Points reward"
+
+#: .\apps\blog\forms\site.py:586
+#, python-format
+msgid ""
+"Extra author points reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.05 means 5%% extra reward."
+msgstr ""
+"Extra author points reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.05 means 5%% extra reward."
+
+#: .\apps\blog\forms\site.py:602
+msgid "Daily login extra money"
+msgstr "Daily login extra money"
+
+#: .\apps\blog\forms\site.py:603
+msgid ""
+"Extra daily login money granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+msgstr ""
+"Extra daily login money granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+
+#: .\apps\blog\forms\site.py:618
+msgid "Daily login extra points"
+msgstr "Daily login extra points"
+
+#: .\apps\blog\forms\site.py:619
+msgid ""
+"Extra daily login points granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+msgstr ""
+"Extra daily login points granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+
+#: .\apps\blog\forms\site.py:634
+msgid "First comment extra money"
+msgstr "First comment extra money"
+
+#: .\apps\blog\forms\site.py:635
+msgid ""
+"Extra first comment money granted to users at this VIP level. Leave blank to "
+"use the default of level x 2."
+msgstr ""
+"Extra first comment money granted to users at this VIP level. Leave blank to "
+"use the default of level x 2."
+
+#: .\apps\blog\forms\site.py:650
+msgid "First comment extra points"
+msgstr "First comment extra points"
+
+#: .\apps\blog\forms\site.py:651
+msgid ""
+"Extra first comment points granted to users at this VIP level. Leave blank "
+"to use the default of level x 2."
+msgstr ""
+"Extra first comment points granted to users at this VIP level. Leave blank "
+"to use the default of level x 2."
+
+#: .\apps\blog\forms\site.py:690
+msgid "Enter a valid URL."
+msgstr "Enter a valid URL."
+
+#: .\apps\blog\forms\site.py:699
+msgid "Advanced hover rules must be valid JSON."
+msgstr "Advanced hover rules must be valid JSON."
+
+#: .\apps\blog\forms\site.py:701
+msgid "Advanced hover rules must be a JSON array."
+msgstr "Advanced hover rules must be a JSON array."
+
+#: .\apps\blog\forms\site.py:717
+#, python-format
+msgid "Rule %(index)s must be an object."
+msgstr "Rule %(index)s must be an object."
+
+#: .\apps\blog\forms\site.py:722
+#, python-format
+msgid "Rule %(index)s must include a selector."
+msgstr "Rule %(index)s must include a selector."
+
+#: .\apps\blog\forms\site.py:724
+#, python-format
+msgid "Rule %(index)s must include at least one message in texts."
+msgstr "Rule %(index)s must include at least one message in texts."
+
+#: .\apps\blog\forms\site.py:727
+#, python-format
+msgid "Rule %(index)s contains unsupported page groups."
+msgstr "Rule %(index)s contains unsupported page groups."
+
+#: .\apps\blog\forms\site.py:747
+msgid "Unsupported Live2D source type."
+msgstr "Unsupported Live2D source type."
+
+#: .\apps\blog\forms\site.py:761
+msgid "Upload a Live2D widget bundle before enabling widget-bundle mode."
+msgstr "Upload a Live2D widget bundle before enabling widget-bundle mode."
+
+#: .\apps\blog\forms\site.py:766
+msgid "Choose one of the model ids exposed by the widget bundle."
+msgstr "Choose one of the model ids exposed by the widget bundle."
+
+#: .\apps\blog\forms\site.py:775
+msgid "Upload a Cubism runtime bundle before enabling cubism-bundle mode."
+msgstr "Upload a Cubism runtime bundle before enabling cubism-bundle mode."
+
+#: .\apps\blog\forms\site.py:780
+msgid "Choose one of the model ids exposed by the Cubism bundle."
+msgstr "Choose one of the model ids exposed by the Cubism bundle."
+
+#: .\apps\blog\forms\site.py:783
+msgid "Unsupported tip source mode."
+msgstr "Unsupported tip source mode."
+
+#: .\apps\blog\models\attachment.py:26 .\apps\blog\models\book.py:25
+#: .\apps\blog\models\post.py:35
+msgid "Unified"
+msgstr "Unified"
+
+#: .\apps\blog\models\attachment.py:27 .\apps\blog\models\book.py:26
+#: .\apps\blog\models\post.py:36
+msgid "Standalone"
+msgstr "Standalone"
+
+#: .\apps\blog\models\attachment.py:118 .\apps\blog\models\attachment.py:164
+#: .\apps\blog\models\attachment.py:210 .\apps\blog\models\audit.py:13
 msgid "Post"
-msgstr "Posts"
+msgstr "Post"
 
+#: .\apps\blog\models\attachment.py:119 .\apps\blog\models\attachment.py:165
+#: .\apps\blog\models\attachment.py:211 .\apps\blog\models\audit.py:14
+#: .\templates\blog\manage\site_settings.html:548
 msgid "Book"
 msgstr "Book"
 
+#: .\apps\blog\models\attachment.py:151 .\apps\blog\models\attachment.py:198
+#: .\apps\blog\services\login_rewards.py:74
+#: .\apps\blog\services\login_rewards.py:86
+msgid "Daily login reward"
+msgstr "Daily login reward"
+
+#: .\apps\blog\models\attachment.py:152 .\apps\blog\models\attachment.py:199
+#: .\apps\blog\services\comment_rewards.py:83
+#: .\apps\blog\services\comment_rewards.py:97
+msgid "First comment reward"
+msgstr "First comment reward"
+
+#: .\apps\blog\models\attachment.py:153 .\apps\blog\models\attachment.py:200
+#: .\apps\blog\services\author_rewards.py:100
+#: .\apps\blog\services\author_rewards.py:118
+msgid "Author reward"
+msgstr "Author reward"
+
+#: .\apps\blog\models\attachment.py:155 .\apps\blog\models\attachment.py:201
+msgid "Admin adjustment"
+msgstr "Admin adjustment"
+
+#: .\apps\blog\models\attachment.py:168 .\apps\blog\models\attachment.py:214
+#: .\templates\blog\manage\audit_list.html:48
+#: .\templates\blog\manage\site_settings.html:386
+#: .\templates\blog\manage\user_list.html:35
+msgid "User"
+msgstr "User"
+
+#: .\apps\blog\models\audit.py:59 .\templates\auth\login.html:4
 msgid "Login"
 msgstr "Login"
 
+#: .\apps\blog\models\audit.py:60
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
+#: .\apps\blog\models\audit.py:61
 msgid "Create post"
 msgstr "Create post"
 
-#, fuzzy
-#| msgid "Create post"
+#: .\apps\blog\models\audit.py:62
 msgid "Update post"
-msgstr "Create post"
+msgstr "Update post"
 
+#: .\apps\blog\models\audit.py:63
 msgid "Delete post"
 msgstr "Delete post"
 
+#: .\apps\blog\models\audit.py:64
 msgid "Create comment"
 msgstr "Create comment"
 
-#, fuzzy
-#| msgid "Create comment"
+#: .\apps\blog\models\audit.py:65
 msgid "Update comment"
-msgstr "Create comment"
+msgstr "Update comment"
 
+#: .\apps\blog\models\audit.py:66
+#: .\templates\blog\includes\comment_threads.html:61
+#: .\templates\blog\includes\comment_threads.html:228
+#: .\templates\blog\manage\comment_list.html:55
+#: .\templates\blog\profile\comments.html:59
 msgid "Delete comment"
 msgstr "Delete comment"
 
-#, fuzzy
-#| msgid "Update link"
+#: .\apps\blog\models\audit.py:67
 msgid "Update profile"
-msgstr "Update link"
+msgstr "Update profile"
 
+#: .\apps\blog\models\audit.py:68
+msgid "Create user"
+msgstr "Create user"
+
+#: .\apps\blog\models\audit.py:69
 msgid "Update user"
 msgstr "Update user"
 
+#: .\apps\blog\models\audit.py:70 .\templates\blog\manage\user_form.html:201
 msgid "Delete user"
 msgstr "Delete user"
 
-#, fuzzy
-#| msgid "Update user"
+#: .\apps\blog\models\audit.py:71
 msgid "Update user assets"
-msgstr "Update user"
+msgstr "Update user assets"
 
-#, fuzzy
-#| msgid "Only top-level comments can be replied to."
+#: .\apps\blog\models\comment.py:38
 msgid "Top-level comments cannot reply to another comment."
-msgstr "Only top-level comments can be replied to."
+msgstr "Top-level comments cannot reply to another comment."
 
+#: .\apps\blog\models\comment.py:41
 msgid "Comment parent must belong to the same post."
 msgstr "Comment parent must belong to the same post."
 
-#, fuzzy
-#| msgid "You can only reply to top-level comments."
+#: .\apps\blog\models\comment.py:43
 msgid "Replies must stay under a top-level comment."
-msgstr "You can only reply to top-level comments."
+msgstr "Replies must stay under a top-level comment."
 
+#: .\apps\blog\models\comment.py:45
 msgid "Replies must target a comment."
-msgstr ""
+msgstr "Replies must target a comment."
 
-#, fuzzy
-#| msgid "Comment parent must belong to the same post."
+#: .\apps\blog\models\comment.py:47
 msgid "Reply target must belong to the same post."
-msgstr "Comment parent must belong to the same post."
+msgstr "Reply target must belong to the same post."
 
+#: .\apps\blog\models\comment.py:49
 msgid ""
 "Replies can only target the top-level comment or one of its direct replies."
 msgstr ""
+"Replies can only target the top-level comment or one of its direct replies."
 
+#: .\apps\blog\models\comment.py:77 .\apps\blog\models\post.py:216
+#: .\apps\blog\utils\request.py:43 .\apps\blog\utils\request.py:45
 msgid "Feedback value must be either 1 or -1."
-msgstr ""
+msgstr "Feedback value must be either 1 or -1."
 
+#: .\apps\blog\models\post.py:19 .\templates\blog\manage\post_list.html:110
+#: .\templates\blog\profile\posts.html:90
 msgid "Draft"
 msgstr "Draft"
 
+#: .\apps\blog\models\post.py:20 .\apps\blog\views\book\external.py:105
+#: .\apps\blog\views\book\public.py:156 .\apps\blog\views\post\external.py:44
+#: .\apps\blog\views\post\public.py:80
 msgid "Published"
 msgstr "Published"
 
-msgid "7 days"
-msgstr ""
-
-msgid "14 days"
-msgstr ""
-
-msgid "30 days"
-msgstr ""
-
-#, fuzzy
-#| msgid "Profile settings"
+#: .\apps\blog\models\site.py:13
 msgid "Site setting"
-msgstr "Profile settings"
+msgstr "Site setting"
 
-#, fuzzy
-#| msgid "Profile settings"
+#: .\apps\blog\models\site.py:14
 msgid "Site settings"
-msgstr "Profile settings"
+msgstr "Site settings"
 
-msgid "Encrypted"
-msgstr ""
+#: .\apps\blog\models\site.py:27
+msgid "Pending"
+msgstr "Pending"
 
-msgid "Book only"
-msgstr "Book only"
+#: .\apps\blog\models\site.py:28
+msgid "Running"
+msgstr "Running"
 
-#, fuzzy
-#| msgid "Book structure must be a list."
+#: .\apps\blog\models\site.py:29
+msgid "Succeeded"
+msgstr "Succeeded"
+
+#: .\apps\blog\models\site.py:30 .\templates\blog\book_detail.html:121
+#: .\templates\blog\detail.html:73
+#: .\templates\blog\includes\comment_threads.html:81
+#: .\templates\blog\includes\comment_threads.html:248
+#: .\templates\blog\includes\namecard_comments.html:36
+msgid "Failed"
+msgstr "Failed"
+
+#: .\apps\blog\models\site.py:47
+msgid "Media cleanup job"
+msgstr "Media cleanup job"
+
+#: .\apps\blog\models\site.py:48
+msgid "Media cleanup jobs"
+msgstr "Media cleanup jobs"
+
+#: .\apps\blog\permissions.py:52
 msgid "Condition data must be a list."
-msgstr "Book structure must be a list."
+msgstr "Condition data must be a list."
 
-#, fuzzy
-#| msgid "Each book structure node must be an object."
+#: .\apps\blog\permissions.py:63
 msgid "Each condition must be an object."
-msgstr "Each book structure node must be an object."
+msgstr "Each condition must be an object."
 
-#, fuzzy
-#| msgid "Unknown book structure node type."
+#: .\apps\blog\permissions.py:66
 msgid "Unknown condition type."
-msgstr "Unknown book structure node type."
+msgstr "Unknown condition type."
 
+#: .\apps\blog\permissions.py:68
 msgid "Each condition type can only be used once."
-msgstr ""
+msgstr "Each condition type can only be used once."
 
+#: .\apps\blog\permissions.py:75 .\apps\blog\permissions.py:77
 msgid "Condition value must be a positive integer."
-msgstr ""
+msgstr "Condition value must be a positive integer."
 
+#: .\apps\blog\permissions.py:87
 msgid "At least one condition is required."
-msgstr ""
+msgstr "At least one condition is required."
 
+#: .\apps\blog\services\author_rewards.py:102
+#: .\apps\blog\services\author_rewards.py:120
+#, python-format
+msgid "Author reward from %(object_type)s: %(title)s"
+msgstr "Author reward from %(object_type)s: %(title)s"
+
+#: .\apps\blog\services\comment_rewards.py:85
+#: .\apps\blog\services\comment_rewards.py:99
+#, python-format
+msgid "First comment reward for article: %(title)s"
+msgstr "First comment reward for article: %(title)s"
+
+#: .\apps\blog\services\login_rewards.py:76
+#: .\apps\blog\services\login_rewards.py:88
+#, python-format
+msgid "Daily login reward (%(vip_name)s bonus included)"
+msgstr "Daily login reward (%(vip_name)s bonus included)"
+
+#: .\apps\blog\signals.py:11
 #, python-format
 msgid "User signed in: %(username)s"
 msgstr "User signed in: %(username)s"
 
+#: .\apps\blog\signals.py:16
 msgid "anonymous user"
 msgstr "anonymous user"
 
+#: .\apps\blog\signals.py:17
 #, python-format
 msgid "User signed out: %(username)s"
 msgstr "User signed out: %(username)s"
 
-msgid "1 day"
-msgstr ""
+#: .\apps\blog\tests\test_vip_management.py:670 .\apps\blog\views\profile.py:22
+#: .\templates\blog\profile\money_history.html:4
+#: .\templates\blog\profile\money_history.html:21
+msgid "Money history"
+msgstr "Money history"
 
+#: .\apps\blog\tests\test_vip_management.py:687 .\apps\blog\views\profile.py:23
+#: .\templates\blog\profile\points_history.html:4
+#: .\templates\blog\profile\points_history.html:21
+msgid "Points history"
+msgstr "Points history"
+
+#: .\apps\blog\tests\test_vip_management.py:698 .\apps\blog\views\profile.py:24
+#: .\templates\blog\profile\overview.html:26
+msgid "User group"
+msgstr "User group"
+
+#: .\apps\blog\utils\site.py:27
+msgid "1 day"
+msgstr "1 day"
+
+#: .\apps\blog\utils\site.py:28 .\apps\blog\utils\site.py:39
+msgid "7 days"
+msgstr "7 days"
+
+#: .\apps\blog\utils\site.py:29 .\apps\blog\utils\site.py:41
+msgid "30 days"
+msgstr "30 days"
+
+#: .\apps\blog\utils\site.py:30 .\apps\blog\utils\site.py:1638
+#: .\apps\blog\views\book\external.py:140 .\apps\blog\views\post\external.py:79
+#: .\apps\blog\views\post\external.py:104
+#: .\templates\blog\manage\post_list.html:91
+#: .\templates\blog\manage\post_list.html:136
+#: .\templates\blog\manage\post_list.html:142
 msgid "Never expires"
 msgstr "Never expires"
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
-msgid "You do not have permission to generate a share link."
-msgstr "You do not have permission to delete this comment."
+#: .\apps\blog\utils\site.py:40
+msgid "14 days"
+msgstr "14 days"
 
+#: .\apps\blog\utils\site.py:600
+msgid ""
+"Welcome to the blog. There is probably something new worth reading today."
+msgstr ""
+"Welcome to the blog. There is probably something new worth reading today."
+
+#: .\apps\blog\utils\site.py:601
+msgid "Take a look around. Articles, books, and tags are all waiting for you."
+msgstr "Take a look around. Articles, books, and tags are all waiting for you."
+
+#: .\apps\blog\utils\site.py:604
+msgid "Still browsing? Try searching for a keyword you care about."
+msgstr "Still browsing? Try searching for a keyword you care about."
+
+#: .\apps\blog\utils\site.py:605
+msgid ""
+"If you are not sure where to start, the homepage usually has the freshest "
+"content."
+msgstr ""
+"If you are not sure where to start, the homepage usually has the freshest "
+"content."
+
+#: .\apps\blog\utils\site.py:608
+msgid "Easy there. I am here to help, not to be poked forever."
+msgstr "Easy there. I am here to help, not to be poked forever."
+
+#: .\apps\blog\utils\site.py:609
+msgid ""
+"If you are looking for something specific, the search box is usually faster."
+msgstr ""
+"If you are looking for something specific, the search box is usually faster."
+
+#: .\apps\blog\utils\site.py:612
+msgid "The homepage shows the main activity and the latest content."
+msgstr "The homepage shows the main activity and the latest content."
+
+#: .\apps\blog\utils\site.py:613
+msgid "You can keep scrolling to read comments and related details."
+msgstr "You can keep scrolling to read comments and related details."
+
+#: .\apps\blog\utils\site.py:614
+msgid "Books here support structured reading, so chapter navigation is useful."
+msgstr ""
+"Books here support structured reading, so chapter navigation is useful."
+
+#: .\apps\blog\utils\site.py:615
+msgid ""
+"Your profile area is where you manage posts, books, and personal settings."
+msgstr ""
+"Your profile area is where you manage posts, books, and personal settings."
+
+#: .\apps\blog\utils\site.py:620
+msgid "Use this box to search articles, books, and tags."
+msgstr "Use this box to search articles, books, and tags."
+
+#: .\apps\blog\utils\site.py:630
+msgid "This menu leads to your profile settings and account summary."
+msgstr "This menu leads to your profile settings and account summary."
+
+#: .\apps\blog\utils\site.py:896
+msgid "Welcome back."
+msgstr "Welcome back."
+
+#: .\apps\blog\utils\site.py:897
+msgid "See you next time."
+msgstr "See you next time."
+
+#: .\apps\blog\utils\site.py:898
+msgid "Model switched."
+msgstr "Model switched."
+
+#: .\apps\blog\utils\site.py:899
+msgid "Appearance switched."
+msgstr "Appearance switched."
+
+#: .\apps\blog\utils\site.py:900
+msgid "Expression switched."
+msgstr "Expression switched."
+
+#: .\apps\blog\utils\site.py:901
+msgid "The current model does not provide switchable expressions."
+msgstr "The current model does not provide switchable expressions."
+
+#: .\apps\blog\utils\site.py:902
+msgid "Motion played."
+msgstr "Motion played."
+
+#: .\apps\blog\utils\site.py:903
+msgid "The current model does not provide switchable motions."
+msgstr "The current model does not provide switchable motions."
+
+#: .\apps\blog\utils\site.py:904
+msgid "Photo saved."
+msgstr "Photo saved."
+
+#: .\apps\blog\utils\site.py:905
+msgid "Photo is not available right now."
+msgstr "Photo is not available right now."
+
+#: .\apps\blog\utils\site.py:906
+msgid "The current model does not support switching appearance."
+msgstr "The current model does not support switching appearance."
+
+#: .\apps\blog\utils\site.py:907
+msgid "Appearance switching failed. Please try again later."
+msgstr "Appearance switching failed. Please try again later."
+
+#: .\apps\blog\utils\site.py:908
+msgid ""
+"Model switching failed. Your current environment may not support this "
+"renderer."
+msgstr ""
+"Model switching failed. Your current environment may not support this "
+"renderer."
+
+#: .\apps\blog\utils\site.py:909
+msgid "Your current environment does not support Cubism rendering."
+msgstr "Your current environment does not support Cubism rendering."
+
+#: .\apps\blog\utils\site.py:910
+msgid "Live2D failed to load. Please try again later."
+msgstr "Live2D failed to load. Please try again later."
+
+#: .\apps\blog\utils\site.py:925
+msgid "Bundle paths must stay inside the uploaded package."
+msgstr "Bundle paths must stay inside the uploaded package."
+
+#: .\apps\blog\utils\site.py:928
+msgid "Bundle paths cannot escape the uploaded package root."
+msgstr "Bundle paths cannot escape the uploaded package root."
+
+#: .\apps\blog\utils\site.py:940
+msgid "The bundle manifest must define at least one model."
+msgstr "The bundle manifest must define at least one model."
+
+#: .\apps\blog\utils\site.py:945
+msgid "Every bundle model entry must be an object."
+msgstr "Every bundle model entry must be an object."
+
+#: .\apps\blog\utils\site.py:951
+msgid "Every bundle model must have a numeric id."
+msgstr "Every bundle model must have a numeric id."
+
+#: .\apps\blog\utils\site.py:953
+msgid "Bundle model ids must be unique."
+msgstr "Bundle model ids must be unique."
+
+#: .\apps\blog\utils\site.py:961 .\apps\blog\utils\site.py:1007
+msgid "The bundle manifest must be a JSON object."
+msgstr "The bundle manifest must be a JSON object."
+
+#: .\apps\blog\utils\site.py:965 .\apps\blog\utils\site.py:1011
+msgid "Unsupported bundle manifest version."
+msgstr "Unsupported bundle manifest version."
+
+#: .\apps\blog\utils\site.py:967 .\apps\blog\utils\site.py:1013
+msgid "Unsupported bundle engine."
+msgstr "Unsupported bundle engine."
+
+#: .\apps\blog\utils\site.py:970
+msgid "The bundle manifest must include an entry section."
+msgstr "The bundle manifest must include an entry section."
+
+#: .\apps\blog\utils\site.py:1027
+msgid ""
+"Each Cubism model variant must use a unique groupId + textureVariantId "
+"combination."
+msgstr ""
+"Each Cubism model variant must use a unique groupId + textureVariantId "
+"combination."
+
+#: .\apps\blog\utils\site.py:1152
+msgid "A Cubism model3.json file is not valid UTF-8 JSON."
+msgstr "A Cubism model3.json file is not valid UTF-8 JSON."
+
+#: .\apps\blog\utils\site.py:1160
+msgid "The Cubism bundle is missing a file referenced by model3.json."
+msgstr "The Cubism bundle is missing a file referenced by model3.json."
+
+#: .\apps\blog\utils\site.py:1167
+msgid ""
+"The Cubism bundle must include at least one model3.json file or a "
+"manifest.json file."
+msgstr ""
+"The Cubism bundle must include at least one model3.json file or a "
+"manifest.json file."
+
+#: .\apps\blog\utils\site.py:1179
+msgid "Default"
+msgstr "Default"
+
+#: .\apps\blog\utils\site.py:1195
+msgid "Please upload a Cubism runtime bundle file."
+msgstr "Please upload a Cubism runtime bundle file."
+
+#: .\apps\blog\utils\site.py:1198
+msgid "The Cubism runtime bundle must be uploaded as a zip file."
+msgstr "The Cubism runtime bundle must be uploaded as a zip file."
+
+#: .\apps\blog\utils\site.py:1201
+msgid "The Cubism runtime bundle is too large."
+msgstr "The Cubism runtime bundle is too large."
+
+#: .\apps\blog\utils\site.py:1219 .\apps\blog\utils\site.py:1263
+msgid "The bundle manifest is not valid UTF-8 JSON."
+msgstr "The bundle manifest is not valid UTF-8 JSON."
+
+#: .\apps\blog\utils\site.py:1226
+msgid "The bundle is missing one of the declared model3.json files."
+msgstr "The bundle is missing one of the declared model3.json files."
+
+#: .\apps\blog\utils\site.py:1238
+msgid "Please upload a Live2D bundle file."
+msgstr "Please upload a Live2D bundle file."
+
+#: .\apps\blog\utils\site.py:1241
+msgid "The Live2D bundle must be uploaded as a zip file."
+msgstr "The Live2D bundle must be uploaded as a zip file."
+
+#: .\apps\blog\utils\site.py:1244
+msgid "The Live2D bundle is too large."
+msgstr "The Live2D bundle is too large."
+
+#: .\apps\blog\utils\site.py:1258
+msgid "The bundle must include a manifest.json file at its root."
+msgstr "The bundle must include a manifest.json file at its root."
+
+#: .\apps\blog\utils\site.py:1272
+msgid "The bundle is missing one of the required entry files."
+msgstr "The bundle is missing one of the required entry files."
+
+#: .\apps\blog\views\access_check.py:39 .\apps\blog\views\attachment.py:178
+msgid "Unknown action."
+msgstr "Unknown action."
+
+#: .\apps\blog\views\access_check.py:50 .\apps\blog\views\attachment.py:187
+msgid "No password required."
+msgstr "No password required."
+
+#: .\apps\blog\views\access_check.py:54 .\apps\blog\views\attachment.py:191
+msgid "Password is required."
+msgstr "Password is required."
+
+#: .\apps\blog\views\access_check.py:57 .\apps\blog\views\attachment.py:195
+msgid "Incorrect password."
+msgstr "Incorrect password."
+
+#: .\apps\blog\views\access_check.py:82 .\apps\blog\views\attachment.py:209
+msgid "No purchase required."
+msgstr "No purchase required."
+
+#: .\apps\blog\views\attachment.py:31 .\apps\blog\views\media.py:41
+msgid "Please sign in and try uploading again."
+msgstr "Please sign in and try uploading again."
+
+#: .\apps\blog\views\attachment.py:37 .\apps\blog\views\media.py:51
+msgid "You do not have permission to upload files in this editor."
+msgstr "You do not have permission to upload files in this editor."
+
+#: .\apps\blog\views\attachment.py:39
+msgid "You do not have permission to upload attachments."
+msgstr "You do not have permission to upload attachments."
+
+#: .\apps\blog\views\attachment.py:43
+msgid "Unable to upload attachment."
+msgstr "Unable to upload attachment."
+
+#: .\apps\blog\views\attachment.py:81
+msgid "Please sign in and try again."
+msgstr "Please sign in and try again."
+
+#: .\apps\blog\views\attachment.py:111 .\apps\blog\views\attachment.py:113
+msgid "You do not have permission to view uploaded attachments."
+msgstr "You do not have permission to view uploaded attachments."
+
+#: .\apps\blog\views\attachment.py:230 .\apps\blog\views\attachment.py:231
+#: .\apps\blog\views\manage\attachments.py:86
+msgid "You do not have permission to manage this attachment."
+msgstr "You do not have permission to manage this attachment."
+
+#: .\apps\blog\views\attachment.py:246
+msgid "Unable to update attachment."
+msgstr "Unable to update attachment."
+
+#: .\apps\blog\views\attachment.py:258
+#, python-format
+msgid "Attachment updated: %(title)s"
+msgstr "Attachment updated: %(title)s"
+
+#: .\apps\blog\views\attachment.py:301
+#, python-format
+msgid "Attachment deleted: %(title)s"
+msgstr "Attachment deleted: %(title)s"
+
+#: .\apps\blog\views\attachment.py:304
+msgid "Attachment deleted successfully."
+msgstr "Attachment deleted successfully."
+
+#: .\apps\blog\views\book\external.py:115 .\apps\blog\views\post\external.py:54
+msgid "You do not have permission to generate a share link."
+msgstr "You do not have permission to generate a share link."
+
+#: .\apps\blog\views\book\external.py:117
 msgid "Only public books can generate share links."
 msgstr "Only public books can generate share links."
 
+#: .\apps\blog\views\book\external.py:122 .\apps\blog\views\post\external.py:61
+#: .\apps\blog\views\post\external.py:92
 msgid "Invalid expiry option."
-msgstr ""
+msgstr "Invalid expiry option."
 
+#: .\apps\blog\views\book\manage.py:77 .\apps\blog\views\profile_books.py:210
 #, python-format
 msgid "Book created: %(name)s"
 msgstr "Book created: %(name)s"
 
+#: .\apps\blog\views\book\manage.py:80 .\apps\blog\views\profile_books.py:213
 msgid "Book created successfully."
 msgstr "Book created successfully."
 
+#: .\apps\blog\views\book\manage.py:85 .\apps\blog\views\profile_books.py:219
 msgid "Create book"
 msgstr "Create book"
 
+#: .\apps\blog\views\book\manage.py:110 .\apps\blog\views\profile_books.py:250
 #, python-format
 msgid "Book updated: %(name)s"
 msgstr "Book updated: %(name)s"
 
+#: .\apps\blog\views\book\manage.py:113 .\apps\blog\views\profile_books.py:253
 msgid "Book updated successfully."
 msgstr "Book updated successfully."
 
+#: .\apps\blog\views\book\manage.py:140 .\apps\blog\views\profile_books.py:286
 #, python-format
 msgid "Book deleted: %(name)s"
 msgstr "Book deleted: %(name)s"
 
+#: .\apps\blog\views\book\manage.py:143 .\apps\blog\views\profile_books.py:289
 msgid "Book deleted successfully."
 msgstr "Book deleted successfully."
 
-#, fuzzy
-#| msgid "Enter password to view this book"
-msgid "Enter password to view this article"
-msgstr "Enter password to view this book"
-
-#, fuzzy
-#| msgid "Select articles"
-msgid "Unlock article"
-msgstr "Select articles"
-
-#, fuzzy
-#| msgid "Content snapshot"
-msgid "Content access check"
-msgstr "Content snapshot"
-
-msgid "Purchase now"
-msgstr ""
-
-msgid "Insufficient balance"
-msgstr ""
-
-msgid "Insufficient points"
-msgstr ""
-
+#: .\apps\blog\views\book\public.py:180
 msgid "No accessible articles in this book yet."
 msgstr "No accessible articles in this book yet."
 
-msgid "Enter password to view this book"
-msgstr "Enter password to view this book"
-
-msgid "Unlock book"
-msgstr "Unlock book"
-
-#, fuzzy
-#| msgid "Email is required."
-msgid "Password is required."
-msgstr "Email is required."
-
-#, fuzzy
-#| msgid "Forgot password"
-msgid "Incorrect password."
-msgstr "Forgot password"
-
-msgid "Password"
-msgstr "Password"
-
-msgid "Enter book password"
-msgstr "Enter book password"
-
+#: .\apps\blog\views\book\utils\share.py:20
 msgid "Save this book before generating an external link."
 msgstr "Save this book before generating an external link."
 
+#: .\apps\blog\views\comment\public.py:64
+msgid "You do not have permission to post comments."
+msgstr "You do not have permission to post comments."
+
+#: .\apps\blog\views\comment\public.py:95
 msgid "You are commenting too frequently. Please try again later."
 msgstr "You are commenting too frequently. Please try again later."
 
+#: .\apps\blog\views\comment\public.py:113
 msgid ""
 "Replies can only target a top-level comment or one of its direct replies."
 msgstr ""
+"Replies can only target a top-level comment or one of its direct replies."
 
+#: .\apps\blog\views\comment\public.py:119
 msgid "Reply posted successfully."
 msgstr "Reply posted successfully."
 
+#: .\apps\blog\views\comment\public.py:119
 msgid "Comment posted successfully."
 msgstr "Comment posted successfully."
 
+#: .\apps\blog\views\comment\public.py:120
 #, python-format
 msgid "Comment created on %(title)s"
 msgstr "Comment created on %(title)s"
 
+#: .\apps\blog\views\comment\public.py:127 .\apps\users\views.py:172
+msgid "VIP"
+msgstr "VIP"
+
+#: .\apps\blog\views\comment\public.py:128
+#, python-format
+msgid "%(action)s First comment reward: +%(money)s money, +%(points)s points."
+msgstr "%(action)s First comment reward: +%(money)s money, +%(points)s points."
+
+#: .\apps\blog\views\comment\public.py:134
+#, python-format
+msgid ""
+"Base: +%(base_money)s money, +%(base_points)s points; %(vip_name)s bonus: +"
+"%(vip_money)s money, +%(vip_points)s points."
+msgstr ""
+"Base: +%(base_money)s money, +%(base_points)s points; %(vip_name)s bonus: +"
+"%(vip_money)s money, +%(vip_points)s points."
+
+#: .\apps\blog\views\comment\public.py:156
 msgid "You do not have permission to delete this comment."
 msgstr "You do not have permission to delete this comment."
 
+#: .\apps\blog\views\comment\public.py:159
+#: .\apps\blog\views\manage\comments.py:81
+#: .\apps\blog\views\profile_comments.py:160
 #, python-format
 msgid "Comment deleted on %(title)s"
 msgstr "Comment deleted on %(title)s"
 
+#: .\apps\blog\views\comment\public.py:162
+#: .\apps\blog\views\manage\comments.py:84
+#: .\apps\blog\views\profile_comments.py:163
 msgid "Comment deleted successfully."
 msgstr "Comment deleted successfully."
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
+#: .\apps\blog\views\comment\public.py:172
+#: .\apps\blog\views\manage\comments.py:52
 msgid "You do not have permission to edit this comment."
-msgstr "You do not have permission to delete this comment."
+msgstr "You do not have permission to edit this comment."
 
-#, fuzzy, python-format
-#| msgid "Comment created on %(title)s"
+#: .\apps\blog\views\comment\public.py:176
+#: .\apps\blog\views\profile_comments.py:129
+msgid "You do not have permission to edit comments."
+msgstr "You do not have permission to edit comments."
+
+#: .\apps\blog\views\comment\public.py:199
+#: .\apps\blog\views\manage\comments.py:61
+#: .\apps\blog\views\profile_comments.py:137
+#, python-format
 msgid "Comment updated on %(title)s"
-msgstr "Comment created on %(title)s"
+msgstr "Comment updated on %(title)s"
 
-#, fuzzy
-#| msgid "Comment posted successfully."
+#: .\apps\blog\views\comment\public.py:201
+#: .\apps\blog\views\manage\comments.py:63
+#: .\apps\blog\views\profile_comments.py:139
 msgid "Comment updated successfully."
-msgstr "Comment posted successfully."
+msgstr "Comment updated successfully."
 
+#: .\apps\blog\views\manage\attachments.py:99
+msgid "A media cleanup task is already running."
+msgstr "A media cleanup task is already running."
+
+#: .\apps\blog\views\manage\attachments.py:119
+#, python-format
+msgid "Started media cleanup job #%(job_id)s."
+msgstr "Started media cleanup job #%(job_id)s."
+
+#: .\apps\blog\views\manage\attachments.py:125
+#: .\templates\blog\manage\attachment_list.html:126
+msgid "Media cleanup has started in the background."
+msgstr "Media cleanup has started in the background."
+
+#: .\apps\blog\views\manage\attachments.py:137
+msgid "Cleanup task not found."
+msgstr "Cleanup task not found."
+
+#: .\apps\blog\views\manage\audit.py:18
 msgid "Audit logs cleared successfully."
 msgstr "Audit logs cleared successfully."
 
+#: .\apps\blog\views\manage\base.py:84 .\templates\blog\manage\sidebar.html:7
 msgid "Basic"
-msgstr ""
+msgstr "Basic"
 
+#: .\apps\blog\views\manage\base.py:85 .\templates\blog\manage\sidebar.html:8
+#: .\templates\blog\manage\user_list.html:19
 msgid "Users"
 msgstr "Users"
 
+#: .\apps\blog\views\manage\base.py:87 .\templates\base.html:31
+#: .\templates\base.html:33 .\templates\blog\book_list.html:4
+#: .\templates\blog\book_list.html:16 .\templates\blog\home.html:68
+#: .\templates\blog\home.html:101 .\templates\blog\home.html:108
+#: .\templates\blog\manage\book_list.html:19
+#: .\templates\blog\manage\sidebar.html:10
 msgid "Books"
 msgstr "Books"
 
-#, fuzzy
-#| msgid "Comment"
-msgid "Comments"
-msgstr "Comment"
+#: .\apps\blog\views\manage\base.py:88 .\templates\blog\home.html:76
+#: .\templates\blog\manage\attachment_list.html:19
+#: .\templates\blog\manage\sidebar.html:11
+msgid "Attachments"
+msgstr "Attachments"
 
+#: .\apps\blog\views\manage\base.py:89
+#: .\templates\blog\manage\comment_list.html:19
+#: .\templates\blog\manage\sidebar.html:12
+msgid "Comments"
+msgstr "Comments"
+
+#: .\apps\blog\views\manage\base.py:90 .\templates\blog\manage\sidebar.html:13
 msgid "Audit"
 msgstr "Audit"
 
-#, fuzzy
-#| msgid "Search users..."
+#: .\apps\blog\views\manage\site.py:38
 msgid "Search dashboard..."
-msgstr "Search users..."
+msgstr "Search dashboard..."
 
-#, fuzzy
-#| msgid "Profile settings"
+#: .\apps\blog\views\manage\site.py:96
+#: .\templates\blog\manage\site_settings.html:4
+#: .\templates\blog\manage\site_settings.html:21
 msgid "Basic settings"
-msgstr "Profile settings"
+msgstr "Basic settings"
 
+#: .\apps\blog\views\manage\site.py:117
+msgid "Basic site settings restored to defaults."
+msgstr "Basic site settings restored to defaults."
+
+#: .\apps\blog\views\manage\site.py:118
+msgid "Basic settings restored to defaults."
+msgstr "Basic settings restored to defaults."
+
+#: .\apps\blog\views\manage\site.py:141
+msgid "Upload a replacement bundle before keeping widget-bundle mode enabled."
+msgstr "Upload a replacement bundle before keeping widget-bundle mode enabled."
+
+#: .\apps\blog\views\manage\site.py:146
+msgid "Upload a replacement bundle before keeping cubism-bundle mode enabled."
+msgstr "Upload a replacement bundle before keeping cubism-bundle mode enabled."
+
+#: .\apps\blog\views\manage\site.py:164
 msgid "Basic site settings updated"
-msgstr ""
+msgstr "Basic site settings updated"
 
+#: .\apps\blog\views\manage\site.py:166
 msgid "Pending removals were applied when saving."
-msgstr ""
+msgstr "Pending removals were applied when saving."
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\manage\site.py:167
 msgid "Basic settings updated successfully."
-msgstr "Post updated successfully."
+msgstr "Basic settings updated successfully."
 
+#: .\apps\blog\views\manage\users.py:101
+#, python-format
+msgid "Admin adjusted balance: %(before)s -> %(after)s"
+msgstr "Admin adjusted balance: %(before)s -> %(after)s"
+
+#: .\apps\blog\views\manage\users.py:113
+#, python-format
+msgid "Admin adjusted points: %(before)s -> %(after)s"
+msgstr "Admin adjusted points: %(before)s -> %(after)s"
+
+#: .\apps\blog\views\manage\users.py:125
 #, python-format
 msgid "User updated: %(username)s"
 msgstr "User updated: %(username)s"
 
+#: .\apps\blog\views\manage\users.py:130
 #, python-format
 msgid "Money updated for %(username)s: %(before)s -> %(after)s"
-msgstr ""
+msgstr "Money updated for %(username)s: %(before)s -> %(after)s"
 
+#: .\apps\blog\views\manage\users.py:137
 #, python-format
 msgid "Points updated for %(username)s: %(before)s -> %(after)s"
-msgstr ""
+msgstr "Points updated for %(username)s: %(before)s -> %(after)s"
 
+#: .\apps\blog\views\manage\users.py:147
+#: .\templates\emails\password_changed.html:7
+#: .\templates\emails\password_changed.txt:2
 #, python-format
 msgid "[%(app_name)s] Your password was updated"
 msgstr "[%(app_name)s] Your password was updated"
 
+#: .\apps\blog\views\manage\users.py:157
 msgid "User password was updated, but the password email could not be sent."
 msgstr "User password was updated, but the password email could not be sent."
 
+#: .\apps\blog\views\manage\users.py:165
+#: .\templates\emails\email_changed.html:7
+#: .\templates\emails\email_changed.txt:2
 #, python-format
 msgid "[%(app_name)s] Your email address was updated"
 msgstr "[%(app_name)s] Your email address was updated"
 
+#: .\apps\blog\views\manage\users.py:175
 msgid "User was updated, but the email notification could not be sent."
 msgstr "User was updated, but the email notification could not be sent."
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\manage\users.py:176
 msgid "User updated successfully."
-msgstr "Post updated successfully."
+msgstr "User updated successfully."
 
+#: .\apps\blog\views\manage\users.py:184
 msgid "Edit user"
 msgstr "Edit user"
 
+#: .\apps\blog\views\manage\users.py:197
 msgid "You cannot delete your own account."
 msgstr "You cannot delete your own account."
 
+#: .\apps\blog\views\manage\users.py:204
 msgid "This user cannot be deleted because related data still exists."
 msgstr "This user cannot be deleted because related data still exists."
 
+#: .\apps\blog\views\manage\users.py:207
 #, python-format
 msgid "User deleted: %(username)s"
 msgstr "User deleted: %(username)s"
 
+#: .\apps\blog\views\manage\users.py:208
 msgid "User deleted successfully."
 msgstr "User deleted successfully."
 
-#, fuzzy
-#| msgid "Basic information"
+#: .\apps\blog\views\manage\users.py:231
+#, python-format
+msgid "User created: %(username)s"
+msgstr "User created: %(username)s"
+
+#: .\apps\blog\views\media.py:54
+msgid "Unknown upload context."
+msgstr "Unknown upload context."
+
+#: .\apps\blog\views\media.py:68 .\apps\blog\views\post\manage.py:690
+msgid "No image uploaded."
+msgstr "No image uploaded."
+
+#: .\apps\blog\views\media.py:71
+msgid "Please choose a valid image file."
+msgstr "Please choose a valid image file."
+
+#: .\apps\blog\views\media.py:84
+msgid "You do not have permission to upload videos."
+msgstr "You do not have permission to upload videos."
+
+#: .\apps\blog\views\media.py:96
+msgid "No video uploaded."
+msgstr "No video uploaded."
+
+#: .\apps\blog\views\media.py:99
+msgid "Please choose a valid video file."
+msgstr "Please choose a valid video file."
+
+#: .\apps\blog\views\media.py:101
+msgid "The uploaded video is empty."
+msgstr "The uploaded video is empty."
+
+#: .\apps\blog\views\media.py:103
+#, python-format
+msgid "The video exceeds the maximum size of %(size)s MB."
+msgstr "The video exceeds the maximum size of %(size)s MB."
+
+#: .\apps\blog\views\namecard.py:46 .\templates\blog\namecard.html:33
 msgid "Basic Information"
-msgstr "Basic information"
+msgstr "Basic Information"
 
+#: .\apps\blog\views\namecard.py:47 .\templates\blog\namecard.html:134
+#: .\templates\blog\namecard.html:135
 msgid "Recent Posts"
-msgstr ""
+msgstr "Recent Posts"
 
-#, fuzzy
-#| msgid "Select books"
+#: .\apps\blog\views\namecard.py:48 .\templates\blog\namecard.html:153
+#: .\templates\blog\namecard.html:154
 msgid "Recent Books"
-msgstr "Select books"
+msgstr "Recent Books"
 
-#, fuzzy
-#| msgid "Delete comment"
+#: .\apps\blog\views\namecard.py:49 .\templates\blog\namecard.html:198
+#: .\templates\blog\namecard.html:199
 msgid "Recent Comments"
-msgstr "Delete comment"
+msgstr "Recent Comments"
 
+#: .\apps\blog\views\post\context.py:105 .\apps\blog\views\post\context.py:119
+#: .\templates\blog\includes\comment_threads.html:16
+#: .\templates\blog\includes\comment_threads.html:46
+#: .\templates\blog\includes\comment_threads.html:183
+#: .\templates\blog\includes\comment_threads.html:213
+#: .\templates\blog\includes\namecard_comments.html:14
 msgid "Reply"
 msgstr "Reply"
 
+#: .\apps\blog\views\post\context.py:106 .\apps\blog\views\post\context.py:120
 msgid "Write a reply"
 msgstr "Write a reply"
 
-#, fuzzy
-#| msgid "Post comment"
+#: .\apps\blog\views\post\context.py:112 .\apps\blog\views\post\context.py:126
+#: .\templates\blog\manage\comment_list.html:99
+#: .\templates\blog\profile\comments.html:103
 msgid "Edit comment"
-msgstr "Post comment"
+msgstr "Edit comment"
 
-#, fuzzy
-#| msgid "Create comment"
+#: .\apps\blog\views\post\context.py:113 .\apps\blog\views\post\context.py:127
 msgid "Update your comment"
-msgstr "Create comment"
+msgstr "Update your comment"
 
-#, fuzzy
-#| msgid "Only public books can generate share links."
+#: .\apps\blog\views\post\external.py:56
 msgid "Only published public articles can generate share links."
 msgstr "Only published public articles can generate share links."
 
+#: .\apps\blog\views\post\external.py:100
 #, python-format
 msgid "External link updated: %(title)s"
 msgstr "External link updated: %(title)s"
 
+#: .\apps\blog\views\post\external.py:114
 msgid "External link validity updated successfully."
 msgstr "External link validity updated successfully."
 
+#: .\apps\blog\views\post\external.py:128
 #, python-format
 msgid "External link deleted: %(title)s"
 msgstr "External link deleted: %(title)s"
 
+#: .\apps\blog\views\post\external.py:131
 msgid "External link deleted successfully."
 msgstr "External link deleted successfully."
 
+#: .\apps\blog\views\post\manage.py:317
 msgid "Search external links..."
 msgstr "Search external links..."
 
+#: .\apps\blog\views\post\manage.py:318
 msgid "Search external links"
 msgstr "Search external links"
 
+#: .\apps\blog\views\post\manage.py:320 .\apps\blog\views\profile_posts.py:221
+#: .\templates\base.html:55
 msgid "Search articles..."
 msgstr "Search articles..."
 
-#, fuzzy
-#| msgid "Publish article"
+#: .\apps\blog\views\post\manage.py:323 .\apps\blog\views\profile_posts.py:224
 msgid "Published articles"
-msgstr "Publish article"
+msgstr "Published articles"
 
+#: .\apps\blog\views\post\manage.py:324
+#, fuzzy
+#| msgid "Draft"
+msgid "Drafts"
+msgstr "Draft"
+
+#: .\apps\blog\views\post\manage.py:324
+#, fuzzy
+#| msgid "Revision"
+msgid "Revisions"
+msgstr "Revision"
+
+#: .\apps\blog\views\post\manage.py:325
+#: .\templates\blog\manage\post_list.html:127
+msgid "External links"
+msgstr "External links"
+
+#: .\apps\blog\views\post\manage.py:349
 #, python-format
 msgid "Article created: %(title)s"
 msgstr "Article created: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:350 .\apps\blog\views\post\manage.py:453
 msgid "Article published successfully."
 msgstr "Article published successfully."
 
+#: .\apps\blog\views\post\manage.py:353 .\apps\blog\views\profile_posts.py:249
 #, python-format
 msgid "Draft created: %(title)s"
 msgstr "Draft created: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:354 .\apps\blog\views\post\manage.py:457
+#: .\apps\blog\views\profile_posts.py:250
+#: .\apps\blog\views\profile_posts.py:293
 msgid "Draft saved successfully."
 msgstr "Draft saved successfully."
 
-#, fuzzy
-#| msgid "Related articles"
+#: .\apps\blog\views\post\manage.py:362
 msgid "Create article"
-msgstr "Related articles"
+msgstr "Create article"
 
+#: .\apps\blog\views\post\manage.py:401 .\apps\blog\views\post\manage.py:458
 #, python-format
 msgid "Revision saved: %(title)s"
 msgstr "Revision saved: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:402 .\apps\blog\views\post\manage.py:457
 msgid "Revision saved successfully."
 msgstr "Revision saved successfully."
 
+#: .\apps\blog\views\post\manage.py:410
 #, python-format
 msgid "Article updated: %(title)s"
 msgstr "Article updated: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:411
 msgid "Article updated successfully."
 msgstr "Article updated successfully."
 
-#, fuzzy
-#| msgid "Edit user"
+#: .\apps\blog\views\post\manage.py:416
 msgid "Edit article"
 msgstr "Edit article"
 
+#: .\apps\blog\views\post\manage.py:452
 #, python-format
 msgid "Article published: %(title)s"
 msgstr "Article published: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:458 .\apps\blog\views\profile_posts.py:292
 #, python-format
 msgid "Draft saved: %(title)s"
 msgstr "Draft saved: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:468
 msgid "Edit revision"
 msgstr "Edit revision"
 
+#: .\apps\blog\views\post\manage.py:468 .\apps\blog\views\profile_posts.py:313
 msgid "Edit draft"
 msgstr "Edit draft"
 
+#: .\apps\blog\views\post\manage.py:519 .\apps\blog\views\profile_posts.py:382
 #, python-format
 msgid "Draft imported from article: %(title)s"
 msgstr "Draft imported from article: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:520 .\apps\blog\views\profile_posts.py:383
 msgid "Article imported as draft successfully."
 msgstr "Article imported as draft successfully."
 
+#: .\apps\blog\views\post\manage.py:536
+#: .\templates\blog\editor\post_import_manage.html:4
+#: .\templates\blog\editor\post_import_manage.html:19
+#: .\templates\blog\editor\post_import_profile.html:4
+#: .\templates\blog\editor\post_import_profile.html:21
+#: .\templates\blog\manage\post_list.html:25
+#: .\templates\blog\profile\posts.html:27
 msgid "Import from existing article"
 msgstr "Import from existing article"
 
+#: .\apps\blog\views\post\manage.py:554 .\apps\blog\views\profile_posts.py:427
 msgid "Unable to import the selected markdown file."
-msgstr ""
+msgstr "Unable to import the selected markdown file."
 
+#: .\apps\blog\views\post\manage.py:585 .\apps\blog\views\profile_posts.py:453
 #, python-format
 msgid "Draft imported from markdown file: %(title)s"
 msgstr "Draft imported from markdown file: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:586 .\apps\blog\views\profile_posts.py:454
 msgid "Article imported from .md successfully."
 msgstr "Article imported from .md successfully."
 
+#: .\apps\blog\views\post\manage.py:633 .\apps\blog\views\profile_posts.py:326
 #, python-format
 msgid "Draft deleted: %(title)s"
 msgstr "Draft deleted: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:634 .\apps\blog\views\profile_posts.py:327
 msgid "Draft deleted successfully."
 msgstr "Draft deleted successfully."
 
+#: .\apps\blog\views\post\manage.py:647 .\apps\blog\views\post\manage.py:663
 #, python-format
 msgid "Cover image removed: %(title)s"
 msgstr "Cover image removed: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:650 .\apps\blog\views\post\manage.py:666
 msgid "Cover image removed successfully."
 msgstr "Cover image removed successfully."
 
+#: .\apps\blog\views\post\manage.py:681
 #, python-format
 msgid "Article deleted: %(title)s"
 msgstr "Article deleted: %(title)s"
 
+#: .\apps\blog\views\post\manage.py:682
 msgid "Article deleted successfully."
 msgstr "Article deleted successfully."
 
-msgid "No image uploaded."
-msgstr ""
-
-#, fuzzy
-#| msgid "Enter your password"
-msgid "Enter article password"
-msgstr "Enter your password"
-
-msgid "Updated"
-msgstr "Updated"
-
+#: .\apps\blog\views\post\utils\importer.py:156
 msgid "Imported post"
 msgstr "Imported post"
 
+#: .\apps\blog\views\post\utils\share.py:29
 msgid ""
 "This article has not been published yet. Publish it before generating an "
 "external link."
@@ -1014,233 +2782,423 @@ msgstr ""
 "This article has not been published yet. Publish it before generating an "
 "external link."
 
+#: .\apps\blog\views\post\utils\share.py:31
 msgid ""
 "Only the original author can generate a new external link for this article."
 msgstr ""
 "Only the original author can generate a new external link for this article."
 
+#: .\apps\blog\views\profile.py:20
+#: .\templates\blog\manage\site_settings.html:30
+#: .\templates\blog\manage\user_form.html:33
+#: .\templates\blog\profile\overview.html:28
+#: .\templates\blog\profile\overview.html:47
 msgid "Basic information"
 msgstr "Basic information"
 
+#: .\apps\blog\views\profile.py:21 .\templates\blog\manage\user_form.html:114
+#: .\templates\blog\profile\overview.html:24
 msgid "Account security"
 msgstr "Account security"
 
-#, fuzzy
-#| msgid "Add articles"
+#: .\apps\blog\views\profile.py:25 .\templates\blog\profile\posts.html:4
+#: .\templates\blog\profile\posts.html:21
 msgid "My articles"
 msgstr "My articles"
 
+#: .\apps\blog\views\profile.py:26 .\templates\blog\profile\books.html:4
+#: .\templates\blog\profile\books.html:21
+msgid "My books"
+msgstr "My books"
+
+#: .\apps\blog\views\profile.py:28 .\templates\blog\profile\comments.html:4
+#: .\templates\blog\profile\comments.html:21
 msgid "My comments"
 msgstr "My comments"
 
+#: .\apps\blog\views\profile.py:111
+msgid "Publish articles"
+msgstr "Publish articles"
+
+#: .\apps\blog\views\profile.py:112
+msgid "Post comments"
+msgstr "Post comments"
+
+#: .\apps\blog\views\profile.py:113
+msgid "Publish books"
+msgstr "Publish books"
+
+#: .\apps\blog\views\profile.py:114
+msgid "Upload attachments"
+msgstr "Upload attachments"
+
+#: .\apps\blog\views\profile.py:115
+msgid "Upload videos"
+msgstr "Upload videos"
+
+#: .\apps\blog\views\profile.py:116
+msgid "VIP special resources"
+msgstr "VIP special resources"
+
+#: .\apps\blog\views\profile.py:117
+msgid "VIP money resource discount"
+msgstr "VIP money resource discount"
+
+#: .\apps\blog\views\profile.py:118
+msgid "VIP points resource reduction"
+msgstr "VIP points resource reduction"
+
+#: .\apps\blog\views\profile.py:119
+msgid "VIP author money reward bonus"
+msgstr "VIP author money reward bonus"
+
+#: .\apps\blog\views\profile.py:120
+msgid "VIP author points reward bonus"
+msgstr "VIP author points reward bonus"
+
+#: .\apps\blog\views\profile.py:121
+msgid "VIP daily login extra money"
+msgstr "VIP daily login extra money"
+
+#: .\apps\blog\views\profile.py:122
+msgid "VIP daily login extra points"
+msgstr "VIP daily login extra points"
+
+#: .\apps\blog\views\profile.py:123
+msgid "VIP first article comment extra money"
+msgstr "VIP first article comment extra money"
+
+#: .\apps\blog\views\profile.py:124
+msgid "VIP first article comment extra points"
+msgstr "VIP first article comment extra points"
+
+#: .\apps\blog\views\profile.py:183
 msgid "Password changed"
 msgstr "Password changed"
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\profile.py:184
 msgid "Password updated successfully."
-msgstr "Post updated successfully."
+msgstr "Password updated successfully."
 
+#: .\apps\blog\views\profile.py:262
 msgid "Profile updated"
 msgstr "Profile updated"
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\profile.py:263
 msgid "Profile updated successfully."
-msgstr "Post updated successfully."
+msgstr "Profile updated successfully."
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
+#: .\apps\blog\views\profile_posts.py:364
 msgid "You do not have permission to import this article."
-msgstr "You do not have permission to delete this comment."
+msgstr "You do not have permission to import this article."
 
+#: .\apps\users\forms.py:17 .\apps\users\tests\test_auth.py:17
 msgid "Username or email"
 msgstr "Username or email"
 
+#: .\apps\users\forms.py:21 .\apps\users\tests\test_auth.py:18
 msgid "Enter your username or email"
 msgstr "Enter your username or email"
 
+#: .\apps\users\forms.py:32 .\apps\users\forms.py:89
 msgid "Enter your password"
 msgstr "Enter your password"
 
+#: .\apps\users\forms.py:39
 msgid "Remember me"
 msgstr "Remember me"
 
+#: .\apps\users\forms.py:44 .\apps\users\tests\test_auth.py:19
 msgid "Username/email or password is incorrect."
 msgstr "Username/email or password is incorrect."
 
+#: .\apps\users\forms.py:45
 msgid "This account is inactive."
 msgstr "This account is inactive."
 
+#: .\apps\users\forms.py:56
+msgid "Enter your username"
+msgstr "Enter your username"
+
+#: .\apps\users\forms.py:66
 msgid "Enter your email"
 msgstr "Enter your email"
 
-msgid "Confirm password"
-msgstr "Confirm password"
-
+#: .\apps\users\forms.py:100
 msgid "Enter your password again"
 msgstr "Enter your password again"
 
-msgid "This username is already taken."
-msgstr "This username is already taken."
-
+#: .\apps\users\forms.py:115 .\apps\users\views.py:226
+#: .\apps\users\views.py:262
 msgid "This email is already registered."
 msgstr "This email is already registered."
 
+#: .\apps\users\models.py:39
+msgid "Unspecified"
+msgstr "Unspecified"
+
+#: .\apps\users\models.py:40
+msgid "Male"
+msgstr "Male"
+
+#: .\apps\users\models.py:41
+msgid "Female"
+msgstr "Female"
+
+#: .\apps\users\models.py:42
+msgid "Other"
+msgstr "Other"
+
+#: .\apps\users\tests\test_auth.py:16 .\apps\users\views.py:291
+#: .\apps\users\views.py:317 .\templates\auth\login.html:106
+msgid "Password reset successful. Please check your email."
+msgstr "Password reset successful. Please check your email."
+
+#: .\apps\users\tests\test_auth.py:20 .\apps\users\views.py:167
+#, python-format
+msgid "Daily first login reward: %(rewards)s."
+msgstr "Daily first login reward: %(rewards)s."
+
+#: .\apps\users\tests\test_auth.py:21 .\apps\users\views.py:159
+#: .\apps\users\views.py:163
+#, python-format
+msgid "+%(money)s money"
+msgstr "+%(money)s money"
+
+#: .\apps\users\tests\test_auth.py:22 .\apps\users\views.py:161
+#: .\apps\users\views.py:165
+#, python-format
+msgid "+%(points)s points"
+msgstr "+%(points)s points"
+
+#: .\apps\users\tests\test_auth.py:23 .\apps\users\views.py:170
+#, python-format
+msgid "%(vip_name)s bonus: %(rewards)s."
+msgstr "%(vip_name)s bonus: %(rewards)s."
+
+#: .\apps\users\views.py:97
 msgid "Please wait before requesting another verification code."
 msgstr "Please wait before requesting another verification code."
 
+#: .\apps\users\views.py:118
 msgid "Verification code sent."
 msgstr "Verification code sent."
 
+#: .\apps\users\views.py:129
 msgid "Registration is currently unavailable."
 msgstr "Registration is currently unavailable."
 
+#: .\apps\users\views.py:207
 msgid "Registration successful. Please sign in."
 msgstr "Registration successful. Please sign in."
 
+#: .\apps\users\views.py:217 .\apps\users\views.py:250
 msgid "Email is required."
 msgstr "Email is required."
 
+#: .\apps\users\views.py:223 .\apps\users\views.py:256
 msgid "Enter a valid email address."
 msgstr "Enter a valid email address."
 
+#: .\apps\users\views.py:233 .\templates\emails\register_code.html:7
 #, python-format
 msgid "[%(app_name)s] Your verification code"
 msgstr "[%(app_name)s] Your verification code"
 
+#: .\apps\users\views.py:244
 msgid "Email verification is currently unavailable."
 msgstr "Email verification is currently unavailable."
 
+#: .\apps\users\views.py:259
 msgid "Please enter a different email address."
 msgstr "Please enter a different email address."
 
+#: .\apps\users\views.py:269 .\templates\emails\email_change_code.html:7
 #, python-format
 msgid "[%(app_name)s] Your email verification code"
 msgstr "[%(app_name)s] Your email verification code"
 
+#: .\apps\users\views.py:281 .\templates\auth\login.html:108
 msgid "Password reset is currently unavailable."
 msgstr "Password reset is currently unavailable."
 
-msgid "Password reset successful. Please check your email."
-msgstr "Password reset successful. Please check your email."
-
+#: .\apps\users\views.py:303 .\templates\emails\reset_password.html:7
 #, python-format
 msgid "[%(app_name)s] Your temporary password"
 msgstr "[%(app_name)s] Your temporary password"
 
+#: .\config\settings\base.py:101
 msgid "Simplified Chinese"
 msgstr "Simplified Chinese"
 
+#: .\config\settings\base.py:102
 msgid "English"
 msgstr "English"
 
+#: .\templates\auth\login.html:31
 msgid "Welcome back"
 msgstr "Welcome back"
 
+#: .\templates\auth\login.html:34
 msgid "No account? Sign up"
 msgstr "No account? Sign up"
 
+#: .\templates\auth\login.html:73 .\templates\auth\login.html:75
+#: .\templates\auth\login.html:88 .\templates\auth\register.html:92
+#: .\templates\auth\register.html:94 .\templates\auth\register.html:107
+#: .\templates\auth\register.html:122 .\templates\auth\register.html:124
+#: .\templates\auth\register.html:137
 msgid "Show password"
 msgstr "Show password"
 
+#: .\templates\auth\login.html:74 .\templates\auth\register.html:93
+#: .\templates\auth\register.html:123
 msgid "Hide password"
 msgstr "Hide password"
 
+#: .\templates\auth\login.html:105
 msgid "Password Reset"
 msgstr "Password Reset"
 
+#: .\templates\auth\login.html:107
 msgid "Password Reset Unavailable"
 msgstr "Password Reset Unavailable"
 
+#: .\templates\auth\login.html:109
 msgid "OK"
 msgstr "OK"
 
+#: .\templates\auth\login.html:111
 msgid "Forgot password"
 msgstr "Forgot password"
 
+#: .\templates\auth\login.html:117
 msgid "Sign in"
 msgstr "Sign in"
 
+#: .\templates\auth\register.html:4 .\templates\auth\register.html:144
 msgid "Register"
 msgstr "Register"
 
+#: .\templates\auth\register.html:31
 msgid "Create account"
 msgstr "Create account"
 
+#: .\templates\auth\register.html:33
 msgid "Already has account? Sign in"
 msgstr "Already has account? Sign in"
 
+#: .\templates\auth\register.html:72 .\templates\auth\register.html:76
+#: .\templates\blog\profile\overview.html:170
+#: .\templates\blog\profile\overview.html:172
 msgid "Send code"
 msgstr "Send code"
 
-#, fuzzy, python-format
-#| msgid "Resend in %(seconds)s s"
+#: .\templates\auth\register.html:73
+#, python-format
 msgid "Resend in %%(seconds)s s"
-msgstr "Resend in %(seconds)s s"
+msgstr "Resend in %%(seconds)s s"
 
+#: .\templates\auth\register.html:74
 msgid "Request failed."
 msgstr "Request failed."
 
+#: .\templates\base.html:22
 msgid "Primary navigation"
-msgstr ""
+msgstr "Primary navigation"
 
+#: .\templates\base.html:23 .\templates\base.html:25
 msgid "Home"
 msgstr "Home"
 
+#: .\templates\base.html:55 .\templates\blog\manage\book_list.html:24
+#: .\templates\blog\profile\books.html:28
 msgid "Search books..."
 msgstr "Search books..."
 
-#, fuzzy
-#| msgid "Search posts..."
+#: .\templates\base.html:55
 msgid "Search tags..."
-msgstr "Search posts..."
+msgstr "Search tags..."
 
-#, fuzzy
-#| msgid "Open management"
+#: .\templates\base.html:72
 msgid "Open user menu"
-msgstr "Open management"
+msgstr "Open user menu"
 
-#, fuzzy
-#| msgid "Account security"
+#: .\templates\base.html:91
 msgid "Account summary"
-msgstr "Account security"
+msgstr "Account summary"
 
+#: .\templates\base.html:110 .\templates\blog\manage\sidebar.html:5
 msgid "Website management"
 msgstr "Website management"
 
+#: .\templates\base.html:112
 msgid "Profile settings"
 msgstr "Profile settings"
 
+#: .\templates\base.html:116
 msgid "Sign out"
 msgstr "Sign out"
 
-#, fuzzy
-#| msgid "Profile sections"
+#: .\templates\base.html:129
 msgid "Notifications"
-msgstr "Profile sections"
+msgstr "Notifications"
 
+#: .\templates\base.html:140
 msgid "Delete item"
 msgstr "Delete item"
 
+#: .\templates\base.html:141
 msgid "Remove item"
 msgstr "Remove item"
 
+#: .\templates\base.html:142
 msgid "Are you sure you want to continue? This action cannot be undone."
 msgstr "Are you sure you want to continue? This action cannot be undone."
 
+#: .\templates\base.html:143 .\templates\blog\editor\book_form.html:194
+#: .\templates\blog\includes\comment_threads.html:63
+#: .\templates\blog\includes\comment_threads.html:65
+#: .\templates\blog\includes\comment_threads.html:230
+#: .\templates\blog\includes\comment_threads.html:232
+#: .\templates\blog\manage\attachment_list.html:82
+#: .\templates\blog\manage\attachment_list.html:87
+#: .\templates\blog\manage\book_list.html:66
+#: .\templates\blog\manage\book_list.html:70
+#: .\templates\blog\manage\comment_list.html:57
+#: .\templates\blog\manage\comment_list.html:61
+#: .\templates\blog\manage\post_list.html:150
+#: .\templates\blog\manage\post_list.html:154
+#: .\templates\blog\manage\post_list.html:180
+#: .\templates\blog\manage\post_list.html:184
+#: .\templates\blog\manage\post_list.html:195
+#: .\templates\blog\manage\post_list.html:199
+#: .\templates\blog\manage\user_form.html:203
+#: .\templates\blog\manage\user_form.html:205
+#: .\templates\blog\profile\attachments.html:72
+#: .\templates\blog\profile\attachments.html:76
+#: .\templates\blog\profile\books.html:70
+#: .\templates\blog\profile\books.html:74
+#: .\templates\blog\profile\comments.html:61
+#: .\templates\blog\profile\comments.html:65
+#: .\templates\blog\profile\posts.html:106
+#: .\templates\blog\profile\posts.html:110
 msgid "Delete"
 msgstr "Delete"
 
+#: .\templates\base.html:144
 msgid "Remove"
 msgstr "Remove"
 
+#: .\templates\base.html:146
 msgid "Unsaved changes"
 msgstr "Unsaved changes"
 
+#: .\templates\base.html:147
 msgid "Discard unsaved changes?"
 msgstr "Discard unsaved changes?"
 
+#: .\templates\base.html:148
 msgid ""
 "Your changes have not been saved yet. If you leave this page now, those "
 "changes will be lost."
@@ -1248,590 +3206,1037 @@ msgstr ""
 "Your changes have not been saved yet. If you leave this page now, those "
 "changes will be lost."
 
+#: .\templates\base.html:149
 msgid "Leave page"
 msgstr "Leave page"
 
+#: .\templates\base.html:150
 msgid "Keep editing"
 msgstr "Keep editing"
 
+#: .\templates\base.html:159 .\templates\blog\book_detail.html:198
+#: .\templates\blog\detail.html:151
+#: .\templates\blog\includes\comment_threads.html:102
+#: .\templates\blog\includes\comment_threads.html:125
+#: .\templates\blog\includes\comment_threads.html:269
+#: .\templates\blog\includes\comment_threads.html:305
+#: .\templates\blog\manage\comment_list.html:90
+#: .\templates\blog\manage\post_list.html:140
+#: .\templates\blog\profile\comments.html:94
 msgid "Close"
 msgstr "Close"
 
+#: .\templates\blog\access_gate.html:4 .\templates\blog\access_gate.html:12
+#: .\templates\blog\access_gate.html:15
+msgid "Access verification"
+msgstr "Access verification"
+
+#: .\templates\blog\access_gate.html:30
+#: .\templates\blog\includes\attachment_access_gate.html:17
+#: .\templates\blog\manage\post_list.html:70
+#: .\templates\blog\profile\posts.html:69
+msgid "Type"
+msgstr "Type"
+
+#: .\templates\blog\access_gate.html:31
+#: .\templates\blog\includes\attachment_access_gate.html:18
+msgid "Requirement"
+msgstr "Requirement"
+
+#: .\templates\blog\access_gate.html:32
+#: .\templates\blog\includes\attachment_access_gate.html:19
+msgid "Authorization"
+msgstr "Authorization"
+
+#: .\templates\blog\access_gate.html:55
+#: .\templates\blog\includes\attachment_access_gate.html:40
+msgid "Granted"
+msgstr "Granted"
+
+#: .\templates\blog\access_gate.html:60
+#: .\templates\blog\includes\attachment_access_gate.html:42
+msgid "Verify"
+msgstr "Verify"
+
+#: .\templates\blog\access_gate.html:64
+#: .\templates\blog\includes\attachment_access_gate.html:44
+msgid "Purchase"
+msgstr "Purchase"
+
+#: .\templates\blog\access_gate.html:67
+#: .\templates\blog\includes\attachment_access_gate.html:46
+msgid "Cannot satisfy"
+msgstr "Cannot satisfy"
+
+#: .\templates\blog\access_gate.html:90 .\templates\blog\access_gate.html:101
+#: .\templates\blog\includes\attachment_access_gate.html:60
+#: .\templates\blog\includes\attachment_access_gate.html:70
+#: .\templates\blog\manage\site_settings.html:715
+msgid "Confirm"
+msgstr "Confirm"
+
+#: .\templates\blog\access_gate.html:115
+msgid "Enter"
+msgstr "Enter"
+
+#: .\templates\blog\article_list.html:17
 msgid "Browse every article you can access, including encrypted ones."
 msgstr "Browse every article you can access, including encrypted ones."
 
+#: .\templates\blog\article_list.html:25 .\templates\blog\book_detail.html:154
 msgid "No accessible articles yet"
 msgstr "No accessible articles yet"
 
+#: .\templates\blog\article_list.html:26
 msgid "Articles you can access will appear here once they are published."
 msgstr "Articles you can access will appear here once they are published."
 
+#: .\templates\blog\book_detail.html:23 .\templates\blog\book_detail.html:27
+#: .\templates\blog\editor\book_form.html:182
 msgid "Chapters"
 msgstr "Chapters"
 
+#: .\templates\blog\book_detail.html:29
 msgid "Book chapters"
 msgstr "Book chapters"
 
+#: .\templates\blog\book_detail.html:43 .\templates\blog\book_detail.html:47
+#: .\templates\blog\detail.html:23 .\templates\blog\detail.html:27
 msgid "Table of Contents"
-msgstr ""
+msgstr "Table of Contents"
 
-#, fuzzy
-#| msgid "Back to blog"
+#: .\templates\blog\book_detail.html:48 .\templates\blog\detail.html:28
 msgid "Back to top"
-msgstr "Back to blog"
+msgstr "Back to top"
 
-#, fuzzy
-#| msgid "Article editor"
+#: .\templates\blog\book_detail.html:50 .\templates\blog\detail.html:30
 msgid "Article outline"
-msgstr "Article editor"
+msgstr "Article outline"
 
-#, fuzzy
-#| msgid "Copy link"
+#: .\templates\blog\book_detail.html:119 .\templates\blog\detail.html:71
+#: .\templates\blog\includes\comment_threads.html:79
+#: .\templates\blog\includes\comment_threads.html:246
+#: .\templates\blog\includes\namecard_comments.html:34
 msgid "Copy"
-msgstr "Copy link"
+msgstr "Copy"
 
+#: .\templates\blog\book_detail.html:120 .\templates\blog\detail.html:72
+#: .\templates\blog\includes\comment_threads.html:80
+#: .\templates\blog\includes\comment_threads.html:247
+#: .\templates\blog\includes\namecard_comments.html:35
 msgid "Copied"
-msgstr ""
+msgstr "Copied"
 
-msgid "Failed"
-msgstr ""
-
+#: .\templates\blog\book_detail.html:124 .\templates\blog\detail.html:76
+#: .\templates\blog\includes\comment_threads.html:84
+#: .\templates\blog\includes\comment_threads.html:251
+#: .\templates\blog\includes\namecard_comments.html:39
 #, python-format
 msgid "Hidden %%count%% more lines"
-msgstr ""
+msgstr "Hidden %%count%% more lines"
 
-#, fuzzy
-#| msgid "Show"
+#: .\templates\blog\book_detail.html:125 .\templates\blog\detail.html:77
+#: .\templates\blog\includes\comment_threads.html:85
+#: .\templates\blog\includes\comment_threads.html:252
+#: .\templates\blog\includes\namecard_comments.html:40
 msgid "Show all"
-msgstr "Show"
+msgstr "Show all"
 
+#: .\templates\blog\book_detail.html:163 .\templates\blog\detail.html:116
 msgid "Discussion"
 msgstr "Discussion"
 
+#: .\templates\blog\book_detail.html:165 .\templates\blog\detail.html:118
 #, python-format
 msgid "%(total)s Comment"
 msgid_plural "%(total)s Comments"
 msgstr[0] "%(total)s Comment"
 msgstr[1] "%(total)s Comments"
 
+#: .\templates\blog\book_detail.html:174 .\templates\blog\book_detail.html:199
+#: .\templates\blog\detail.html:127 .\templates\blog\detail.html:152
 msgid "Post comment"
 msgstr "Post comment"
 
-#, fuzzy
-#| msgid ""
-#| "Supports Markdown, side-by-side preview, direct image upload, table "
-#| "insertion, and GitHub-style callouts."
+#: .\templates\blog\book_detail.html:194 .\templates\blog\detail.html:147
+#: .\templates\blog\editor\post_form.html:204
+#: .\templates\blog\manage\comment_list.html:84
+#: .\templates\blog\profile\comments.html:88
 msgid ""
-"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
-"direct image upload, table insertion, and GitHub-style callouts."
+"Supports Markdown, colored text, emoji insertion, direct image and video "
+"upload, side-by-side preview, table insertion, and GitHub-style callouts."
 msgstr ""
-"Supports Markdown, side-by-side preview, direct image upload, table "
-"insertion, and GitHub-style callouts."
+"Supports Markdown, colored text, emoji insertion, direct image and video "
+"upload, side-by-side preview, table insertion, and GitHub-style callouts."
 
+#: .\templates\blog\book_list.html:15
 msgid "Library"
 msgstr "Library"
 
+#: .\templates\blog\book_list.html:41 .\templates\blog\namecard.html:178
 #, python-format
 msgid "%(total)s article"
 msgid_plural "%(total)s articles"
 msgstr[0] "%(total)s article"
 msgstr[1] "%(total)s articles"
 
+#: .\templates\blog\book_list.html:52
+msgid "Please sign in to star books."
+msgstr "Please sign in to star books."
+
+#: .\templates\blog\book_list.html:53 .\templates\blog\book_list.html:56
+msgid "Star book"
+msgstr "Star book"
+
+#: .\templates\blog\book_list.html:54 .\templates\blog\book_list.html:56
+msgid "Unstar book"
+msgstr "Unstar book"
+
+#: .\templates\blog\book_list.html:63 .\templates\blog\namecard.html:183
 msgid "No summary yet."
 msgstr "No summary yet."
 
+#: .\templates\blog\book_list.html:68 .\templates\blog\namecard.html:188
 msgid "No books yet"
 msgstr "No books yet"
 
+#: .\templates\blog\book_list.html:69
 msgid "Books will appear here after editors create and publish them."
 msgstr "Books will appear here after editors create and publish them."
 
+#: .\templates\blog\detail.html:90 .\templates\blog\includes\post_card.html:47
+msgid "Please sign in to star articles."
+msgstr "Please sign in to star articles."
+
+#: .\templates\blog\detail.html:91 .\templates\blog\detail.html:94
+#: .\templates\blog\includes\post_card.html:48
+#: .\templates\blog\includes\post_card.html:51
+msgid "Star article"
+msgstr "Star article"
+
+#: .\templates\blog\detail.html:92 .\templates\blog\detail.html:94
+#: .\templates\blog\includes\post_card.html:49
+#: .\templates\blog\includes\post_card.html:51
+msgid "Unstar article"
+msgstr "Unstar article"
+
+#: .\templates\blog\detail.html:167
 msgid "More"
 msgstr "More"
 
+#: .\templates\blog\detail.html:168
 msgid "Related articles"
 msgstr "Related articles"
 
-#, fuzzy
-#| msgid "No published posts yet"
+#: .\templates\blog\detail.html:176
 msgid "No Related articles yet."
-msgstr "No published posts yet"
+msgstr "No Related articles yet."
 
-msgid "Blog"
-msgstr ""
+#: .\templates\blog\editor\book_form.html:4
+#: .\templates\blog\editor\book_form.html:30
+msgid "Book Editor"
+msgstr "Book Editor"
 
-msgid "Overview"
-msgstr "Overview"
+#: .\templates\blog\editor\book_form.html:29
+#: .\templates\blog\editor\post_form.html:28
+msgid "Editor"
+msgstr "Editor"
 
-msgid "Blog performance dashboard"
-msgstr "Blog performance dashboard"
+#: .\templates\blog\editor\book_form.html:74
+#: .\templates\blog\editor\post_form.html:80
+msgid "Delete cover image"
+msgstr "Delete cover image"
 
-msgid ""
-"Track publishing cadence, editorial activity, and the latest content updates "
-"from one place."
-msgstr ""
-"Track publishing cadence, editorial activity, and the latest content updates "
-"from one place."
+#: .\templates\blog\editor\book_form.html:75
+#: .\templates\blog\editor\post_form.html:81
+#: .\templates\blog\manage\user_form.html:46
+#: .\templates\blog\profile\overview.html:64
+msgid "Undo"
+msgstr "Undo"
 
-msgid "Explore articles"
-msgstr "Explore articles"
+#: .\templates\blog\editor\book_form.html:91
+#: .\templates\blog\editor\post_form.html:108
+#: .\templates\blog\manage\attachment_list.html:117
+msgid "Conditions"
+msgstr "Conditions"
 
-msgid "Write a new article"
-msgstr "Write a new article"
+#: .\templates\blog\editor\book_form.html:98
+#: .\templates\blog\editor\post_form.html:115
+msgid "Condition types are full"
+msgstr "Condition types are full"
 
-#, fuzzy
-#| msgid "Activity in the last 30 days"
-msgid "Article views in the last 7 days"
-msgstr "Activity in the last 30 days"
+#: .\templates\blog\editor\book_form.html:99
+#: .\templates\blog\editor\book_form.html:125
+#: .\templates\blog\editor\post_form.html:116
+#: .\templates\blog\editor\post_form.html:144
+msgid "Value"
+msgstr "Value"
 
-#, fuzzy
-#| msgid "Fresh articles released this week."
-msgid "Independent article page visits recorded this week."
-msgstr "Fresh articles released this week."
+#: .\templates\blog\editor\book_form.html:100
+#: .\templates\blog\editor\book_form.html:126
+#: .\templates\blog\editor\post_form.html:117
+#: .\templates\blog\editor\post_form.html:145
+msgid "Enter password"
+msgstr "Enter password"
 
-#, fuzzy
-#| msgid "Published in the last 7 days"
-msgid "Book views in the last 7 days"
-msgstr "Published in the last 7 days"
+#: .\templates\blog\editor\book_form.html:101
+#: .\templates\blog\editor\book_form.html:127
+#: .\templates\blog\editor\post_form.html:118
+#: .\templates\blog\editor\post_form.html:146
+msgid "Leave blank to keep current password"
+msgstr "Leave blank to keep current password"
 
-msgid "Independent book page visits recorded this week."
-msgstr ""
+#: .\templates\blog\editor\book_form.html:117
+#: .\templates\blog\editor\post_form.html:136
+#: .\templates\blog\manage\attachment_list.html:118
+msgid "VIP conditions"
+msgstr "VIP conditions"
 
-msgid "Highlights"
-msgstr "Highlights"
+#: .\templates\blog\editor\book_form.html:124
+#: .\templates\blog\editor\post_form.html:143
+msgid "VIP condition types are full"
+msgstr "VIP condition types are full"
 
-msgid "Content snapshot"
-msgstr "Content snapshot"
+#: .\templates\blog\editor\book_form.html:137
+#: .\templates\blog\editor\post_form.html:158
+msgid "External link"
+msgstr "External link"
 
-msgid "Total articles"
-msgstr "Total articles"
+#: .\templates\blog\editor\book_form.html:143
+#: .\templates\blog\editor\post_form.html:164
+msgid "Link expiry"
+msgstr "Link expiry"
 
-msgid "All articles currently stored in the blog."
-msgstr "All articles currently stored in the blog."
+#: .\templates\blog\editor\book_form.html:159
+#: .\templates\blog\editor\post_form.html:180
+#: .\templates\blog\manage\post_list.html:139
+msgid "Request failed. Please try again."
+msgstr "Request failed. Please try again."
 
-msgid "Topic labels used to organize the content library."
-msgstr "Topic labels used to organize the content library."
+#: .\templates\blog\editor\book_form.html:160
+#: .\templates\blog\editor\post_form.html:181
+msgid "Unable to generate share link right now."
+msgstr "Unable to generate share link right now."
 
-msgid "Books used to organize related articles."
-msgstr "Books used to organize related articles."
+#: .\templates\blog\editor\book_form.html:161
+#: .\templates\blog\editor\post_form.html:182
+msgid "External link copied."
+msgstr "External link copied."
 
-msgid "Authors"
-msgstr "Authors"
+#: .\templates\blog\editor\book_form.html:163
+#: .\templates\blog\editor\post_form.html:184
+msgid "Generate share link"
+msgstr "Generate share link"
 
-msgid "Contributors who have published or drafted articles."
-msgstr "Contributors who have published or drafted articles."
+#: .\templates\blog\editor\book_form.html:173
+#: .\templates\blog\editor\post_form.html:196
+#: .\templates\blog\manage\post_list.html:130
+msgid "Copy link"
+msgstr "Copy link"
 
-msgid "Traffic"
-msgstr ""
+#: .\templates\blog\editor\book_form.html:183
+#: .\templates\blog\editor\book_form.html:207
+msgid "Chapter management"
+msgstr "Chapter management"
 
-#, fuzzy, python-format
-#| msgid "Activity in the last 30 days"
-msgid "Visits in the last %(days)s days"
-msgstr "Activity in the last 30 days"
+#: .\templates\blog\editor\book_form.html:184
+#: .\templates\blog\editor\book_form.html:208
+msgid "Chapter actions"
+msgstr "Chapter actions"
 
-#, fuzzy, python-format
-#| msgid "Post publishing trend in the last 30 days"
-msgid "Article and book visit trend in the last %(days)s days"
-msgstr "Post publishing trend in the last 30 days"
+#: .\templates\blog\editor\book_form.html:185
+#: .\templates\blog\editor\book_form.html:209
+#: .\templates\blog\editor\book_form.html:211
+msgid "Add article"
+msgstr "Add article"
 
-msgid "Latest published articles"
-msgstr "Latest published articles"
+#: .\templates\blog\editor\book_form.html:185
+#: .\templates\blog\editor\book_form.html:209
+#: .\templates\blog\editor\book_form.html:211
+msgid "Add articles"
+msgstr "Add articles"
 
-#, fuzzy
-#| msgid "Write a new article"
-msgid "Write a new post"
-msgstr "Write a new article"
+#: .\templates\blog\editor\book_form.html:186
+#: .\templates\blog\editor\book_form.html:213
+#: .\templates\blog\editor\book_form.html:215
+msgid "Add group"
+msgstr "Add group"
 
-msgid "No published articles yet"
-msgstr "No published articles yet"
+#: .\templates\blog\editor\book_form.html:187
+msgid "New group"
+msgstr "New group"
 
-msgid ""
-"Create your first article from the management panel to populate the homepage."
-msgstr ""
-"Create your first article from the management panel to populate the homepage."
+#: .\templates\blog\editor\book_form.html:188
+msgid "No chapters yet. Add articles or groups to start building this book."
+msgstr "No chapters yet. Add articles or groups to start building this book."
 
-msgid "Author"
-msgstr "Author"
+#: .\templates\blog\editor\book_form.html:189
+msgid "Rename group"
+msgstr "Rename group"
 
-msgid "Open comment actions"
-msgstr ""
+#: .\templates\blog\editor\book_form.html:190
+msgid "Group title"
+msgstr "Group title"
 
-msgid "Edit"
-msgstr "Edit"
+#: .\templates\blog\editor\book_form.html:191
+msgid "Enter a new group name."
+msgstr "Enter a new group name."
 
-msgid ""
-"Are you sure you want to delete this comment? This action cannot be undone."
-msgstr ""
-"Are you sure you want to delete this comment? This action cannot be undone."
+#: .\templates\blog\editor\book_form.html:192
+msgid "Move up"
+msgstr "Move up"
 
+#: .\templates\blog\editor\book_form.html:193
+msgid "Move down"
+msgstr "Move down"
+
+#: .\templates\blog\editor\book_form.html:195
+#: .\templates\blog\includes\comment_threads.html:103
+#: .\templates\blog\includes\comment_threads.html:270
+#: .\templates\blog\manage\comment_list.html:91
+#: .\templates\blog\manage\site_settings.html:720
+#: .\templates\blog\manage\user_form.html:209
+#: .\templates\blog\profile\comments.html:95
 msgid "Save"
 msgstr "Save"
 
+#: .\templates\blog\editor\book_form.html:201
+msgid "Added"
+msgstr "Added"
+
+#: .\templates\blog\editor\book_form.html:202
+msgid "Add selected"
+msgstr "Add selected"
+
+#: .\templates\blog\editor\book_form.html:203
+msgid "Drag"
+msgstr "Drag"
+
+#: .\templates\blog\editor\book_form.html:247
+msgid "Save book"
+msgstr "Save book"
+
+#: .\templates\blog\editor\post_form.html:4
+#: .\templates\blog\editor\post_form.html:29
+msgid "Article Editor"
+msgstr "Article Editor"
+
+#: .\templates\blog\editor\post_form.html:32
+msgid "Has revision"
+msgstr "Has revision"
+
+#: .\templates\blog\editor\post_form.html:189
+msgid ""
+"You can view the current external link, but only the original author can "
+"generate a new one."
+msgstr ""
+"You can view the current external link, but only the original author can "
+"generate a new one."
+
+#: .\templates\blog\editor\post_form.html:208
+msgid "Save revision"
+msgstr "Save revision"
+
+#: .\templates\blog\editor\post_form.html:208
+msgid "Save draft"
+msgstr "Save draft"
+
+#: .\templates\blog\editor\post_form.html:210
+msgid "Publish article"
+msgstr "Publish article"
+
+#: .\templates\blog\editor\post_import_manage.html:18
+#: .\templates\blog\editor\post_import_profile.html:20
+msgid "Import"
+msgstr "Import"
+
+#: .\templates\blog\editor\post_import_manage.html:21
+#: .\templates\blog\editor\post_import_profile.html:23
+msgid "Back to articles"
+msgstr "Back to articles"
+
+#: .\templates\blog\editor\post_import_manage.html:24
+#: .\templates\blog\editor\post_import_profile.html:26
+msgid "Search articles to import..."
+msgstr "Search articles to import..."
+
+#: .\templates\blog\editor\post_import_manage.html:24
+#: .\templates\blog\editor\post_import_profile.html:26
+msgid "Search articles to import"
+msgstr "Search articles to import"
+
+#: .\templates\blog\editor\post_import_manage.html:38
+#: .\templates\blog\editor\post_import_profile.html:46
+msgid "No published articles available to import."
+msgstr "No published articles available to import."
+
+#: .\templates\blog\home.html:4
+msgid "Blog"
+msgstr "Blog"
+
+#: .\templates\blog\home.html:15
+msgid "Overview"
+msgstr "Overview"
+
+#: .\templates\blog\home.html:16
+msgid "Blog performance dashboard"
+msgstr "Blog performance dashboard"
+
+#: .\templates\blog\home.html:17
+msgid ""
+"Track publishing cadence, editorial activity, and the latest content updates "
+"from one place."
+msgstr ""
+"Track publishing cadence, editorial activity, and the latest content updates "
+"from one place."
+
+#: .\templates\blog\home.html:19
+msgid "Explore articles"
+msgstr "Explore articles"
+
+#: .\templates\blog\home.html:21
+msgid "Write a new article"
+msgstr "Write a new article"
+
+#: .\templates\blog\home.html:28
+msgid "Article views in the last 7 days"
+msgstr "Article views in the last 7 days"
+
+#: .\templates\blog\home.html:30
+msgid "Independent article page visits recorded this week."
+msgstr "Independent article page visits recorded this week."
+
+#: .\templates\blog\home.html:34
+msgid "Book views in the last 7 days"
+msgstr "Book views in the last 7 days"
+
+#: .\templates\blog\home.html:36
+msgid "Independent book page visits recorded this week."
+msgstr "Independent book page visits recorded this week."
+
+#: .\templates\blog\home.html:44
+msgid "Highlights"
+msgstr "Highlights"
+
+#: .\templates\blog\home.html:45
+msgid "Content snapshot"
+msgstr "Content snapshot"
+
+#: .\templates\blog\home.html:52
+msgid "Total articles"
+msgstr "Total articles"
+
+#: .\templates\blog\home.html:55
+msgid "All articles currently stored in the blog."
+msgstr "All articles currently stored in the blog."
+
+#: .\templates\blog\home.html:63
+msgid "Topic labels used to organize the content library."
+msgstr "Topic labels used to organize the content library."
+
+#: .\templates\blog\home.html:71
+msgid "Books used to organize related articles."
+msgstr "Books used to organize related articles."
+
+#: .\templates\blog\home.html:79
+msgid "All attachments currently stored in the blog."
+msgstr "All attachments currently stored in the blog."
+
+#: .\templates\blog\home.html:84
+msgid "Authors"
+msgstr "Authors"
+
+#: .\templates\blog\home.html:87
+msgid "Contributors who have published or drafted articles."
+msgstr "Contributors who have published or drafted articles."
+
+#: .\templates\blog\home.html:95
+msgid "Traffic"
+msgstr "Traffic"
+
+#: .\templates\blog\home.html:96
+#, python-format
+msgid "Visits in the last %(days)s days"
+msgstr "Visits in the last %(days)s days"
+
+#: .\templates\blog\home.html:103
+#, python-format
+msgid "Article and book visit trend in the last %(days)s days"
+msgstr "Article and book visit trend in the last %(days)s days"
+
+#: .\templates\blog\home.html:121
+msgid "Latest published articles"
+msgstr "Latest published articles"
+
+#: .\templates\blog\home.html:124
+msgid "Write a new post"
+msgstr "Write a new post"
+
+#: .\templates\blog\home.html:133
+msgid "No published articles yet"
+msgstr "No published articles yet"
+
+#: .\templates\blog\home.html:134
+msgid ""
+"Create your first article from the management panel to populate the homepage."
+msgstr ""
+"Create your first article from the management panel to populate the homepage."
+
+#: .\templates\blog\includes\attachment_access_gate.html:2
+#: .\templates\blog\includes\attachment_access_gate.html:4
+msgid "Attachment access verification"
+msgstr "Attachment access verification"
+
+#: .\templates\blog\includes\attachment_access_gate.html:78
+msgid "Refresh access"
+msgstr "Refresh access"
+
+#: .\templates\blog\includes\attachment_card.html:23
+msgid "File"
+msgstr "File"
+
+#: .\templates\blog\includes\attachment_card.html:25
+#, python-format
+msgid "累计下载 %(count)s 次"
+msgstr "累计下载 %(count)s 次"
+
+#: .\templates\blog\includes\attachment_card.html:35
+#: .\templates\blog\manage\attachment_list.html:75
+#: .\templates\blog\profile\attachments.html:65
+msgid "Download"
+msgstr "Download"
+
+#: .\templates\blog\includes\attachment_missing.html:7
+msgid "Attachment unavailable"
+msgstr "Attachment unavailable"
+
+#: .\templates\blog\includes\attachment_missing.html:9
+#, python-format
+msgid "Attachment #%(id)s could not be found."
+msgstr "Attachment #%(id)s could not be found."
+
+#: .\templates\blog\includes\comment_threads.html:12
+#: .\templates\blog\includes\comment_threads.html:21
+#: .\templates\blog\includes\comment_threads.html:179
+#: .\templates\blog\includes\comment_threads.html:188
+#: .\templates\blog\manage\comment_list.html:34
+#: .\templates\blog\manage\post_list.html:73
+msgid "Author"
+msgstr "Author"
+
+#: .\templates\blog\includes\comment_threads.html:39
+#: .\templates\blog\includes\comment_threads.html:206
+msgid "Open comment actions"
+msgstr "Open comment actions"
+
+#: .\templates\blog\includes\comment_threads.html:51
+#: .\templates\blog\includes\comment_threads.html:218
+#: .\templates\blog\manage\attachment_list.html:74
+#: .\templates\blog\manage\book_list.html:58
+#: .\templates\blog\manage\comment_list.html:50
+#: .\templates\blog\manage\post_list.html:143
+#: .\templates\blog\manage\post_list.html:169
+#: .\templates\blog\manage\post_list.html:187
+#: .\templates\blog\manage\user_list.html:60
+#: .\templates\blog\profile\attachments.html:64
+#: .\templates\blog\profile\books.html:62
+#: .\templates\blog\profile\comments.html:53
+#: .\templates\blog\profile\posts.html:99
+msgid "Edit"
+msgstr "Edit"
+
+#: .\templates\blog\includes\comment_threads.html:62
+#: .\templates\blog\includes\comment_threads.html:229
+#: .\templates\blog\manage\comment_list.html:56
+#: .\templates\blog\profile\comments.html:60
+msgid ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+msgstr ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+
+#: .\templates\blog\includes\comment_threads.html:98
+#: .\templates\blog\includes\comment_threads.html:121
+#: .\templates\blog\includes\comment_threads.html:265
+#: .\templates\blog\includes\comment_threads.html:301
+msgid ""
+"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
+"direct image upload, table insertion, and GitHub-style callouts."
+msgstr ""
+"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
+"direct image upload, table insertion, and GitHub-style callouts."
+
+#: .\templates\blog\includes\comment_threads.html:126
+#: .\templates\blog\includes\comment_threads.html:306
 msgid "Post reply"
 msgstr "Post reply"
 
+#: .\templates\blog\includes\comment_threads.html:135
+#: .\templates\blog\includes\comment_threads.html:156
+#: .\templates\blog\includes\comment_threads.html:278
+#: .\templates\blog\includes\namecard_comments.html:48
 msgid "Like"
 msgstr "Like"
 
+#: .\templates\blog\includes\comment_threads.html:139
+#: .\templates\blog\includes\comment_threads.html:160
+#: .\templates\blog\includes\comment_threads.html:282
+#: .\templates\blog\includes\namecard_comments.html:52
 msgid "Dislike"
 msgstr "Dislike"
 
+#: .\templates\blog\includes\comment_threads.html:149
+#: .\templates\blog\includes\comment_threads.html:151
 #, python-format
 msgid "Expand %(count)s replies"
-msgstr ""
+msgstr "Expand %(count)s replies"
 
+#: .\templates\blog\includes\comment_threads.html:150
+#: .\templates\blog\includes\comment_threads.html:151
 msgid "Collapse replies"
-msgstr ""
+msgstr "Collapse replies"
 
+#: .\templates\blog\includes\comment_threads.html:318
+#: .\templates\blog\includes\namecard_comments.html:67
 msgid "No comments yet."
 msgstr "No comments yet."
 
+#: .\templates\blog\includes\comment_threads.html:324
 #, python-format
 msgid "Page %(current)s of %(total)s"
-msgstr ""
+msgstr "Page %(current)s of %(total)s"
 
-msgid "Previous"
-msgstr ""
-
-msgid "Next"
-msgstr ""
-
+#: .\templates\blog\includes\comment_threads.html:343
+#: .\templates\blog\includes\comment_threads.html:344
+#: .\templates\blog\includes\pagination.html:26
+#: .\templates\blog\includes\pagination.html:27
 msgid "Jump to page"
-msgstr ""
+msgstr "Jump to page"
 
+#: .\templates\blog\includes\comment_threads.html:345
+#: .\templates\blog\includes\pagination.html:28
 msgid "Go"
-msgstr ""
+msgstr "Go"
 
+#: .\templates\blog\includes\condition_summary.html:7
 #, python-format
 msgctxt "conditional summary"
 msgid "%(counter)s condition"
 msgid_plural "%(counter)s conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(counter)s condition"
+msgstr[1] "%(counter)s conditions"
 
-#, fuzzy
-#| msgid "Article Editor"
+#: .\templates\blog\includes\namecard_comments.html:58
 msgid "Article in book"
-msgstr "Article Editor"
+msgstr "Article in book"
 
-#, fuzzy
-#| msgid "New article"
+#: .\templates\blog\includes\namecard_comments.html:60
 msgid "From article"
-msgstr "New article"
+msgstr "From article"
 
+#: .\templates\blog\includes\pagination.html:5
 #, python-format
 msgid "Page: %(current)s / %(total)s"
-msgstr ""
+msgstr "Page: %(current)s / %(total)s"
 
+#: .\templates\blog\includes\post_card.html:39
 #, python-format
 msgid "Likes %(up)s, dislikes %(down)s"
-msgstr ""
+msgstr "Likes %(up)s, dislikes %(down)s"
 
+#: .\templates\blog\includes\post_card.html:75
 msgid "No tags"
-msgstr ""
+msgstr "No tags"
 
-msgid "Audit Logs"
-msgstr "Audit Logs"
+#: .\templates\blog\manage\attachment_list.html:4
+msgid "Manage Attachments"
+msgstr "Manage Attachments"
 
+#: .\templates\blog\manage\attachment_list.html:18
+#: .\templates\blog\manage\audit_list.html:18
+#: .\templates\blog\manage\book_list.html:18
+#: .\templates\blog\manage\comment_list.html:18
+#: .\templates\blog\manage\comment_list.html:98
+#: .\templates\blog\manage\post_list.html:18
+#: .\templates\blog\manage\user_form.html:24
+#: .\templates\blog\manage\user_list.html:18
 msgid "Manage"
 msgstr "Manage"
 
+#: .\templates\blog\manage\attachment_list.html:27
+msgid "Clean up"
+msgstr "Clean up"
+
+#: .\templates\blog\manage\attachment_list.html:33
+msgid "Search attachments by title, file, or uploader..."
+msgstr "Search attachments by title, file, or uploader..."
+
+#: .\templates\blog\manage\attachment_list.html:46
+msgid "Uploader"
+msgstr "Uploader"
+
+#: .\templates\blog\manage\attachment_list.html:80
+#: .\templates\blog\profile\attachments.html:70
+msgid "Delete attachment"
+msgstr "Delete attachment"
+
+#: .\templates\blog\manage\attachment_list.html:81
+#: .\templates\blog\manage\post_list.html:179
+#: .\templates\blog\profile\attachments.html:71
+#, python-format
+msgid ""
+"Are you sure you want to delete %(title)s? This action cannot be undone."
+msgstr ""
+"Are you sure you want to delete %(title)s? This action cannot be undone."
+
+#: .\templates\blog\manage\attachment_list.html:107
+msgid "Update attachment"
+msgstr "Update attachment"
+
+#: .\templates\blog\manage\attachment_list.html:108
+msgid "Update"
+msgstr "Update"
+
+#: .\templates\blog\manage\attachment_list.html:112
+msgid "Leave empty to keep the current file."
+msgstr "Leave empty to keep the current file."
+
+#: .\templates\blog\manage\attachment_list.html:113
+msgid "Current file"
+msgstr "Current file"
+
+#: .\templates\blog\manage\attachment_list.html:119
+msgid "Unable to update the selected attachment right now."
+msgstr "Unable to update the selected attachment right now."
+
+#: .\templates\blog\manage\attachment_list.html:121
+msgid "Attachment updated successfully."
+msgstr "Attachment updated successfully."
+
+#: .\templates\blog\manage\attachment_list.html:122
+#, python-format
+msgid "Maximum attachment size: %(size)s MB"
+msgstr "Maximum attachment size: %(size)s MB"
+
+#: .\templates\blog\manage\attachment_list.html:123
+msgid "Clean up unused media"
+msgstr "Clean up unused media"
+
+#: .\templates\blog\manage\attachment_list.html:124
+msgid ""
+"This scans the database and media folder in the background, then deletes "
+"files that are no longer referenced. Continue?"
+msgstr ""
+"This scans the database and media folder in the background, then deletes "
+"files that are no longer referenced. Continue?"
+
+#: .\templates\blog\manage\attachment_list.html:125
+msgid "Start cleanup"
+msgstr "Start cleanup"
+
+#: .\templates\blog\manage\attachment_list.html:127
+msgid "Unable to start media cleanup right now."
+msgstr "Unable to start media cleanup right now."
+
+#: .\templates\blog\manage\attachment_list.html:128
+msgid "Media cleanup succeeded."
+msgstr "Media cleanup succeeded."
+
+#: .\templates\blog\manage\attachment_list.html:129
+msgid "Media cleanup failed."
+msgstr "Media cleanup failed."
+
+#: .\templates\blog\manage\audit_list.html:4
+msgid "Audit Logs"
+msgstr "Audit Logs"
+
+#: .\templates\blog\manage\audit_list.html:19
 msgid "Access audit"
 msgstr "Access audit"
 
+#: .\templates\blog\manage\audit_list.html:25
 msgid "Clear audit logs"
 msgstr "Clear audit logs"
 
+#: .\templates\blog\manage\audit_list.html:26
 msgid ""
 "Are you sure you want to clear all audit logs? This action cannot be undone."
 msgstr ""
 "Are you sure you want to clear all audit logs? This action cannot be undone."
 
+#: .\templates\blog\manage\audit_list.html:27
+#: .\templates\blog\manage\audit_list.html:31
 msgid "Clear"
 msgstr "Clear"
 
+#: .\templates\blog\manage\audit_list.html:35
 msgid "Search audit logs..."
 msgstr "Search audit logs..."
 
+#: .\templates\blog\manage\audit_list.html:35
 msgid "Search audit logs"
 msgstr "Search audit logs"
 
-#, fuzzy
-#| msgid "Actions"
+#: .\templates\blog\manage\audit_list.html:46
 msgid "Action"
-msgstr "Actions"
+msgstr "Action"
 
+#: .\templates\blog\manage\audit_list.html:47
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
-#, fuzzy
-#| msgid "Users"
-msgid "User"
-msgstr "Users"
-
+#: .\templates\blog\manage\audit_list.html:49
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
+#: .\templates\blog\manage\audit_list.html:50
+#: .\templates\blog\manage\comment_list.html:36
+#: .\templates\blog\profile\comments.html:38
+#: .\templates\blog\profile\money_history.html:28
+#: .\templates\blog\profile\points_history.html:28
 msgid "Time"
-msgstr ""
+msgstr "Time"
 
+#: .\templates\blog\manage\audit_list.html:58
 msgid "Anonymous"
 msgstr "Anonymous"
 
+#: .\templates\blog\manage\audit_list.html:64
 msgid "No audit logs yet"
 msgstr "No audit logs yet"
 
-msgid "Book Editor"
-msgstr "Book Editor"
-
-msgid "Editor"
-msgstr "Editor"
-
-msgid "Delete cover image"
-msgstr "Delete cover image"
-
-msgid "Undo"
-msgstr "Undo"
-
-msgid "Conditions"
-msgstr ""
-
-msgid "Condition types are full"
-msgstr ""
-
-msgid "Value"
-msgstr ""
-
-#, fuzzy
-#| msgid "Enter your password"
-msgid "Enter password"
-msgstr "Enter your password"
-
-#, fuzzy
-#| msgid "Leave blank to keep the current password."
-msgid "Leave blank to keep current password"
-msgstr "Leave blank to keep the current password."
-
-msgid "External link"
-msgstr "External link"
-
-msgid "Link expiry"
-msgstr "Link expiry"
-
-#, fuzzy
-#| msgid "Request failed."
-msgid "Request failed. Please try again."
-msgstr "Request failed."
-
-msgid "Unable to generate share link right now."
-msgstr "Unable to generate share link right now."
-
-msgid "External link copied."
-msgstr "External link copied."
-
-msgid "Generate share link"
-msgstr "Generate share link"
-
-msgid "Copy link"
-msgstr "Copy link"
-
-msgid "Chapter management"
-msgstr "Chapter management"
-
-msgid "Chapter actions"
-msgstr "Chapter actions"
-
-msgid "Add articles"
-msgstr "Add articles"
-
-msgid "Add group"
-msgstr "Add group"
-
-msgid "New group"
-msgstr "New group"
-
-msgid "No chapters yet. Add articles or groups to start building this book."
-msgstr "No chapters yet. Add articles or groups to start building this book."
-
-msgid "Rename group"
-msgstr "Rename group"
-
-msgid "Group title"
-msgstr "Group title"
-
-msgid "Enter a new group name."
-msgstr "Enter a new group name."
-
-msgid "Move up"
-msgstr "Move up"
-
-msgid "Move down"
-msgstr "Move down"
-
-msgid "Added"
-msgstr "Added"
-
-msgid "Add selected"
-msgstr "Add selected"
-
-msgid "Drag"
-msgstr "Drag"
-
-msgid "Save book"
-msgstr "Save book"
-
+#: .\templates\blog\manage\book_list.html:4
 msgid "Manage Books"
 msgstr "Manage Books"
 
+#: .\templates\blog\manage\book_list.html:21
+#: .\templates\blog\profile\books.html:24
 msgid "New book"
 msgstr "New book"
 
+#: .\templates\blog\manage\book_list.html:24
+#: .\templates\blog\profile\books.html:28
 msgid "Search books"
 msgstr "Search books"
 
+#: .\templates\blog\manage\book_list.html:35
+#: .\templates\blog\profile\books.html:39
 msgid "Name"
 msgstr "Name"
 
-msgid "Actions"
-msgstr "Actions"
-
+#: .\templates\blog\manage\book_list.html:59
+#: .\templates\blog\manage\post_list.html:170
+#: .\templates\blog\manage\post_list.html:188
+#: .\templates\blog\manage\user_list.html:61
+#: .\templates\blog\profile\books.html:63
+#: .\templates\blog\profile\posts.html:97
 msgid "Browse"
-msgstr ""
+msgstr "Browse"
 
+#: .\templates\blog\manage\book_list.html:64
+#: .\templates\blog\profile\books.html:68
 msgid "Delete book"
 msgstr "Delete book"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
-#| "kept."
+#: .\templates\blog\manage\book_list.html:65
+#: .\templates\blog\profile\books.html:69
+#, python-format
 msgid ""
-"Are you sure you want to delete \\\"%(title)s\\\"? Articles in this book "
-"will be kept."
+"Are you sure you want to delete %(title)s? Articles in this book will be "
+"kept."
 msgstr ""
-"Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
+"Are you sure you want to delete %(title)s? Articles in this book will be "
 "kept."
 
+#: .\templates\blog\manage\book_list.html:77
+#: .\templates\blog\profile\books.html:81
 msgid "No books found."
 msgstr "No books found."
 
-#, fuzzy
-#| msgid "Manage Books"
+#: .\templates\blog\manage\comment_list.html:4
 msgid "Manage Comments"
-msgstr "Manage Books"
+msgstr "Manage Comments"
 
-#, fuzzy
-#| msgid "Search posts, books, tags, authors..."
+#: .\templates\blog\manage\comment_list.html:23
 msgid "Search comments by content or author..."
-msgstr "Search posts, books, tags, authors..."
+msgstr "Search comments by content or author..."
 
-#, fuzzy
-#| msgid "Create comment"
+#: .\templates\blog\manage\comment_list.html:23
+#: .\templates\blog\profile\comments.html:25
 msgid "Search comments"
-msgstr "Create comment"
+msgstr "Search comments"
 
-#, fuzzy
-#| msgid "No comments yet."
+#: .\templates\blog\manage\comment_list.html:68
+#: .\templates\blog\profile\comments.html:72
 msgid "No comments found."
-msgstr "No comments yet."
+msgstr "No comments found."
 
-msgid "Article Editor"
-msgstr "Article Editor"
-
-msgid "Profile sections"
-msgstr "Profile sections"
-
-msgid "Has revision"
-msgstr "Has revision"
-
-msgid ""
-"You can view the current external link, but only the original author can "
-"generate a new one."
-msgstr ""
-"You can view the current external link, but only the original author can "
-"generate a new one."
-
-msgid "Save revision"
-msgstr "Save revision"
-
-msgid "Save draft"
-msgstr "Save draft"
-
-msgid "Publish article"
-msgstr "Publish article"
-
-msgid "Import"
-msgstr "Import"
-
-msgid "Back to articles"
-msgstr "Back to articles"
-
-msgid "Search articles to import..."
-msgstr "Search articles to import..."
-
-msgid "Search articles to import"
-msgstr "Search articles to import"
-
-msgid "No published articles available to import."
-msgstr "No published articles available to import."
-
+#: .\templates\blog\manage\post_list.html:4
 msgid "Manage Articles"
 msgstr "Manage Articles"
 
+#: .\templates\blog\manage\post_list.html:23
+#: .\templates\blog\profile\posts.html:25
 msgid "New article"
 msgstr "New article"
 
+#: .\templates\blog\manage\post_list.html:31
+#: .\templates\blog\profile\posts.html:33
 msgid "Only .md files are supported."
 msgstr "Only .md files are supported."
 
+#: .\templates\blog\manage\post_list.html:32
+#: .\templates\blog\profile\posts.html:34
 msgid "Please choose a markdown file to import."
-msgstr ""
+msgstr "Please choose a markdown file to import."
 
-#, fuzzy
-#| msgid "Unable to update share link right now."
+#: .\templates\blog\manage\post_list.html:33
+#: .\templates\blog\profile\posts.html:35
 msgid "Unable to import the selected markdown file right now."
-msgstr "Unable to update share link right now."
+msgstr "Unable to import the selected markdown file right now."
 
-#, fuzzy
-#| msgid "Updating..."
+#: .\templates\blog\manage\post_list.html:34
+#: .\templates\blog\profile\posts.html:36
 msgid "Importing..."
-msgstr "Updating..."
+msgstr "Importing..."
 
+#: .\templates\blog\manage\post_list.html:35
+#: .\templates\blog\profile\posts.html:37
 msgid "Import from .md file"
 msgstr "Import from .md file"
 
+#: .\templates\blog\manage\post_list.html:45
+#: .\templates\blog\profile\posts.html:47
 msgid "Article lists"
 msgstr "Article lists"
 
+#: .\templates\blog\manage\post_list.html:65
 msgid "Created by"
 msgstr "Created by"
 
+#: .\templates\blog\manage\post_list.html:66
+#: .\templates\blog\manage\post_list.html:135
 msgid "Expires at"
 msgstr "Expires at"
 
-msgid "Type"
-msgstr "Type"
-
+#: .\templates\blog\manage\post_list.html:94
 msgid "Expired"
 msgstr "Expired"
 
+#: .\templates\blog\manage\post_list.html:110
+#: .\templates\blog\profile\posts.html:90
 msgid "Revision"
 msgstr "Revision"
 
+#: .\templates\blog\manage\post_list.html:126
 msgid "Edit external link"
 msgstr "Edit external link"
 
-msgid "External links"
-msgstr "External links"
-
+#: .\templates\blog\manage\post_list.html:128
 #, python-format
 msgid "View or update the external link for \"%(title)s\"."
 msgstr "View or update the external link for \"%(title)s\"."
 
-#, fuzzy
-#| msgid ""
-#| "Anyone with this link can view the post and its comments without signing "
-#| "in, but cannot interact."
+#: .\templates\blog\manage\post_list.html:129
 msgid ""
 "Anyone with this link can view the article and its comments without signing "
 "in, but cannot interact."
@@ -1839,47 +4244,56 @@ msgstr ""
 "Anyone with this link can view the article and its comments without signing "
 "in, but cannot interact."
 
+#: .\templates\blog\manage\post_list.html:131
 msgid "Update link"
 msgstr "Update link"
 
+#: .\templates\blog\manage\post_list.html:132
 msgid "Updating..."
 msgstr "Updating..."
 
+#: .\templates\blog\manage\post_list.html:133
 msgid "Link validity"
 msgstr "Link validity"
 
+#: .\templates\blog\manage\post_list.html:134
 msgid "Share link"
 msgstr "Share link"
 
+#: .\templates\blog\manage\post_list.html:137
 msgid "Share link copied."
 msgstr "Share link copied."
 
+#: .\templates\blog\manage\post_list.html:138
 msgid "Unable to update share link right now."
 msgstr "Unable to update share link right now."
 
+#: .\templates\blog\manage\post_list.html:148
 msgid "Delete external link"
 msgstr "Delete external link"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete the external link for \"%(title)s\"? This "
-#| "action cannot be undone."
+#: .\templates\blog\manage\post_list.html:149
+#, python-format
 msgid ""
-"Are you sure you want to delete the external link for \\\"%(title)s\\\"? "
-"This action cannot be undone."
+"Are you sure you want to delete the external link for %(title)s? This action "
+"cannot be undone."
 msgstr ""
-"Are you sure you want to delete the external link for \"%(title)s\"? This "
-"action cannot be undone."
+"Are you sure you want to delete the external link for %(title)s? This action "
+"cannot be undone."
 
+#: .\templates\blog\manage\post_list.html:163
 msgid "Existing revision"
 msgstr "Existing revision"
 
+#: .\templates\blog\manage\post_list.html:165
 msgid "Open"
 msgstr "Open"
 
+#: .\templates\blog\manage\post_list.html:166
 msgid "Discard"
 msgstr "Discard"
 
+#: .\templates\blog\manage\post_list.html:172
 #, python-format
 msgid ""
 "The published post \"%(title)s\" already has a saved revision. You can "
@@ -1890,265 +4304,475 @@ msgstr ""
 "continue editing the existing revision or start over from the published "
 "version. Starting over will delete the current revision."
 
-#, fuzzy
-#| msgid "Selected articles"
+#: .\templates\blog\manage\post_list.html:178
 msgid "Delete article"
-msgstr "Selected articles"
+msgstr "Delete article"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete \"%(title)s\"? This action cannot be "
-#| "undone."
-msgid ""
-"Are you sure you want to delete \\\"%(title)s\\\"? This action cannot be "
-"undone."
-msgstr ""
-"Are you sure you want to delete \"%(title)s\"? This action cannot be undone."
-
+#: .\templates\blog\manage\post_list.html:193
+#: .\templates\blog\profile\posts.html:104
 msgid "Delete revision"
 msgstr "Delete revision"
 
+#: .\templates\blog\manage\post_list.html:193
+#: .\templates\blog\profile\posts.html:104
 msgid "Delete draft"
 msgstr "Delete draft"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete revision \"%(title)s\"? This action "
-#| "cannot be undone."
+#: .\templates\blog\manage\post_list.html:194
+#: .\templates\blog\profile\posts.html:105
+#, python-format
 msgid ""
-"Are you sure you want to delete revision \\\"%(title)s\\\"? This action "
-"cannot be undone."
+"Are you sure you want to delete revision %(title)s? This action cannot be "
+"undone."
 msgstr ""
-"Are you sure you want to delete revision \"%(title)s\"? This action cannot "
-"be undone."
-
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete draft \"%(title)s\"? This action cannot "
-#| "be undone."
-msgid ""
-"Are you sure you want to delete draft \\\"%(title)s\\\"? This action cannot "
-"be undone."
-msgstr ""
-"Are you sure you want to delete draft \"%(title)s\"? This action cannot be "
+"Are you sure you want to delete revision %(title)s? This action cannot be "
 "undone."
 
+#: .\templates\blog\manage\post_list.html:194
+#: .\templates\blog\profile\posts.html:105
+#, python-format
+msgid ""
+"Are you sure you want to delete draft %(title)s? This action cannot be "
+"undone."
+msgstr ""
+"Are you sure you want to delete draft %(title)s? This action cannot be "
+"undone."
+
+#: .\templates\blog\manage\post_list.html:207
+#: .\templates\blog\profile\posts.html:118
 msgid "No published articles found."
 msgstr "No published articles found."
 
+#: .\templates\blog\manage\post_list.html:207
+#: .\templates\blog\profile\posts.html:118
 msgid "No drafts or revisions found."
 msgstr "No drafts or revisions found."
 
+#: .\templates\blog\manage\post_list.html:207
 msgid "No external links found."
 msgstr "No external links found."
 
+#: .\templates\blog\manage\sidebar.html:4
 msgid "Workspace"
 msgstr "Workspace"
 
-msgid "Website"
-msgstr ""
+#: .\templates\blog\manage\site_settings.html:34
+#: .\templates\blog\manage\site_settings.html:47
+#: .\templates\blog\manage\site_settings.html:69
+#: .\templates\blog\manage\site_settings.html:91
+#: .\templates\blog\manage\site_settings.html:113
+#: .\templates\blog\manage\site_settings.html:120
+#: .\templates\blog\manage\site_settings.html:134
+#: .\templates\blog\manage\site_settings.html:139
+#: .\templates\blog\manage\site_settings.html:144
+#: .\templates\blog\manage\site_settings.html:153
+#: .\templates\blog\manage\site_settings.html:183
+#: .\templates\blog\manage\site_settings.html:214
+#: .\templates\blog\manage\site_settings.html:221
+#: .\templates\blog\manage\site_settings.html:310
+#: .\templates\blog\manage\site_settings.html:317
+#: .\templates\blog\manage\site_settings.html:377
+#: .\templates\blog\manage\site_settings.html:391
+#: .\templates\blog\manage\site_settings.html:397
+#: .\templates\blog\manage\site_settings.html:402
+#: .\templates\blog\manage\site_settings.html:407
+#: .\templates\blog\manage\site_settings.html:412
+#: .\templates\blog\manage\site_settings.html:425
+#: .\templates\blog\manage\site_settings.html:441
+#: .\templates\blog\manage\site_settings.html:446
+#: .\templates\blog\manage\site_settings.html:451
+#: .\templates\blog\manage\site_settings.html:456
+#: .\templates\blog\manage\site_settings.html:461
+#: .\templates\blog\manage\site_settings.html:466
+#: .\templates\blog\manage\site_settings.html:471
+#: .\templates\blog\manage\site_settings.html:476
+#: .\templates\blog\manage\site_settings.html:481
+#: .\templates\blog\manage\site_settings.html:500
+#: .\templates\blog\manage\site_settings.html:507
+#: .\templates\blog\manage\site_settings.html:513
+#: .\templates\blog\manage\site_settings.html:521
+#: .\templates\blog\manage\site_settings.html:528
+#: .\templates\blog\manage\site_settings.html:534
+#: .\templates\blog\manage\site_settings.html:539
+#: .\templates\blog\manage\site_settings.html:553
+#: .\templates\blog\manage\site_settings.html:560
+#: .\templates\blog\manage\site_settings.html:566
+#: .\templates\blog\manage\site_settings.html:573
+#: .\templates\blog\manage\site_settings.html:578
+#: .\templates\blog\manage\site_settings.html:592
+#: .\templates\blog\manage\site_settings.html:600
+#: .\templates\blog\manage\site_settings.html:607
+#: .\templates\blog\manage\site_settings.html:612
+#: .\templates\blog\manage\site_settings.html:617
+#: .\templates\blog\manage\site_settings.html:631
+#: .\templates\blog\manage\site_settings.html:639
+#: .\templates\blog\manage\site_settings.html:646
+#: .\templates\blog\manage\site_settings.html:660
+#: .\templates\blog\manage\site_settings.html:668
+#: .\templates\blog\manage\site_settings.html:675
+#: .\templates\blog\manage\site_settings.html:680
+#: .\templates\blog\manage\site_settings.html:694
+#: .\templates\blog\manage\site_settings.html:701
+msgid "Help"
+msgstr "Help"
 
+#: .\templates\blog\manage\site_settings.html:43
 msgid "Appearance assets"
-msgstr ""
+msgstr "Appearance assets"
 
+#: .\templates\blog\manage\site_settings.html:53
 msgid "Website icon preview"
-msgstr ""
+msgstr "Website icon preview"
 
-#, fuzzy
-#| msgid "Remove column"
+#: .\templates\blog\manage\site_settings.html:55
 msgid "Remove icon"
-msgstr "Remove column"
+msgstr "Remove icon"
 
+#: .\templates\blog\manage\site_settings.html:62
+#: .\templates\blog\manage\site_settings.html:84
+#: .\templates\blog\manage\site_settings.html:106
+#: .\templates\blog\manage\site_settings.html:175
+#: .\templates\blog\manage\site_settings.html:205
 msgid "Undo remove"
-msgstr ""
+msgstr "Undo remove"
 
+#: .\templates\blog\manage\site_settings.html:75
 msgid "Login page background preview"
-msgstr ""
+msgstr "Login page background preview"
 
-#, fuzzy
-#| msgid "Remove column"
+#: .\templates\blog\manage\site_settings.html:77
+#: .\templates\blog\manage\site_settings.html:99
 msgid "Remove background"
-msgstr "Remove column"
+msgstr "Remove background"
 
+#: .\templates\blog\manage\site_settings.html:97
 msgid "Authenticated page background preview"
-msgstr ""
+msgstr "Authenticated page background preview"
 
-#, fuzzy
-#| msgid "Audit Logs"
-msgid "Audit logs"
-msgstr "Audit Logs"
+#: .\templates\blog\manage\site_settings.html:126
+msgid "CDN configuration"
+msgstr "CDN configuration"
 
-#, fuzzy
-#| msgid "Profile settings"
-msgid "VIP settings"
-msgstr "Profile settings"
+#: .\templates\blog\manage\site_settings.html:127
+msgid "Expand CDN configuration"
+msgstr "Expand CDN configuration"
 
+#: .\templates\blog\manage\site_settings.html:162
+#: .\templates\blog\manage\site_settings.html:192
+msgid "No bundle uploaded"
+msgstr "No bundle uploaded"
+
+#: .\templates\blog\manage\site_settings.html:164
+#: .\templates\blog\manage\site_settings.html:194
+msgid "Models:"
+msgstr "Models:"
+
+#: .\templates\blog\manage\site_settings.html:168
+#: .\templates\blog\manage\site_settings.html:198
+msgid "Remove bundle"
+msgstr "Remove bundle"
+
+#: .\templates\blog\manage\site_settings.html:224
+msgid "Available bundle models:"
+msgstr "Available bundle models:"
+
+#: .\templates\blog\manage\site_settings.html:238
+msgid "Display pages"
+msgstr "Display pages"
+
+#: .\templates\blog\manage\site_settings.html:239
+msgid "Expand display page settings"
+msgstr "Expand display page settings"
+
+#: .\templates\blog\manage\site_settings.html:373
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
-msgid "Article editor"
-msgstr "Article editor"
+#: .\templates\blog\manage\site_settings.html:435
+#, python-format
+msgid "Expand VIP %(level)s settings"
+msgstr "Expand VIP %(level)s settings"
 
-#, fuzzy
-#| msgid "Edit user"
+#: .\templates\blog\manage\site_settings.html:495
+#: .\templates\blog\profile\comments.html:36
+msgid "Article"
+msgstr "Article"
+
+#: .\templates\blog\manage\site_settings.html:626
+msgid "Video"
+msgstr "Video"
+
+#: .\templates\blog\manage\site_settings.html:689
+msgid "Audit logs"
+msgstr "Audit logs"
+
+#: .\templates\blog\manage\site_settings.html:713
+#: .\templates\blog\manage\site_settings.html:717
+msgid "Restore defaults"
+msgstr "Restore defaults"
+
+#: .\templates\blog\manage\site_settings.html:714
+msgid "Are you sure you want to restore all settings to their defaults?"
+msgstr "Are you sure you want to restore all settings to their defaults?"
+
+#: .\templates\blog\manage\user_form.html:4
+#: .\templates\blog\manage\user_form.html:25
 msgid "Edit User"
-msgstr "Edit user"
+msgstr "Edit User"
 
+#: .\templates\blog\manage\user_form.html:45
+#: .\templates\blog\profile\overview.html:63
 msgid "Delete avatar"
 msgstr "Delete avatar"
 
+#: .\templates\blog\manage\user_form.html:87
+msgid "Social information"
+msgstr "Social information"
+
+#: .\templates\blog\manage\user_form.html:137
 msgid "User groups"
 msgstr "User groups"
 
+#: .\templates\blog\manage\user_form.html:148
 msgid "Administrator permissions"
 msgstr "Administrator permissions"
 
+#: .\templates\blog\manage\user_form.html:178
 msgid "Virtual assets"
-msgstr ""
+msgstr "Virtual assets"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete user \"%(username)s\"? This action cannot "
-#| "be undone."
+#: .\templates\blog\manage\user_form.html:202
+#, python-format
 msgid ""
-"Are you sure you want to delete user \\\"%(username)s\\\"? This action "
-"cannot be undone."
+"Are you sure you want to delete user %(username)s? This action cannot be "
+"undone."
 msgstr ""
-"Are you sure you want to delete user \"%(username)s\"? This action cannot be "
+"Are you sure you want to delete user %(username)s? This action cannot be "
 "undone."
 
+#: .\templates\blog\manage\user_list.html:4
 msgid "Manage Users"
 msgstr "Manage Users"
 
+#: .\templates\blog\manage\user_list.html:21
+msgid "Add user"
+msgstr "Add user"
+
+#: .\templates\blog\manage\user_list.html:24
 msgid "Search users..."
 msgstr "Search users..."
 
+#: .\templates\blog\manage\user_list.html:24
 msgid "Search users"
 msgstr "Search users"
 
+#: .\templates\blog\manage\user_list.html:37
 msgid "Roles"
 msgstr "Roles"
 
+#: .\templates\blog\manage\user_list.html:38
 msgid "State"
 msgstr "State"
 
+#: .\templates\blog\manage\user_list.html:55
 msgid "Disabled"
 msgstr "Disabled"
 
+#: .\templates\blog\manage\user_list.html:67
 msgid "No users found."
 msgstr "No users found."
 
-#, fuzzy
-#| msgid "Username"
+#: .\templates\blog\namecard.html:4
 msgid "User Namecard"
-msgstr "Username"
+msgstr "User Namecard"
 
-#, fuzzy
-#| msgid "Chapter actions"
+#: .\templates\blog\namecard.html:19
 msgid "Namecard sections"
-msgstr "Chapter actions"
+msgstr "Namecard sections"
 
-#, fuzzy
-#| msgid "Name"
+#: .\templates\blog\namecard.html:32
 msgid "Namecard"
-msgstr "Name"
+msgstr "Namecard"
 
-#, fuzzy
-#| msgid "Personal settings"
+#: .\templates\blog\namecard.html:72 .\templates\blog\namecard.html:80
+msgid "Not specified"
+msgstr "Not specified"
+
+#: .\templates\blog\namecard.html:86
 msgid "Personal description"
-msgstr "Personal settings"
+msgstr "Personal description"
 
+#: .\templates\blog\namecard.html:90
 msgid "No personal description yet."
-msgstr ""
+msgstr "No personal description yet."
 
-#, fuzzy
-#| msgid "No drafts yet"
+#: .\templates\blog\namecard.html:96
+msgid "Social links"
+msgstr "Social links"
+
+#: .\templates\blog\namecard.html:143
 msgid "No posts yet"
-msgstr "No drafts yet"
+msgstr "No posts yet"
 
+#: .\templates\blog\namecard.html:144
 msgid "This user hasn't published any non-private articles yet."
-msgstr ""
+msgstr "This user hasn't published any non-private articles yet."
 
+#: .\templates\blog\namecard.html:189
 msgid "This user hasn't published any non-private books yet."
-msgstr ""
+msgstr "This user hasn't published any non-private books yet."
 
-#, fuzzy
-#| msgid "Profile updated"
+#: .\templates\blog\profile\attachments.html:20
+#: .\templates\blog\profile\books.html:20
+#: .\templates\blog\profile\comments.html:20
+#: .\templates\blog\profile\comments.html:102
+#: .\templates\blog\profile\money_history.html:20
+#: .\templates\blog\profile\overview.html:4
+#: .\templates\blog\profile\overview.html:21
+#: .\templates\blog\profile\points_history.html:20
+#: .\templates\blog\profile\posts.html:20
 msgid "Profile"
-msgstr "Profile updated"
+msgstr "Profile"
 
+#: .\templates\blog\profile\attachments.html:25
+msgid "Search attachments by title or file..."
+msgstr "Search attachments by title or file..."
+
+#: .\templates\blog\profile\comments.html:25
+msgid "Search comments..."
+msgstr "Search comments..."
+
+#: .\templates\blog\profile\includes\sidebar.html:4
+msgid "Profile sections"
+msgstr "Profile sections"
+
+#: .\templates\blog\profile\money_history.html:29
+#: .\templates\blog\profile\points_history.html:29
+msgid "Amount"
+msgstr "Amount"
+
+#: .\templates\blog\profile\money_history.html:30
+#: .\templates\blog\profile\points_history.html:30
+msgid "Balance after"
+msgstr "Balance after"
+
+#: .\templates\blog\profile\money_history.html:31
+#: .\templates\blog\profile\points_history.html:31
+msgid "Reason"
+msgstr "Reason"
+
+#: .\templates\blog\profile\money_history.html:44
+msgid "No money history found."
+msgstr "No money history found."
+
+#: .\templates\blog\profile\overview.html:67
 msgid "Click avatar to upload"
 msgstr "Click avatar to upload"
 
-#, fuzzy
-#| msgid "Hide password"
+#: .\templates\blog\profile\overview.html:100
+msgid "Public links"
+msgstr "Public links"
+
+#: .\templates\blog\profile\overview.html:135
+msgid "Save changes"
+msgstr "Save changes"
+
+#: .\templates\blog\profile\overview.html:167
+msgid "Please enter an email address first."
+msgstr "Please enter an email address first."
+
+#: .\templates\blog\profile\overview.html:168
+msgid "Please enter a valid email address."
+msgstr "Please enter a valid email address."
+
+#: .\templates\blog\profile\overview.html:169
+msgid "Sending..."
+msgstr "Sending..."
+
+#: .\templates\blog\profile\overview.html:181
+msgid "Save email"
+msgstr "Save email"
+
+#: .\templates\blog\profile\overview.html:220
 msgid "Update password"
-msgstr "Hide password"
+msgstr "Update password"
 
-#, fuzzy
-#| msgid "Search posts"
+#: .\templates\blog\profile\overview.html:229
+msgid "Feature"
+msgstr "Feature"
+
+#: .\templates\blog\profile\points_history.html:44
+msgid "No points history found."
+msgstr "No points history found."
+
+#: .\templates\blog\search.html:16
 msgid "Search results"
-msgstr "Search posts"
+msgstr "Search results"
 
+#: .\templates\blog\search.html:19
 #, python-format
 msgid "Results for \"%(query)s\""
-msgstr ""
+msgstr "Results for \"%(query)s\""
 
+#: .\templates\blog\search.html:21
 msgid "Enter a keyword from the top search bar."
-msgstr ""
+msgstr "Enter a keyword from the top search bar."
 
-#, fuzzy
-#| msgid "No posts found."
+#: .\templates\blog\search.html:31
 msgid "No results found"
-msgstr "No posts found."
+msgstr "No results found"
 
+#: .\templates\blog\search.html:32
 msgid "Try another keyword, book, tag, or author name."
 msgstr "Try another keyword, book, tag, or author name."
 
-#, fuzzy
-#| msgid "Tags"
+#: .\templates\blog\tag_detail.html:14
 msgid "Tag"
-msgstr "Tags"
+msgstr "Tag"
 
-#, fuzzy, python-format
-#| msgid "%(total)s Comment"
-#| msgid_plural "%(total)s Comments"
+#: .\templates\blog\tag_detail.html:19
+#, python-format
 msgid "%(total)s post"
 msgid_plural "%(total)s posts"
-msgstr[0] "%(total)s Comment"
-msgstr[1] "%(total)s Comments"
+msgstr[0] "%(total)s post"
+msgstr[1] "%(total)s posts"
 
-#, fuzzy
-#| msgid "No posts found."
+#: .\templates\blog\tag_detail.html:28
 msgid "No posts found for this tag"
-msgstr "No posts found."
+msgstr "No posts found for this tag"
 
-#, fuzzy
-#| msgid "Articles you can access will appear here once they are published."
+#: .\templates\blog\tag_detail.html:29
 msgid ""
 "Posts assigned to this tag will appear here once they are visible to you."
-msgstr "Articles you can access will appear here once they are published."
+msgstr ""
+"Posts assigned to this tag will appear here once they are visible to you."
 
+#: .\templates\blog\tags.html:16
 msgid "All tags"
-msgstr ""
+msgstr "All tags"
 
+#: .\templates\blog\tags.html:17
 msgid "Browse every tag that currently has visible posts."
-msgstr ""
+msgstr "Browse every tag that currently has visible posts."
 
-#, fuzzy
-#| msgid "No drafts yet"
+#: .\templates\blog\tags.html:25
 msgid "No tags yet"
-msgstr "No drafts yet"
+msgstr "No tags yet"
 
+#: .\templates\blog\tags.html:26
 msgid "Tags with visible posts will appear here once content is categorized."
-msgstr ""
+msgstr "Tags with visible posts will appear here once content is categorized."
 
+#: .\templates\emails\email_change_code.html:17
 msgid "Verify New Email"
 msgstr "Verify New Email"
 
+#: .\templates\emails\email_change_code.html:18
+#: .\templates\emails\email_change_code.txt:4
 msgid "Use the verification code below to confirm your new email address."
 msgstr "Use the verification code below to confirm your new email address."
 
+#: .\templates\emails\email_change_code.html:23
 #, python-format
 msgid ""
 "You are receiving this email because an email change verification code was "
@@ -2157,21 +4781,43 @@ msgstr ""
 "You are receiving this email because an email change verification code was "
 "requested for %(app_name)s."
 
+#: .\templates\emails\email_change_code.html:25
+#: .\templates\emails\register_code.html:25
 msgid "One-time code"
 msgstr "One-time code"
 
+#: .\templates\emails\email_change_code.html:29
+#: .\templates\emails\email_change_code.txt:8
+#: .\templates\emails\register_code.html:29
+#: .\templates\emails\register_code.txt:8
 #, python-format
 msgid "This code will expire in %(minutes)s minutes."
 msgstr "This code will expire in %(minutes)s minutes."
 
+#: .\templates\emails\email_change_code.html:30
+#: .\templates\emails\email_change_code.txt:9
+#: .\templates\emails\register_code.html:30
+#: .\templates\emails\register_code.txt:9
 msgid ""
 "For your security, do not forward this email or share the code with anyone."
 msgstr ""
 "For your security, do not forward this email or share the code with anyone."
 
+#: .\templates\emails\email_change_code.html:31
+#: .\templates\emails\email_change_code.txt:10
 msgid "If you did not request this email change, you can safely ignore it."
 msgstr "If you did not request this email change, you can safely ignore it."
 
+#: .\templates\emails\email_change_code.html:37
+#: .\templates\emails\email_change_code.txt:12
+#: .\templates\emails\email_changed.html:35
+#: .\templates\emails\email_changed.txt:11
+#: .\templates\emails\password_changed.html:36
+#: .\templates\emails\password_changed.txt:12
+#: .\templates\emails\register_code.html:37
+#: .\templates\emails\register_code.txt:12
+#: .\templates\emails\reset_password.html:36
+#: .\templates\emails\reset_password.txt:11
 #, python-format
 msgid ""
 "This is an automated email from %(app_name)s. Please do not reply directly "
@@ -2180,27 +4826,43 @@ msgstr ""
 "This is an automated email from %(app_name)s. Please do not reply directly "
 "to this message."
 
-#, fuzzy, python-format
-#| msgid "[%(app_name)s] Your email verification code"
+#: .\templates\emails\email_change_code.txt:2
+#, python-format
 msgid "%(app_name)s email verification code"
-msgstr "[%(app_name)s] Your email verification code"
+msgstr "%(app_name)s email verification code"
 
+#: .\templates\emails\email_change_code.txt:6
+#: .\templates\emails\register_code.html:17
+#: .\templates\emails\register_code.txt:6
 msgid "Verification Code"
 msgstr "Verification Code"
 
+#: .\templates\emails\email_changed.html:17
 msgid "Email Address Updated"
 msgstr "Email Address Updated"
 
+#: .\templates\emails\email_changed.html:18
+#: .\templates\emails\email_changed.txt:4
 msgid "Your account email address has been updated by an administrator."
 msgstr "Your account email address has been updated by an administrator."
 
+#: .\templates\emails\email_changed.html:23
+#: .\templates\emails\email_changed.txt:6
+#: .\templates\emails\password_changed.html:23
+#: .\templates\emails\password_changed.txt:6
 #, python-format
 msgid "This change was applied to the account for %(username)s."
 msgstr "This change was applied to the account for %(username)s."
 
+#: .\templates\emails\email_changed.html:25
+#: .\templates\emails\email_changed.txt:7
 msgid "New email address"
 msgstr "New email address"
 
+#: .\templates\emails\email_changed.html:29
+#: .\templates\emails\email_changed.txt:9
+#: .\templates\emails\password_changed.html:30
+#: .\templates\emails\password_changed.txt:10
 msgid ""
 "If you did not expect this change, please contact an administrator "
 "immediately."
@@ -2208,12 +4870,17 @@ msgstr ""
 "If you did not expect this change, please contact an administrator "
 "immediately."
 
+#: .\templates\emails\password_changed.html:17
 msgid "Password Updated"
 msgstr "Password Updated"
 
+#: .\templates\emails\password_changed.html:18
+#: .\templates\emails\password_changed.txt:4
 msgid "An administrator has updated your account password."
 msgstr "An administrator has updated your account password."
 
+#: .\templates\emails\password_changed.html:29
+#: .\templates\emails\password_changed.txt:9
 msgid ""
 "For security, please sign in as soon as possible and change this password if "
 "needed."
@@ -2221,9 +4888,12 @@ msgstr ""
 "For security, please sign in as soon as possible and change this password if "
 "needed."
 
+#: .\templates\emails\register_code.html:18
+#: .\templates\emails\register_code.txt:4
 msgid "Use the verification code below to complete your registration."
 msgstr "Use the verification code below to complete your registration."
 
+#: .\templates\emails\register_code.html:23
 #, python-format
 msgid ""
 "You are receiving this email because a registration verification code was "
@@ -2232,26 +4902,37 @@ msgstr ""
 "You are receiving this email because a registration verification code was "
 "requested for %(app_name)s."
 
+#: .\templates\emails\register_code.html:31
+#: .\templates\emails\register_code.txt:10
 msgid "If you did not request this email, you can safely ignore it."
 msgstr "If you did not request this email, you can safely ignore it."
 
+#: .\templates\emails\register_code.txt:2
 #, python-format
 msgid "%(app_name)s verification code"
 msgstr "%(app_name)s verification code"
 
+#: .\templates\emails\reset_password.html:17
+#: .\templates\emails\reset_password.txt:6
 msgid "Temporary Password"
 msgstr "Temporary Password"
 
+#: .\templates\emails\reset_password.html:18
+#: .\templates\emails\reset_password.txt:4
 msgid "Use the temporary password below to sign in to your account."
 msgstr "Use the temporary password below to sign in to your account."
 
+#: .\templates\emails\reset_password.html:23
 #, python-format
 msgid "A password reset request was processed for your %(app_name)s account."
 msgstr "A password reset request was processed for your %(app_name)s account."
 
+#: .\templates\emails\reset_password.html:25
 msgid "Temporary password"
 msgstr "Temporary password"
 
+#: .\templates\emails\reset_password.html:29
+#: .\templates\emails\reset_password.txt:8
 msgid ""
 "For security, please sign in as soon as possible and change this password "
 "immediately."
@@ -2259,6 +4940,8 @@ msgstr ""
 "For security, please sign in as soon as possible and change this password "
 "immediately."
 
+#: .\templates\emails\reset_password.html:30
+#: .\templates\emails\reset_password.txt:9
 msgid ""
 "If you did not request this reset, please contact an administrator after "
 "signing in."
@@ -2266,12 +4949,58 @@ msgstr ""
 "If you did not request this reset, please contact an administrator after "
 "signing in."
 
+#: .\templates\emails\reset_password.txt:2
 #, python-format
 msgid "%(app_name)s temporary password"
 msgstr "%(app_name)s temporary password"
 
-msgid "Allow reprint"
-msgstr "Allow reprint"
+#, fuzzy
+#~ msgid "Reference internal post"
+#~ msgstr "Reference internal article"
 
-msgid "Allow quote"
-msgstr "Allow quote"
+#, fuzzy
+#~ msgid "Posts"
+#~ msgstr "Posts"
+
+#, fuzzy
+#~ msgid "Search posts"
+#~ msgstr "Search posts"
+
+#, fuzzy
+#~ msgid "Password cannot be empty for encrypted articles."
+#~ msgstr "Password cannot be empty for encrypted articles."
+
+#, python-format
+#~ msgid "VIP %(level)s display name"
+#~ msgstr "VIP %(level)s display name"
+
+#, fuzzy
+#~ msgid "Leave blank to use the default name."
+#~ msgstr "Leave blank to keep the current password."
+
+#, fuzzy
+#~ msgid "Enter password to view this article"
+#~ msgstr "Enter password to view this book"
+
+#, fuzzy
+#~ msgid "Content access check"
+#~ msgstr "Content snapshot"
+
+#~ msgid "Insufficient balance"
+#~ msgstr "Insufficient balance"
+
+#~ msgid "Insufficient points"
+#~ msgstr "Insufficient points"
+
+#~ msgid "Enter password to view this book"
+#~ msgstr "Enter password to view this book"
+
+#~ msgid "Enter book password"
+#~ msgstr "Enter book password"
+
+#, fuzzy
+#~ msgid "Enter article password"
+#~ msgstr "Enter your password"
+
+#~ msgid "Article editor"
+#~ msgstr "Article editor"

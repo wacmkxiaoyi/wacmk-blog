@@ -6,9 +6,7 @@
     if (!configEl || !dataEl) return;
 
     var config = JSON.parse(configEl.textContent);
-    var accessData = JSON.parse(dataEl.textContent);
     var checkUrl = config.checkUrl;
-    var isAccessGate = config.isAccessGate;
 
     var card = document.querySelector(".access-gate-card");
     if (!card) return;

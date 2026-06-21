@@ -110,6 +110,9 @@
             <form method="post" action="{% url 'comment-create' post.slug %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
                 {% csrf_token %}
                 <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+                {% if comment.reply_form.non_field_errors %}
+                <div class="form-alert" role="alert">{{ comment.reply_form.non_field_errors|striptags }}</div>
+                {% endif %}
                 <div class="field-group">
                     <div class="comment-form-header">
                         <label for="{{ comment.reply_form.content.id_for_label }}">{{ comment.reply_form.content.label }}</label>
@@ -229,6 +232,7 @@
                                     >{% trans "Delete" %}</button>
                                 </form>
                                 {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% endif %}
@@ -286,6 +290,9 @@
                 <form method="post" action="{% url 'comment-create' post.slug %}?next={{ request.get_full_path|urlencode }}" class="panel-form reply-form-card">
                     {% csrf_token %}
                     <input type="hidden" name="parent_id" value="{{ reply.pk }}">
+                    {% if reply.reply_form.non_field_errors %}
+                    <div class="form-alert" role="alert">{{ reply.reply_form.non_field_errors|striptags }}</div>
+                    {% endif %}
                     <div class="field-group">
                         <div class="comment-form-header">
                             <label for="{{ reply.reply_form.content.id_for_label }}">{{ reply.reply_form.content.label }}</label>

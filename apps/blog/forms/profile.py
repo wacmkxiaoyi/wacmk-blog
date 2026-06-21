@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
-from apps.users.models import EmailVerificationCode, GENDER_CHOICES, UserProfile
+from apps.users.models import EmailVerificationCode, GENDER_CHOICES
 
 
 User = get_user_model()

@@ -9,6 +9,7 @@ from apps.blog.permissions import CONDITION_TYPE_MONEY, CONDITION_TYPE_POINTS, g
 from apps.blog.services.money import apply_user_money_change
 from apps.blog.services.points import apply_user_points_change
 from apps.blog.utils import get_site_setting
+from apps.blog.utils.site import get_user_vip_level, get_normalized_vip_configs
 from apps.users.models import UserProfile
 
 
@@ -32,13 +33,25 @@ def _get_reward_ratios(site_setting, object_type):
     return Decimal("0"), Decimal("0")
 
 
-def _round_reward(value, ratio):
+def _get_vip_reward_bonus(site_setting, reader):
+    vip_level = get_user_vip_level(reader, site_setting)
+    if vip_level <= 0:
+        return Decimal("0"), Decimal("0")
+    vip_configs = get_normalized_vip_configs(site_setting)
+    if vip_level > len(vip_configs):
+        return Decimal("0"), Decimal("0")
+    config = vip_configs[vip_level - 1]
+    return Decimal(str(config.get("money_reward", 0) or 0)), Decimal(str(config.get("points_reward", 0) or 0))
+
+
+def _round_reward(value, ratio, bonus=Decimal("0")):
     if value is None or value <= 0:
         return 0
     ratio = Decimal(str(ratio or 0))
     if ratio <= 0:
         return 0
-    reward = (Decimal(value) * ratio).quantize(Decimal("1"), rounding=ROUND_CEILING)
+    bonus = Decimal(str(bonus or 0))
+    reward = (Decimal(value) * ratio * (Decimal("1") + bonus)).quantize(Decimal("1"), rounding=ROUND_CEILING)
     return max(int(reward), 0)
 
 
@@ -61,8 +74,9 @@ def grant_author_reward_once(obj, reader):
 
     site_setting = get_site_setting()
     money_ratio, points_ratio = _get_reward_ratios(site_setting, object_type)
-    reward_money = _round_reward(money_required, money_ratio)
-    reward_points = _round_reward(points_required, points_ratio)
+    money_bonus, points_bonus = _get_vip_reward_bonus(site_setting, reader)
+    reward_money = _round_reward(money_required, money_ratio, money_bonus)
+    reward_points = _round_reward(points_required, points_ratio, points_bonus)
 
     if reward_money <= 0 and reward_points <= 0:
         return {"granted": False, "created": False, "reward_money": 0, "reward_points": 0}

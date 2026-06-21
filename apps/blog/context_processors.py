@@ -1,9 +1,12 @@
+import json
+
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 from apps.users.models import UserProfile
 
 from .forms import SearchForm
-from .utils.site import build_user_business_identity_summary, get_setting_file_url, get_site_setting
+from .utils.site import build_live2d_runtime_config, build_user_business_identity_summary, get_setting_file_url, get_site_setting
 
 
 def global_site_context(request):
@@ -16,6 +19,7 @@ def global_site_context(request):
     if user and user.is_authenticated:
         user_business_identity = build_user_business_identity_summary(user, site_setting)
     site_title = site_setting.get("site_title") or settings.APP_NAME
+    live2d_runtime_config = build_live2d_runtime_config(site_setting, request)
     return {
         "nav_search_form": SearchForm(request.GET or None),
         "site_user_profile": profile,
@@ -26,6 +30,9 @@ def global_site_context(request):
         "auth_background_url": get_setting_file_url("auth_background"),
         "app_background_url": get_setting_file_url("app_background"),
         "attachment_max_size_mb": site_setting.get("attachment_max_size_mb", 1),
+        "video_max_size_mb": site_setting.get("video_max_size_mb", 100),
         "post_editor_autosave_enabled": site_setting.get("post_editor_autosave_enabled", True),
         "post_editor_autosave_interval_minutes": site_setting.get("post_editor_autosave_interval_minutes", 5),
+        "live2d_should_render": bool(live2d_runtime_config),
+        "live2d_runtime_config": mark_safe(json.dumps(live2d_runtime_config, ensure_ascii=True)) if live2d_runtime_config else "",
     }

@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
+from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -262,7 +263,7 @@ class AuthorRewardFlowTests(TestCase):
                 "attachment_author_reward_money_ratio": Decimal("0.80"),
                 "attachment_author_reward_points_ratio": Decimal("0.00"),
                 "vip_max_level": 1,
-                "vip_configs": [{"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05"}],
+                "vip_configs": [{"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "money_reward": "0.10", "points_reward": "0.05"}],
             }
         )
 
@@ -397,6 +398,71 @@ class AuthorRewardFlowTests(TestCase):
         record = AuthorRewardRecord.objects.get(object_type="post", object_id=post.pk, reader=self.vip_reader)
         self.assertEqual(record.reward_money, 0)
         self.assertEqual(record.reward_points, 1)
+
+    def test_first_post_access_applies_vip_money_reward_bonus(self):
+        post = Post.objects.create(
+            title="VIP money reward post",
+            slug="vip-money-reward-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_CONDITIONAL,
+            author=self.author,
+            condition_rules=[{"type": "money", "value": 100}],
+        )
+        self.vip_reader.profile.money = 100
+        self.vip_reader.profile.save(update_fields=["money"])
+        self.client.force_login(self.vip_reader)
+        self.client.post(reverse("access-check", kwargs={"object_type": "post", "object_id": post.pk}), {"action": "purchase"})
+
+        response = self.client.get(post.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.money, 88)
+        record = AuthorRewardRecord.objects.get(object_type="post", object_id=post.pk, reader=self.vip_reader)
+        self.assertEqual(record.reward_money, 88)
+
+    def test_first_attachment_access_applies_vip_points_reward_bonus(self):
+        set_settings(
+            {
+                "attachment_author_reward_money_ratio": Decimal("0.00"),
+                "attachment_author_reward_points_ratio": Decimal("0.50"),
+                "vip_max_level": 1,
+                "vip_configs": [
+                    {
+                        "display_name": "VIP 1",
+                        "money_discount": "0.10",
+                        "points_discount": "0.05",
+                        "money_reward": "0.10",
+                        "points_reward": "0.05",
+                    }
+                ],
+            }
+        )
+        attachment = Attachment.objects.create(
+            title="VIP rewarded points attachment",
+            original_filename="vip-points.txt",
+            mime_type="text/plain",
+            file_size=12,
+            file_ext="txt",
+            visibility=Attachment.VISIBILITY_CONDITIONAL,
+            condition_rules=[{"type": "points", "value": 10}],
+            uploaded_by=self.author,
+            file=SimpleUploadedFile("vip-points.txt", b"rewarded-file", content_type="text/plain"),
+        )
+        self.vip_reader.profile.points = 20
+        self.vip_reader.profile.save(update_fields=["points"])
+        self.client.force_login(self.vip_reader)
+        self.client.post(reverse("attachment-access-check", kwargs={"pk": attachment.pk}), {"action": "purchase"})
+
+        response = self.client.get(reverse("attachment-download", kwargs={"pk": attachment.pk}))
+
+        self.assertEqual(response.status_code, 200)
+        self.author.profile.refresh_from_db()
+        self.assertEqual(self.author.profile.points, 6)
+        record = AuthorRewardRecord.objects.get(object_type="attachment", object_id=attachment.pk, reader=self.vip_reader)
+        self.assertEqual(record.reward_points, 6)
 
     def test_first_standalone_book_access_with_vip_public_does_not_reward_author(self):
         book = Book.objects.create(
@@ -534,6 +600,57 @@ class CommentRewardFlowTests(TestCase):
         points_history = UserPointsHistory.objects.get(user=self.reader, reason_type=UserPointsHistory.REASON_FIRST_COMMENT_REWARD)
         self.assertEqual(points_history.change_amount, 1)
         self.assertEqual(points_history.balance_after, 1)
+
+    def test_rate_limited_top_level_comment_shows_inline_error(self):
+        post = Post.objects.create(
+            title="Rate limited comment post",
+            slug="rate-limited-comment-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+
+        first_response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "first comment"})
+        second_response = self.client.post(reverse("comment-create", kwargs={"slug": post.slug}), {"content": "second comment"})
+
+        self.assertEqual(first_response.status_code, 302)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertContains(second_response, "You are commenting too frequently. Please try again later.")
+        self.assertContains(second_response, 'class="panel-form comment-form-card" data-comment-entry-panel', html=False)
+        self.assertContains(second_response, 'textarea', count=1)
+        self.assertEqual(Comment.objects.filter(post=post, author=self.reader).count(), 1)
+
+    def test_rate_limited_reply_shows_inline_error_on_same_panel(self):
+        post = Post.objects.create(
+            title="Rate limited reply post",
+            slug="rate-limited-reply-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.author,
+        )
+        parent_author = User.objects.create_user(username="rate-parent-author", password="login-pass")
+        UserProfile.objects.get_or_create(user=parent_author)
+        parent_comment = Comment.objects.create(post=post, author=parent_author, content="parent")
+
+        first_response = self.client.post(
+            reverse("comment-create", kwargs={"slug": post.slug}),
+            {f"reply-{parent_comment.pk}-content": "reply 1", "parent_id": str(parent_comment.pk)},
+        )
+        second_response = self.client.post(
+            reverse("comment-create", kwargs={"slug": post.slug}),
+            {f"reply-{parent_comment.pk}-content": "reply 2", "parent_id": str(parent_comment.pk)},
+        )
+
+        self.assertEqual(first_response.status_code, 302)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertContains(second_response, "You are commenting too frequently. Please try again later.")
+        self.assertContains(second_response, f'data-reply-panel="{parent_comment.pk}"', html=False)
+        self.assertContains(second_response, f'name="reply-{parent_comment.pk}-content"', html=False)
+        self.assertEqual(Comment.objects.filter(post=post, author=self.reader).count(), 1)
 
 
 class CommentVipBadgeRenderingTests(TestCase):
@@ -827,6 +944,25 @@ class BookStructureSyncTests(TestCase):
         imported_post = publish_post_draft(imported_draft)
 
         self.assertEqual(imported_post.books.count(), 0)
+
+    def test_clone_and_publish_store_cover_in_current_user_directory(self):
+        source_post = Post.objects.create(
+            title="Covered post",
+            slug="covered-post",
+            summary="summary",
+            content="content",
+            status=Post.STATUS_PUBLISHED,
+            visibility=Post.VISIBILITY_PUBLIC,
+            author=self.user,
+        )
+        source_post.cover_image.save("cover.png", ContentFile(b"cover-image"), save=True)
+
+        other_user = User.objects.create_user(username="covered-other", password="login-pass")
+        cloned_draft = clone_post_to_draft(source_post, other_user)
+        published_post = publish_post_draft(cloned_draft)
+
+        self.assertIn(f"users/{other_user.pk}/post-cover/", cloned_draft.cover_image.name)
+        self.assertIn(f"users/{self.user.pk}/post-cover/", published_post.cover_image.name)
 
 
 class ProfileBookLimitAccessTests(TestCase):

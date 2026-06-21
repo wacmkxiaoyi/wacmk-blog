@@ -14,7 +14,7 @@ from apps.blog.views.profile_posts import ProfilePostAccessMixin
 
 
 class ProfileAttachmentListView(ProfilePostAccessMixin, TemplateView):
-    template_name = "blog/profile_attachments.html"
+    template_name = "blog/profile/attachments.html"
     paginate_by = 15
     default_sort = "updated_at"
     sortable_fields = {

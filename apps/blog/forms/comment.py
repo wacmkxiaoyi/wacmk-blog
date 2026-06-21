@@ -3,7 +3,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Comment
-from apps.blog.utils.site import check_attachment_upload_permission
+from apps.blog.utils.site import check_attachment_upload_permission, check_comment_permission, check_video_upload_permission
+
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 
 from .common import MarkdownTextarea
 
@@ -41,6 +43,19 @@ class CommentForm(forms.ModelForm):
         "data-attachment-vip-access-label": _("VIP access permission"),
         "data-attachment-max-size-label": _("Maximum attachment size"),
     }
+    VIDEO_WIDGET_ATTRS = {
+        "data-video-title": _("Insert video"),
+        "data-video-kicker": _("Markdown"),
+        "data-video-url-label": _("Video URL"),
+        "data-video-help": _("Enter the video URL to insert an embedded player."),
+        "data-video-confirm-label": _("Insert"),
+        "data-video-upload-label": _("Upload video"),
+        "data-video-upload-url": reverse_lazy("frontend-upload-video"),
+        "data-video-upload-error-title": _("Video upload failed"),
+        "data-video-upload-error-message": _("Unable to upload the selected video right now."),
+        "data-video-max-size-label": _("Maximum video size"),
+        "data-video-file-required-message": _("Please choose a video file first."),
+    }
 
     content = forms.CharField(
         label=_("Comment"),
@@ -63,7 +78,10 @@ class CommentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
+        self.editor_context = kwargs.pop("editor_context", MEDIA_UPLOAD_CONTEXT_COMMENT)
+        self.image_upload_url = kwargs.pop("image_upload_url", "")
         super().__init__(*args, **kwargs)
+        can_upload_media = check_comment_permission(self.user)
         widget_attrs = {
             "data-link-title": _("Insert link"),
             "data-link-kicker": _("Markdown"),
@@ -87,6 +105,11 @@ class CommentForm(forms.ModelForm):
             "data-image-help": _("Enter image prompt text and the image URL."),
             "data-image-confirm-label": _("Insert"),
             "data-image-upload-label": _("Upload image"),
+            "data-video-title": _("Insert video"),
+            "data-video-kicker": _("Markdown"),
+            "data-video-url-label": _("Video URL"),
+            "data-video-help": _("Enter the video URL to insert an embedded player."),
+            "data-video-confirm-label": _("Insert"),
             "data-browser-previous-label": _("Previous"),
             "data-browser-next-label": _("Next"),
             "data-browser-page-label": _("Page"),
@@ -107,10 +130,22 @@ class CommentForm(forms.ModelForm):
             "data-table-insert-column-right-label": _("Insert column right"),
             "data-table-remove-row-label": _("Remove row"),
             "data-table-remove-column-label": _("Remove column"),
+            "data-media-upload-context": self.editor_context,
         }
-        if check_attachment_upload_permission(self.user):
+        if can_upload_media and self.image_upload_url:
+            widget_attrs["data-upload-url"] = self.image_upload_url
+        if can_upload_media and check_attachment_upload_permission(self.user):
             widget_attrs.update(self.ATTACHMENT_WIDGET_ATTRS)
-        self.fields["content"].widget.attrs.update(widget_attrs)
+        if can_upload_media and check_video_upload_permission(self.user):
+            widget_attrs.update(self.VIDEO_WIDGET_ATTRS)
+        content_attrs = self.fields["content"].widget.attrs
+        content_attrs.update(widget_attrs)
+        if content_attrs.get("data-attachment-upload-url"):
+            content_attrs["data-attachment-upload-url"] = f"{reverse_lazy('attachment-upload')}?context={self.editor_context}"
+        if content_attrs.get("data-attachment-browser-url"):
+            content_attrs["data-attachment-browser-url"] = f"{reverse_lazy('attachment-mine')}?context={self.editor_context}"
+        if content_attrs.get("data-video-upload-url"):
+            content_attrs["data-video-upload-url"] = f"{reverse_lazy('frontend-upload-video')}?context={self.editor_context}"
 
     def clean_content(self):
         content = normalize_comment_content(self.cleaned_data.get("content"))

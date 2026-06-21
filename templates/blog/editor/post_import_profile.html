@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Import from existing article" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
+<link rel="stylesheet" href="{% static 'css/bundles/manage.css' %}">
+<link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="site-page manage-page profile-manage-page">
+    {% include 'blog/profile/includes/sidebar.html' %}
+
+    <section class="manage-content">
+        <div class="section-panel">
+            <div class="section-heading-row">
+                <div>
+                    <span class="section-kicker">{% trans "Import" %}</span>
+                    <h1>{% trans "Import from existing article" %}</h1>
+                </div>
+                <a href="{% url 'profile-posts' %}" class="secondary-button">{% trans "Back to articles" %}</a>
+            </div>
+            <form method="get" class="inline-search-form">
+                <input type="search" name="q" value="{{ query }}" class="input-control" placeholder="{% trans 'Search articles to import...' %}" aria-label="{% trans 'Search articles to import' %}">
+                <button type="submit" class="secondary-button">{% trans "Search" %}</button>
+            </form>
+            <div class="post-grid import-post-grid">
+                {% for post in posts %}
+                {% if post.import_can_access %}
+                <form method="post" class="import-post-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="source_post_id" value="{{ post.pk }}">
+                    {% include 'blog/includes/post_card.html' with card_class='compact-card import-post-card-submit' summary_length=140 show_visibility=True show_tags=True show_tag_links=False post_card_button=True post_card_button_type='submit' post_card_button_label=post.title %}
+                </form>
+                {% else %}
+                <form method="post" class="import-post-form" data-import-access-form data-import-post-url="{{ post.get_absolute_url }}" data-import-post-id="{{ post.pk }}" data-import-requires-password="{% if post.import_requires_password %}true{% endif %}" data-import-requires-condition="{% if post.import_requires_condition %}true{% endif %}" data-import-condition-status="{{ post.import_condition_status|default:'' }}" data-import-condition-money="{{ post.import_condition_money|default:'' }}" data-import-condition-points="{{ post.import_condition_points|default:'' }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="source_post_id" value="{{ post.pk }}">
+                    {% include 'blog/includes/post_card.html' with card_class='compact-card import-post-card-submit' summary_length=140 show_visibility=True show_tags=True show_tag_links=False post_card_button=True post_card_button_type='button' post_card_button_label=post.title post_requires_password=post.import_requires_password %}
+                </form>
+                {% endif %}
+                {% empty %}
+                <div class="empty-panel">
+                    <p>{% trans "No published articles available to import." %}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% include 'blog/includes/pagination.html' with pagination_input_id='id_profile_import_page_jump' %}
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/entrypoints/blog-content.js' %}"></script>
+{% endblock %}

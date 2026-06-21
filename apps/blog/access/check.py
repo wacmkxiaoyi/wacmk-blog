@@ -18,7 +18,6 @@ from apps.blog.permissions import (
     CONDITION_TYPE_ENCRYPTED,
     CONDITION_TYPE_MONEY,
     CONDITION_TYPE_POINTS,
-    get_condition_rule_value,
     has_condition_rule,
 )
 from apps.blog.utils.site import apply_vip_discount_to_requirement, build_user_business_identity_summary, get_user_vip_discounts

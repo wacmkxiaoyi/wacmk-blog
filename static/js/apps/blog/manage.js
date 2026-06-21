@@ -2061,6 +2061,15 @@ function initManageUserForm() {
 function initSiteSettingsForm() {
     var vipMaxLevelInput = document.querySelector('[data-vip-max-level-input="true"]');
     var vipLevelFieldsWrapper = document.querySelector('[data-vip-config-fields]');
+    var live2dEnabledInput = document.getElementById('id_live2d_enabled');
+    var live2dSettingsBody = document.querySelector('[data-live2d-settings-body]');
+    var live2dSourceTypeSelect = document.getElementById('id_live2d_source_type');
+    var live2dRandomModelInput = document.getElementById('id_live2d_random_model');
+    var live2dModelIdBody = document.querySelector('[data-live2d-model-id-body]');
+    var live2dTipsEnabledInput = document.getElementById('id_live2d_tips_enabled');
+    var live2dTipsBody = document.querySelector('[data-live2d-tips-body]');
+    var live2dTipsModeSelect = document.getElementById('id_live2d_tips_mode');
+    var live2dCustomTipsBody = document.querySelector('[data-live2d-custom-tips-body]');
 
     function syncVipConfigToggle(card, expanded) {
         var toggle = card ? card.querySelector('[data-vip-config-toggle]') : null;
@@ -2116,6 +2125,146 @@ function initSiteSettingsForm() {
         vipMaxLevelInput.addEventListener('input', syncVipLevelFieldVisibility);
         syncVipLevelFieldVisibility();
     }
+
+    function syncLive2dSourcePanels() {
+        var sourceType = live2dSourceTypeSelect ? live2dSourceTypeSelect.value : 'cdn';
+        document.querySelectorAll('[data-live2d-source-panel]').forEach(function (panel) {
+            panel.hidden = panel.getAttribute('data-live2d-source-panel') !== sourceType;
+        });
+        document.querySelectorAll('[data-live2d-panel-card]').forEach(function (card) {
+            var cardType = card.getAttribute('data-live2d-panel-card');
+            if (cardType === 'cdn' || cardType === 'widget_bundle' || cardType === 'cubism_bundle') {
+                card.hidden = cardType !== sourceType;
+            }
+        });
+    }
+
+    function syncLive2dPanelToggle(card, expanded) {
+        var toggle = card ? card.querySelector('[data-live2d-panel-toggle]') : null;
+        var body = card ? card.querySelector('[data-live2d-panel-body]') : null;
+        var icon = toggle ? toggle.querySelector('i') : null;
+        if (!toggle || !body) {
+            return;
+        }
+        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        body.hidden = !expanded;
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !expanded);
+            icon.classList.toggle('fa-chevron-up', expanded);
+        }
+    }
+
+    function syncLive2dTipsVisibility() {
+        var tipsEnabled = !live2dTipsEnabledInput || live2dTipsEnabledInput.checked;
+        var tipsMode = live2dTipsModeSelect ? live2dTipsModeSelect.value : 'hybrid';
+        if (live2dTipsBody) {
+            live2dTipsBody.hidden = !tipsEnabled;
+        }
+        if (live2dCustomTipsBody) {
+            live2dCustomTipsBody.hidden = !tipsEnabled || tipsMode === 'builtin';
+        }
+    }
+
+    function syncLive2dModelVisibility() {
+        var enabled = !live2dEnabledInput || live2dEnabledInput.checked;
+        var randomModelEnabled = !live2dRandomModelInput || live2dRandomModelInput.checked;
+        if (live2dModelIdBody) {
+            live2dModelIdBody.hidden = !enabled || randomModelEnabled;
+        }
+    }
+
+    function syncLive2dVisibility() {
+        var enabled = !live2dEnabledInput || live2dEnabledInput.checked;
+        if (live2dSettingsBody) {
+            live2dSettingsBody.hidden = !enabled;
+        }
+        syncLive2dSourcePanels();
+        syncLive2dModelVisibility();
+        syncLive2dTipsVisibility();
+    }
+
+    if (live2dEnabledInput) {
+        live2dEnabledInput.addEventListener('change', syncLive2dVisibility);
+    }
+    if (live2dSourceTypeSelect) {
+        live2dSourceTypeSelect.addEventListener('change', syncLive2dSourcePanels);
+    }
+    if (live2dRandomModelInput) {
+        live2dRandomModelInput.addEventListener('change', syncLive2dModelVisibility);
+    }
+    if (live2dTipsEnabledInput) {
+        live2dTipsEnabledInput.addEventListener('change', syncLive2dTipsVisibility);
+    }
+    if (live2dTipsModeSelect) {
+        live2dTipsModeSelect.addEventListener('change', syncLive2dTipsVisibility);
+    }
+
+    document.querySelectorAll('[data-live2d-panel-card]').forEach(function (card) {
+        var toggle = card.querySelector('[data-live2d-panel-toggle]');
+        var cardType = card.getAttribute('data-live2d-panel-card');
+        syncLive2dPanelToggle(card, cardType !== 'display-pages' && cardType !== 'cdn');
+        if (toggle) {
+            toggle.addEventListener('click', function () {
+                var expanded = toggle.getAttribute('aria-expanded') === 'true';
+                syncLive2dPanelToggle(card, !expanded);
+            });
+        }
+    });
+
+    ['widget', 'cubism'].forEach(function (bundleKey) {
+        var removeInput = document.querySelector('[data-live2d-bundle-remove-input="' + bundleKey + '"]');
+        var summary = document.querySelector('[data-live2d-bundle-summary="' + bundleKey + '"]');
+        var uploadRow = document.querySelector('[data-live2d-bundle-upload-row="' + bundleKey + '"]');
+        var removeButton = document.querySelector('[data-live2d-bundle-remove-toggle="' + bundleKey + '"]');
+        var undoButton = document.querySelector('[data-live2d-bundle-undo="' + bundleKey + '"]');
+        var fileInput = document.getElementById(bundleKey === 'cubism' ? 'id_live2d_cubism_bundle_file' : 'id_live2d_widget_bundle_file');
+        var hasExistingBundle = !!(summary && !summary.hasAttribute('hidden'));
+
+        function syncBundleState(markedForRemoval) {
+            if (removeInput) {
+                removeInput.value = markedForRemoval ? '1' : '0';
+            }
+            if (summary) {
+                summary.hidden = markedForRemoval || !hasExistingBundle;
+            }
+            if (uploadRow) {
+                uploadRow.classList.toggle('is-hidden', !markedForRemoval && hasExistingBundle && !(fileInput && fileInput.files && fileInput.files.length));
+            }
+            if (undoButton) {
+                undoButton.classList.toggle('is-hidden', !markedForRemoval || !hasExistingBundle);
+            }
+        }
+
+        if (removeButton) {
+            removeButton.addEventListener('click', function () {
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+                syncBundleState(true);
+            });
+        }
+        if (undoButton) {
+            undoButton.addEventListener('click', function () {
+                syncBundleState(false);
+            });
+        }
+        if (fileInput) {
+            fileInput.addEventListener('change', function () {
+                if (removeInput) {
+                    removeInput.value = '0';
+                }
+                if (uploadRow) {
+                    uploadRow.classList.remove('is-hidden');
+                }
+                if (summary && (!fileInput.files || !fileInput.files.length)) {
+                    summary.hidden = !hasExistingBundle;
+                }
+            });
+        }
+        syncBundleState(false);
+    });
+
+    syncLive2dVisibility();
 
     ["site_icon", "auth_background", "app_background"].forEach(function (assetKey) {
         var removeInput = document.querySelector('[data-site-setting-remove-input="' + assetKey + '"]');
@@ -2431,6 +2580,105 @@ function initAddUserButton() {
     });
 }
 
+function isNativeContextMenuTarget(target) {
+    if (!target || typeof target.closest !== "function") {
+        return false;
+    }
+    return Boolean(target.closest("input, textarea, select, [contenteditable='true'], [contenteditable=''], .CodeMirror"));
+}
+
+function getActionMenuLabel(node) {
+    var explicitLabel = node.getAttribute("data-row-action-label");
+    if (explicitLabel) {
+        return explicitLabel.trim();
+    }
+    return (node.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function triggerActionMenuNode(node) {
+    if (!node) {
+        return;
+    }
+    if (typeof node.click === "function") {
+        node.click();
+        return;
+    }
+    if (node.tagName === "A") {
+        window.location.href = node.href;
+    }
+}
+
+function collectRowActions(row) {
+    var actionsRoot = row ? row.querySelector(".table-actions") : null;
+    var actionNodes = actionsRoot ? actionsRoot.querySelectorAll("a.table-button, button.table-button") : [];
+    var actions = [];
+    Array.prototype.forEach.call(actionNodes, function (node) {
+        var label = getActionMenuLabel(node);
+        if (!label) {
+            return;
+        }
+        actions.push({
+            label: label,
+            disabled: node.disabled || node.getAttribute("aria-disabled") === "true",
+            isDanger: node.classList.contains("table-button-danger") || node.closest("form[data-delete-confirm-form]") !== null,
+            onClick: function () {
+                triggerActionMenuNode(node);
+            }
+        });
+    });
+    return actions;
+}
+
+var activeActionMenuRow = null;
+
+function clearActiveActionMenuRow() {
+    if (!activeActionMenuRow) {
+        return;
+    }
+    activeActionMenuRow.classList.remove("is-action-menu-active");
+    activeActionMenuRow = null;
+}
+
+function setActiveActionMenuRow(row) {
+    if (activeActionMenuRow === row) {
+        return;
+    }
+    clearActiveActionMenuRow();
+    if (!row) {
+        return;
+    }
+    row.classList.add("is-action-menu-active");
+    activeActionMenuRow = row;
+}
+
+function bindTableRowActionMenus() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-row-action-menu]"), function (row) {
+        if (row.getAttribute("data-row-action-menu-bound") === "true") {
+            return;
+        }
+        row.setAttribute("data-row-action-menu-bound", "true");
+        row.addEventListener("contextmenu", function (event) {
+            var actions = null;
+            if (isNativeContextMenuTarget(event.target)) {
+                return;
+            }
+            actions = collectRowActions(row);
+            if (!actions.length) {
+                return;
+            }
+            event.preventDefault();
+            setActiveActionMenuRow(row);
+            openActionMenu(event, actions);
+        });
+    });
+
+    if (bindTableRowActionMenus.__closeListenerBound === true) {
+        return;
+    }
+    bindTableRowActionMenus.__closeListenerBound = true;
+    document.addEventListener("actionmenu:close", clearActiveActionMenuRow);
+}
+
 var manageInitialized = false;
 
 export function initBlogManage() {
@@ -2446,8 +2694,10 @@ export function initBlogManage() {
     initManageUserForm();
     initSiteSettingsForm();
     initAddUserButton();
+    bindTableRowActionMenus();
 }
 
 export function initManagePostListPage() {
     initializeMarkdownImportTrigger();
+    bindTableRowActionMenus();
 }

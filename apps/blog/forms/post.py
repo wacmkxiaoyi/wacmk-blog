@@ -1,17 +1,23 @@
 import os
-import json
 
 from django import forms
+from django.urls import reverse
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.auth import get_allowed_types_for_post
 from apps.blog.models import Post, PostDraft, Tag
-from apps.blog.utils.site import check_attachment_upload_permission
+from apps.blog.utils.site import check_attachment_upload_permission, check_video_upload_permission
+
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_POST
 
 from .common import MarkdownTextarea
 from .mixins import AccessScopeFormMixin
+
+
+def check_post_media_upload_permission(user):
+    return bool(getattr(user, "is_authenticated", False))
 
 
 class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
@@ -43,6 +49,19 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
         "data-attachment-access-scope-label": _("Access scope"),
         "data-attachment-vip-access-label": _("VIP access permission"),
         "data-attachment-max-size-label": _("Maximum attachment size"),
+    }
+    VIDEO_WIDGET_ATTRS = {
+        "data-video-title": _("Insert video"),
+        "data-video-kicker": _("Markdown"),
+        "data-video-url-label": _("Video URL"),
+        "data-video-help": _("Enter the video URL to insert an embedded player."),
+        "data-video-confirm-label": _("Insert"),
+        "data-video-upload-label": _("Upload video"),
+        "data-video-upload-url": reverse_lazy("frontend-upload-video"),
+        "data-video-upload-error-title": _("Video upload failed"),
+        "data-video-upload-error-message": _("Unable to upload the selected video right now."),
+        "data-video-max-size-label": _("Maximum video size"),
+        "data-video-file-required-message": _("Please choose a video file first."),
     }
     VISIBILITY_EDITOR_CHOICES = [
         (Post.VISIBILITY_PUBLIC, _("Public")),
@@ -151,6 +170,8 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
+        self.editor_context = kwargs.pop("editor_context", MEDIA_UPLOAD_CONTEXT_POST)
+        self.image_upload_url = kwargs.pop("image_upload_url", "")
         super().__init__(*args, **kwargs)
         self._remove_cover_image = False
         self.fields["visibility"].choices = self.VISIBILITY_EDITOR_CHOICES
@@ -180,6 +201,11 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
             "data-image-help": _("Enter image prompt text and the image URL."),
             "data-image-confirm-label": _("Insert"),
             "data-image-upload-label": _("Upload image"),
+            "data-video-title": _("Insert video"),
+            "data-video-kicker": _("Markdown"),
+            "data-video-url-label": _("Video URL"),
+            "data-video-help": _("Enter the video URL to insert an embedded player."),
+            "data-video-confirm-label": _("Insert"),
             "data-browser-previous-label": _("Previous"),
             "data-browser-next-label": _("Next"),
             "data-browser-page-label": _("Page"),
@@ -200,10 +226,23 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
             "data-table-insert-column-right-label": _("Insert column right"),
             "data-table-remove-row-label": _("Remove row"),
             "data-table-remove-column-label": _("Remove column"),
+            "data-media-upload-context": self.editor_context,
         }
-        if check_attachment_upload_permission(self.user):
+        if self.image_upload_url:
+            widget_attrs["data-upload-url"] = self.image_upload_url
+        else:
+            widget_attrs.pop("data-upload-url", None)
+        if check_post_media_upload_permission(self.user) and check_attachment_upload_permission(self.user):
             widget_attrs.update(self.ATTACHMENT_WIDGET_ATTRS)
+        if check_post_media_upload_permission(self.user) and check_video_upload_permission(self.user):
+            widget_attrs.update(self.VIDEO_WIDGET_ATTRS)
         content_widget.attrs.update(widget_attrs)
+        if content_widget.attrs.get("data-attachment-upload-url"):
+            content_widget.attrs["data-attachment-upload-url"] = f"{reverse('attachment-upload')}?context={self.editor_context}"
+        if content_widget.attrs.get("data-attachment-browser-url"):
+            content_widget.attrs["data-attachment-browser-url"] = f"{reverse('attachment-mine')}?context={self.editor_context}"
+        if content_widget.attrs.get("data-video-upload-url"):
+            content_widget.attrs["data-video-upload-url"] = f"{reverse('frontend-upload-video')}?context={self.editor_context}"
         if self.instance.pk:
             self.fields["tag_names"].initial = ", ".join(self.instance.tags.values_list("name", flat=True))
 
@@ -229,12 +268,15 @@ class BasePostEditorForm(AccessScopeFormMixin, forms.ModelForm):
     def save(self, commit=True):
         existing_cover_name = self.instance.cover_image.name if getattr(self.instance, "cover_image", None) else ""
         instance = super().save(commit=False)
+        uploaded_cover = self.files.get("cover_image")
         if self._remove_cover_image and not self.files.get("cover_image"):
             instance.cover_image = ""
         if commit:
             if self._remove_cover_image and not self.files.get("cover_image") and existing_cover_name:
                 self.instance.cover_image.delete(save=False)
             instance.save()
+            if uploaded_cover and existing_cover_name and existing_cover_name != instance.cover_image.name:
+                instance.cover_image.storage.delete(existing_cover_name)
         tag_objects = self.get_tag_objects()
 
         if commit:

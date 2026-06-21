@@ -5,6 +5,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.media_paths import attachment_upload_to
+
 from .base import TimeStampedModel
 
 
@@ -26,7 +28,7 @@ class Attachment(TimeStampedModel):
     ]
 
     title = models.CharField(max_length=200)
-    file = models.FileField(upload_to="blog/attachments/")
+    file = models.FileField(upload_to=attachment_upload_to)
     original_filename = models.CharField(max_length=255, blank=True)
     mime_type = models.CharField(max_length=120, blank=True)
     file_size = models.PositiveBigIntegerField(default=0)

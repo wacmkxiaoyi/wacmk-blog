@@ -95,7 +95,13 @@ function focusEditorTextarea(panel) {
     window.setTimeout(function () {
         var editorInstance = syncEditorFromTextarea(textarea);
         if (editorInstance && editorInstance.codemirror) {
-            editorInstance.codemirror.focus();
+            window.requestAnimationFrame(function () {
+                editorInstance.codemirror.refresh();
+                window.requestAnimationFrame(function () {
+                    editorInstance.codemirror.refresh();
+                    editorInstance.codemirror.focus();
+                });
+            });
             return;
         }
         textarea.focus();

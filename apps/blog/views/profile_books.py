@@ -82,7 +82,7 @@ def _compute_can_create_book(request):
 
 
 class ProfileBookListView(ProfileBookAccessMixin, TemplateView):
-    template_name = "blog/profile_books.html"
+    template_name = "blog/profile/books.html"
     paginate_by = 15
     default_sort = "updated_at"
     sortable_fields = {
@@ -186,7 +186,7 @@ class ProfileBookListView(ProfileBookAccessMixin, TemplateView):
 
 
 class ProfileBookCreateView(ProfileBookWriteMixin, CreateView):
-    template_name = "blog/profile_book_form.html"
+    template_name = "blog/editor/book_form.html"
     form_class = BookForm
 
     def get_form_kwargs(self):
@@ -218,14 +218,14 @@ class ProfileBookCreateView(ProfileBookWriteMixin, CreateView):
         context.update(self.get_profile_context())
         context["page_title"] = _("Create book")
         context["next_url"] = (self.request.GET.get("next") or "").strip()
-        context["profile_book_mode"] = True
+        context["is_profile_book_view"] = True
         context.update(build_book_share_editor_context(context["form"].instance, self.request))
         return context
 
 
 class ProfileBookUpdateView(ProfileBookWriteMixin, UpdateView):
     enforce_book_limit = False
-    template_name = "blog/profile_book_form.html"
+    template_name = "blog/editor/book_form.html"
     context_object_name = "book"
     form_class = BookForm
 
@@ -264,7 +264,7 @@ class ProfileBookUpdateView(ProfileBookWriteMixin, UpdateView):
         context.update(self.get_profile_context())
         context["page_title"] = self.object.name
         context["next_url"] = (self.request.GET.get("next") or "").strip()
-        context["profile_book_mode"] = True
+        context["is_profile_book_view"] = True
         context["posts"] = self.object.posts.select_related("author", "revision_draft").prefetch_related("tags", "books").order_by("-updated_at")
         selected_ids = {str(post.pk) for post in context["posts"]}
         context["form"].post_options = [option for option in context["form"].post_options if option["value"] in selected_ids]

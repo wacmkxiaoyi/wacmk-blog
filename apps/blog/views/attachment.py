@@ -18,6 +18,7 @@ from apps.blog.services.author_rewards import grant_author_reward_once
 from apps.blog.utils import is_ajax_request, write_audit_log
 from apps.blog.utils.attachments import build_attachment_placeholder, build_attachment_render_context, format_file_size
 from apps.blog.utils.site import check_attachment_upload_permission
+from apps.blog.views.media import check_media_context_permission, get_media_upload_context
 
 
 class AttachmentUploadView(LoginRequiredMixin, View):
@@ -31,6 +32,9 @@ class AttachmentUploadView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        context = get_media_upload_context(request)
+        if not check_media_context_permission(request.user, context):
+            return JsonResponse({"ok": False, "message": str(_("You do not have permission to upload files in this editor."))}, status=403)
         if not check_attachment_upload_permission(request.user):
             return JsonResponse({"ok": False, "message": str(_("You do not have permission to upload attachments."))}, status=403)
         form = AttachmentUploadForm(request.POST, request.FILES, user=request.user)
@@ -102,6 +106,9 @@ class UserAttachmentListView(LoginRequiredMixin, View):
         }
 
     def get(self, request, *args, **kwargs):
+        context = get_media_upload_context(request)
+        if not check_media_context_permission(request.user, context):
+            return JsonResponse({"ok": False, "message": str(_("You do not have permission to view uploaded attachments."))}, status=403)
         if not check_attachment_upload_permission(request.user):
             return JsonResponse({"ok": False, "message": str(_("You do not have permission to view uploaded attachments."))}, status=403)
         query = (request.GET.get("q") or "").strip()

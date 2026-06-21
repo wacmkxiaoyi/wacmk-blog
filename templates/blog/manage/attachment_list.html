@@ -18,7 +18,17 @@
                     <span class="section-kicker">{% trans "Manage" %}</span>
                     <h1>{% trans "Attachments" %}</h1>
                 </div>
+                <button
+                    type="button"
+                    class="primary-button"
+                    data-media-cleanup-start-button
+                    data-media-cleanup-start-url="{% url 'manage-attachment-cleanup-start' %}"
+                    {% if active_cleanup_job %}disabled{% endif %}
+                >{% trans "Clean up" %}</button>
             </div>
+            {% if latest_cleanup_job_payload %}
+            {{ latest_cleanup_job_payload|json_script:"media-cleanup-latest-job" }}
+            {% endif %}
             <form method="get" class="inline-search-form">
                 <input type="search" name="q" value="{{ query }}" class="input-control" placeholder="{% trans 'Search attachments by title, file, or uploader...' %}" aria-label="{% trans 'Search attachments' %}">
                 {% if current_sort %}
@@ -40,7 +50,7 @@
                     </thead>
                     <tbody>
                         {% for attachment in attachments %}
-                        <tr data-attachment-row>
+                        <tr data-attachment-row data-row-action-menu>
                             <td data-attachment-title>{{ attachment.title }}</td>
                             <td data-attachment-access-cell>{% include 'blog/includes/attachment_access_cell.html' with attachment_context=attachment.render_context %}</td>
                             <td>{{ attachment.uploaded_by.first_name|default:attachment.uploaded_by.username }}</td>
@@ -110,6 +120,13 @@
     <span data-attachment-modal-file-required>{% trans "Please choose an attachment file first." %}</span>
     <span data-attachment-modal-success>{% trans "Attachment updated successfully." %}</span>
     <span data-attachment-modal-max-size>{% blocktrans with size=attachment_max_size_mb|default:1 %}Maximum attachment size: {{ size }} MB{% endblocktrans %}</span>
+    <span data-media-cleanup-confirm-title>{% trans "Clean up unused media" %}</span>
+    <span data-media-cleanup-confirm-message>{% trans "This scans the database and media folder in the background, then deletes files that are no longer referenced. Continue?" %}</span>
+    <span data-media-cleanup-confirm-button>{% trans "Start cleanup" %}</span>
+    <span data-media-cleanup-start-success>{% trans "Media cleanup has started in the background." %}</span>
+    <span data-media-cleanup-start-error>{% trans "Unable to start media cleanup right now." %}</span>
+    <span data-media-cleanup-success-title>{% trans "Media cleanup succeeded." %}</span>
+    <span data-media-cleanup-failed-title>{% trans "Media cleanup failed." %}</span>
 </div>
 {% endblock %}
 

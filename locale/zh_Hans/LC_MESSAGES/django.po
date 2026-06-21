@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: wacmk-blog\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 20:27+0800\n"
+"POT-Creation-Date: 2026-06-21 23:43+0800\n"
 "PO-Revision-Date: 2026-05-23 00:00+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,2204 +13,4712 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Insufficient balance."
-msgstr ""
+#: .\apps\blog\access\check.py:75 .\apps\blog\access\check.py:134
+#: .\apps\blog\auth\evaluators\book_only.py:11 .\apps\blog\permissions.py:17
+#: .\templates\blog\editor\post_form.html:122
+#: .\templates\blog\editor\post_form.html:150
+msgid "Book only"
+msgstr "仅图书"
 
+#: .\apps\blog\access\check.py:234 .\apps\blog\forms\manage.py:251
+#: .\apps\blog\forms\manage.py:252 .\apps\users\forms.py:27
+#: .\apps\users\forms.py:84 .\templates\blog\access_gate.html:83
+#: .\templates\blog\includes\attachment_access_gate.html:56
+#: .\templates\blog\profile\overview.html:193
+msgid "Password"
+msgstr "密码"
+
+#: .\apps\blog\access\common.py:165
+msgid "Insufficient balance."
+msgstr "余额不足。"
+
+#: .\apps\blog\access\common.py:167 .\apps\blog\models\attachment.py:154
+msgid "Content purchase"
+msgstr "内容购买"
+
+#: .\apps\blog\access\common.py:169
+msgid "Purchase content: %(title)s"
+msgstr "购买内容：%(title)s"
+
+#: .\apps\blog\auth\evaluators\encrypted.py:11 .\apps\blog\permissions.py:16
+#: .\templates\blog\editor\book_form.html:104
+#: .\templates\blog\editor\book_form.html:130
+#: .\templates\blog\editor\post_form.html:121
+#: .\templates\blog\editor\post_form.html:149
+msgid "Encrypted"
+msgstr "加密"
+
+#: .\apps\blog\auth\evaluators\money.py:16 .\apps\blog\forms\manage.py:86
+#: .\apps\blog\permissions.py:14 .\templates\blog\editor\book_form.html:102
+#: .\templates\blog\editor\book_form.html:128
+#: .\templates\blog\editor\post_form.html:119
+#: .\templates\blog\editor\post_form.html:147
+msgid "Money"
+msgstr "金额"
+
+#: .\apps\blog\auth\evaluators\points.py:12 .\apps\blog\forms\manage.py:92
+#: .\apps\blog\permissions.py:15 .\templates\blog\editor\book_form.html:103
+#: .\templates\blog\editor\book_form.html:129
+#: .\templates\blog\editor\post_form.html:120
+#: .\templates\blog\editor\post_form.html:148
+msgid "Points"
+msgstr "积分"
+
+#: .\apps\blog\forms\attachment.py:14 .\apps\blog\forms\book.py:26
+#: .\apps\blog\forms\post.py:67 .\apps\blog\models\attachment.py:18
+#: .\apps\blog\models\book.py:17 .\apps\blog\models\post.py:27
+#: .\apps\blog\permissions.py:25
 msgid "Public"
 msgstr "公开"
 
+#: .\apps\blog\forms\attachment.py:15 .\apps\blog\forms\book.py:27
+#: .\apps\blog\forms\post.py:68 .\apps\blog\models\attachment.py:19
+#: .\apps\blog\models\book.py:18 .\apps\blog\models\post.py:28
+#: .\apps\blog\permissions.py:26
 msgid "Private"
 msgstr "私密"
 
+#: .\apps\blog\forms\attachment.py:16 .\apps\blog\forms\book.py:28
+#: .\apps\blog\forms\post.py:69 .\apps\blog\models\attachment.py:20
+#: .\apps\blog\models\book.py:19 .\apps\blog\models\post.py:29
 msgid "Conditional"
-msgstr ""
+msgstr "条件"
 
-msgid "Book name"
-msgstr "图书名称"
+#: .\apps\blog\forms\attachment.py:21 .\apps\blog\forms\comment.py:21
+#: .\apps\blog\forms\post.py:28
+#: .\templates\blog\manage\attachment_list.html:110
+msgid "Attachment title"
+msgstr "附件标题"
 
-msgid "Enter book name"
-msgstr "输入图书名称"
+#: .\apps\blog\forms\attachment.py:26
+msgid "Enter attachment title"
+msgstr "输入附件标题"
 
-msgid "Slug"
-msgstr "别名"
-
-msgid "Book slug"
-msgstr "图书别名"
-
-msgid "Summary"
-msgstr "摘要"
-
-msgid "Short summary shown on the books page."
-msgstr "显示在图书列表页的简要摘要。"
-
-msgid "Cover image"
-msgstr "封面图"
-
+#: .\apps\blog\forms\attachment.py:31 .\apps\blog\forms\book.py:67
+#: .\apps\blog\forms\comment.py:35 .\apps\blog\forms\comment.py:41
+#: .\apps\blog\forms\post.py:42 .\apps\blog\forms\post.py:48
+#: .\apps\blog\forms\post.py:138
+#: .\templates\blog\manage\attachment_list.html:45
+#: .\templates\blog\manage\attachment_list.html:114
+#: .\templates\blog\manage\book_list.html:37
+#: .\templates\blog\manage\post_list.html:68
+#: .\templates\blog\profile\attachments.html:37
+#: .\templates\blog\profile\books.html:41
+#: .\templates\blog\profile\posts.html:67
 msgid "Access permission"
 msgstr "访问权限"
 
+#: .\apps\blog\forms\attachment.py:38 .\apps\blog\forms\book.py:74
+#: .\apps\blog\forms\comment.py:42 .\apps\blog\forms\post.py:49
+#: .\apps\blog\forms\post.py:145 .\templates\blog\editor\book_form.html:87
+#: .\templates\blog\editor\post_form.html:104
+#: .\templates\blog\manage\attachment_list.html:115
+msgid "Access scope"
+msgstr "访问范围"
+
+#: .\apps\blog\forms\attachment.py:44 .\apps\blog\forms\book.py:80
+#: .\apps\blog\forms\comment.py:43 .\apps\blog\forms\post.py:50
+#: .\apps\blog\forms\post.py:151 .\templates\blog\editor\book_form.html:111
+#: .\templates\blog\editor\post_form.html:130
+#: .\templates\blog\includes\vip_access_badge.html:3
+#: .\templates\blog\includes\vip_access_badge.html:10
+#: .\templates\blog\manage\attachment_list.html:116
+msgid "VIP access permission"
+msgstr "VIP 访问权限"
+
+#: .\apps\blog\forms\attachment.py:72
+msgid "The uploaded attachment is empty."
+msgstr "上传的附件为空。"
+
+#: .\apps\blog\forms\attachment.py:75
+msgid "The attachment exceeds the maximum size of %(size)s MB."
+msgstr "附件超过最大大小 %(size)s MB。"
+
+#: .\apps\blog\forms\book.py:32
+msgid "Book name"
+msgstr "图书名称"
+
+#: .\apps\blog\forms\book.py:36
+msgid "Enter book name"
+msgstr "输入图书名称"
+
+#: .\apps\blog\forms\book.py:42 .\apps\blog\forms\post.py:83
+msgid "Slug"
+msgstr "别名"
+
+#: .\apps\blog\forms\book.py:46
+msgid "Book slug"
+msgstr "图书别名"
+
+#: .\apps\blog\forms\book.py:52 .\apps\blog\forms\post.py:93
+msgid "Summary"
+msgstr "摘要"
+
+#: .\apps\blog\forms\book.py:57
+msgid "Short summary shown on the books page."
+msgstr "显示在图书列表页的简要摘要。"
+
+#: .\apps\blog\forms\book.py:63 .\apps\blog\forms\post.py:117
+msgid "Cover image"
+msgstr "封面图"
+
+#: .\apps\blog\forms\book.py:87 .\apps\blog\forms\comment.py:95
+#: .\apps\blog\forms\post.py:191 .\apps\blog\views\manage\base.py:86
+#: .\templates\base.html:27 .\templates\base.html:29
+#: .\templates\blog\article_list.html:4 .\templates\blog\article_list.html:15
+#: .\templates\blog\article_list.html:16 .\templates\blog\home.html:100
+#: .\templates\blog\home.html:107 .\templates\blog\home.html:120
+#: .\templates\blog\manage\book_list.html:36
+#: .\templates\blog\manage\post_list.html:19
+#: .\templates\blog\manage\sidebar.html:9
+#: .\templates\blog\profile\books.html:40
 msgid "Articles"
 msgstr "文章"
 
-#, fuzzy
-#| msgid "Invalid book structure data."
-msgid "Invalid condition data."
-msgstr "图书结构数据无效。"
+#: .\apps\blog\forms\book.py:313 .\apps\blog\forms\book.py:317
+msgid "You do not have permission to add \"%(title)s\" to this book."
+msgstr "你没有权限将“%(title)s”添加到这本图书中。"
 
+#: .\apps\blog\forms\book.py:327
 msgid "Invalid book structure data."
 msgstr "图书结构数据无效。"
 
+#: .\apps\blog\forms\book.py:329
 msgid "Book structure must be a list."
 msgstr "图书结构必须是一个列表。"
 
-msgid "At least one complete condition is required."
-msgstr ""
-
-msgid "Password cannot be empty for encrypted books."
-msgstr "加密图书的密码不能为空。"
-
+#: .\apps\blog\forms\book.py:348
 msgid "Selected articles must match the book structure."
 msgstr "所选文章必须与图书结构保持一致。"
 
+#: .\apps\blog\forms\book.py:378
 msgid "Each book structure node must be an object."
 msgstr "每个图书结构节点都必须是一个对象。"
 
+#: .\apps\blog\forms\book.py:383
 msgid "Article nodes must include a post id."
 msgstr "文章节点必须包含文章 ID。"
 
+#: .\apps\blog\forms\book.py:389
 msgid "Group nodes must include a title."
 msgstr "分组节点必须包含标题。"
 
+#: .\apps\blog\forms\book.py:398
 msgid "Unknown book structure node type."
 msgstr "未知的图书结构节点类型。"
 
-msgid "Comment"
-msgstr "评论"
+#: .\apps\blog\forms\comment.py:19 .\apps\blog\forms\comment.py:25
+#: .\apps\blog\forms\post.py:26 .\apps\blog\forms\post.py:32
+msgid "Upload attachment"
+msgstr "上传附件"
 
-msgid "Write a comment"
-msgstr "写下评论"
+#: .\apps\blog\forms\comment.py:20 .\apps\blog\forms\post.py:27
+#: .\apps\blog\models\attachment.py:120 .\apps\blog\models\attachment.py:166
+#: .\apps\blog\models\attachment.py:212
+#: .\templates\blog\manage\attachment_list.html:106
+#: .\templates\blog\manage\site_settings.html:587
+msgid "Attachment"
+msgstr "附件"
 
-msgid "Insert link"
-msgstr "插入链接"
+#: .\apps\blog\forms\comment.py:22 .\apps\blog\forms\post.py:29
+#: .\templates\blog\manage\attachment_list.html:111
+msgid "Select file"
+msgstr "选择文件"
 
-msgid "Markdown"
-msgstr "Markdown"
+#: .\apps\blog\forms\comment.py:23 .\apps\blog\forms\post.py:30
+msgid "Upload a reusable attachment and insert it into the current content."
+msgstr "上传可复用附件并将其插入当前内容。"
 
-msgid "Display name"
-msgstr "显示名称"
+#: .\apps\blog\forms\comment.py:24 .\apps\blog\forms\post.py:31
+msgid "Upload and insert"
+msgstr "上传并插入"
 
-msgid "URL"
-msgstr "URL"
+#: .\apps\blog\forms\comment.py:28 .\apps\blog\forms\comment.py:29
+#: .\apps\blog\forms\comment.py:30 .\apps\blog\forms\post.py:35
+#: .\apps\blog\forms\post.py:36 .\apps\blog\forms\post.py:37
+#: .\apps\blog\views\profile.py:27 .\templates\blog\profile\attachments.html:4
+#: .\templates\blog\profile\attachments.html:21
+msgid "My attachments"
+msgstr "我的附件"
 
-msgid "Enter display text and the target URL."
-msgstr "输入显示名称和目标 URL。"
+#: .\apps\blog\forms\comment.py:31 .\apps\blog\forms\post.py:38
+#: .\templates\blog\manage\attachment_list.html:33
+#: .\templates\blog\profile\attachments.html:25
+msgid "Search attachments"
+msgstr "搜索附件"
 
+#: .\apps\blog\forms\comment.py:32 .\apps\blog\forms\post.py:39
+#: .\templates\blog\manage\attachment_list.html:94
+#: .\templates\blog\profile\attachments.html:83
+msgid "No attachments found."
+msgstr "未找到附件。"
+
+#: .\apps\blog\forms\comment.py:33 .\apps\blog\forms\comment.py:51
+#: .\apps\blog\forms\comment.py:91 .\apps\blog\forms\comment.py:106
+#: .\apps\blog\forms\comment.py:112 .\apps\blog\forms\comment.py:126
+#: .\apps\blog\forms\post.py:40 .\apps\blog\forms\post.py:58
+#: .\apps\blog\forms\post.py:187 .\apps\blog\forms\post.py:202
+#: .\apps\blog\forms\post.py:208 .\apps\blog\forms\post.py:222
 msgid "Insert"
 msgstr "插入"
 
-msgid "Cancel"
-msgstr "取消"
-
-#, fuzzy
-#| msgid "Reference internal article"
-msgid "Reference internal post"
-msgstr "引用内部文章"
-
-#, fuzzy
-#| msgid "Posts"
-msgid "Posts"
-msgstr "文章"
-
-#, fuzzy
-#| msgid "Search posts"
-msgid "Search posts"
-msgstr "搜索文章"
-
-#, fuzzy
-#| msgid "No books found."
-msgid "No posts found."
-msgstr "暂无图书。"
-
-msgid "Select"
-msgstr "选择"
-
-msgid "Selected"
-msgstr "已选择"
-
-#, fuzzy
-#| msgid "Add selected"
-msgid "Insert selected"
-msgstr "添加所选"
-
-#, fuzzy
-#| msgid "Insert table"
-msgid "Insert image"
-msgstr "插入表格"
-
-msgid "Prompt"
-msgstr ""
-
-msgid "Image URL"
-msgstr ""
-
-#, fuzzy
-#| msgid "Enter display text and the target URL."
-msgid "Enter image prompt text and the image URL."
-msgstr "输入显示名称和目标 URL。"
-
-msgid "Upload image"
-msgstr "上传图片"
-
-msgid "Insert table"
-msgstr "插入表格"
-
-msgid "Choose table size"
-msgstr "选择表格尺寸"
-
-#, fuzzy
-#| msgid "Import from .md file"
-msgid "Import from .csv"
-msgstr "从 .md 中导入"
-
-#, fuzzy
-#| msgid "Import from .md file"
-msgid "Import from .tsv"
-msgstr "从 .md 中导入"
-
-msgid "Table import failed"
-msgstr ""
-
-msgid "Please choose a valid CSV or TSV file and try again."
-msgstr ""
-
-msgid "The selected file does not contain any table data."
-msgstr ""
-
-msgid "Right-click a cell to insert or remove rows and columns."
-msgstr "右键单击单元格可插入或删除行列。"
-
-msgid "Use tabs or | to paste cells, one row per line."
-msgstr "可用 Tab 或 | 粘贴单元格内容，每行代表表格中的一行。"
-
-msgid "Insert row above"
-msgstr "在上方插入行"
-
-msgid "Insert row below"
-msgstr "在下方插入行"
-
-msgid "Insert column left"
-msgstr "在左侧插入列"
-
-msgid "Insert column right"
-msgstr "在右侧插入列"
-
-msgid "Remove row"
-msgstr "删除行"
-
-msgid "Remove column"
-msgstr "删除列"
-
-msgid "Comment content cannot be empty."
-msgstr "评论内容不能为空。"
-
-#, fuzzy
-#| msgid "Search posts"
-msgid "Search"
-msgstr "搜索文章"
-
-msgid "Search posts, books, tags, authors..."
-msgstr "搜索文章、图书、标签、作者..."
-
-msgid "Administrator"
-msgstr "管理员"
-
-msgid "Normal user"
-msgstr "普通用户"
-
-msgid "Nickname"
-msgstr "名称"
-
-#, fuzzy
-#| msgid "Personal settings"
-msgid "Personal introduction"
-msgstr "个人设置"
-
-msgid "Email"
-msgstr "邮箱"
-
-#, fuzzy
-#| msgid "New email address"
-msgid "Email address"
-msgstr "新邮箱地址"
-
-msgid "New password"
-msgstr "新密码"
-
-msgid "Leave blank to keep the current password."
-msgstr "留空则保持当前密码不变。"
-
-msgid "Confirm new password"
-msgstr "确认新密码"
-
-msgid "User role"
-msgstr "用户角色"
-
-msgid "Business identity"
-msgstr ""
-
-msgid "Active"
-msgstr "启用"
-
-msgid "Staff"
-msgstr "工作人员"
-
-msgid "Superuser"
-msgstr "超级管理员"
-
-msgid "Groups"
-msgstr "分组"
-
-msgid "Money"
-msgstr ""
-
-msgid "Points"
-msgstr ""
-
-#, python-format
-msgid ""
-"Current business identity %(identity)s is preserved until you manually "
-"choose a new one."
-msgstr ""
-
-#, fuzzy
-#| msgid "This email is already registered."
-msgid "This email is already in use."
-msgstr "该邮箱已被注册。"
-
-msgid "The two passwords do not match."
-msgstr "两次输入的密码不一致。"
-
-msgid "Choose a valid business identity."
-msgstr ""
-
+#: .\apps\blog\forms\comment.py:34 .\apps\blog\forms\post.py:41
+#: .\apps\blog\forms\post.py:73
+#: .\templates\blog\manage\attachment_list.html:44
+#: .\templates\blog\manage\post_list.html:63
+#: .\templates\blog\profile\attachments.html:36
+#: .\templates\blog\profile\posts.html:65
 msgid "Title"
 msgstr "标题"
 
-msgid "Article title"
-msgstr "文章标题"
+#: .\apps\blog\forms\comment.py:36 .\apps\blog\forms\post.py:43
+#: .\apps\blog\views\post\utils\draft.py:108
+#: .\templates\blog\manage\attachment_list.html:47
+#: .\templates\blog\manage\book_list.html:38
+#: .\templates\blog\manage\post_list.html:76
+#: .\templates\blog\profile\attachments.html:38
+#: .\templates\blog\profile\books.html:42
+#: .\templates\blog\profile\posts.html:71
+msgid "Updated"
+msgstr "更新时间"
 
-msgid "Article slug"
-msgstr "文章别名"
+#: .\apps\blog\forms\comment.py:37 .\apps\blog\forms\post.py:44
+#: .\templates\blog\manage\attachment_list.html:48
+#: .\templates\blog\manage\book_list.html:39
+#: .\templates\blog\manage\comment_list.html:37
+#: .\templates\blog\manage\post_list.html:78
+#: .\templates\blog\manage\user_list.html:39
+#: .\templates\blog\profile\attachments.html:39
+#: .\templates\blog\profile\books.html:43
+#: .\templates\blog\profile\comments.html:39
+#: .\templates\blog\profile\posts.html:72
+msgid "Actions"
+msgstr "操作"
 
-msgid "Short summary shown on the homepage."
-msgstr "显示在首页上的简短摘要。"
+#: .\apps\blog\forms\comment.py:38 .\apps\blog\forms\post.py:45
+#: .\templates\blog\manage\attachment_list.html:120
+msgid "Please choose an attachment file first."
+msgstr "请先选择附件文件。"
 
-msgid "Content"
-msgstr "正文"
+#: .\apps\blog\forms\comment.py:39 .\apps\blog\forms\post.py:46
+msgid "Attachment upload failed"
+msgstr "附件上传失败"
 
-msgid "Status"
-msgstr "状态"
+#: .\apps\blog\forms\comment.py:40 .\apps\blog\forms\post.py:47
+msgid "Unable to upload the selected attachment right now."
+msgstr "当前无法上传所选附件。"
 
-msgid "Tags"
-msgstr "标签"
+#: .\apps\blog\forms\comment.py:44 .\apps\blog\forms\post.py:51
+msgid "Maximum attachment size"
+msgstr "附件大小上限"
 
-msgid "Separate tags with commas."
-msgstr "使用逗号分隔多个标签。"
+#: .\apps\blog\forms\comment.py:47 .\apps\blog\forms\comment.py:108
+#: .\apps\blog\forms\post.py:54 .\apps\blog\forms\post.py:204
+msgid "Insert video"
+msgstr "插入视频"
 
-msgid "Example: Django, Diary, Update"
-msgstr "例如：Django、日记、更新"
+#: .\apps\blog\forms\comment.py:48 .\apps\blog\forms\comment.py:87
+#: .\apps\blog\forms\comment.py:102 .\apps\blog\forms\comment.py:109
+#: .\apps\blog\forms\comment.py:118 .\apps\blog\forms\post.py:55
+#: .\apps\blog\forms\post.py:183 .\apps\blog\forms\post.py:198
+#: .\apps\blog\forms\post.py:205 .\apps\blog\forms\post.py:214
+msgid "Markdown"
+msgstr "Markdown 格式"
 
+#: .\apps\blog\forms\comment.py:49 .\apps\blog\forms\comment.py:110
+#: .\apps\blog\forms\post.py:56 .\apps\blog\forms\post.py:206
+msgid "Video URL"
+msgstr "视频 URL"
+
+#: .\apps\blog\forms\comment.py:50 .\apps\blog\forms\comment.py:111
+#: .\apps\blog\forms\post.py:57 .\apps\blog\forms\post.py:207
+msgid "Enter the video URL to insert an embedded player."
+msgstr "输入视频 URL 以插入嵌入式播放器。"
+
+#: .\apps\blog\forms\comment.py:52 .\apps\blog\forms\post.py:59
+msgid "Upload video"
+msgstr "上传视频"
+
+#: .\apps\blog\forms\comment.py:54 .\apps\blog\forms\post.py:61
+msgid "Video upload failed"
+msgstr "视频上传失败"
+
+#: .\apps\blog\forms\comment.py:55 .\apps\blog\forms\post.py:62
+msgid "Unable to upload the selected video right now."
+msgstr "当前无法上传所选视频。"
+
+#: .\apps\blog\forms\comment.py:56 .\apps\blog\forms\post.py:63
+msgid "Maximum video size"
+msgstr "视频大小上限"
+
+#: .\apps\blog\forms\comment.py:57 .\apps\blog\forms\post.py:64
+msgid "Please choose a video file first."
+msgstr "请先选择视频文件。"
+
+#: .\apps\blog\forms\comment.py:61 .\apps\blog\models\attachment.py:167
+#: .\apps\blog\models\attachment.py:213
+#: .\templates\blog\manage\site_settings.html:655
+msgid "Comment"
+msgstr "评论"
+
+#: .\apps\blog\forms\comment.py:70
+msgid "Write a comment"
+msgstr "写下评论"
+
+#: .\apps\blog\forms\comment.py:86 .\apps\blog\forms\post.py:182
+msgid "Insert link"
+msgstr "插入链接"
+
+#: .\apps\blog\forms\comment.py:88 .\apps\blog\forms\manage.py:27
+#: .\apps\blog\forms\post.py:184 .\apps\blog\forms\profile.py:18
+#: .\apps\blog\forms\site.py:511
+msgid "Display name"
+msgstr "显示名称"
+
+#: .\apps\blog\forms\comment.py:89 .\apps\blog\forms\post.py:185
+msgid "URL"
+msgstr "链接地址"
+
+#: .\apps\blog\forms\comment.py:90 .\apps\blog\forms\post.py:186
+msgid "Enter display text and the target URL."
+msgstr "输入显示名称和目标 URL。"
+
+#: .\apps\blog\forms\comment.py:92 .\apps\blog\forms\post.py:188
+#: .\templates\base.html:145 .\templates\blog\access_gate.html:89
+#: .\templates\blog\access_gate.html:100
+#: .\templates\blog\editor\book_form.html:196
+#: .\templates\blog\includes\attachment_access_gate.html:59
+#: .\templates\blog\includes\attachment_access_gate.html:69
+#: .\templates\blog\includes\comment_threads.html:64
+#: .\templates\blog\includes\comment_threads.html:231
+#: .\templates\blog\manage\attachment_list.html:83
+#: .\templates\blog\manage\attachment_list.html:109
+#: .\templates\blog\manage\audit_list.html:28
+#: .\templates\blog\manage\book_list.html:67
+#: .\templates\blog\manage\comment_list.html:58
+#: .\templates\blog\manage\post_list.html:151
+#: .\templates\blog\manage\post_list.html:167
+#: .\templates\blog\manage\post_list.html:181
+#: .\templates\blog\manage\post_list.html:196
+#: .\templates\blog\manage\site_settings.html:716
+#: .\templates\blog\manage\user_form.html:204
+#: .\templates\blog\profile\attachments.html:73
+#: .\templates\blog\profile\books.html:71
+#: .\templates\blog\profile\comments.html:62
+#: .\templates\blog\profile\posts.html:107
+msgid "Cancel"
+msgstr "取消"
+
+#: .\apps\blog\forms\comment.py:93 .\apps\blog\forms\comment.py:94
+#: .\apps\blog\forms\post.py:189 .\apps\blog\forms\post.py:190
 msgid "Reference internal article"
 msgstr "引用内部文章"
 
+#: .\apps\blog\forms\comment.py:96 .\apps\blog\forms\post.py:192
+#: .\apps\blog\views\post\manage.py:321 .\apps\blog\views\profile_posts.py:222
+#: .\templates\blog\editor\book_form.html:197
 msgid "Search articles"
 msgstr "搜索文章"
 
+#: .\apps\blog\forms\comment.py:97 .\apps\blog\forms\post.py:193
+#: .\templates\blog\editor\book_form.html:198
 msgid "No articles found."
 msgstr "暂无文章。"
 
-#, fuzzy
-#| msgid "Password cannot be empty for encrypted books."
-msgid "Password cannot be empty for encrypted articles."
-msgstr "加密文章不可使用空密码。"
+#: .\apps\blog\forms\comment.py:98 .\apps\blog\forms\post.py:194
+#: .\templates\blog\editor\book_form.html:199
+msgid "Select"
+msgstr "选择"
 
+#: .\apps\blog\forms\comment.py:99 .\apps\blog\forms\post.py:195
+#: .\templates\blog\editor\book_form.html:200
+msgid "Selected"
+msgstr "已选择"
+
+#: .\apps\blog\forms\comment.py:100 .\apps\blog\forms\post.py:196
+msgid "Insert selected"
+msgstr "添加所选"
+
+#: .\apps\blog\forms\comment.py:101 .\apps\blog\forms\post.py:197
+msgid "Insert image"
+msgstr "插入表格"
+
+#: .\apps\blog\forms\comment.py:103 .\apps\blog\forms\post.py:199
+msgid "Prompt"
+msgstr "提示词"
+
+#: .\apps\blog\forms\comment.py:104 .\apps\blog\forms\post.py:200
+msgid "Image URL"
+msgstr "图片 URL"
+
+#: .\apps\blog\forms\comment.py:105 .\apps\blog\forms\post.py:201
+msgid "Enter image prompt text and the image URL."
+msgstr "输入显示名称和目标 URL。"
+
+#: .\apps\blog\forms\comment.py:107 .\apps\blog\forms\post.py:203
+msgid "Upload image"
+msgstr "上传图片"
+
+#: .\apps\blog\forms\comment.py:113 .\apps\blog\forms\post.py:209
+#: .\templates\blog\includes\comment_threads.html:328
+#: .\templates\blog\includes\comment_threads.html:330
+#: .\templates\blog\includes\pagination.html:9
+#: .\templates\blog\includes\pagination.html:11
+msgid "Previous"
+msgstr "上一页"
+
+#: .\apps\blog\forms\comment.py:114 .\apps\blog\forms\post.py:210
+#: .\templates\blog\includes\comment_threads.html:333
+#: .\templates\blog\includes\comment_threads.html:335
+#: .\templates\blog\includes\pagination.html:14
+#: .\templates\blog\includes\pagination.html:16
+msgid "Next"
+msgstr "下一页"
+
+#: .\apps\blog\forms\comment.py:115 .\apps\blog\forms\post.py:211
+msgid "Page"
+msgstr "页码"
+
+#: .\apps\blog\forms\comment.py:116 .\apps\blog\forms\post.py:212
+msgid "Insert table"
+msgstr "插入表格"
+
+#: .\apps\blog\forms\comment.py:117 .\apps\blog\forms\post.py:213
+msgid "Choose table size"
+msgstr "选择表格尺寸"
+
+#: .\apps\blog\forms\comment.py:119 .\apps\blog\forms\post.py:215
+msgid "Import from .csv"
+msgstr "从 .md 中导入"
+
+#: .\apps\blog\forms\comment.py:120 .\apps\blog\forms\post.py:216
+msgid "Import from .tsv"
+msgstr "从 .md 中导入"
+
+#: .\apps\blog\forms\comment.py:121 .\apps\blog\forms\post.py:217
+msgid "Table import failed"
+msgstr "表格导入失败"
+
+#: .\apps\blog\forms\comment.py:122 .\apps\blog\forms\post.py:218
+msgid "Please choose a valid CSV or TSV file and try again."
+msgstr "请选择有效的 CSV 或 TSV 文件后重试。"
+
+#: .\apps\blog\forms\comment.py:123 .\apps\blog\forms\post.py:219
+msgid "The selected file does not contain any table data."
+msgstr "所选文件不包含任何表格数据。"
+
+#: .\apps\blog\forms\comment.py:124 .\apps\blog\forms\post.py:220
+msgid "Right-click a cell to insert or remove rows and columns."
+msgstr "右键单击单元格可插入或删除行列。"
+
+#: .\apps\blog\forms\comment.py:125 .\apps\blog\forms\post.py:221
+msgid "Use tabs or | to paste cells, one row per line."
+msgstr "可用 Tab 或 | 粘贴单元格内容，每行代表表格中的一行。"
+
+#: .\apps\blog\forms\comment.py:127 .\apps\blog\forms\post.py:223
+msgid "Insert row above"
+msgstr "在上方插入行"
+
+#: .\apps\blog\forms\comment.py:128 .\apps\blog\forms\post.py:224
+msgid "Insert row below"
+msgstr "在下方插入行"
+
+#: .\apps\blog\forms\comment.py:129 .\apps\blog\forms\post.py:225
+msgid "Insert column left"
+msgstr "在左侧插入列"
+
+#: .\apps\blog\forms\comment.py:130 .\apps\blog\forms\post.py:226
+msgid "Insert column right"
+msgstr "在右侧插入列"
+
+#: .\apps\blog\forms\comment.py:131 .\apps\blog\forms\post.py:227
+msgid "Remove row"
+msgstr "删除行"
+
+#: .\apps\blog\forms\comment.py:132 .\apps\blog\forms\post.py:228
+msgid "Remove column"
+msgstr "删除列"
+
+#: .\apps\blog\forms\comment.py:153 .\apps\blog\views\manage\comments.py:57
+#: .\apps\blog\views\profile_comments.py:133
+msgid "Comment content cannot be empty."
+msgstr "评论内容不能为空。"
+
+#: .\apps\blog\forms\common.py:13 .\templates\base.html:48
+#: .\templates\base.html:57 .\templates\blog\editor\post_import_manage.html:26
+#: .\templates\blog\editor\post_import_profile.html:27
+#: .\templates\blog\manage\attachment_list.html:38
+#: .\templates\blog\manage\audit_list.html:40
+#: .\templates\blog\manage\book_list.html:29
+#: .\templates\blog\manage\comment_list.html:28
+#: .\templates\blog\manage\post_list.html:57
+#: .\templates\blog\manage\user_list.html:29
+#: .\templates\blog\profile\attachments.html:30
+#: .\templates\blog\profile\books.html:33
+#: .\templates\blog\profile\comments.html:30
+#: .\templates\blog\profile\posts.html:59 .\templates\blog\search.html:4
+#: .\templates\blog\search.html:15
+msgid "Search"
+msgstr "搜索文章"
+
+#: .\apps\blog\forms\common.py:17
+msgid "Search posts, books, tags, authors..."
+msgstr "搜索文章、图书、标签、作者..."
+
+#: .\apps\blog\forms\manage.py:19
+#: .\templates\blog\includes\comment_threads.html:13
+#: .\templates\blog\includes\comment_threads.html:22
+#: .\templates\blog\includes\comment_threads.html:180
+#: .\templates\blog\includes\comment_threads.html:189
+#: .\templates\blog\includes\namecard_comments.html:11
+#: .\templates\blog\includes\namecard_comments.html:19
+#: .\templates\blog\namecard.html:48
+msgid "Administrator"
+msgstr "管理员"
+
+#: .\apps\blog\forms\manage.py:20 .\apps\blog\tests\test_vip_management.py:348
+#: .\apps\blog\tests\test_vip_management.py:717 .\apps\blog\utils\site.py:1590
+#: .\apps\blog\utils\site.py:1622 .\apps\blog\views\profile.py:51
+#: .\templates\base.html:88
+msgid "Normal user"
+msgstr "普通用户"
+
+#: .\apps\blog\forms\manage.py:25 .\apps\blog\forms\manage.py:242
+#: .\apps\blog\forms\profile.py:16
+msgid "Nickname"
+msgstr "名称"
+
+#: .\apps\blog\forms\manage.py:31
+msgid "Personal introduction"
+msgstr "个人设置"
+
+#: .\apps\blog\forms\manage.py:37 .\apps\blog\forms\profile.py:50
+#: .\templates\blog\namecard.html:68
+msgid "Gender"
+msgstr "性别"
+
+#: .\apps\blog\forms\manage.py:43 .\apps\blog\forms\profile.py:56
+#: .\templates\blog\namecard.html:76
+msgid "Age"
+msgstr "年龄"
+
+#: .\apps\blog\forms\manage.py:49 .\apps\blog\forms\manage.py:247
+#: .\apps\blog\forms\profile.py:21 .\apps\users\forms.py:62
+#: .\templates\blog\manage\user_list.html:36
+msgid "Email"
+msgstr "邮箱"
+
+#: .\apps\blog\forms\manage.py:50 .\apps\blog\forms\manage.py:248
+#: .\apps\blog\forms\profile.py:22 .\templates\blog\profile\overview.html:150
+msgid "Email address"
+msgstr "新邮箱地址"
+
+#: .\apps\blog\forms\manage.py:54 .\templates\emails\password_changed.html:25
+#: .\templates\emails\password_changed.txt:7
+msgid "New password"
+msgstr "新密码"
+
+#: .\apps\blog\forms\manage.py:55
+msgid "Leave blank to keep the current password."
+msgstr "留空则保持当前密码不变。"
+
+#: .\apps\blog\forms\manage.py:60
+msgid "Confirm new password"
+msgstr "确认新密码"
+
+#: .\apps\blog\forms\manage.py:64
+msgid "User role"
+msgstr "用户角色"
+
+#: .\apps\blog\forms\manage.py:69
+msgid "Business identity"
+msgstr "商业身份"
+
+#: .\apps\blog\forms\manage.py:74 .\templates\blog\manage\user_list.html:53
+msgid "Active"
+msgstr "启用"
+
+#: .\apps\blog\forms\manage.py:75 .\templates\blog\manage\user_list.html:49
+msgid "Staff"
+msgstr "工作人员"
+
+#: .\apps\blog\forms\manage.py:76 .\templates\blog\manage\user_list.html:48
+msgid "Superuser"
+msgstr "超级管理员"
+
+#: .\apps\blog\forms\manage.py:79
+msgid "Groups"
+msgstr "分组"
+
+#: .\apps\blog\forms\manage.py:97 .\apps\blog\forms\profile.py:63
+msgid "GitHub"
+msgstr "GitHub 账号"
+
+#: .\apps\blog\forms\manage.py:102 .\apps\blog\forms\profile.py:68
+#: .\templates\blog\manage\site_settings.html:20
+#: .\templates\blog\namecard.html:104
+msgid "Website"
+msgstr "网站"
+
+#: .\apps\blog\forms\manage.py:107 .\apps\blog\forms\profile.py:73
+msgid "Twitter"
+msgstr "Twitter 账号"
+
+#: .\apps\blog\forms\manage.py:112 .\apps\blog\forms\profile.py:78
+msgid "QQ"
+msgstr "QQ 账号"
+
+#: .\apps\blog\forms\manage.py:114 .\apps\blog\forms\profile.py:80
+msgid "QQ number"
+msgstr "QQ 号"
+
+#: .\apps\blog\forms\manage.py:140
+msgid ""
+"Current business identity %(identity)s is preserved until you manually "
+"choose a new one."
+msgstr "当前商业身份 %(identity)s 将被保留，直到你手动选择新的身份。"
+
+#: .\apps\blog\forms\manage.py:182 .\apps\blog\forms\manage.py:268
+#: .\apps\blog\forms\profile.py:118
+msgid "This email is already in use."
+msgstr "该邮箱已被注册。"
+
+#: .\apps\blog\forms\manage.py:199 .\apps\blog\forms\manage.py:276
+#: .\apps\users\forms.py:133
+msgid "The two passwords do not match."
+msgstr "两次输入的密码不一致。"
+
+#: .\apps\blog\forms\manage.py:204
+msgid "Choose a valid business identity."
+msgstr "请选择有效的商业身份。"
+
+#: .\apps\blog\forms\manage.py:236 .\apps\blog\forms\manage.py:238
+#: .\apps\users\forms.py:51 .\templates\blog\profile\overview.html:70
+msgid "Username"
+msgstr "用户名"
+
+#: .\apps\blog\forms\manage.py:244
+msgid "Display name (optional)"
+msgstr "显示名称（可选）"
+
+#: .\apps\blog\forms\manage.py:255 .\apps\blog\forms\manage.py:256
+#: .\apps\users\forms.py:95
+msgid "Confirm password"
+msgstr "确认密码"
+
+#: .\apps\blog\forms\manage.py:262 .\apps\users\forms.py:109
+msgid "This username is already taken."
+msgstr "该用户名已被占用。"
+
+#: .\apps\blog\forms\mixins.py:61
+msgid "Invalid condition data."
+msgstr "图书结构数据无效。"
+
+#: .\apps\blog\forms\mixins.py:94
+msgid "At least one complete condition is required."
+msgstr "至少需要一个完整的条件。"
+
+#: .\apps\blog\forms\mixins.py:100
+msgid "VIP conditions require Standalone access scope."
+msgstr "VIP 条件要求使用独立访问范围。"
+
+#: .\apps\blog\forms\mixins.py:102
+msgid "At least one complete VIP condition is required."
+msgstr "至少需要一个完整的 VIP 条件。"
+
+#: .\apps\blog\forms\mixins.py:113
+msgid "Password cannot be empty for VIP-encrypted content."
+msgstr "VIP 加密内容的密码不能为空。"
+
+#: .\apps\blog\forms\mixins.py:123
+msgid "Password cannot be empty for encrypted content."
+msgstr "加密内容的密码不能为空。"
+
+#: .\apps\blog\forms\post.py:77
+msgid "Article title"
+msgstr "文章标题"
+
+#: .\apps\blog\forms\post.py:87
+msgid "Article slug"
+msgstr "文章别名"
+
+#: .\apps\blog\forms\post.py:98
+msgid "Short summary shown on the homepage."
+msgstr "显示在首页上的简短摘要。"
+
+#: .\apps\blog\forms\post.py:103 .\templates\blog\manage\comment_list.html:35
+#: .\templates\blog\profile\comments.html:37
+msgid "Content"
+msgstr "正文"
+
+#: .\apps\blog\forms\post.py:121
+msgid "Status"
+msgstr "状态"
+
+#: .\apps\blog\forms\post.py:128
+msgid "Allow reprint"
+msgstr "允许转载"
+
+#: .\apps\blog\forms\post.py:134
+msgid "Allow quote"
+msgstr "允许引用"
+
+#: .\apps\blog\forms\post.py:158 .\templates\base.html:35
+#: .\templates\base.html:37 .\templates\blog\home.html:60
+#: .\templates\blog\tags.html:4 .\templates\blog\tags.html:15
+msgid "Tags"
+msgstr "标签"
+
+#: .\apps\blog\forms\post.py:159
+msgid "Separate tags with commas."
+msgstr "使用逗号分隔多个标签。"
+
+#: .\apps\blog\forms\post.py:163
+msgid "Example: Django, Diary, Update"
+msgstr "例如：Django、日记、更新"
+
+#: .\apps\blog\forms\post.py:322
 msgid "A published article already uses this slug."
 msgstr "已有已发布文章使用了这个别名。"
 
+#: .\apps\blog\forms\post.py:328
 msgid "Markdown file"
 msgstr "Markdown 文件"
 
+#: .\apps\blog\forms\post.py:330
 msgid ""
 "Supports .md files with optional front matter fields: title, summary, tags, "
 "and slug."
-msgstr ""
-"支持 .md 文件，可选解析 front matter 中的 title、summary、tags 和 slug。"
+msgstr "支持 .md 文件，可选解析 front matter 中的 title、summary、tags 和 slug。"
 
+#: .\apps\blog\forms\profile.py:26
 msgid "Description"
 msgstr "个人简介"
 
+#: .\apps\blog\forms\profile.py:31
 msgid "Write a brief introduction about yourself"
 msgstr "写一段简短的自我介绍"
 
+#: .\apps\blog\forms\profile.py:37 .\apps\users\forms.py:72
 msgid "Verification code"
 msgstr "验证码"
 
+#: .\apps\blog\forms\profile.py:42 .\apps\users\forms.py:77
 msgid "Enter verification code"
 msgstr "请输入验证码"
 
+#: .\apps\blog\forms\profile.py:59
+msgid "Your age"
+msgstr "你的年龄"
+
+#: .\apps\blog\forms\profile.py:84
+msgid "Show email on my namecard"
+msgstr "在我的名片上显示邮箱"
+
+#: .\apps\blog\forms\profile.py:124 .\apps\users\forms.py:121
 msgid "Enter a valid 6-digit verification code."
 msgstr "请输入有效的 6 位验证码。"
 
+#: .\apps\blog\forms\profile.py:136
 msgid "Verification code is required when changing email."
 msgstr "修改邮箱时必须填写验证码。"
 
+#: .\apps\blog\forms\profile.py:148 .\apps\users\forms.py:152
 msgid "The verification code is invalid or expired."
 msgstr "验证码无效或已过期。"
 
+#: .\apps\blog\forms\site.py:46
+msgid "Enable registration"
+msgstr "启用注册"
+
+#: .\apps\blog\forms\site.py:47
+msgid "When enabled, users can register new accounts via email verification."
+msgstr "启用后，用户可以通过邮箱验证注册新账号。"
+
+#: .\apps\blog\forms\site.py:53
+msgid "Verification code expiry (seconds)"
+msgstr "验证码有效期（秒）"
+
+#: .\apps\blog\forms\site.py:54
+msgid ""
+"How long before a verification code sent via email becomes invalid. Enter a "
+"value between 60 and 3600 seconds."
+msgstr "通过邮件发送的验证码在多久后失效。请输入 60 到 3600 秒之间的值。"
+
+#: .\apps\blog\forms\site.py:60
+msgid "Resend cooldown (seconds)"
+msgstr "重发冷却时间（秒）"
+
+#: .\apps\blog\forms\site.py:61
+msgid ""
+"How long a user must wait before requesting another verification code. Enter"
+" a value between 10 and 600 seconds."
+msgstr "用户在再次请求验证码前需要等待多久。请输入 10 到 600 秒之间的值。"
+
+#: .\apps\blog\forms\site.py:66
 msgid "Website title"
 msgstr "网站标题"
 
+#: .\apps\blog\forms\site.py:70
 msgid "Leave blank to use the default site title"
 msgstr "留空则使用默认网站标题"
 
+#: .\apps\blog\forms\site.py:73
 msgid "Shown in the browser tab and site header context where applicable."
 msgstr "用于浏览器标签页标题，并在适用的站点头部场景中显示。"
 
+#: .\apps\blog\forms\site.py:77
 msgid "Website icon"
 msgstr "网站图标"
 
+#: .\apps\blog\forms\site.py:79
 msgid ""
 "Used as the browser tab icon. Leave empty to keep the current icon or use "
 "the default."
 msgstr "用作浏览器标签页图标。留空则保留当前图标或使用默认图标。"
 
+#: .\apps\blog\forms\site.py:83
 msgid "Login page background"
 msgstr "登录页背景"
 
+#: .\apps\blog\forms\site.py:85
 msgid "Used on login, register, and other unauthenticated auth pages."
 msgstr "用于登录、注册及其他未登录认证页面。"
 
+#: .\apps\blog\forms\site.py:89
 msgid "Authenticated page background"
 msgstr "登录后页面背景"
 
+#: .\apps\blog\forms\site.py:91
 msgid "Used after sign-in across the main site and management pages."
 msgstr "用于登录后的主站页面和管理页面。"
 
+#: .\apps\blog\forms\site.py:95
+msgid "Enable Live2D assistant"
+msgstr "启用 Live2D 助手"
+
+#: .\apps\blog\forms\site.py:96
+msgid "Show a Live2D assistant on supported desktop pages."
+msgstr "在支持的桌面页面显示 Live2D 助手。"
+
+#: .\apps\blog\forms\site.py:100
+msgid "Assistant source"
+msgstr "助手来源"
+
+#: .\apps\blog\forms\site.py:101
+msgid ""
+"Choose whether the assistant resources come from a CDN, a Live2D widget "
+"bundle, or a standard Cubism runtime bundle."
+msgstr ""
+"选择助手资源来自 CDN、Live2D widget 资源包，还是标准 Cubism runtime "
+"资源包。"
+
+#: .\apps\blog\forms\site.py:103
+msgid "CDN"
+msgstr "CDN 模式"
+
+#: .\apps\blog\forms\site.py:104 .\apps\blog\forms\site.py:152
+#: .\templates\blog\manage\site_settings.html:153
+msgid "Live2D widget bundle"
+msgstr "Live2D widget 资源包"
+
+#: .\apps\blog\forms\site.py:105 .\apps\blog\forms\site.py:158
+#: .\templates\blog\manage\site_settings.html:183
+msgid "Cubism runtime bundle"
+msgstr "Cubism runtime 资源包"
+
+#: .\apps\blog\forms\site.py:111
+msgid "Assistant model id"
+msgstr "助手模型 ID"
+
+#: .\apps\blog\forms\site.py:112
+msgid ""
+"Used when random assistant model is disabled. For CDN mode, this is the "
+"zero-based index in model_list.json. Bundle sources expose the available ids"
+" below."
+msgstr ""
+"在禁用随机助手模型时使用。对于 CDN 模式，这是 model_list.json 中从 0 开始的索引。资源包来源会在下方显示可用的 id。"
+
+#: .\apps\blog\forms\site.py:118
+msgid "Random assistant model"
+msgstr "随机助手模型"
+
+#: .\apps\blog\forms\site.py:119
+msgid "When enabled, the current assistant source picks a model at random."
+msgstr "启用后，当前助手来源将随机选择一个模型。"
+
+#: .\apps\blog\forms\site.py:122
+msgid "Show on homepage"
+msgstr "在首页显示"
+
+#: .\apps\blog\forms\site.py:123
+msgid "Show on article lists"
+msgstr "在文章列表页显示"
+
+#: .\apps\blog\forms\site.py:124
+msgid "Show on article detail pages"
+msgstr "在文章详情页显示"
+
+#: .\apps\blog\forms\site.py:125
+msgid "Show on book lists"
+msgstr "在图书列表页显示"
+
+#: .\apps\blog\forms\site.py:126
+msgid "Show on book detail pages"
+msgstr "在图书详情页显示"
+
+#: .\apps\blog\forms\site.py:127
+msgid "Show on tag pages"
+msgstr "在标签页显示"
+
+#: .\apps\blog\forms\site.py:128
+msgid "Show on search pages"
+msgstr "在搜索页显示"
+
+#: .\apps\blog\forms\site.py:129
+msgid "Show on profile pages"
+msgstr "在个人资料页显示"
+
+#: .\apps\blog\forms\site.py:130
+msgid "Show on public share pages"
+msgstr "在公开分享页显示"
+
+#: .\apps\blog\forms\site.py:131
+msgid "Show on management pages"
+msgstr "在管理页显示"
+
+#: .\apps\blog\forms\site.py:134
+msgid "CDN autoload URL"
+msgstr "CDN 自动加载 URL"
+
+#: .\apps\blog\forms\site.py:135
+msgid "Leave blank to use the default supported autoload script URL."
+msgstr "留空则使用默认支持的自动加载脚本 URL。"
+
+#: .\apps\blog\forms\site.py:140
+msgid "CDN tips JSON URL (optional)"
+msgstr "CDN 提示 JSON URL（可选）"
+
+#: .\apps\blog\forms\site.py:141
+msgid "Optional override for the tips JSON file loaded by the assistant."
+msgstr "可选覆盖助手加载的提示 JSON 文件。"
+
+#: .\apps\blog\forms\site.py:146
+msgid "CDN model assets base URL"
+msgstr "CDN 模型资源基础 URL"
+
+#: .\apps\blog\forms\site.py:147
+msgid "Optional override for the remote model assets base URL."
+msgstr "可选覆盖远程模型资源基础 URL。"
+
+#: .\apps\blog\forms\site.py:153
+msgid ""
+"Upload a zip bundle that includes manifest.json and the required Live2D "
+"resource files."
+msgstr "上传包含 manifest.json 和所需 Live2D 资源文件的 zip 资源包。"
+
+#: .\apps\blog\forms\site.py:159
+msgid ""
+"Upload a standard Cubism runtime zip bundle. It may include manifest.json, "
+".model3.json, .moc3, textures, .motion3.json, .exp3.json, .physics3.json, "
+"and related runtime files referenced by model3.json."
+msgstr ""
+"上传标准的 Cubism runtime zip 资源包。它可以包含 manifest.json、"
+".model3.json、.moc3、textures、.motion3.json、.exp3.json、"
+".physics3.json，以及 model3.json 引用的相关运行时文件。"
+
+#: .\apps\blog\forms\site.py:164
+msgid "Enable assistant tips"
+msgstr "启用助手提示"
+
+#: .\apps\blog\forms\site.py:165
+msgid "Allow the assistant to show welcome, idle, and hover tips."
+msgstr "允许助手显示欢迎、待机和悬停提示。"
+
+#: .\apps\blog\forms\site.py:169
+msgid "Tip source mode"
+msgstr "提示来源模式"
+
+#: .\apps\blog\forms\site.py:170
+msgid ""
+"Built-in uses the default tips, custom uses only your own tips, and hybrid "
+"merges both."
+msgstr "内置表示使用默认提示，自定义表示仅使用你自己的提示，混合表示合并两者。"
+
+#: .\apps\blog\forms\site.py:172
+msgid "Built-in only"
+msgstr "仅内置"
+
+#: .\apps\blog\forms\site.py:173
+msgid "Custom only"
+msgstr "仅自定义"
+
+#: .\apps\blog\forms\site.py:174
+msgid "Hybrid"
+msgstr "混合"
+
+#: .\apps\blog\forms\site.py:178
+msgid "Welcome tips"
+msgstr "欢迎提示"
+
+#: .\apps\blog\forms\site.py:178
+msgid "Enter one welcome message per line."
+msgstr "每行输入一条欢迎消息。"
+
+#: .\apps\blog\forms\site.py:179
+msgid "Idle tips"
+msgstr "待机提示"
+
+#: .\apps\blog\forms\site.py:179
+msgid "Enter one idle message per line."
+msgstr "每行输入一条待机消息。"
+
+#: .\apps\blog\forms\site.py:180
+msgid "Touch tips"
+msgstr "触碰提示"
+
+#: .\apps\blog\forms\site.py:180
+msgid "Enter one touch response per line."
+msgstr "每行输入一条触碰回应。"
+
+#: .\apps\blog\forms\site.py:181
+msgid "Homepage tips"
+msgstr "首页提示"
+
+#: .\apps\blog\forms\site.py:181
+msgid "Enter one homepage-specific message per line."
+msgstr "每行输入一条首页专属消息。"
+
+#: .\apps\blog\forms\site.py:182
+msgid "Article page tips"
+msgstr "文章页提示"
+
+#: .\apps\blog\forms\site.py:182
+msgid "Enter one article-detail message per line."
+msgstr "每行输入一条文章详情页消息。"
+
+#: .\apps\blog\forms\site.py:183
+msgid "Book page tips"
+msgstr "图书页提示"
+
+#: .\apps\blog\forms\site.py:183
+msgid "Enter one book-detail message per line."
+msgstr "每行输入一条图书详情页消息。"
+
+#: .\apps\blog\forms\site.py:184
+msgid "Profile page tips"
+msgstr "个人资料页提示"
+
+#: .\apps\blog\forms\site.py:184
+msgid "Enter one profile-specific message per line."
+msgstr "每行输入一条个人资料页专属消息。"
+
+#: .\apps\blog\forms\site.py:187
+msgid "Advanced hover rules (JSON)"
+msgstr "高级悬停规则（JSON）"
+
+#: .\apps\blog\forms\site.py:188
+msgid ""
+"Enter a JSON array of rule objects. Each rule supports selector, texts, and "
+"optional pageGroups."
+msgstr "输入规则对象组成的 JSON 数组。每条规则支持 selector、texts 以及可选的 pageGroups。"
+
+#: .\apps\blog\forms\site.py:193
 msgid "Enable draft autosave"
 msgstr "启用草稿自动保存"
 
+#: .\apps\blog\forms\site.py:194
 msgid "Automatically save article drafts in this browser while editing."
 msgstr "在编辑文章时，自动在当前浏览器中保存本地恢复草稿。"
 
+#: .\apps\blog\forms\site.py:200
 msgid "Draft autosave interval (minutes)"
 msgstr "草稿自动保存间隔（分钟）"
 
+#: .\apps\blog\forms\site.py:201
 msgid ""
 "How often the editor should save a local recovery draft. Enter a value "
 "between 1 and 60 minutes."
 msgstr "设置编辑器保存本地恢复草稿的频率。请输入 1 到 60 分钟之间的数值。"
 
+#: .\apps\blog\forms\site.py:206
 msgid "Enable scheduled audit log cleanup"
-msgstr ""
+msgstr "启用定时清理审计日志"
 
+#: .\apps\blog\forms\site.py:207
 msgid "Allow the system task to automatically delete expired audit logs."
-msgstr ""
+msgstr "允许系统任务自动删除过期的审计日志。"
 
+#: .\apps\blog\forms\site.py:213
 msgid "Audit log retention (days)"
-msgstr ""
+msgstr "审计日志保留天数"
 
+#: .\apps\blog\forms\site.py:214
 msgid ""
 "Audit logs older than this number of days will be removed when the cleanup "
 "task runs."
-msgstr ""
+msgstr "清理任务运行时，将删除早于该天数的审计日志。"
 
+#: .\apps\blog\forms\site.py:220
 msgid "Maximum VIP level"
-msgstr ""
+msgstr "VIP 最高等级"
 
-#, python-format
+#: .\apps\blog\forms\site.py:221
 msgid "Set to 0 to disable VIP support. Choose up to %(max_level)s levels."
-msgstr ""
+msgstr "设为 0 可禁用 VIP 功能。最多可设置 %(max_level)s 个等级。"
 
+#: .\apps\blog\forms\site.py:233
 msgid "Homepage visit trend range"
-msgstr ""
+msgstr "首页访问趋势范围"
 
+#: .\apps\blog\forms\site.py:234
 msgid "Choose how many recent days to show in the homepage visit chart."
-msgstr ""
+msgstr "选择首页访问图表展示最近多少天的数据。"
 
-#, fuzzy
-#| msgid "Books used to organize related articles."
+#: .\apps\blog\forms\site.py:241
 msgid "Allow users to create articles"
 msgstr "用于整理相关文章的图书数量。"
 
+#: .\apps\blog\forms\site.py:242
 msgid ""
 "When enabled, non-admin users can create draft articles from their profile. "
 "When disabled, article creation is hidden for everyone."
+msgstr "启用后，非管理员用户可以在个人资料页创建文章草稿。禁用后，所有人都不会看到文章创建入口。"
+
+#: .\apps\blog\forms\site.py:248
+msgid "Maximum articles for non-admin users"
+msgstr "非管理员用户文章上限"
+
+#: .\apps\blog\forms\site.py:249
+msgid ""
+"Maximum number of articles (including drafts) that non-admin users can "
+"create. Set to 0 for no limit."
 msgstr ""
+"非管理员用户可创建的文章总数上限（包括草稿）。设为 0 表示不限制。"
 
-#, python-format
-msgid "VIP %(level)s display name"
-msgstr ""
+#: .\apps\blog\forms\site.py:254
+msgid "Only VIP posting"
+msgstr "仅 VIP 可发文"
 
-#, fuzzy
-#| msgid "Leave blank to use the default site title"
-msgid "Leave blank to use the default name."
-msgstr "留空则使用默认网站标题"
+#: .\apps\blog\forms\site.py:255
+msgid "When enabled, only VIP users can create articles."
+msgstr "启用后，仅 VIP 用户可以创建文章。"
 
-#, fuzzy
-#| msgid "Posts"
+#: .\apps\blog\forms\site.py:260
+msgid "Allow users to create books"
+msgstr "允许用户创建图书"
+
+#: .\apps\blog\forms\site.py:261
+msgid ""
+"When enabled, non-admin users can create books from their profile. When "
+"disabled, book creation is hidden for everyone."
+msgstr "启用后，非管理员用户可以在个人资料页创建图书。禁用后，所有人都不会看到图书创建入口。"
+
+#: .\apps\blog\forms\site.py:267
+msgid "Maximum books for non-admin users"
+msgstr "非管理员用户图书上限"
+
+#: .\apps\blog\forms\site.py:268
+msgid ""
+"Maximum number of books that non-admin users can create. Set to 0 for no "
+"limit."
+msgstr "非管理员用户可创建的图书总数上限。设为 0 表示不限制。"
+
+#: .\apps\blog\forms\site.py:273
+msgid "Only VIP create"
+msgstr "仅 VIP 可创建"
+
+#: .\apps\blog\forms\site.py:274
+msgid "When enabled, only VIP users can create books."
+msgstr "启用后，仅 VIP 用户可以创建图书。"
+
+#: .\apps\blog\forms\site.py:280
+msgid "Maximum attachment size (MB)"
+msgstr "附件大小上限（MB）"
+
+#: .\apps\blog\forms\site.py:281
+msgid ""
+"Maximum allowed size for a single uploaded attachment. Default is 1 MB."
+msgstr "单个上传附件允许的最大大小。默认值为 1 MB。"
+
+#: .\apps\blog\forms\site.py:287
+msgid "Maximum video size (MB)"
+msgstr "视频大小上限（MB）"
+
+#: .\apps\blog\forms\site.py:288
+msgid "Maximum allowed size for a single uploaded video. Default is 100 MB."
+msgstr "单个上传视频允许的最大大小。默认值为 100 MB。"
+
+#: .\apps\blog\forms\site.py:293
+msgid "Allow users to upload attachments"
+msgstr "允许用户上传附件"
+
+#: .\apps\blog\forms\site.py:294
+msgid ""
+"When enabled, non-admin users can upload and reuse attachments from article "
+"and comment editors."
+msgstr "启用后，非管理员用户可以在文章和评论编辑器中上传并复用附件。"
+
+#: .\apps\blog\forms\site.py:299 .\apps\blog\forms\site.py:311
+msgid "Only VIP upload"
+msgstr "仅 VIP 可上传"
+
+#: .\apps\blog\forms\site.py:300
+msgid ""
+"When enabled, only VIP users can upload and insert attachments. Admins are "
+"unaffected."
+msgstr "启用后，仅 VIP 用户可以上传并插入附件。管理员不受影响。"
+
+#: .\apps\blog\forms\site.py:305
+msgid "Allow users to upload video"
+msgstr "允许用户上传视频"
+
+#: .\apps\blog\forms\site.py:306
+msgid ""
+"When enabled, non-admin users can upload and insert videos from article and "
+"comment editors."
+msgstr "启用后，非管理员用户可以在文章和评论编辑器中上传并插入视频。"
+
+#: .\apps\blog\forms\site.py:312
+msgid ""
+"When enabled, only VIP users can upload and insert videos. Admins are "
+"unaffected."
+msgstr "启用后，仅 VIP 用户可以上传并插入视频。管理员不受影响。"
+
+#: .\apps\blog\forms\site.py:317
+msgid "Allow users to comment"
+msgstr "允许用户评论"
+
+#: .\apps\blog\forms\site.py:318
+msgid ""
+"When disabled, users cannot post, reply, or edit comments on articles and "
+"books. Admins are unaffected."
+msgstr "禁用后，用户无法在文章和图书下发表评论、回复或编辑评论。管理员不受影响。"
+
+#: .\apps\blog\forms\site.py:323
+msgid "Only VIP commenting"
+msgstr "仅 VIP 可评论"
+
+#: .\apps\blog\forms\site.py:324
+msgid ""
+"When enabled, only VIP users can post, reply, and edit comments. Admins are "
+"unaffected."
+msgstr "启用后，仅 VIP 用户可以发表评论、回复和编辑评论。管理员不受影响。"
+
+#: .\apps\blog\forms\site.py:331
+msgid "First comment reward money"
+msgstr "首条评论奖励金额"
+
+#: .\apps\blog\forms\site.py:332
+msgid ""
+"When a user posts their first comment on an article, reward this amount of "
+"money. Set to 0 to disable."
+msgstr "当用户在文章下发表首条评论时，奖励这笔金额。设为 0 表示禁用。"
+
+#: .\apps\blog\forms\site.py:339
+msgid "First comment reward points"
+msgstr "首条评论奖励积分"
+
+#: .\apps\blog\forms\site.py:340
+msgid ""
+"When a user posts their first comment on an article, reward this amount of "
+"points. Set to 0 to disable."
+msgstr "当用户在文章下发表首条评论时，奖励这些积分。设为 0 表示禁用。"
+
+#: .\apps\blog\forms\site.py:347
+msgid "Daily first login reward money"
+msgstr "每日首次登录奖励金额"
+
+#: .\apps\blog\forms\site.py:348
+msgid ""
+"When a user logs in for the first time each day, reward this amount of "
+"money. Set to 0 to disable money rewards."
+msgstr "当用户每天首次登录时，奖励这笔金额。设为 0 表示禁用金额奖励。"
+
+#: .\apps\blog\forms\site.py:355
+msgid "Daily first login reward points"
+msgstr "每日首次登录奖励积分"
+
+#: .\apps\blog\forms\site.py:356
+msgid ""
+"When a user logs in for the first time each day, reward this amount of "
+"points. Set to 0 to disable points rewards."
+msgstr "当用户每天首次登录时，奖励这些积分。设为 0 表示禁用积分奖励。"
+
+#: .\apps\blog\forms\site.py:364
+msgid "Article author money reward ratio"
+msgstr "文章作者金额奖励比例"
+
+#: .\apps\blog\forms\site.py:365
+msgid ""
+"When a reader first enters an article, reward the author this share of the "
+"money requirement. Enter a value between 0 and 1."
+msgstr "当读者首次进入文章时，按金额要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:373
+msgid "Article author points reward ratio"
+msgstr "文章作者积分奖励比例"
+
+#: .\apps\blog\forms\site.py:374
+msgid ""
+"When a reader first enters an article, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+msgstr "当读者首次进入文章时，按积分要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:382
+msgid "Book author money reward ratio"
+msgstr "图书作者金额奖励比例"
+
+#: .\apps\blog\forms\site.py:383
+msgid ""
+"When a reader first enters a book, reward the author this share of the money"
+" requirement. Enter a value between 0 and 1."
+msgstr "当读者首次进入图书时，按金额要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:391
+msgid "Book author points reward ratio"
+msgstr "图书作者积分奖励比例"
+
+#: .\apps\blog\forms\site.py:392
+msgid ""
+"When a reader first enters a book, reward the author this share of the "
+"points requirement. Enter a value between 0 and 1."
+msgstr "当读者首次进入图书时，按积分要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:400
+msgid "Attachment author money reward ratio"
+msgstr "附件作者金额奖励比例"
+
+#: .\apps\blog\forms\site.py:401
+msgid ""
+"When a reader first downloads an attachment, reward the author this share of"
+" the money requirement. Enter a value between 0 and 1."
+msgstr "当读者首次下载附件时，按金额要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:409
+msgid "Attachment author points reward ratio"
+msgstr "附件作者积分奖励比例"
+
+#: .\apps\blog\forms\site.py:410
+msgid ""
+"When a reader first downloads an attachment, reward the author this share of"
+" the points requirement. Enter a value between 0 and 1."
+msgstr "当读者首次下载附件时，按积分要求的这一比例奖励作者。请输入 0 到 1 之间的值。"
+
+#: .\apps\blog\forms\site.py:528
+msgid "Money discount"
+msgstr "金额折扣"
+
+#: .\apps\blog\forms\site.py:529
+msgid ""
+"Enter a value between 0 and 1. For example, 0.10 means the user pays 90%% of"
+" the original money requirement."
+msgstr "请输入 0 到 1 之间的值。例如，0.10 表示用户支付原金额要求的 90%%。"
+
+#: .\apps\blog\forms\site.py:547
+msgid "Points discount"
+msgstr "积分折扣"
+
+#: .\apps\blog\forms\site.py:548
+msgid ""
+"Enter a value between 0 and 1. For example, 0.05 means the user needs 95%% "
+"of the original points requirement."
+msgstr "请输入 0 到 1 之间的值。例如，0.05 表示用户需要原积分要求的 95%%。"
+
+#: .\apps\blog\forms\site.py:566
+msgid "Money reward"
+msgstr "金额奖励"
+
+#: .\apps\blog\forms\site.py:567
+msgid ""
+"Extra author money reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.10 means 10%% extra reward."
+msgstr "该 VIP 等级用户的作者金额奖励额外倍率。请输入 0 到 1 之间的值。例如，0.10 表示额外奖励 10%%。"
+
+#: .\apps\blog\forms\site.py:585
+msgid "Points reward"
+msgstr "积分奖励"
+
+#: .\apps\blog\forms\site.py:586
+msgid ""
+"Extra author points reward multiplier for users at this VIP level. Enter a "
+"value between 0 and 1. For example, 0.05 means 5%% extra reward."
+msgstr "该 VIP 等级用户的作者积分奖励额外倍率。请输入 0 到 1 之间的值。例如，0.05 表示额外奖励 5%%。"
+
+#: .\apps\blog\forms\site.py:602
+msgid "Daily login extra money"
+msgstr "每日登录额外金额"
+
+#: .\apps\blog\forms\site.py:603
+msgid ""
+"Extra daily login money granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+msgstr "该 VIP 等级用户每日登录可获得的额外金额。留空则使用默认值：等级 x 5。"
+
+#: .\apps\blog\forms\site.py:618
+msgid "Daily login extra points"
+msgstr "每日登录额外积分"
+
+#: .\apps\blog\forms\site.py:619
+msgid ""
+"Extra daily login points granted to users at this VIP level. Leave blank to "
+"use the default of level x 5."
+msgstr "该 VIP 等级用户每日登录可获得的额外积分。留空则使用默认值：等级 x 5。"
+
+#: .\apps\blog\forms\site.py:634
+msgid "First comment extra money"
+msgstr "首条评论额外金额"
+
+#: .\apps\blog\forms\site.py:635
+msgid ""
+"Extra first comment money granted to users at this VIP level. Leave blank to"
+" use the default of level x 2."
+msgstr "该 VIP 等级用户可获得的首条评论额外金额。留空则使用默认值：等级 x 2。"
+
+#: .\apps\blog\forms\site.py:650
+msgid "First comment extra points"
+msgstr "首条评论额外积分"
+
+#: .\apps\blog\forms\site.py:651
+msgid ""
+"Extra first comment points granted to users at this VIP level. Leave blank "
+"to use the default of level x 2."
+msgstr "该 VIP 等级用户可获得的首条评论额外积分。留空则使用默认值：等级 x 2。"
+
+#: .\apps\blog\forms\site.py:690
+msgid "Enter a valid URL."
+msgstr "请输入有效的 URL。"
+
+#: .\apps\blog\forms\site.py:699
+msgid "Advanced hover rules must be valid JSON."
+msgstr "高级悬停规则必须是有效的 JSON。"
+
+#: .\apps\blog\forms\site.py:701
+msgid "Advanced hover rules must be a JSON array."
+msgstr "高级悬停规则必须是 JSON 数组。"
+
+#: .\apps\blog\forms\site.py:717
+msgid "Rule %(index)s must be an object."
+msgstr "规则 %(index)s 必须是一个对象。"
+
+#: .\apps\blog\forms\site.py:722
+msgid "Rule %(index)s must include a selector."
+msgstr "规则 %(index)s 必须包含一个 selector。"
+
+#: .\apps\blog\forms\site.py:724
+msgid "Rule %(index)s must include at least one message in texts."
+msgstr "规则 %(index)s 的 texts 中必须至少包含一条消息。"
+
+#: .\apps\blog\forms\site.py:727
+msgid "Rule %(index)s contains unsupported page groups."
+msgstr "规则 %(index)s 包含不受支持的页面分组。"
+
+#: .\apps\blog\forms\site.py:747
+msgid "Unsupported Live2D source type."
+msgstr "不支持的 Live2D 来源类型。"
+
+#: .\apps\blog\forms\site.py:761
+msgid "Upload a Live2D widget bundle before enabling widget-bundle mode."
+msgstr "启用 widget-bundle 模式前，请先上传 Live2D widget 资源包。"
+
+#: .\apps\blog\forms\site.py:766
+msgid "Choose one of the model ids exposed by the widget bundle."
+msgstr "请选择 widget 资源包公开的模型 id 之一。"
+
+#: .\apps\blog\forms\site.py:775
+msgid "Upload a Cubism runtime bundle before enabling cubism-bundle mode."
+msgstr "启用 cubism-bundle 模式前，请先上传 Cubism runtime 资源包。"
+
+#: .\apps\blog\forms\site.py:780
+msgid "Choose one of the model ids exposed by the Cubism bundle."
+msgstr "请选择 Cubism 资源包公开的模型 id 之一。"
+
+#: .\apps\blog\forms\site.py:783
+msgid "Unsupported tip source mode."
+msgstr "不支持的提示来源模式。"
+
+#: .\apps\blog\models\attachment.py:26 .\apps\blog\models\book.py:25
+#: .\apps\blog\models\post.py:35
+msgid "Unified"
+msgstr "统一"
+
+#: .\apps\blog\models\attachment.py:27 .\apps\blog\models\book.py:26
+#: .\apps\blog\models\post.py:36
+msgid "Standalone"
+msgstr "独立"
+
+#: .\apps\blog\models\attachment.py:118 .\apps\blog\models\attachment.py:164
+#: .\apps\blog\models\attachment.py:210 .\apps\blog\models\audit.py:13
 msgid "Post"
 msgstr "文章"
 
+#: .\apps\blog\models\attachment.py:119 .\apps\blog\models\attachment.py:165
+#: .\apps\blog\models\attachment.py:211 .\apps\blog\models\audit.py:14
+#: .\templates\blog\manage\site_settings.html:548
 msgid "Book"
 msgstr "图书"
 
+#: .\apps\blog\models\attachment.py:151 .\apps\blog\models\attachment.py:198
+#: .\apps\blog\services\login_rewards.py:74
+#: .\apps\blog\services\login_rewards.py:86
+msgid "Daily login reward"
+msgstr "每日登录奖励"
+
+#: .\apps\blog\models\attachment.py:152 .\apps\blog\models\attachment.py:199
+#: .\apps\blog\services\comment_rewards.py:83
+#: .\apps\blog\services\comment_rewards.py:97
+msgid "First comment reward"
+msgstr "首条评论奖励"
+
+#: .\apps\blog\models\attachment.py:153 .\apps\blog\models\attachment.py:200
+#: .\apps\blog\services\author_rewards.py:100
+#: .\apps\blog\services\author_rewards.py:118
+msgid "Author reward"
+msgstr "作者奖励"
+
+#: .\apps\blog\models\attachment.py:155 .\apps\blog\models\attachment.py:201
+msgid "Admin adjustment"
+msgstr "管理员调整"
+
+#: .\apps\blog\models\attachment.py:168 .\apps\blog\models\attachment.py:214
+#: .\templates\blog\manage\audit_list.html:48
+#: .\templates\blog\manage\site_settings.html:386
+#: .\templates\blog\manage\user_list.html:35
+msgid "User"
+msgstr "用户"
+
+#: .\apps\blog\models\audit.py:59 .\templates\auth\login.html:4
 msgid "Login"
 msgstr "登录"
 
+#: .\apps\blog\models\audit.py:60
 msgid "Logout"
-msgstr ""
+msgstr "退出登录"
 
+#: .\apps\blog\models\audit.py:61
 msgid "Create post"
 msgstr "创建文章"
 
+#: .\apps\blog\models\audit.py:62
 msgid "Update post"
 msgstr "更新文章"
 
+#: .\apps\blog\models\audit.py:63
 msgid "Delete post"
 msgstr "删除文章"
 
+#: .\apps\blog\models\audit.py:64
 msgid "Create comment"
 msgstr "创建评论"
 
-#, fuzzy
-#| msgid "Create comment"
+#: .\apps\blog\models\audit.py:65
 msgid "Update comment"
 msgstr "创建评论"
 
+#: .\apps\blog\models\audit.py:66
+#: .\templates\blog\includes\comment_threads.html:61
+#: .\templates\blog\includes\comment_threads.html:228
+#: .\templates\blog\manage\comment_list.html:55
+#: .\templates\blog\profile\comments.html:59
 msgid "Delete comment"
 msgstr "删除评论"
 
-#, fuzzy
-#| msgid "Update post"
+#: .\apps\blog\models\audit.py:67
 msgid "Update profile"
 msgstr "更新文章"
 
+#: .\apps\blog\models\audit.py:68
+msgid "Create user"
+msgstr "创建用户"
+
+#: .\apps\blog\models\audit.py:69
 msgid "Update user"
 msgstr "更新用户"
 
+#: .\apps\blog\models\audit.py:70 .\templates\blog\manage\user_form.html:201
 msgid "Delete user"
 msgstr "删除用户"
 
-#, fuzzy
-#| msgid "Update user"
+#: .\apps\blog\models\audit.py:71
 msgid "Update user assets"
 msgstr "更新用户"
 
-#, fuzzy
-#| msgid "Only top-level comments can be replied to."
+#: .\apps\blog\models\comment.py:38
 msgid "Top-level comments cannot reply to another comment."
 msgstr "只能回复一级评论。"
 
+#: .\apps\blog\models\comment.py:41
 msgid "Comment parent must belong to the same post."
 msgstr "回复目标必须属于同一篇文章。"
 
-#, fuzzy
-#| msgid "You can only reply to top-level comments."
+#: .\apps\blog\models\comment.py:43
 msgid "Replies must stay under a top-level comment."
 msgstr "只能回复一级评论。"
 
+#: .\apps\blog\models\comment.py:45
 msgid "Replies must target a comment."
-msgstr ""
+msgstr "回复必须以某条评论为目标。"
 
-#, fuzzy
-#| msgid "Comment parent must belong to the same post."
+#: .\apps\blog\models\comment.py:47
 msgid "Reply target must belong to the same post."
 msgstr "回复目标必须属于同一篇文章。"
 
+#: .\apps\blog\models\comment.py:49
 msgid ""
 "Replies can only target the top-level comment or one of its direct replies."
-msgstr ""
+msgstr "回复只能针对顶级评论或其直接回复之一。"
 
+#: .\apps\blog\models\comment.py:77 .\apps\blog\models\post.py:216
+#: .\apps\blog\utils\request.py:43 .\apps\blog\utils\request.py:45
 msgid "Feedback value must be either 1 or -1."
-msgstr ""
+msgstr "反馈值只能是 1 或 -1。"
 
+#: .\apps\blog\models\post.py:19 .\templates\blog\manage\post_list.html:110
+#: .\templates\blog\profile\posts.html:90
 msgid "Draft"
 msgstr "草稿"
 
+#: .\apps\blog\models\post.py:20 .\apps\blog\views\book\external.py:105
+#: .\apps\blog\views\book\public.py:156 .\apps\blog\views\post\external.py:44
+#: .\apps\blog\views\post\public.py:80
 msgid "Published"
 msgstr "已发布"
 
-msgid "7 days"
-msgstr ""
-
-msgid "14 days"
-msgstr ""
-
-msgid "30 days"
-msgstr ""
-
+#: .\apps\blog\models\site.py:13
 msgid "Site setting"
 msgstr "站点设置"
 
+#: .\apps\blog\models\site.py:14
 msgid "Site settings"
 msgstr "站点设置"
 
-msgid "Encrypted"
-msgstr "加密"
+#: .\apps\blog\models\site.py:27
+msgid "Pending"
+msgstr "待处理"
 
-msgid "Book only"
-msgstr "仅图书"
+#: .\apps\blog\models\site.py:28
+msgid "Running"
+msgstr "运行中"
 
-#, fuzzy
-#| msgid "Book structure must be a list."
+#: .\apps\blog\models\site.py:29
+msgid "Succeeded"
+msgstr "成功"
+
+#: .\apps\blog\models\site.py:30 .\templates\blog\book_detail.html:121
+#: .\templates\blog\detail.html:73
+#: .\templates\blog\includes\comment_threads.html:81
+#: .\templates\blog\includes\comment_threads.html:248
+#: .\templates\blog\includes\namecard_comments.html:36
+msgid "Failed"
+msgstr "失败"
+
+#: .\apps\blog\models\site.py:47
+msgid "Media cleanup job"
+msgstr "媒体清理任务"
+
+#: .\apps\blog\models\site.py:48
+msgid "Media cleanup jobs"
+msgstr "媒体清理任务"
+
+#: .\apps\blog\permissions.py:52
 msgid "Condition data must be a list."
 msgstr "图书结构必须是一个列表。"
 
-#, fuzzy
-#| msgid "Each book structure node must be an object."
+#: .\apps\blog\permissions.py:63
 msgid "Each condition must be an object."
 msgstr "每个图书结构节点都必须是一个对象。"
 
-#, fuzzy
-#| msgid "Unknown book structure node type."
+#: .\apps\blog\permissions.py:66
 msgid "Unknown condition type."
 msgstr "未知的图书结构节点类型。"
 
+#: .\apps\blog\permissions.py:68
 msgid "Each condition type can only be used once."
-msgstr ""
+msgstr "每种条件类型只能使用一次。"
 
+#: .\apps\blog\permissions.py:75 .\apps\blog\permissions.py:77
 msgid "Condition value must be a positive integer."
-msgstr ""
+msgstr "条件值必须是正整数。"
 
+#: .\apps\blog\permissions.py:87
 msgid "At least one condition is required."
-msgstr ""
+msgstr "至少需要一个条件。"
 
-#, python-format
+#: .\apps\blog\services\author_rewards.py:102
+#: .\apps\blog\services\author_rewards.py:120
+msgid "Author reward from %(object_type)s: %(title)s"
+msgstr "来自 %(object_type)s 的作者奖励：%(title)s"
+
+#: .\apps\blog\services\comment_rewards.py:85
+#: .\apps\blog\services\comment_rewards.py:99
+msgid "First comment reward for article: %(title)s"
+msgstr "文章首条评论奖励：%(title)s"
+
+#: .\apps\blog\services\login_rewards.py:76
+#: .\apps\blog\services\login_rewards.py:88
+msgid "Daily login reward (%(vip_name)s bonus included)"
+msgstr "每日登录奖励（含 %(vip_name)s 加成）"
+
+#: .\apps\blog\signals.py:11
 msgid "User signed in: %(username)s"
 msgstr "用户已登录：%(username)s"
 
+#: .\apps\blog\signals.py:16
 msgid "anonymous user"
 msgstr "匿名用户"
 
-#, python-format
+#: .\apps\blog\signals.py:17
 msgid "User signed out: %(username)s"
 msgstr "用户已退出：%(username)s"
 
-msgid "1 day"
-msgstr ""
+#: .\apps\blog\tests\test_vip_management.py:670
+#: .\apps\blog\views\profile.py:22
+#: .\templates\blog\profile\money_history.html:4
+#: .\templates\blog\profile\money_history.html:21
+msgid "Money history"
+msgstr "金额记录"
 
+#: .\apps\blog\tests\test_vip_management.py:687
+#: .\apps\blog\views\profile.py:23
+#: .\templates\blog\profile\points_history.html:4
+#: .\templates\blog\profile\points_history.html:21
+msgid "Points history"
+msgstr "积分记录"
+
+#: .\apps\blog\tests\test_vip_management.py:698
+#: .\apps\blog\views\profile.py:24 .\templates\blog\profile\overview.html:26
+msgid "User group"
+msgstr "用户组"
+
+#: .\apps\blog\utils\site.py:27
+msgid "1 day"
+msgstr "1 天"
+
+#: .\apps\blog\utils\site.py:28 .\apps\blog\utils\site.py:39
+msgid "7 days"
+msgstr "7 天"
+
+#: .\apps\blog\utils\site.py:29 .\apps\blog\utils\site.py:41
+msgid "30 days"
+msgstr "30 天"
+
+#: .\apps\blog\utils\site.py:30 .\apps\blog\utils\site.py:1638
+#: .\apps\blog\views\book\external.py:140
+#: .\apps\blog\views\post\external.py:79
+#: .\apps\blog\views\post\external.py:104
+#: .\templates\blog\manage\post_list.html:91
+#: .\templates\blog\manage\post_list.html:136
+#: .\templates\blog\manage\post_list.html:142
 msgid "Never expires"
 msgstr "永不过期"
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
+#: .\apps\blog\utils\site.py:40
+msgid "14 days"
+msgstr "14 天"
+
+#: .\apps\blog\utils\site.py:600
+msgid ""
+"Welcome to the blog. There is probably something new worth reading today."
+msgstr ""
+"欢迎来到博客。今天大概又有值得一读的新内容。"
+
+#: .\apps\blog\utils\site.py:601
+msgid "Take a look around. Articles, books, and tags are all waiting for you."
+msgstr ""
+"随便看看吧。文章、图书和标签都在等你。"
+
+#: .\apps\blog\utils\site.py:604
+msgid "Still browsing? Try searching for a keyword you care about."
+msgstr "还在浏览吗？试着搜索一个你关心的关键词吧。"
+
+#: .\apps\blog\utils\site.py:605
+msgid ""
+"If you are not sure where to start, the homepage usually has the freshest "
+"content."
+msgstr ""
+"如果你不知道从哪里开始，首页通常会有最新鲜的内容。"
+
+#: .\apps\blog\utils\site.py:608
+msgid "Easy there. I am here to help, not to be poked forever."
+msgstr "别急。我是来帮忙的，不是让你一直戳的。"
+
+#: .\apps\blog\utils\site.py:609
+msgid ""
+"If you are looking for something specific, the search box is usually faster."
+msgstr ""
+"如果你在找某个具体内容，搜索框通常会更快。"
+
+#: .\apps\blog\utils\site.py:612
+msgid "The homepage shows the main activity and the latest content."
+msgstr "首页会展示主要动态和最新内容。"
+
+#: .\apps\blog\utils\site.py:613
+msgid "You can keep scrolling to read comments and related details."
+msgstr "你可以继续向下滚动，查看评论和相关细节。"
+
+#: .\apps\blog\utils\site.py:614
+msgid ""
+"Books here support structured reading, so chapter navigation is useful."
+msgstr ""
+"这里的图书支持结构化阅读，所以章节导航会很有用。"
+
+#: .\apps\blog\utils\site.py:615
+msgid ""
+"Your profile area is where you manage posts, books, and personal settings."
+msgstr ""
+"个人资料区域是你管理文章、图书和个人设置的地方。"
+
+#: .\apps\blog\utils\site.py:620
+msgid "Use this box to search articles, books, and tags."
+msgstr "使用这个输入框搜索文章、图书和标签。"
+
+#: .\apps\blog\utils\site.py:630
+msgid "This menu leads to your profile settings and account summary."
+msgstr "这个菜单会带你进入个人资料设置和账号概览。"
+
+#: .\apps\blog\utils\site.py:896
+msgid "Welcome back."
+msgstr "欢迎回来。"
+
+#: .\apps\blog\utils\site.py:897
+msgid "See you next time."
+msgstr "下次见。"
+
+#: .\apps\blog\utils\site.py:898
+msgid "Model switched."
+msgstr "模型已切换。"
+
+#: .\apps\blog\utils\site.py:899
+msgid "Appearance switched."
+msgstr "外观已切换。"
+
+#: .\apps\blog\utils\site.py:900
+msgid "Expression switched."
+msgstr "表情已切换。"
+
+#: .\apps\blog\utils\site.py:901
+msgid "The current model does not provide switchable expressions."
+msgstr "当前模型不提供可切换的表情。"
+
+#: .\apps\blog\utils\site.py:902
+msgid "Motion played."
+msgstr "动作已播放。"
+
+#: .\apps\blog\utils\site.py:903
+msgid "The current model does not provide switchable motions."
+msgstr "当前模型不提供可切换的动作。"
+
+#: .\apps\blog\utils\site.py:904
+msgid "Photo saved."
+msgstr "图片已保存。"
+
+#: .\apps\blog\utils\site.py:905
+msgid "Photo is not available right now."
+msgstr "当前无法获取图片。"
+
+#: .\apps\blog\utils\site.py:906
+msgid "The current model does not support switching appearance."
+msgstr "当前模型不支持切换外观。"
+
+#: .\apps\blog\utils\site.py:907
+msgid "Appearance switching failed. Please try again later."
+msgstr "外观切换失败，请稍后再试。"
+
+#: .\apps\blog\utils\site.py:908
+msgid ""
+"Model switching failed. Your current environment may not support this "
+"renderer."
+msgstr "模型切换失败。你当前的环境可能不支持此渲染器。"
+
+#: .\apps\blog\utils\site.py:909
+msgid "Your current environment does not support Cubism rendering."
+msgstr "你当前的环境不支持 Cubism 渲染。"
+
+#: .\apps\blog\utils\site.py:910
+msgid "Live2D failed to load. Please try again later."
+msgstr "Live2D 加载失败，请稍后再试。"
+
+#: .\apps\blog\utils\site.py:925
+msgid "Bundle paths must stay inside the uploaded package."
+msgstr "资源包路径必须位于已上传包内。"
+
+#: .\apps\blog\utils\site.py:928
+msgid "Bundle paths cannot escape the uploaded package root."
+msgstr "资源包路径不能超出已上传包的根目录。"
+
+#: .\apps\blog\utils\site.py:940
+msgid "The bundle manifest must define at least one model."
+msgstr "资源包清单必须至少定义一个模型。"
+
+#: .\apps\blog\utils\site.py:945
+msgid "Every bundle model entry must be an object."
+msgstr "资源包中的每个模型条目都必须是对象。"
+
+#: .\apps\blog\utils\site.py:951
+msgid "Every bundle model must have a numeric id."
+msgstr "资源包中的每个模型都必须有数字 id。"
+
+#: .\apps\blog\utils\site.py:953
+msgid "Bundle model ids must be unique."
+msgstr "资源包中的模型 id 必须唯一。"
+
+#: .\apps\blog\utils\site.py:961 .\apps\blog\utils\site.py:1007
+msgid "The bundle manifest must be a JSON object."
+msgstr "资源包清单必须是 JSON 对象。"
+
+#: .\apps\blog\utils\site.py:965 .\apps\blog\utils\site.py:1011
+msgid "Unsupported bundle manifest version."
+msgstr "不支持的资源包清单版本。"
+
+#: .\apps\blog\utils\site.py:967 .\apps\blog\utils\site.py:1013
+msgid "Unsupported bundle engine."
+msgstr "不支持的资源包引擎。"
+
+#: .\apps\blog\utils\site.py:970
+msgid "The bundle manifest must include an entry section."
+msgstr "资源包清单必须包含 entry 部分。"
+
+#: .\apps\blog\utils\site.py:1027
+msgid ""
+"Each Cubism model variant must use a unique groupId + textureVariantId "
+"combination."
+msgstr "每个 Cubism 模型变体都必须使用唯一的 groupId + textureVariantId 组合。"
+
+#: .\apps\blog\utils\site.py:1152
+msgid "A Cubism model3.json file is not valid UTF-8 JSON."
+msgstr "Cubism 的 model3.json 文件不是有效的 UTF-8 JSON。"
+
+#: .\apps\blog\utils\site.py:1160
+msgid "The Cubism bundle is missing a file referenced by model3.json."
+msgstr "Cubism 资源包缺少 model3.json 引用的文件。"
+
+#: .\apps\blog\utils\site.py:1167
+msgid ""
+"The Cubism bundle must include at least one model3.json file or a "
+"manifest.json file."
+msgstr "Cubism 资源包必须至少包含一个 model3.json 文件或 manifest.json 文件。"
+
+#: .\apps\blog\utils\site.py:1179
+msgid "Default"
+msgstr "默认"
+
+#: .\apps\blog\utils\site.py:1195
+msgid "Please upload a Cubism runtime bundle file."
+msgstr "请上传 Cubism runtime 资源包文件。"
+
+#: .\apps\blog\utils\site.py:1198
+msgid "The Cubism runtime bundle must be uploaded as a zip file."
+msgstr "Cubism runtime 资源包必须以 zip 文件形式上传。"
+
+#: .\apps\blog\utils\site.py:1201
+msgid "The Cubism runtime bundle is too large."
+msgstr "Cubism runtime 资源包过大。"
+
+#: .\apps\blog\utils\site.py:1219 .\apps\blog\utils\site.py:1263
+msgid "The bundle manifest is not valid UTF-8 JSON."
+msgstr "资源包清单不是有效的 UTF-8 JSON。"
+
+#: .\apps\blog\utils\site.py:1226
+msgid "The bundle is missing one of the declared model3.json files."
+msgstr "资源包缺少声明的 model3.json 文件之一。"
+
+#: .\apps\blog\utils\site.py:1238
+msgid "Please upload a Live2D bundle file."
+msgstr "请上传 Live2D 资源包文件。"
+
+#: .\apps\blog\utils\site.py:1241
+msgid "The Live2D bundle must be uploaded as a zip file."
+msgstr "Live2D 资源包必须以 zip 文件形式上传。"
+
+#: .\apps\blog\utils\site.py:1244
+msgid "The Live2D bundle is too large."
+msgstr "Live2D 资源包过大。"
+
+#: .\apps\blog\utils\site.py:1258
+msgid "The bundle must include a manifest.json file at its root."
+msgstr "资源包根目录必须包含 manifest.json 文件。"
+
+#: .\apps\blog\utils\site.py:1272
+msgid "The bundle is missing one of the required entry files."
+msgstr "资源包缺少所需的入口文件之一。"
+
+#: .\apps\blog\views\access_check.py:39 .\apps\blog\views\attachment.py:178
+msgid "Unknown action."
+msgstr "未知操作。"
+
+#: .\apps\blog\views\access_check.py:50 .\apps\blog\views\attachment.py:187
+msgid "No password required."
+msgstr "无需密码。"
+
+#: .\apps\blog\views\access_check.py:54 .\apps\blog\views\attachment.py:191
+msgid "Password is required."
+msgstr "请输入密码。"
+
+#: .\apps\blog\views\access_check.py:57 .\apps\blog\views\attachment.py:195
+msgid "Incorrect password."
+msgstr "密码错误。"
+
+#: .\apps\blog\views\access_check.py:82 .\apps\blog\views\attachment.py:209
+msgid "No purchase required."
+msgstr "无需购买。"
+
+#: .\apps\blog\views\attachment.py:31 .\apps\blog\views\media.py:41
+msgid "Please sign in and try uploading again."
+msgstr "请登录后重试上传。"
+
+#: .\apps\blog\views\attachment.py:37 .\apps\blog\views\media.py:51
+msgid "You do not have permission to upload files in this editor."
+msgstr "你没有权限在此编辑器中上传文件。"
+
+#: .\apps\blog\views\attachment.py:39
+msgid "You do not have permission to upload attachments."
+msgstr "你没有权限上传附件。"
+
+#: .\apps\blog\views\attachment.py:43
+msgid "Unable to upload attachment."
+msgstr "无法上传附件。"
+
+#: .\apps\blog\views\attachment.py:81
+msgid "Please sign in and try again."
+msgstr "请登录后重试。"
+
+#: .\apps\blog\views\attachment.py:111 .\apps\blog\views\attachment.py:113
+msgid "You do not have permission to view uploaded attachments."
+msgstr "你没有权限查看已上传的附件。"
+
+#: .\apps\blog\views\attachment.py:230 .\apps\blog\views\attachment.py:231
+#: .\apps\blog\views\manage\attachments.py:86
+msgid "You do not have permission to manage this attachment."
+msgstr "你没有权限管理该附件。"
+
+#: .\apps\blog\views\attachment.py:246
+msgid "Unable to update attachment."
+msgstr "无法更新附件。"
+
+#: .\apps\blog\views\attachment.py:258
+msgid "Attachment updated: %(title)s"
+msgstr "附件已更新：%(title)s"
+
+#: .\apps\blog\views\attachment.py:301
+msgid "Attachment deleted: %(title)s"
+msgstr "附件已删除：%(title)s"
+
+#: .\apps\blog\views\attachment.py:304
+msgid "Attachment deleted successfully."
+msgstr "附件删除成功。"
+
+#: .\apps\blog\views\book\external.py:115
+#: .\apps\blog\views\post\external.py:54
 msgid "You do not have permission to generate a share link."
 msgstr "您没有权限删除这条评论。"
 
+#: .\apps\blog\views\book\external.py:117
 msgid "Only public books can generate share links."
 msgstr "只有公开图书可以生成外链。"
 
+#: .\apps\blog\views\book\external.py:122
+#: .\apps\blog\views\post\external.py:61 .\apps\blog\views\post\external.py:92
 msgid "Invalid expiry option."
-msgstr ""
+msgstr "无效的过期选项。"
 
-#, python-format
+#: .\apps\blog\views\book\manage.py:77 .\apps\blog\views\profile_books.py:210
 msgid "Book created: %(name)s"
 msgstr "图书已创建：%(name)s"
 
+#: .\apps\blog\views\book\manage.py:80 .\apps\blog\views\profile_books.py:213
 msgid "Book created successfully."
 msgstr "图书创建成功。"
 
+#: .\apps\blog\views\book\manage.py:85 .\apps\blog\views\profile_books.py:219
 msgid "Create book"
 msgstr "创建图书"
 
-#, python-format
+#: .\apps\blog\views\book\manage.py:110 .\apps\blog\views\profile_books.py:250
 msgid "Book updated: %(name)s"
 msgstr "图书已更新：%(name)s"
 
+#: .\apps\blog\views\book\manage.py:113 .\apps\blog\views\profile_books.py:253
 msgid "Book updated successfully."
 msgstr "图书更新成功。"
 
-#, python-format
+#: .\apps\blog\views\book\manage.py:140 .\apps\blog\views\profile_books.py:286
 msgid "Book deleted: %(name)s"
 msgstr "图书已删除：%(name)s"
 
+#: .\apps\blog\views\book\manage.py:143 .\apps\blog\views\profile_books.py:289
 msgid "Book deleted successfully."
 msgstr "图书删除成功。"
 
-#, fuzzy
-#| msgid "Enter password to view this book"
-msgid "Enter password to view this article"
-msgstr "输入密码以查看该图书"
-
-#, fuzzy
-#| msgid "Select articles"
-msgid "Unlock article"
-msgstr "选择文章"
-
-#, fuzzy
-#| msgid "Content snapshot"
-msgid "Content access check"
-msgstr "内容快照"
-
-msgid "Purchase now"
-msgstr ""
-
-msgid "Insufficient balance"
-msgstr ""
-
-msgid "Insufficient points"
-msgstr ""
-
+#: .\apps\blog\views\book\public.py:180
 msgid "No accessible articles in this book yet."
 msgstr "这本图书暂时还没有可访问的文章。"
 
-msgid "Enter password to view this book"
-msgstr "输入密码以查看该图书"
-
-msgid "Unlock book"
-msgstr "解锁图书"
-
-#, fuzzy
-#| msgid "Email is required."
-msgid "Password is required."
-msgstr "请输入邮箱。"
-
-#, fuzzy
-#| msgid "Forgot password"
-msgid "Incorrect password."
-msgstr "忘记密码"
-
-msgid "Password"
-msgstr "密码"
-
-msgid "Enter book password"
-msgstr "请输入图书密码"
-
+#: .\apps\blog\views\book\utils\share.py:20
 msgid "Save this book before generating an external link."
 msgstr "请先保存图书，再生成外链。"
 
+#: .\apps\blog\views\comment\public.py:64
+msgid "You do not have permission to post comments."
+msgstr "你没有权限发表评论。"
+
+#: .\apps\blog\views\comment\public.py:95
 msgid "You are commenting too frequently. Please try again later."
 msgstr "评论过于频繁，请稍后再试。"
 
+#: .\apps\blog\views\comment\public.py:113
 msgid ""
 "Replies can only target a top-level comment or one of its direct replies."
-msgstr ""
+msgstr "回复只能针对顶级评论或其直接回复之一。"
 
+#: .\apps\blog\views\comment\public.py:119
 msgid "Reply posted successfully."
 msgstr "回复发表成功。"
 
+#: .\apps\blog\views\comment\public.py:119
 msgid "Comment posted successfully."
 msgstr "评论发表成功。"
 
-#, python-format
+#: .\apps\blog\views\comment\public.py:120
 msgid "Comment created on %(title)s"
 msgstr "已在 %(title)s 下创建评论"
 
+#: .\apps\blog\views\comment\public.py:127 .\apps\users\views.py:172
+msgid "VIP"
+msgstr "VIP 会员"
+
+#: .\apps\blog\views\comment\public.py:128
+msgid "%(action)s First comment reward: +%(money)s money, +%(points)s points."
+msgstr "%(action)s 首条评论奖励：+%(money)s 金额，+%(points)s 积分。"
+
+#: .\apps\blog\views\comment\public.py:134
+msgid ""
+"Base: +%(base_money)s money, +%(base_points)s points; %(vip_name)s bonus: "
+"+%(vip_money)s money, +%(vip_points)s points."
+msgstr ""
+"基础：+%(base_money)s 金额，+%(base_points)s 积分；%(vip_name)s 加成：+%(vip_money)s "
+"金额，+%(vip_points)s 积分。"
+
+#: .\apps\blog\views\comment\public.py:156
 msgid "You do not have permission to delete this comment."
 msgstr "您没有权限删除这条评论。"
 
-#, python-format
+#: .\apps\blog\views\comment\public.py:159
+#: .\apps\blog\views\manage\comments.py:81
+#: .\apps\blog\views\profile_comments.py:160
 msgid "Comment deleted on %(title)s"
 msgstr "已删除 %(title)s 下的评论"
 
+#: .\apps\blog\views\comment\public.py:162
+#: .\apps\blog\views\manage\comments.py:84
+#: .\apps\blog\views\profile_comments.py:163
 msgid "Comment deleted successfully."
 msgstr "评论删除成功。"
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
+#: .\apps\blog\views\comment\public.py:172
+#: .\apps\blog\views\manage\comments.py:52
 msgid "You do not have permission to edit this comment."
 msgstr "您没有权限删除这条评论。"
 
-#, fuzzy, python-format
-#| msgid "Comment created on %(title)s"
+#: .\apps\blog\views\comment\public.py:176
+#: .\apps\blog\views\profile_comments.py:129
+msgid "You do not have permission to edit comments."
+msgstr "你没有权限编辑评论。"
+
+#: .\apps\blog\views\comment\public.py:199
+#: .\apps\blog\views\manage\comments.py:61
+#: .\apps\blog\views\profile_comments.py:137
 msgid "Comment updated on %(title)s"
 msgstr "已在 %(title)s 下创建评论"
 
-#, fuzzy
-#| msgid "Comment posted successfully."
+#: .\apps\blog\views\comment\public.py:201
+#: .\apps\blog\views\manage\comments.py:63
+#: .\apps\blog\views\profile_comments.py:139
 msgid "Comment updated successfully."
 msgstr "评论发表成功。"
 
+#: .\apps\blog\views\manage\attachments.py:99
+msgid "A media cleanup task is already running."
+msgstr "已有媒体清理任务正在运行。"
+
+#: .\apps\blog\views\manage\attachments.py:119
+msgid "Started media cleanup job #%(job_id)s."
+msgstr "已启动媒体清理任务 #%(job_id)s。"
+
+#: .\apps\blog\views\manage\attachments.py:125
+#: .\templates\blog\manage\attachment_list.html:126
+msgid "Media cleanup has started in the background."
+msgstr "媒体清理已在后台启动。"
+
+#: .\apps\blog\views\manage\attachments.py:137
+msgid "Cleanup task not found."
+msgstr "未找到清理任务。"
+
+#: .\apps\blog\views\manage\audit.py:18
 msgid "Audit logs cleared successfully."
 msgstr "审计日志已清理。"
 
+#: .\apps\blog\views\manage\base.py:84 .\templates\blog\manage\sidebar.html:7
 msgid "Basic"
 msgstr "基础"
 
+#: .\apps\blog\views\manage\base.py:85 .\templates\blog\manage\sidebar.html:8
+#: .\templates\blog\manage\user_list.html:19
 msgid "Users"
 msgstr "用户"
 
+#: .\apps\blog\views\manage\base.py:87 .\templates\base.html:31
+#: .\templates\base.html:33 .\templates\blog\book_list.html:4
+#: .\templates\blog\book_list.html:16 .\templates\blog\home.html:68
+#: .\templates\blog\home.html:101 .\templates\blog\home.html:108
+#: .\templates\blog\manage\book_list.html:19
+#: .\templates\blog\manage\sidebar.html:10
 msgid "Books"
 msgstr "图书"
 
-#, fuzzy
-#| msgid "Comment"
+#: .\apps\blog\views\manage\base.py:88 .\templates\blog\home.html:76
+#: .\templates\blog\manage\attachment_list.html:19
+#: .\templates\blog\manage\sidebar.html:11
+msgid "Attachments"
+msgstr "附件"
+
+#: .\apps\blog\views\manage\base.py:89
+#: .\templates\blog\manage\comment_list.html:19
+#: .\templates\blog\manage\sidebar.html:12
 msgid "Comments"
 msgstr "评论"
 
+#: .\apps\blog\views\manage\base.py:90 .\templates\blog\manage\sidebar.html:13
 msgid "Audit"
 msgstr "审计"
 
-#, fuzzy
-#| msgid "Search users..."
+#: .\apps\blog\views\manage\site.py:38
 msgid "Search dashboard..."
-msgstr "搜索用户..."
+msgstr "搜索仪表盘..."
 
+#: .\apps\blog\views\manage\site.py:96
+#: .\templates\blog\manage\site_settings.html:4
+#: .\templates\blog\manage\site_settings.html:21
 msgid "Basic settings"
 msgstr "基础设置"
 
-msgid "Basic site settings updated"
-msgstr "站点基础设置已更新"
-
-msgid "Pending removals were applied when saving."
-msgstr "已在保存时应用待移除内容。"
-
+#: .\apps\blog\views\manage\site.py:117
 msgid "Basic site settings restored to defaults."
 msgstr "站点基础设置已恢复默认。"
 
+#: .\apps\blog\views\manage\site.py:118
 msgid "Basic settings restored to defaults."
 msgstr "基础设置已恢复默认。"
 
+#: .\apps\blog\views\manage\site.py:141
+msgid "Upload a replacement bundle before keeping widget-bundle mode enabled."
+msgstr "如需继续启用 widget-bundle 模式，请先上传替换资源包。"
+
+#: .\apps\blog\views\manage\site.py:146
+msgid "Upload a replacement bundle before keeping cubism-bundle mode enabled."
+msgstr "如需继续启用 cubism-bundle 模式，请先上传替换资源包。"
+
+#: .\apps\blog\views\manage\site.py:164
+msgid "Basic site settings updated"
+msgstr "站点基础设置已更新"
+
+#: .\apps\blog\views\manage\site.py:166
+msgid "Pending removals were applied when saving."
+msgstr "已在保存时应用待移除内容。"
+
+#: .\apps\blog\views\manage\site.py:167
 msgid "Basic settings updated successfully."
 msgstr "基础设置更新成功。"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:101
+msgid "Admin adjusted balance: %(before)s -> %(after)s"
+msgstr "管理员调整余额：%(before)s -> %(after)s"
+
+#: .\apps\blog\views\manage\users.py:113
+msgid "Admin adjusted points: %(before)s -> %(after)s"
+msgstr "管理员调整积分：%(before)s -> %(after)s"
+
+#: .\apps\blog\views\manage\users.py:125
 msgid "User updated: %(username)s"
 msgstr "用户已更新：%(username)s"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:130
 msgid "Money updated for %(username)s: %(before)s -> %(after)s"
-msgstr ""
+msgstr "%(username)s 的金额已更新：%(before)s -> %(after)s"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:137
 msgid "Points updated for %(username)s: %(before)s -> %(after)s"
-msgstr ""
+msgstr "%(username)s 的积分已更新：%(before)s -> %(after)s"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:147
+#: .\templates\emails\password_changed.html:7
+#: .\templates\emails\password_changed.txt:2
 msgid "[%(app_name)s] Your password was updated"
 msgstr "【%(app_name)s】密码已更新"
 
+#: .\apps\blog\views\manage\users.py:157
 msgid "User password was updated, but the password email could not be sent."
 msgstr "用户密码已更新，但密码通知邮件发送失败。"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:165
+#: .\templates\emails\email_changed.html:7
+#: .\templates\emails\email_changed.txt:2
 msgid "[%(app_name)s] Your email address was updated"
 msgstr "【%(app_name)s】邮箱地址已更新"
 
+#: .\apps\blog\views\manage\users.py:175
 msgid "User was updated, but the email notification could not be sent."
 msgstr "用户已更新，但通知邮件发送失败。"
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\manage\users.py:176
 msgid "User updated successfully."
-msgstr "文章更新成功。"
+msgstr "用户更新成功。"
 
+#: .\apps\blog\views\manage\users.py:184
 msgid "Edit user"
 msgstr "用户编辑"
 
+#: .\apps\blog\views\manage\users.py:197
 msgid "You cannot delete your own account."
 msgstr "不能删除自己的账号。"
 
+#: .\apps\blog\views\manage\users.py:204
 msgid "This user cannot be deleted because related data still exists."
 msgstr "该用户存在关联数据，无法删除。"
 
-#, python-format
+#: .\apps\blog\views\manage\users.py:207
 msgid "User deleted: %(username)s"
 msgstr "用户已删除：%(username)s"
 
+#: .\apps\blog\views\manage\users.py:208
 msgid "User deleted successfully."
 msgstr "用户删除成功。"
 
-#, fuzzy
-#| msgid "Basic information"
+#: .\apps\blog\views\manage\users.py:231
+msgid "User created: %(username)s"
+msgstr "用户已创建：%(username)s"
+
+#: .\apps\blog\views\media.py:54
+msgid "Unknown upload context."
+msgstr "未知上传上下文。"
+
+#: .\apps\blog\views\media.py:68 .\apps\blog\views\post\manage.py:690
+msgid "No image uploaded."
+msgstr "未上传图片。"
+
+#: .\apps\blog\views\media.py:71
+msgid "Please choose a valid image file."
+msgstr "请选择有效的图片文件。"
+
+#: .\apps\blog\views\media.py:84
+msgid "You do not have permission to upload videos."
+msgstr "你没有权限上传视频。"
+
+#: .\apps\blog\views\media.py:96
+msgid "No video uploaded."
+msgstr "未上传视频。"
+
+#: .\apps\blog\views\media.py:99
+msgid "Please choose a valid video file."
+msgstr "请选择有效的视频文件。"
+
+#: .\apps\blog\views\media.py:101
+msgid "The uploaded video is empty."
+msgstr "上传的视频为空。"
+
+#: .\apps\blog\views\media.py:103
+msgid "The video exceeds the maximum size of %(size)s MB."
+msgstr "视频超过最大大小 %(size)s MB。"
+
+#: .\apps\blog\views\namecard.py:46 .\templates\blog\namecard.html:33
 msgid "Basic Information"
 msgstr "基本信息"
 
+#: .\apps\blog\views\namecard.py:47 .\templates\blog\namecard.html:134
+#: .\templates\blog\namecard.html:135
 msgid "Recent Posts"
-msgstr ""
+msgstr "最近文章"
 
-#, fuzzy
-#| msgid "Select books"
+#: .\apps\blog\views\namecard.py:48 .\templates\blog\namecard.html:153
+#: .\templates\blog\namecard.html:154
 msgid "Recent Books"
-msgstr "选择图书"
+msgstr "最近图书"
 
-#, fuzzy
-#| msgid "Delete comment"
+#: .\apps\blog\views\namecard.py:49 .\templates\blog\namecard.html:198
+#: .\templates\blog\namecard.html:199
 msgid "Recent Comments"
-msgstr "删除评论"
+msgstr "最近评论"
 
+#: .\apps\blog\views\post\context.py:105 .\apps\blog\views\post\context.py:119
+#: .\templates\blog\includes\comment_threads.html:16
+#: .\templates\blog\includes\comment_threads.html:46
+#: .\templates\blog\includes\comment_threads.html:183
+#: .\templates\blog\includes\comment_threads.html:213
+#: .\templates\blog\includes\namecard_comments.html:14
 msgid "Reply"
 msgstr "回复"
 
+#: .\apps\blog\views\post\context.py:106 .\apps\blog\views\post\context.py:120
 msgid "Write a reply"
 msgstr "写下回复"
 
-#, fuzzy
-#| msgid "Post comment"
+#: .\apps\blog\views\post\context.py:112 .\apps\blog\views\post\context.py:126
+#: .\templates\blog\manage\comment_list.html:99
+#: .\templates\blog\profile\comments.html:103
 msgid "Edit comment"
-msgstr "发表评论"
+msgstr "编辑评论"
 
-#, fuzzy
-#| msgid "Create comment"
+#: .\apps\blog\views\post\context.py:113 .\apps\blog\views\post\context.py:127
 msgid "Update your comment"
-msgstr "创建评论"
+msgstr "更新你的评论"
 
-#, fuzzy
-#| msgid "Only public books can generate share links."
+#: .\apps\blog\views\post\external.py:56
 msgid "Only published public articles can generate share links."
 msgstr "只有已发布的公开文章才能生成外链。"
 
-#, python-format
+#: .\apps\blog\views\post\external.py:100
 msgid "External link updated: %(title)s"
 msgstr "外链已更新：%(title)s"
 
+#: .\apps\blog\views\post\external.py:114
 msgid "External link validity updated successfully."
 msgstr "外链有效期更新成功。"
 
-#, python-format
+#: .\apps\blog\views\post\external.py:128
 msgid "External link deleted: %(title)s"
 msgstr "外链已删除：%(title)s"
 
+#: .\apps\blog\views\post\external.py:131
 msgid "External link deleted successfully."
 msgstr "外链删除成功。"
 
+#: .\apps\blog\views\post\manage.py:317
 msgid "Search external links..."
 msgstr "搜索外链..."
 
+#: .\apps\blog\views\post\manage.py:318
 msgid "Search external links"
 msgstr "搜索外链"
 
+#: .\apps\blog\views\post\manage.py:320 .\apps\blog\views\profile_posts.py:221
+#: .\templates\base.html:55
 msgid "Search articles..."
 msgstr "搜索文章..."
 
-#, fuzzy
-#| msgid "Publish article"
+#: .\apps\blog\views\post\manage.py:323 .\apps\blog\views\profile_posts.py:224
 msgid "Published articles"
-msgstr "发布文章"
+msgstr "已发布文章"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:349
 msgid "Article created: %(title)s"
 msgstr "文章已创建：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:350 .\apps\blog\views\post\manage.py:453
 msgid "Article published successfully."
 msgstr "文章发布成功。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:353 .\apps\blog\views\profile_posts.py:249
 msgid "Draft created: %(title)s"
 msgstr "草稿已创建：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:354 .\apps\blog\views\post\manage.py:457
+#: .\apps\blog\views\profile_posts.py:250
+#: .\apps\blog\views\profile_posts.py:293
 msgid "Draft saved successfully."
 msgstr "草稿保存成功。"
 
-#, fuzzy
-#| msgid "Related articles"
+#: .\apps\blog\views\post\manage.py:362
 msgid "Create article"
-msgstr "相关文章"
+msgstr "创建文章"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:401 .\apps\blog\views\post\manage.py:458
 msgid "Revision saved: %(title)s"
 msgstr "修订版已保存：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:402 .\apps\blog\views\post\manage.py:457
 msgid "Revision saved successfully."
 msgstr "修订版保存成功。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:410
 msgid "Article updated: %(title)s"
 msgstr "文章已更新：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:411
 msgid "Article updated successfully."
 msgstr "文章更新成功。"
 
+#: .\apps\blog\views\post\manage.py:416
 msgid "Edit article"
 msgstr "编辑文章"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:452
 msgid "Article published: %(title)s"
 msgstr "文章已发布：%(title)s"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:458 .\apps\blog\views\profile_posts.py:292
 msgid "Draft saved: %(title)s"
 msgstr "草稿已保存：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:468
 msgid "Edit revision"
 msgstr "编辑修订版"
 
+#: .\apps\blog\views\post\manage.py:468 .\apps\blog\views\profile_posts.py:313
 msgid "Edit draft"
 msgstr "编辑草稿"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:519 .\apps\blog\views\profile_posts.py:382
 msgid "Draft imported from article: %(title)s"
 msgstr "已从文章导入草稿：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:520 .\apps\blog\views\profile_posts.py:383
 msgid "Article imported as draft successfully."
 msgstr "文章已成功导入为草稿。"
 
+#: .\apps\blog\views\post\manage.py:536
+#: .\templates\blog\editor\post_import_manage.html:4
+#: .\templates\blog\editor\post_import_manage.html:19
+#: .\templates\blog\editor\post_import_profile.html:4
+#: .\templates\blog\editor\post_import_profile.html:21
+#: .\templates\blog\manage\post_list.html:25
+#: .\templates\blog\profile\posts.html:27
 msgid "Import from existing article"
 msgstr "从已有文章导入"
 
+#: .\apps\blog\views\post\manage.py:554 .\apps\blog\views\profile_posts.py:427
 msgid "Unable to import the selected markdown file."
-msgstr ""
+msgstr "无法导入所选 Markdown 文件。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:585 .\apps\blog\views\profile_posts.py:453
 msgid "Draft imported from markdown file: %(title)s"
 msgstr "已从 Markdown 文件导入草稿：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:586 .\apps\blog\views\profile_posts.py:454
 msgid "Article imported from .md successfully."
 msgstr "文章已成功从 .md 导入。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:633 .\apps\blog\views\profile_posts.py:326
 msgid "Draft deleted: %(title)s"
 msgstr "草稿已删除：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:634 .\apps\blog\views\profile_posts.py:327
 msgid "Draft deleted successfully."
 msgstr "草稿删除成功。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:647 .\apps\blog\views\post\manage.py:663
 msgid "Cover image removed: %(title)s"
 msgstr "已删除封面图：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:650 .\apps\blog\views\post\manage.py:666
 msgid "Cover image removed successfully."
 msgstr "封面图删除成功。"
 
-#, python-format
+#: .\apps\blog\views\post\manage.py:681
 msgid "Article deleted: %(title)s"
 msgstr "文章已删除：%(title)s"
 
+#: .\apps\blog\views\post\manage.py:682
 msgid "Article deleted successfully."
 msgstr "文章删除成功。"
 
-msgid "No image uploaded."
-msgstr ""
-
-msgid "Enter article password"
-msgstr "输入密码"
-
-msgid "Updated"
-msgstr "更新时间"
-
+#: .\apps\blog\views\post\utils\importer.py:156
 msgid "Imported post"
 msgstr "导入的文章"
 
+#: .\apps\blog\views\post\utils\share.py:29
 msgid ""
 "This article has not been published yet. Publish it before generating an "
 "external link."
 msgstr "这篇文章尚未发布，请先发布后再生成外链。"
 
+#: .\apps\blog\views\post\utils\share.py:31
 msgid ""
 "Only the original author can generate a new external link for this article."
 msgstr "只有原始作者可以为这篇文章生成新的外链。"
 
+#: .\apps\blog\views\profile.py:20
+#: .\templates\blog\manage\site_settings.html:30
+#: .\templates\blog\manage\user_form.html:33
+#: .\templates\blog\profile\overview.html:28
+#: .\templates\blog\profile\overview.html:47
 msgid "Basic information"
 msgstr "基本信息"
 
+#: .\apps\blog\views\profile.py:21 .\templates\blog\manage\user_form.html:114
+#: .\templates\blog\profile\overview.html:24
 msgid "Account security"
 msgstr "账号安全"
 
-#, fuzzy
-#| msgid "Add articles"
+#: .\apps\blog\views\profile.py:25 .\templates\blog\profile\posts.html:4
+#: .\templates\blog\profile\posts.html:21
 msgid "My articles"
 msgstr "我的文章"
 
+#: .\apps\blog\views\profile.py:26 .\templates\blog\profile\books.html:4
+#: .\templates\blog\profile\books.html:21
+msgid "My books"
+msgstr "我的图书"
+
+#: .\apps\blog\views\profile.py:28 .\templates\blog\profile\comments.html:4
+#: .\templates\blog\profile\comments.html:21
 msgid "My comments"
 msgstr "我的评论"
 
+#: .\apps\blog\views\profile.py:111
+msgid "Publish articles"
+msgstr "发布文章"
+
+#: .\apps\blog\views\profile.py:112
+msgid "Post comments"
+msgstr "发表评论"
+
+#: .\apps\blog\views\profile.py:113
+msgid "Publish books"
+msgstr "发布图书"
+
+#: .\apps\blog\views\profile.py:114
+msgid "Upload attachments"
+msgstr "上传附件"
+
+#: .\apps\blog\views\profile.py:115
+msgid "Upload videos"
+msgstr "上传视频"
+
+#: .\apps\blog\views\profile.py:116
+msgid "VIP special resources"
+msgstr "VIP 专属资源"
+
+#: .\apps\blog\views\profile.py:117
+msgid "VIP money resource discount"
+msgstr "VIP 金额资源折扣"
+
+#: .\apps\blog\views\profile.py:118
+msgid "VIP points resource reduction"
+msgstr "VIP 积分资源减免"
+
+#: .\apps\blog\views\profile.py:119
+msgid "VIP author money reward bonus"
+msgstr "VIP 作者金额奖励加成"
+
+#: .\apps\blog\views\profile.py:120
+msgid "VIP author points reward bonus"
+msgstr "VIP 作者积分奖励加成"
+
+#: .\apps\blog\views\profile.py:121
+msgid "VIP daily login extra money"
+msgstr "VIP 每日登录额外金额"
+
+#: .\apps\blog\views\profile.py:122
+msgid "VIP daily login extra points"
+msgstr "VIP 每日登录额外积分"
+
+#: .\apps\blog\views\profile.py:123
+msgid "VIP first article comment extra money"
+msgstr "VIP 文章首评额外金额"
+
+#: .\apps\blog\views\profile.py:124
+msgid "VIP first article comment extra points"
+msgstr "VIP 文章首评额外积分"
+
+#: .\apps\blog\views\profile.py:183
 msgid "Password changed"
 msgstr "密码已修改"
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\profile.py:184
 msgid "Password updated successfully."
-msgstr "文章更新成功。"
+msgstr "密码更新成功。"
 
+#: .\apps\blog\views\profile.py:262
 msgid "Profile updated"
 msgstr "个人资料已更新"
 
-#, fuzzy
-#| msgid "Post updated successfully."
+#: .\apps\blog\views\profile.py:263
 msgid "Profile updated successfully."
-msgstr "文章更新成功。"
+msgstr "个人资料更新成功。"
 
-#, fuzzy
-#| msgid "You do not have permission to delete this comment."
+#: .\apps\blog\views\profile_posts.py:364
 msgid "You do not have permission to import this article."
-msgstr "您没有权限删除这条评论。"
+msgstr "你没有权限导入这篇文章。"
 
+#: .\apps\users\forms.py:17 .\apps\users\tests\test_auth.py:17
 msgid "Username or email"
 msgstr "用户名或邮箱"
 
+#: .\apps\users\forms.py:21 .\apps\users\tests\test_auth.py:18
 msgid "Enter your username or email"
 msgstr "请输入用户名或邮箱"
 
+#: .\apps\users\forms.py:32 .\apps\users\forms.py:89
 msgid "Enter your password"
 msgstr "请输入密码"
 
+#: .\apps\users\forms.py:39
 msgid "Remember me"
 msgstr "记住我"
 
+#: .\apps\users\forms.py:44 .\apps\users\tests\test_auth.py:19
 msgid "Username/email or password is incorrect."
 msgstr "用户名/邮箱或密码不正确。"
 
+#: .\apps\users\forms.py:45
 msgid "This account is inactive."
 msgstr "当前账号不可用。"
 
+#: .\apps\users\forms.py:56
+msgid "Enter your username"
+msgstr "请输入用户名"
+
+#: .\apps\users\forms.py:66
 msgid "Enter your email"
 msgstr "请输入邮箱"
 
-msgid "Confirm password"
-msgstr "确认密码"
-
+#: .\apps\users\forms.py:100
 msgid "Enter your password again"
 msgstr "请再次输入密码"
 
-msgid "This username is already taken."
-msgstr "该用户名已被占用。"
-
+#: .\apps\users\forms.py:115 .\apps\users\views.py:226
+#: .\apps\users\views.py:262
 msgid "This email is already registered."
 msgstr "该邮箱已被注册。"
 
-msgid "Please wait before requesting another verification code."
-msgstr "请稍后再请求新的验证码。"
+#: .\apps\users\models.py:39
+msgid "Unspecified"
+msgstr "未指定"
 
-msgid "Verification code sent."
-msgstr "验证码已发送。"
+#: .\apps\users\models.py:40
+msgid "Male"
+msgstr "男"
 
-msgid "Registration is currently unavailable."
-msgstr "当前暂不支持注册。"
+#: .\apps\users\models.py:41
+msgid "Female"
+msgstr "女"
 
-msgid "Registration successful. Please sign in."
-msgstr "注册成功，请登录。"
+#: .\apps\users\models.py:42
+msgid "Other"
+msgstr "其他"
 
-msgid "Email is required."
-msgstr "请输入邮箱。"
-
-msgid "Enter a valid email address."
-msgstr "请输入有效的邮箱地址。"
-
-#, python-format
-msgid "[%(app_name)s] Your verification code"
-msgstr "【%(app_name)s】验证码"
-
-msgid "Email verification is currently unavailable."
-msgstr "当前暂不可进行邮箱验证。"
-
-msgid "Please enter a different email address."
-msgstr "请输入不同的邮箱地址。"
-
-#, python-format
-msgid "[%(app_name)s] Your email verification code"
-msgstr "【%(app_name)s】邮箱验证码"
-
-msgid "Password reset is currently unavailable."
-msgstr "当前暂不支持密码重置。"
-
+#: .\apps\users\tests\test_auth.py:16 .\apps\users\views.py:291
+#: .\apps\users\views.py:317 .\templates\auth\login.html:106
 msgid "Password reset successful. Please check your email."
 msgstr "密码重置成功，请检查邮箱。"
 
-#, python-format
+#: .\apps\users\tests\test_auth.py:20 .\apps\users\views.py:167
+msgid "Daily first login reward: %(rewards)s."
+msgstr "每日首次登录奖励：%(rewards)s。"
+
+#: .\apps\users\tests\test_auth.py:21 .\apps\users\views.py:159
+#: .\apps\users\views.py:163
+msgid "+%(money)s money"
+msgstr "+%(money)s 金额"
+
+#: .\apps\users\tests\test_auth.py:22 .\apps\users\views.py:161
+#: .\apps\users\views.py:165
+msgid "+%(points)s points"
+msgstr "+%(points)s 积分"
+
+#: .\apps\users\tests\test_auth.py:23 .\apps\users\views.py:170
+msgid "%(vip_name)s bonus: %(rewards)s."
+msgstr "%(vip_name)s 加成：%(rewards)s。"
+
+#: .\apps\users\views.py:97
+msgid "Please wait before requesting another verification code."
+msgstr "请稍后再请求新的验证码。"
+
+#: .\apps\users\views.py:118
+msgid "Verification code sent."
+msgstr "验证码已发送。"
+
+#: .\apps\users\views.py:129
+msgid "Registration is currently unavailable."
+msgstr "当前暂不支持注册。"
+
+#: .\apps\users\views.py:207
+msgid "Registration successful. Please sign in."
+msgstr "注册成功，请登录。"
+
+#: .\apps\users\views.py:217 .\apps\users\views.py:250
+msgid "Email is required."
+msgstr "请输入邮箱。"
+
+#: .\apps\users\views.py:223 .\apps\users\views.py:256
+msgid "Enter a valid email address."
+msgstr "请输入有效的邮箱地址。"
+
+#: .\apps\users\views.py:233 .\templates\emails\register_code.html:7
+msgid "[%(app_name)s] Your verification code"
+msgstr "【%(app_name)s】验证码"
+
+#: .\apps\users\views.py:244
+msgid "Email verification is currently unavailable."
+msgstr "当前暂不可进行邮箱验证。"
+
+#: .\apps\users\views.py:259
+msgid "Please enter a different email address."
+msgstr "请输入不同的邮箱地址。"
+
+#: .\apps\users\views.py:269 .\templates\emails\email_change_code.html:7
+msgid "[%(app_name)s] Your email verification code"
+msgstr "【%(app_name)s】邮箱验证码"
+
+#: .\apps\users\views.py:281 .\templates\auth\login.html:108
+msgid "Password reset is currently unavailable."
+msgstr "当前暂不支持密码重置。"
+
+#: .\apps\users\views.py:303 .\templates\emails\reset_password.html:7
 msgid "[%(app_name)s] Your temporary password"
 msgstr "【%(app_name)s】临时密码"
 
+#: .\config\settings\base.py:101
 msgid "Simplified Chinese"
 msgstr "简体中文"
 
+#: .\config\settings\base.py:102
 msgid "English"
 msgstr "英文"
 
+#: .\templates\auth\login.html:31
 msgid "Welcome back"
 msgstr "欢迎回来"
 
+#: .\templates\auth\login.html:34
 msgid "No account? Sign up"
 msgstr "还没有账号？去注册"
 
+#: .\templates\auth\login.html:73 .\templates\auth\login.html:75
+#: .\templates\auth\login.html:88 .\templates\auth\register.html:92
+#: .\templates\auth\register.html:94 .\templates\auth\register.html:107
+#: .\templates\auth\register.html:122 .\templates\auth\register.html:124
+#: .\templates\auth\register.html:137
 msgid "Show password"
 msgstr "显示密码"
 
+#: .\templates\auth\login.html:74 .\templates\auth\register.html:93
+#: .\templates\auth\register.html:123
 msgid "Hide password"
 msgstr "隐藏密码"
 
+#: .\templates\auth\login.html:105
 msgid "Password Reset"
 msgstr "密码重置"
 
+#: .\templates\auth\login.html:107
 msgid "Password Reset Unavailable"
 msgstr "密码重置不可用"
 
+#: .\templates\auth\login.html:109
 msgid "OK"
 msgstr "确定"
 
+#: .\templates\auth\login.html:111
 msgid "Forgot password"
 msgstr "忘记密码"
 
+#: .\templates\auth\login.html:117
 msgid "Sign in"
 msgstr "登录"
 
+#: .\templates\auth\register.html:4 .\templates\auth\register.html:144
 msgid "Register"
 msgstr "注册"
 
+#: .\templates\auth\register.html:31
 msgid "Create account"
 msgstr "创建账号"
 
+#: .\templates\auth\register.html:33
 msgid "Already has account? Sign in"
 msgstr "已有账号？去登录"
 
+#: .\templates\auth\register.html:72 .\templates\auth\register.html:76
+#: .\templates\blog\profile\overview.html:170
+#: .\templates\blog\profile\overview.html:172
 msgid "Send code"
 msgstr "发送验证码"
 
-#, fuzzy, python-format
-#| msgid "Resend in %(seconds)s s"
+#: .\templates\auth\register.html:73
 msgid "Resend in %%(seconds)s s"
 msgstr "%(seconds)s 秒后重发"
 
+#: .\templates\auth\register.html:74
 msgid "Request failed."
 msgstr "请求失败。"
 
+#: .\templates\base.html:22
 msgid "Primary navigation"
-msgstr ""
+msgstr "主导航"
 
+#: .\templates\base.html:23 .\templates\base.html:25
 msgid "Home"
 msgstr "主页"
 
+#: .\templates\base.html:55 .\templates\blog\manage\book_list.html:24
+#: .\templates\blog\profile\books.html:28
 msgid "Search books..."
 msgstr "搜索图书..."
 
-#, fuzzy
-#| msgid "Search posts..."
+#: .\templates\base.html:55
 msgid "Search tags..."
-msgstr "搜索文章..."
+msgstr "搜索标签..."
 
-#, fuzzy
-#| msgid "Open management"
+#: .\templates\base.html:72
 msgid "Open user menu"
-msgstr "打开管理页"
+msgstr "打开用户菜单"
 
-#, fuzzy
-#| msgid "Account security"
+#: .\templates\base.html:91
 msgid "Account summary"
-msgstr "账号安全"
+msgstr "账号摘要"
 
+#: .\templates\base.html:110 .\templates\blog\manage\sidebar.html:5
 msgid "Website management"
 msgstr "网站管理"
 
+#: .\templates\base.html:112
 msgid "Profile settings"
 msgstr "个人设置"
 
+#: .\templates\base.html:116
 msgid "Sign out"
 msgstr "退出"
 
-#, fuzzy
-#| msgid "Profile sections"
+#: .\templates\base.html:129
 msgid "Notifications"
-msgstr "个人设置导航"
+msgstr "通知"
 
+#: .\templates\base.html:140
 msgid "Delete item"
 msgstr "删除项目"
 
+#: .\templates\base.html:141
 msgid "Remove item"
 msgstr "移除项目"
 
+#: .\templates\base.html:142
 msgid "Are you sure you want to continue? This action cannot be undone."
 msgstr "确定要继续吗？此操作不可恢复。"
 
+#: .\templates\base.html:143 .\templates\blog\editor\book_form.html:194
+#: .\templates\blog\includes\comment_threads.html:63
+#: .\templates\blog\includes\comment_threads.html:65
+#: .\templates\blog\includes\comment_threads.html:230
+#: .\templates\blog\includes\comment_threads.html:232
+#: .\templates\blog\manage\attachment_list.html:82
+#: .\templates\blog\manage\attachment_list.html:87
+#: .\templates\blog\manage\book_list.html:66
+#: .\templates\blog\manage\book_list.html:70
+#: .\templates\blog\manage\comment_list.html:57
+#: .\templates\blog\manage\comment_list.html:61
+#: .\templates\blog\manage\post_list.html:150
+#: .\templates\blog\manage\post_list.html:154
+#: .\templates\blog\manage\post_list.html:180
+#: .\templates\blog\manage\post_list.html:184
+#: .\templates\blog\manage\post_list.html:195
+#: .\templates\blog\manage\post_list.html:199
+#: .\templates\blog\manage\user_form.html:203
+#: .\templates\blog\manage\user_form.html:205
+#: .\templates\blog\profile\attachments.html:72
+#: .\templates\blog\profile\attachments.html:76
+#: .\templates\blog\profile\books.html:70
+#: .\templates\blog\profile\books.html:74
+#: .\templates\blog\profile\comments.html:61
+#: .\templates\blog\profile\comments.html:65
+#: .\templates\blog\profile\posts.html:106
+#: .\templates\blog\profile\posts.html:110
 msgid "Delete"
 msgstr "删除"
 
+#: .\templates\base.html:144
 msgid "Remove"
 msgstr "移除"
 
+#: .\templates\base.html:146
 msgid "Unsaved changes"
 msgstr "未保存的更改"
 
+#: .\templates\base.html:147
 msgid "Discard unsaved changes?"
 msgstr "放弃未保存的更改？"
 
+#: .\templates\base.html:148
 msgid ""
 "Your changes have not been saved yet. If you leave this page now, those "
 "changes will be lost."
 msgstr "你当前的修改尚未保存。离开此页面后，这些更改将会丢失。"
 
+#: .\templates\base.html:149
 msgid "Leave page"
 msgstr "仍要离开"
 
+#: .\templates\base.html:150
 msgid "Keep editing"
 msgstr "继续编辑"
 
+#: .\templates\base.html:159 .\templates\blog\book_detail.html:198
+#: .\templates\blog\detail.html:151
+#: .\templates\blog\includes\comment_threads.html:102
+#: .\templates\blog\includes\comment_threads.html:125
+#: .\templates\blog\includes\comment_threads.html:269
+#: .\templates\blog\includes\comment_threads.html:305
+#: .\templates\blog\manage\comment_list.html:90
+#: .\templates\blog\manage\post_list.html:140
+#: .\templates\blog\profile\comments.html:94
 msgid "Close"
 msgstr "关闭"
 
+#: .\templates\blog\access_gate.html:4 .\templates\blog\access_gate.html:12
+#: .\templates\blog\access_gate.html:15
+msgid "Access verification"
+msgstr "访问验证"
+
+#: .\templates\blog\access_gate.html:30
+#: .\templates\blog\includes\attachment_access_gate.html:17
+#: .\templates\blog\manage\post_list.html:70
+#: .\templates\blog\profile\posts.html:69
+msgid "Type"
+msgstr "类型"
+
+#: .\templates\blog\access_gate.html:31
+#: .\templates\blog\includes\attachment_access_gate.html:18
+msgid "Requirement"
+msgstr "要求"
+
+#: .\templates\blog\access_gate.html:32
+#: .\templates\blog\includes\attachment_access_gate.html:19
+msgid "Authorization"
+msgstr "授权"
+
+#: .\templates\blog\access_gate.html:55
+#: .\templates\blog\includes\attachment_access_gate.html:40
+msgid "Granted"
+msgstr "已通过"
+
+#: .\templates\blog\access_gate.html:60
+#: .\templates\blog\includes\attachment_access_gate.html:42
+msgid "Verify"
+msgstr "验证"
+
+#: .\templates\blog\access_gate.html:64
+#: .\templates\blog\includes\attachment_access_gate.html:44
+msgid "Purchase"
+msgstr "购买"
+
+#: .\templates\blog\access_gate.html:67
+#: .\templates\blog\includes\attachment_access_gate.html:46
+msgid "Cannot satisfy"
+msgstr "无法满足"
+
+#: .\templates\blog\access_gate.html:90 .\templates\blog\access_gate.html:101
+#: .\templates\blog\includes\attachment_access_gate.html:60
+#: .\templates\blog\includes\attachment_access_gate.html:70
+#: .\templates\blog\manage\site_settings.html:715
+msgid "Confirm"
+msgstr "确认"
+
+#: .\templates\blog\access_gate.html:115
+msgid "Enter"
+msgstr "进入"
+
+#: .\templates\blog\article_list.html:17
 msgid "Browse every article you can access, including encrypted ones."
 msgstr "浏览所有你可访问的文章，包括加密文章。"
 
+#: .\templates\blog\article_list.html:25 .\templates\blog\book_detail.html:154
 msgid "No accessible articles yet"
 msgstr "暂无可访问文章"
 
+#: .\templates\blog\article_list.html:26
 msgid "Articles you can access will appear here once they are published."
 msgstr "你可访问的文章在发布后会显示在这里。"
 
+#: .\templates\blog\book_detail.html:23 .\templates\blog\book_detail.html:27
+#: .\templates\blog\editor\book_form.html:182
 msgid "Chapters"
 msgstr "章节"
 
+#: .\templates\blog\book_detail.html:29
 msgid "Book chapters"
 msgstr "图书章节"
 
+#: .\templates\blog\book_detail.html:43 .\templates\blog\book_detail.html:47
+#: .\templates\blog\detail.html:23 .\templates\blog\detail.html:27
 msgid "Table of Contents"
-msgstr ""
+msgstr "目录"
 
-#, fuzzy
-#| msgid "Back to posts"
+#: .\templates\blog\book_detail.html:48 .\templates\blog\detail.html:28
 msgid "Back to top"
-msgstr "返回文章管理"
+msgstr "回到顶部"
 
-#, fuzzy
-#| msgid "Article editor"
+#: .\templates\blog\book_detail.html:50 .\templates\blog\detail.html:30
 msgid "Article outline"
-msgstr "文章编辑器"
+msgstr "文章大纲"
 
-#, fuzzy
-#| msgid "Copy link"
+#: .\templates\blog\book_detail.html:119 .\templates\blog\detail.html:71
+#: .\templates\blog\includes\comment_threads.html:79
+#: .\templates\blog\includes\comment_threads.html:246
+#: .\templates\blog\includes\namecard_comments.html:34
 msgid "Copy"
-msgstr "复制链接"
+msgstr "复制"
 
+#: .\templates\blog\book_detail.html:120 .\templates\blog\detail.html:72
+#: .\templates\blog\includes\comment_threads.html:80
+#: .\templates\blog\includes\comment_threads.html:247
+#: .\templates\blog\includes\namecard_comments.html:35
 msgid "Copied"
-msgstr ""
+msgstr "已复制"
 
-msgid "Failed"
-msgstr ""
-
-#, python-format
+#: .\templates\blog\book_detail.html:124 .\templates\blog\detail.html:76
+#: .\templates\blog\includes\comment_threads.html:84
+#: .\templates\blog\includes\comment_threads.html:251
+#: .\templates\blog\includes\namecard_comments.html:39
 msgid "Hidden %%count%% more lines"
-msgstr ""
+msgstr "还有 %%count%% 行被隐藏"
 
-#, fuzzy
-#| msgid "Show"
+#: .\templates\blog\book_detail.html:125 .\templates\blog\detail.html:77
+#: .\templates\blog\includes\comment_threads.html:85
+#: .\templates\blog\includes\comment_threads.html:252
+#: .\templates\blog\includes\namecard_comments.html:40
 msgid "Show all"
-msgstr "显示"
+msgstr "显示全部"
 
+#: .\templates\blog\book_detail.html:163 .\templates\blog\detail.html:116
 msgid "Discussion"
 msgstr "讨论"
 
-#, python-format
+#: .\templates\blog\book_detail.html:165 .\templates\blog\detail.html:118
 msgid "%(total)s Comment"
 msgid_plural "%(total)s Comments"
 msgstr[0] "%(total)s 条评论"
 
+#: .\templates\blog\book_detail.html:174 .\templates\blog\book_detail.html:199
+#: .\templates\blog\detail.html:127 .\templates\blog\detail.html:152
 msgid "Post comment"
 msgstr "发表评论"
 
-#, fuzzy
-#| msgid ""
-#| "Supports Markdown, side-by-side preview, direct image upload, table "
-#| "insertion, and GitHub-style callouts."
+#: .\templates\blog\book_detail.html:194 .\templates\blog\detail.html:147
+#: .\templates\blog\editor\post_form.html:204
+#: .\templates\blog\manage\comment_list.html:84
+#: .\templates\blog\profile\comments.html:88
 msgid ""
-"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
-"direct image upload, table insertion, and GitHub-style callouts."
+"Supports Markdown, colored text, emoji insertion, direct image and video "
+"upload, side-by-side preview, table insertion, and GitHub-style callouts."
 msgstr ""
-"支持 Markdown、并排预览、直接上传图片、插入表格，以及 GitHub 风格的提示块。"
+"支持 Markdown、彩色文本、表情插入、直接上传图片和视频、并排预览、插入"
+"表格，以及 GitHub 风格提示块。"
 
+#: .\templates\blog\book_list.html:15
 msgid "Library"
 msgstr "书库"
 
-#, python-format
+#: .\templates\blog\book_list.html:41 .\templates\blog\namecard.html:178
 msgid "%(total)s article"
 msgid_plural "%(total)s articles"
 msgstr[0] "%(total)s 篇文章"
 
+#: .\templates\blog\book_list.html:52
+msgid "Please sign in to star books."
+msgstr "请先登录后再收藏图书。"
+
+#: .\templates\blog\book_list.html:53 .\templates\blog\book_list.html:56
+msgid "Star book"
+msgstr "收藏图书"
+
+#: .\templates\blog\book_list.html:54 .\templates\blog\book_list.html:56
+msgid "Unstar book"
+msgstr "取消收藏图书"
+
+#: .\templates\blog\book_list.html:63 .\templates\blog\namecard.html:183
 msgid "No summary yet."
 msgstr "暂无摘要。"
 
+#: .\templates\blog\book_list.html:68 .\templates\blog\namecard.html:188
 msgid "No books yet"
 msgstr "还没有图书"
 
+#: .\templates\blog\book_list.html:69
 msgid "Books will appear here after editors create and publish them."
 msgstr "编辑创建并发布图书后，会在这里显示。"
 
+#: .\templates\blog\detail.html:90 .\templates\blog\includes\post_card.html:47
+msgid "Please sign in to star articles."
+msgstr "请先登录后再收藏文章。"
+
+#: .\templates\blog\detail.html:91 .\templates\blog\detail.html:94
+#: .\templates\blog\includes\post_card.html:48
+#: .\templates\blog\includes\post_card.html:51
+msgid "Star article"
+msgstr "收藏文章"
+
+#: .\templates\blog\detail.html:92 .\templates\blog\detail.html:94
+#: .\templates\blog\includes\post_card.html:49
+#: .\templates\blog\includes\post_card.html:51
+msgid "Unstar article"
+msgstr "取消收藏文章"
+
+#: .\templates\blog\detail.html:167
 msgid "More"
 msgstr "更多"
 
+#: .\templates\blog\detail.html:168
 msgid "Related articles"
 msgstr "相关文章"
 
-#, fuzzy
-#| msgid "No published posts yet"
+#: .\templates\blog\detail.html:176
 msgid "No Related articles yet."
-msgstr "还没有已发布的文章"
+msgstr "暂无相关文章。"
 
-msgid "Blog"
-msgstr ""
-
-msgid "Overview"
-msgstr "概览"
-
-msgid "Blog performance dashboard"
-msgstr "博客数据看板"
-
-msgid ""
-"Track publishing cadence, editorial activity, and the latest content updates "
-"from one place."
-msgstr "在一个页面中查看发文节奏、编辑活动和最新内容动态。"
-
-msgid "Explore articles"
-msgstr "浏览文章"
-
-msgid "Write a new article"
-msgstr "写一篇新文章"
-
-#, fuzzy
-#| msgid "Activity in the last 30 days"
-msgid "Article views in the last 7 days"
-msgstr "近 30 天活动"
-
-#, fuzzy
-#| msgid "Fresh articles released this week."
-msgid "Independent article page visits recorded this week."
-msgstr "本周新发布的文章数量。"
-
-#, fuzzy
-#| msgid "Published in the last 7 days"
-msgid "Book views in the last 7 days"
-msgstr "近 7 天发布"
-
-msgid "Independent book page visits recorded this week."
-msgstr ""
-
-msgid "Highlights"
-msgstr "亮点"
-
-msgid "Content snapshot"
-msgstr "内容快照"
-
-msgid "Total articles"
-msgstr "文章总数"
-
-msgid "All articles currently stored in the blog."
-msgstr "当前博客中已存储的全部文章。"
-
-msgid "Topic labels used to organize the content library."
-msgstr "用于整理内容库的主题标签数量。"
-
-msgid "Books used to organize related articles."
-msgstr "用于整理相关文章的图书数量。"
-
-msgid "Authors"
-msgstr "作者"
-
-msgid "Contributors who have published or drafted articles."
-msgstr "已发布或创建过草稿的作者数量。"
-
-msgid "Traffic"
-msgstr ""
-
-#, fuzzy, python-format
-#| msgid "Activity in the last 30 days"
-msgid "Visits in the last %(days)s days"
-msgstr "近 30 天活动"
-
-#, fuzzy, python-format
-#| msgid "Post publishing trend in the last 30 days"
-msgid "Article and book visit trend in the last %(days)s days"
-msgstr "近 30 天文章发布趋势"
-
-msgid "Latest published articles"
-msgstr "最新发布文章"
-
-#, fuzzy
-#| msgid "Write a new article"
-msgid "Write a new post"
-msgstr "写一篇新文章"
-
-msgid "No published articles yet"
-msgstr "还没有已发布的文章"
-
-msgid ""
-"Create your first article from the management panel to populate the homepage."
-msgstr "从管理面板创建你的第一篇文章，为首页填充内容。"
-
-msgid "Author"
-msgstr "作者"
-
-msgid "Open comment actions"
-msgstr ""
-
-msgid "Edit"
-msgstr "编辑"
-
-msgid ""
-"Are you sure you want to delete this comment? This action cannot be undone."
-msgstr "确定要删除这条评论吗？此操作不可恢复。"
-
-msgid "Confirm"
-msgstr "确认"
-
-msgid "Restore defaults"
-msgstr "恢复默认"
-
-msgid "Save"
-msgstr "保存"
-
-msgid "Post reply"
-msgstr "发表回复"
-
-msgid "Like"
-msgstr "点赞"
-
-msgid "Dislike"
-msgstr "点踩"
-
-#, python-format
-msgid "Expand %(count)s replies"
-msgstr ""
-
-msgid "Collapse replies"
-msgstr ""
-
-msgid "No comments yet."
-msgstr "还没有评论。"
-
-#, python-format
-msgid "Page %(current)s of %(total)s"
-msgstr ""
-
-msgid "Previous"
-msgstr "上一页"
-
-msgid "Next"
-msgstr "下一页"
-
-msgid "Jump to page"
-msgstr ""
-
-msgid "Go"
-msgstr "跳转"
-
-#, python-format
-msgctxt "conditional summary"
-msgid "%(counter)s condition"
-msgid_plural "%(counter)s conditions"
-msgstr[0] ""
-
-#, fuzzy
-#| msgid "Article Editor"
-msgid "Article in book"
-msgstr "文章编辑器"
-
-#, fuzzy
-#| msgid "New article"
-msgid "From article"
-msgstr "新建文章"
-
-#, python-format
-msgid "Page: %(current)s / %(total)s"
-msgstr ""
-
-#, python-format
-msgid "Likes %(up)s, dislikes %(down)s"
-msgstr ""
-
-msgid "No tags"
-msgstr ""
-
-msgid "Audit Logs"
-msgstr "审计日志"
-
-msgid "Manage"
-msgstr "管理"
-
-msgid "Access audit"
-msgstr "访问审计"
-
-msgid "Clear audit logs"
-msgstr "清理审计日志"
-
-msgid ""
-"Are you sure you want to clear all audit logs? This action cannot be undone."
-msgstr "确定要清理所有审计日志吗？此操作无法撤销。"
-
-msgid ""
-"Are you sure you want to restore all settings to their defaults?"
-msgstr "确定要恢复所有默认设置吗？"
-
-msgid "Clear"
-msgstr "清理"
-
-msgid "Search audit logs..."
-msgstr "搜索审计日志..."
-
-msgid "Search audit logs"
-msgstr "搜索审计日志"
-
-#, fuzzy
-#| msgid "Actions"
-msgid "Action"
-msgstr "操作"
-
-msgid "Message"
-msgstr ""
-
-#, fuzzy
-#| msgid "Users"
-msgid "User"
-msgstr "用户"
-
-msgid "IP"
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Anonymous"
-msgstr "匿名"
-
-msgid "No audit logs yet"
-msgstr "暂无审计日志"
-
+#: .\templates\blog\editor\book_form.html:4
+#: .\templates\blog\editor\book_form.html:30
 msgid "Book Editor"
 msgstr "图书编辑器"
 
+#: .\templates\blog\editor\book_form.html:29
+#: .\templates\blog\editor\post_form.html:28
 msgid "Editor"
 msgstr "编辑器"
 
+#: .\templates\blog\editor\book_form.html:74
+#: .\templates\blog\editor\post_form.html:80
 msgid "Delete cover image"
 msgstr "删除封面图"
 
+#: .\templates\blog\editor\book_form.html:75
+#: .\templates\blog\editor\post_form.html:81
+#: .\templates\blog\manage\user_form.html:46
+#: .\templates\blog\profile\overview.html:64
 msgid "Undo"
 msgstr "撤销"
 
+#: .\templates\blog\editor\book_form.html:91
+#: .\templates\blog\editor\post_form.html:108
+#: .\templates\blog\manage\attachment_list.html:117
 msgid "Conditions"
-msgstr ""
+msgstr "条件"
 
+#: .\templates\blog\editor\book_form.html:98
+#: .\templates\blog\editor\post_form.html:115
 msgid "Condition types are full"
-msgstr ""
+msgstr "条件类型已满"
 
+#: .\templates\blog\editor\book_form.html:99
+#: .\templates\blog\editor\book_form.html:125
+#: .\templates\blog\editor\post_form.html:116
+#: .\templates\blog\editor\post_form.html:144
 msgid "Value"
-msgstr ""
+msgstr "值"
 
-#, fuzzy
-#| msgid "Enter your password"
+#: .\templates\blog\editor\book_form.html:100
+#: .\templates\blog\editor\book_form.html:126
+#: .\templates\blog\editor\post_form.html:117
+#: .\templates\blog\editor\post_form.html:145
 msgid "Enter password"
-msgstr "请输入密码"
+msgstr "输入密码"
 
-#, fuzzy
-#| msgid "Leave blank to keep the current password."
+#: .\templates\blog\editor\book_form.html:101
+#: .\templates\blog\editor\book_form.html:127
+#: .\templates\blog\editor\post_form.html:118
+#: .\templates\blog\editor\post_form.html:146
 msgid "Leave blank to keep current password"
-msgstr "留空则保持当前密码不变。"
+msgstr "留空则保留当前密码"
 
+#: .\templates\blog\editor\book_form.html:117
+#: .\templates\blog\editor\post_form.html:136
+#: .\templates\blog\manage\attachment_list.html:118
+msgid "VIP conditions"
+msgstr "VIP 条件"
+
+#: .\templates\blog\editor\book_form.html:124
+#: .\templates\blog\editor\post_form.html:143
+msgid "VIP condition types are full"
+msgstr "VIP 条件类型已满"
+
+#: .\templates\blog\editor\book_form.html:137
+#: .\templates\blog\editor\post_form.html:158
 msgid "External link"
 msgstr "外链"
 
+#: .\templates\blog\editor\book_form.html:143
+#: .\templates\blog\editor\post_form.html:164
 msgid "Link expiry"
 msgstr "过期时间"
 
-#, fuzzy
-#| msgid "Request failed."
+#: .\templates\blog\editor\book_form.html:159
+#: .\templates\blog\editor\post_form.html:180
+#: .\templates\blog\manage\post_list.html:139
 msgid "Request failed. Please try again."
-msgstr "请求失败。"
+msgstr "请求失败，请重试。"
 
+#: .\templates\blog\editor\book_form.html:160
+#: .\templates\blog\editor\post_form.html:181
 msgid "Unable to generate share link right now."
 msgstr "暂时无法生成外链。"
 
+#: .\templates\blog\editor\book_form.html:161
+#: .\templates\blog\editor\post_form.html:182
 msgid "External link copied."
 msgstr "外链已复制。"
 
+#: .\templates\blog\editor\book_form.html:163
+#: .\templates\blog\editor\post_form.html:184
 msgid "Generate share link"
 msgstr "生成外链"
 
+#: .\templates\blog\editor\book_form.html:173
+#: .\templates\blog\editor\post_form.html:196
+#: .\templates\blog\manage\post_list.html:130
 msgid "Copy link"
 msgstr "复制链接"
 
+#: .\templates\blog\editor\book_form.html:183
+#: .\templates\blog\editor\book_form.html:207
 msgid "Chapter management"
 msgstr "章节管理"
 
+#: .\templates\blog\editor\book_form.html:184
+#: .\templates\blog\editor\book_form.html:208
 msgid "Chapter actions"
 msgstr "章节操作"
 
+#: .\templates\blog\editor\book_form.html:185
+#: .\templates\blog\editor\book_form.html:209
+#: .\templates\blog\editor\book_form.html:211
+msgid "Add article"
+msgstr "添加文章"
+
+#: .\templates\blog\editor\book_form.html:185
+#: .\templates\blog\editor\book_form.html:209
+#: .\templates\blog\editor\book_form.html:211
 msgid "Add articles"
 msgstr "添加文章"
 
+#: .\templates\blog\editor\book_form.html:186
+#: .\templates\blog\editor\book_form.html:213
+#: .\templates\blog\editor\book_form.html:215
 msgid "Add group"
 msgstr "添加分组"
 
+#: .\templates\blog\editor\book_form.html:187
 msgid "New group"
 msgstr "新分组"
 
+#: .\templates\blog\editor\book_form.html:188
 msgid "No chapters yet. Add articles or groups to start building this book."
 msgstr "还没有章节。请先添加文章或分组来构建这本图书。"
 
+#: .\templates\blog\editor\book_form.html:189
 msgid "Rename group"
 msgstr "重命名分组"
 
+#: .\templates\blog\editor\book_form.html:190
 msgid "Group title"
 msgstr "分组名称"
 
+#: .\templates\blog\editor\book_form.html:191
 msgid "Enter a new group name."
 msgstr "请输入新的分组名称。"
 
+#: .\templates\blog\editor\book_form.html:192
 msgid "Move up"
 msgstr "上移"
 
+#: .\templates\blog\editor\book_form.html:193
 msgid "Move down"
 msgstr "下移"
 
+#: .\templates\blog\editor\book_form.html:195
+#: .\templates\blog\includes\comment_threads.html:103
+#: .\templates\blog\includes\comment_threads.html:270
+#: .\templates\blog\manage\comment_list.html:91
+#: .\templates\blog\manage\site_settings.html:720
+#: .\templates\blog\manage\user_form.html:209
+#: .\templates\blog\profile\comments.html:95
+msgid "Save"
+msgstr "保存"
+
+#: .\templates\blog\editor\book_form.html:201
 msgid "Added"
 msgstr "已添加"
 
+#: .\templates\blog\editor\book_form.html:202
 msgid "Add selected"
 msgstr "添加所选"
 
+#: .\templates\blog\editor\book_form.html:203
 msgid "Drag"
 msgstr "拖动"
 
+#: .\templates\blog\editor\book_form.html:247
 msgid "Save book"
 msgstr "保存图书"
 
-msgid "Manage Books"
-msgstr "图书管理"
-
-msgid "New book"
-msgstr "新建图书"
-
-msgid "Search books"
-msgstr "搜索图书"
-
-msgid "Name"
-msgstr "名称"
-
-msgid "Actions"
-msgstr "操作"
-
-msgid "Browse"
-msgstr "浏览"
-
-msgid "Delete book"
-msgstr "删除图书"
-
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete \"%(title)s\"? Posts in this book will be "
-#| "kept."
-msgid ""
-"Are you sure you want to delete \\\"%(title)s\\\"? Articles in this book "
-"will be kept."
-msgstr "确定要删除\"%(title)s\"吗？该图书中的文章会被保留。"
-
-msgid "No books found."
-msgstr "暂无图书。"
-
-#, fuzzy
-#| msgid "Manage Books"
-msgid "Manage Comments"
-msgstr "图书管理"
-
-#, fuzzy
-#| msgid "Search posts, books, tags, authors..."
-msgid "Search comments by content or author..."
-msgstr "搜索文章、图书、标签、作者..."
-
-#, fuzzy
-#| msgid "Create comment"
-msgid "Search comments"
-msgstr "创建评论"
-
-#, fuzzy
-#| msgid "No comments yet."
-msgid "No comments found."
-msgstr "还没有评论。"
-
+#: .\templates\blog\editor\post_form.html:4
+#: .\templates\blog\editor\post_form.html:29
 msgid "Article Editor"
 msgstr "文章编辑器"
 
-msgid "Profile sections"
-msgstr "个人设置导航"
-
+#: .\templates\blog\editor\post_form.html:32
 msgid "Has revision"
 msgstr "有修订版"
 
+#: .\templates\blog\editor\post_form.html:189
 msgid ""
 "You can view the current external link, but only the original author can "
 "generate a new one."
 msgstr "你可以查看当前外链，但只有原始作者可以生成新的外链。"
 
+#: .\templates\blog\editor\post_form.html:208
 msgid "Save revision"
 msgstr "保存修订版"
 
+#: .\templates\blog\editor\post_form.html:208
 msgid "Save draft"
 msgstr "保存草稿"
 
+#: .\templates\blog\editor\post_form.html:210
 msgid "Publish article"
 msgstr "发布文章"
 
+#: .\templates\blog\editor\post_import_manage.html:18
+#: .\templates\blog\editor\post_import_profile.html:20
 msgid "Import"
 msgstr "导入"
 
+#: .\templates\blog\editor\post_import_manage.html:21
+#: .\templates\blog\editor\post_import_profile.html:23
 msgid "Back to articles"
 msgstr "返回文章管理"
 
+#: .\templates\blog\editor\post_import_manage.html:24
+#: .\templates\blog\editor\post_import_profile.html:26
 msgid "Search articles to import..."
 msgstr "搜索要导入的文章..."
 
+#: .\templates\blog\editor\post_import_manage.html:24
+#: .\templates\blog\editor\post_import_profile.html:26
 msgid "Search articles to import"
 msgstr "搜索要导入的文章"
 
+#: .\templates\blog\editor\post_import_manage.html:38
+#: .\templates\blog\editor\post_import_profile.html:46
 msgid "No published articles available to import."
 msgstr "暂无可导入的已发布文章。"
 
+#: .\templates\blog\home.html:4
+msgid "Blog"
+msgstr "博客"
+
+#: .\templates\blog\home.html:15
+msgid "Overview"
+msgstr "概览"
+
+#: .\templates\blog\home.html:16
+msgid "Blog performance dashboard"
+msgstr "博客数据看板"
+
+#: .\templates\blog\home.html:17
+msgid ""
+"Track publishing cadence, editorial activity, and the latest content updates"
+" from one place."
+msgstr "在一个页面中查看发文节奏、编辑活动和最新内容动态。"
+
+#: .\templates\blog\home.html:19
+msgid "Explore articles"
+msgstr "浏览文章"
+
+#: .\templates\blog\home.html:21
+msgid "Write a new article"
+msgstr "写一篇新文章"
+
+#: .\templates\blog\home.html:28
+msgid "Article views in the last 7 days"
+msgstr "近 7 天文章浏览量"
+
+#: .\templates\blog\home.html:30
+msgid "Independent article page visits recorded this week."
+msgstr "本周记录到的独立文章页面访问量。"
+
+#: .\templates\blog\home.html:34
+msgid "Book views in the last 7 days"
+msgstr "近 7 天图书浏览量"
+
+#: .\templates\blog\home.html:36
+msgid "Independent book page visits recorded this week."
+msgstr "本周记录到的独立图书页面访问量。"
+
+#: .\templates\blog\home.html:44
+msgid "Highlights"
+msgstr "亮点"
+
+#: .\templates\blog\home.html:45
+msgid "Content snapshot"
+msgstr "内容快照"
+
+#: .\templates\blog\home.html:52
+msgid "Total articles"
+msgstr "文章总数"
+
+#: .\templates\blog\home.html:55
+msgid "All articles currently stored in the blog."
+msgstr "当前博客中已存储的全部文章。"
+
+#: .\templates\blog\home.html:63
+msgid "Topic labels used to organize the content library."
+msgstr "用于整理内容库的主题标签数量。"
+
+#: .\templates\blog\home.html:71
+msgid "Books used to organize related articles."
+msgstr "用于整理相关文章的图书数量。"
+
+#: .\templates\blog\home.html:79
+msgid "All attachments currently stored in the blog."
+msgstr "博客中当前存储的所有附件。"
+
+#: .\templates\blog\home.html:84
+msgid "Authors"
+msgstr "作者"
+
+#: .\templates\blog\home.html:87
+msgid "Contributors who have published or drafted articles."
+msgstr "已发布或创建过草稿的作者数量。"
+
+#: .\templates\blog\home.html:95
+msgid "Traffic"
+msgstr "流量"
+
+#: .\templates\blog\home.html:96
+msgid "Visits in the last %(days)s days"
+msgstr "近 %(days)s 天访问量"
+
+#: .\templates\blog\home.html:103
+msgid "Article and book visit trend in the last %(days)s days"
+msgstr "近 %(days)s 天文章和图书访问趋势"
+
+#: .\templates\blog\home.html:121
+msgid "Latest published articles"
+msgstr "最新发布文章"
+
+#: .\templates\blog\home.html:124
+msgid "Write a new post"
+msgstr "写一篇新文章"
+
+#: .\templates\blog\home.html:133
+msgid "No published articles yet"
+msgstr "还没有已发布的文章"
+
+#: .\templates\blog\home.html:134
+msgid ""
+"Create your first article from the management panel to populate the "
+"homepage."
+msgstr "从管理面板创建你的第一篇文章，为首页填充内容。"
+
+#: .\templates\blog\includes\attachment_access_gate.html:2
+#: .\templates\blog\includes\attachment_access_gate.html:4
+msgid "Attachment access verification"
+msgstr "附件访问验证"
+
+#: .\templates\blog\includes\attachment_access_gate.html:78
+msgid "Refresh access"
+msgstr "刷新访问权限"
+
+#: .\templates\blog\includes\attachment_card.html:23
+msgid "File"
+msgstr "文件"
+
+#: .\templates\blog\includes\attachment_card.html:25
+msgid "累计下载 %(count)s 次"
+msgstr "累计下载 %(count)s 次"
+
+#: .\templates\blog\includes\attachment_card.html:35
+#: .\templates\blog\manage\attachment_list.html:75
+#: .\templates\blog\profile\attachments.html:65
+msgid "Download"
+msgstr "下载"
+
+#: .\templates\blog\includes\attachment_missing.html:7
+msgid "Attachment unavailable"
+msgstr "附件不可用"
+
+#: .\templates\blog\includes\attachment_missing.html:9
+msgid "Attachment #%(id)s could not be found."
+msgstr "未找到附件 #%(id)s。"
+
+#: .\templates\blog\includes\comment_threads.html:12
+#: .\templates\blog\includes\comment_threads.html:21
+#: .\templates\blog\includes\comment_threads.html:179
+#: .\templates\blog\includes\comment_threads.html:188
+#: .\templates\blog\manage\comment_list.html:34
+#: .\templates\blog\manage\post_list.html:73
+msgid "Author"
+msgstr "作者"
+
+#: .\templates\blog\includes\comment_threads.html:39
+#: .\templates\blog\includes\comment_threads.html:206
+msgid "Open comment actions"
+msgstr "打开评论操作菜单"
+
+#: .\templates\blog\includes\comment_threads.html:51
+#: .\templates\blog\includes\comment_threads.html:218
+#: .\templates\blog\manage\attachment_list.html:74
+#: .\templates\blog\manage\book_list.html:58
+#: .\templates\blog\manage\comment_list.html:50
+#: .\templates\blog\manage\post_list.html:143
+#: .\templates\blog\manage\post_list.html:169
+#: .\templates\blog\manage\post_list.html:187
+#: .\templates\blog\manage\user_list.html:60
+#: .\templates\blog\profile\attachments.html:64
+#: .\templates\blog\profile\books.html:62
+#: .\templates\blog\profile\comments.html:53
+#: .\templates\blog\profile\posts.html:99
+msgid "Edit"
+msgstr "编辑"
+
+#: .\templates\blog\includes\comment_threads.html:62
+#: .\templates\blog\includes\comment_threads.html:229
+#: .\templates\blog\manage\comment_list.html:56
+#: .\templates\blog\profile\comments.html:60
+msgid ""
+"Are you sure you want to delete this comment? This action cannot be undone."
+msgstr "确定要删除这条评论吗？此操作不可恢复。"
+
+#: .\templates\blog\includes\comment_threads.html:98
+#: .\templates\blog\includes\comment_threads.html:121
+#: .\templates\blog\includes\comment_threads.html:265
+#: .\templates\blog\includes\comment_threads.html:301
+msgid ""
+"Supports Markdown, colored text, emoji insertion, side-by-side preview, "
+"direct image upload, table insertion, and GitHub-style callouts."
+msgstr "支持 Markdown、并排预览、直接上传图片、插入表格，以及 GitHub 风格的提示块。"
+
+#: .\templates\blog\includes\comment_threads.html:126
+#: .\templates\blog\includes\comment_threads.html:306
+msgid "Post reply"
+msgstr "发表回复"
+
+#: .\templates\blog\includes\comment_threads.html:135
+#: .\templates\blog\includes\comment_threads.html:156
+#: .\templates\blog\includes\comment_threads.html:278
+#: .\templates\blog\includes\namecard_comments.html:48
+msgid "Like"
+msgstr "点赞"
+
+#: .\templates\blog\includes\comment_threads.html:139
+#: .\templates\blog\includes\comment_threads.html:160
+#: .\templates\blog\includes\comment_threads.html:282
+#: .\templates\blog\includes\namecard_comments.html:52
+msgid "Dislike"
+msgstr "点踩"
+
+#: .\templates\blog\includes\comment_threads.html:149
+#: .\templates\blog\includes\comment_threads.html:151
+msgid "Expand %(count)s replies"
+msgstr "展开 %(count)s 条回复"
+
+#: .\templates\blog\includes\comment_threads.html:150
+#: .\templates\blog\includes\comment_threads.html:151
+msgid "Collapse replies"
+msgstr "收起回复"
+
+#: .\templates\blog\includes\comment_threads.html:318
+#: .\templates\blog\includes\namecard_comments.html:67
+msgid "No comments yet."
+msgstr "还没有评论。"
+
+#: .\templates\blog\includes\comment_threads.html:324
+msgid "Page %(current)s of %(total)s"
+msgstr "第 %(current)s / %(total)s 页"
+
+#: .\templates\blog\includes\comment_threads.html:343
+#: .\templates\blog\includes\comment_threads.html:344
+#: .\templates\blog\includes\pagination.html:26
+#: .\templates\blog\includes\pagination.html:27
+msgid "Jump to page"
+msgstr "跳转到页面"
+
+#: .\templates\blog\includes\comment_threads.html:345
+#: .\templates\blog\includes\pagination.html:28
+msgid "Go"
+msgstr "跳转"
+
+#: .\templates\blog\includes\condition_summary.html:7
+msgctxt "conditional summary"
+msgid "%(counter)s condition"
+msgid_plural "%(counter)s conditions"
+msgstr[0] "%(counter)s 个条件"
+
+#: .\templates\blog\includes\namecard_comments.html:58
+msgid "Article in book"
+msgstr "图书中的文章"
+
+#: .\templates\blog\includes\namecard_comments.html:60
+msgid "From article"
+msgstr "来自文章"
+
+#: .\templates\blog\includes\pagination.html:5
+msgid "Page: %(current)s / %(total)s"
+msgstr "第 %(current)s / %(total)s 页"
+
+#: .\templates\blog\includes\post_card.html:39
+msgid "Likes %(up)s, dislikes %(down)s"
+msgstr "赞 %(up)s，踩 %(down)s"
+
+#: .\templates\blog\includes\post_card.html:75
+msgid "No tags"
+msgstr "无标签"
+
+#: .\templates\blog\manage\attachment_list.html:4
+msgid "Manage Attachments"
+msgstr "管理附件"
+
+#: .\templates\blog\manage\attachment_list.html:18
+#: .\templates\blog\manage\audit_list.html:18
+#: .\templates\blog\manage\book_list.html:18
+#: .\templates\blog\manage\comment_list.html:18
+#: .\templates\blog\manage\comment_list.html:98
+#: .\templates\blog\manage\post_list.html:18
+#: .\templates\blog\manage\user_form.html:24
+#: .\templates\blog\manage\user_list.html:18
+msgid "Manage"
+msgstr "管理"
+
+#: .\templates\blog\manage\attachment_list.html:27
+msgid "Clean up"
+msgstr "清理"
+
+#: .\templates\blog\manage\attachment_list.html:33
+msgid "Search attachments by title, file, or uploader..."
+msgstr "按标题、文件名或上传者搜索附件..."
+
+#: .\templates\blog\manage\attachment_list.html:46
+msgid "Uploader"
+msgstr "上传者"
+
+#: .\templates\blog\manage\attachment_list.html:80
+#: .\templates\blog\profile\attachments.html:70
+msgid "Delete attachment"
+msgstr "删除附件"
+
+#: .\templates\blog\manage\attachment_list.html:81
+#: .\templates\blog\manage\post_list.html:179
+#: .\templates\blog\profile\attachments.html:71
+msgid ""
+"Are you sure you want to delete %(title)s? This action cannot be undone."
+msgstr ""
+"确定要删除 %(title)s 吗？此操作无法撤销。"
+
+#: .\templates\blog\manage\attachment_list.html:107
+msgid "Update attachment"
+msgstr "更新附件"
+
+#: .\templates\blog\manage\attachment_list.html:108
+msgid "Update"
+msgstr "更新"
+
+#: .\templates\blog\manage\attachment_list.html:112
+msgid "Leave empty to keep the current file."
+msgstr "留空则保留当前文件。"
+
+#: .\templates\blog\manage\attachment_list.html:113
+msgid "Current file"
+msgstr "当前文件"
+
+#: .\templates\blog\manage\attachment_list.html:119
+msgid "Unable to update the selected attachment right now."
+msgstr "当前无法更新所选附件。"
+
+#: .\templates\blog\manage\attachment_list.html:121
+msgid "Attachment updated successfully."
+msgstr "附件更新成功。"
+
+#: .\templates\blog\manage\attachment_list.html:122
+msgid "Maximum attachment size: %(size)s MB"
+msgstr "附件大小上限：%(size)s MB"
+
+#: .\templates\blog\manage\attachment_list.html:123
+msgid "Clean up unused media"
+msgstr "清理未使用的媒体文件"
+
+#: .\templates\blog\manage\attachment_list.html:124
+msgid ""
+"This scans the database and media folder in the background, then deletes "
+"files that are no longer referenced. Continue?"
+msgstr ""
+"这将在后台扫描数据库和媒体文件夹，然后删除不再被引用的文件。是否继续？"
+
+#: .\templates\blog\manage\attachment_list.html:125
+msgid "Start cleanup"
+msgstr "开始清理"
+
+#: .\templates\blog\manage\attachment_list.html:127
+msgid "Unable to start media cleanup right now."
+msgstr "当前无法启动媒体清理。"
+
+#: .\templates\blog\manage\attachment_list.html:128
+msgid "Media cleanup succeeded."
+msgstr "媒体清理成功。"
+
+#: .\templates\blog\manage\attachment_list.html:129
+msgid "Media cleanup failed."
+msgstr "媒体清理失败。"
+
+#: .\templates\blog\manage\audit_list.html:4
+msgid "Audit Logs"
+msgstr "审计日志"
+
+#: .\templates\blog\manage\audit_list.html:19
+msgid "Access audit"
+msgstr "访问审计"
+
+#: .\templates\blog\manage\audit_list.html:25
+msgid "Clear audit logs"
+msgstr "清理审计日志"
+
+#: .\templates\blog\manage\audit_list.html:26
+msgid ""
+"Are you sure you want to clear all audit logs? This action cannot be undone."
+msgstr "确定要清理所有审计日志吗？此操作无法撤销。"
+
+#: .\templates\blog\manage\audit_list.html:27
+#: .\templates\blog\manage\audit_list.html:31
+msgid "Clear"
+msgstr "清理"
+
+#: .\templates\blog\manage\audit_list.html:35
+msgid "Search audit logs..."
+msgstr "搜索审计日志..."
+
+#: .\templates\blog\manage\audit_list.html:35
+msgid "Search audit logs"
+msgstr "搜索审计日志"
+
+#: .\templates\blog\manage\audit_list.html:46
+msgid "Action"
+msgstr "操作"
+
+#: .\templates\blog\manage\audit_list.html:47
+msgid "Message"
+msgstr "消息"
+
+#: .\templates\blog\manage\audit_list.html:49
+msgid "IP"
+msgstr "IP 地址"
+
+#: .\templates\blog\manage\audit_list.html:50
+#: .\templates\blog\manage\comment_list.html:36
+#: .\templates\blog\profile\comments.html:38
+#: .\templates\blog\profile\money_history.html:28
+#: .\templates\blog\profile\points_history.html:28
+msgid "Time"
+msgstr "时间"
+
+#: .\templates\blog\manage\audit_list.html:58
+msgid "Anonymous"
+msgstr "匿名"
+
+#: .\templates\blog\manage\audit_list.html:64
+msgid "No audit logs yet"
+msgstr "暂无审计日志"
+
+#: .\templates\blog\manage\book_list.html:4
+msgid "Manage Books"
+msgstr "图书管理"
+
+#: .\templates\blog\manage\book_list.html:21
+#: .\templates\blog\profile\books.html:24
+msgid "New book"
+msgstr "新建图书"
+
+#: .\templates\blog\manage\book_list.html:24
+#: .\templates\blog\profile\books.html:28
+msgid "Search books"
+msgstr "搜索图书"
+
+#: .\templates\blog\manage\book_list.html:35
+#: .\templates\blog\profile\books.html:39
+msgid "Name"
+msgstr "名称"
+
+#: .\templates\blog\manage\book_list.html:59
+#: .\templates\blog\manage\post_list.html:170
+#: .\templates\blog\manage\post_list.html:188
+#: .\templates\blog\manage\user_list.html:61
+#: .\templates\blog\profile\books.html:63
+#: .\templates\blog\profile\posts.html:97
+msgid "Browse"
+msgstr "浏览"
+
+#: .\templates\blog\manage\book_list.html:64
+#: .\templates\blog\profile\books.html:68
+msgid "Delete book"
+msgstr "删除图书"
+
+#: .\templates\blog\manage\book_list.html:65
+#: .\templates\blog\profile\books.html:69
+msgid ""
+"Are you sure you want to delete %(title)s? Articles in this book will be "
+"kept."
+msgstr ""
+"确定要删除 %(title)s 吗？本图书中的文章将会保留。"
+
+#: .\templates\blog\manage\book_list.html:77
+#: .\templates\blog\profile\books.html:81
+msgid "No books found."
+msgstr "暂无图书。"
+
+#: .\templates\blog\manage\comment_list.html:4
+msgid "Manage Comments"
+msgstr "评论管理"
+
+#: .\templates\blog\manage\comment_list.html:23
+msgid "Search comments by content or author..."
+msgstr "按内容或作者搜索评论..."
+
+#: .\templates\blog\manage\comment_list.html:23
+#: .\templates\blog\profile\comments.html:25
+msgid "Search comments"
+msgstr "搜索评论"
+
+#: .\templates\blog\manage\comment_list.html:68
+#: .\templates\blog\profile\comments.html:72
+msgid "No comments found."
+msgstr "未找到评论。"
+
+#: .\templates\blog\manage\post_list.html:4
 msgid "Manage Articles"
 msgstr "文章管理"
 
+#: .\templates\blog\manage\post_list.html:23
+#: .\templates\blog\profile\posts.html:25
 msgid "New article"
 msgstr "新建文章"
 
+#: .\templates\blog\manage\post_list.html:31
+#: .\templates\blog\profile\posts.html:33
 msgid "Only .md files are supported."
 msgstr "仅支持 .md 文件。"
 
+#: .\templates\blog\manage\post_list.html:32
+#: .\templates\blog\profile\posts.html:34
 msgid "Please choose a markdown file to import."
-msgstr ""
+msgstr "请选择要导入的 Markdown 文件。"
 
-#, fuzzy
-#| msgid "Unable to update share link right now."
+#: .\templates\blog\manage\post_list.html:33
+#: .\templates\blog\profile\posts.html:35
 msgid "Unable to import the selected markdown file right now."
-msgstr "暂时无法更新外链。"
+msgstr "当前无法导入所选 Markdown 文件。"
 
-#, fuzzy
-#| msgid "Updating..."
+#: .\templates\blog\manage\post_list.html:34
+#: .\templates\blog\profile\posts.html:36
 msgid "Importing..."
-msgstr "更新中..."
+msgstr "导入中..."
 
+#: .\templates\blog\manage\post_list.html:35
+#: .\templates\blog\profile\posts.html:37
 msgid "Import from .md file"
 msgstr "从 .md 中导入"
 
+#: .\templates\blog\manage\post_list.html:45
+#: .\templates\blog\profile\posts.html:47
 msgid "Article lists"
 msgstr "文章列表"
 
+#: .\templates\blog\manage\post_list.html:65
 msgid "Created by"
 msgstr "创建人"
 
+#: .\templates\blog\manage\post_list.html:66
+#: .\templates\blog\manage\post_list.html:135
 msgid "Expires at"
 msgstr "过期时间"
 
-msgid "Type"
-msgstr "类型"
-
+#: .\templates\blog\manage\post_list.html:94
 msgid "Expired"
 msgstr "已过期"
 
+#: .\templates\blog\manage\post_list.html:110
+#: .\templates\blog\profile\posts.html:90
 msgid "Revision"
 msgstr "修订版"
 
+#: .\templates\blog\manage\post_list.html:126
 msgid "Edit external link"
 msgstr "编辑外链"
 
+#: .\templates\blog\manage\post_list.html:127
 msgid "External links"
 msgstr "外链管理"
 
-#, python-format
+#: .\templates\blog\manage\post_list.html:128
 msgid "View or update the external link for \"%(title)s\"."
 msgstr "查看或更新“%(title)s”的外链。"
 
+#: .\templates\blog\manage\post_list.html:129
 msgid ""
 "Anyone with this link can view the article and its comments without signing "
 "in, but cannot interact."
-msgstr ""
-"任何持有此链接的人都可以在不登录的情况下查看文章及评论，但无法进行交互。"
+msgstr "任何持有此链接的人都可以在不登录的情况下查看文章及评论，但无法进行交互。"
 
+#: .\templates\blog\manage\post_list.html:131
 msgid "Update link"
 msgstr "更新外链"
 
+#: .\templates\blog\manage\post_list.html:132
 msgid "Updating..."
 msgstr "更新中..."
 
+#: .\templates\blog\manage\post_list.html:133
 msgid "Link validity"
 msgstr "链接有效期"
 
+#: .\templates\blog\manage\post_list.html:134
 msgid "Share link"
 msgstr "分享链接"
 
+#: .\templates\blog\manage\post_list.html:137
 msgid "Share link copied."
 msgstr "分享链接已复制。"
 
+#: .\templates\blog\manage\post_list.html:138
 msgid "Unable to update share link right now."
 msgstr "暂时无法更新外链。"
 
+#: .\templates\blog\manage\post_list.html:148
 msgid "Delete external link"
 msgstr "删除外链"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete the external link for \"%(title)s\"? This "
-#| "action cannot be undone."
+#: .\templates\blog\manage\post_list.html:149
 msgid ""
-"Are you sure you want to delete the external link for \\\"%(title)s\\\"? "
-"This action cannot be undone."
-msgstr "确定要删除“%(title)s”的外链吗？此操作不可恢复。"
+"Are you sure you want to delete the external link for %(title)s? This action"
+" cannot be undone."
+msgstr ""
+"确定要删除 %(title)s 的外链吗？此操作无法撤销。"
 
+#: .\templates\blog\manage\post_list.html:163
 msgid "Existing revision"
 msgstr "已有修订版"
 
+#: .\templates\blog\manage\post_list.html:165
 msgid "Open"
 msgstr "读取"
 
+#: .\templates\blog\manage\post_list.html:166
 msgid "Discard"
 msgstr "遗弃"
 
-#, python-format
+#: .\templates\blog\manage\post_list.html:172
 msgid ""
 "The published post \"%(title)s\" already has a saved revision. You can "
 "continue editing the existing revision or start over from the published "
 "version. Starting over will delete the current revision."
-msgstr ""
-"已发布文章\"%(title)s\"已经有一份修订版。你可以继续编辑现有修订版，或从当前已"
-"发布内容重新开始。重新开始会删除当前修订版。"
+msgstr "已发布文章\"%(title)s\"已经有一份修订版。你可以继续编辑现有修订版，或从当前已发布内容重新开始。重新开始会删除当前修订版。"
 
-#, fuzzy
-#| msgid "Selected articles"
+#: .\templates\blog\manage\post_list.html:178
 msgid "Delete article"
 msgstr "已添加文章"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete \"%(title)s\"? This action cannot be "
-#| "undone."
-msgid ""
-"Are you sure you want to delete \\\"%(title)s\\\"? This action cannot be "
-"undone."
-msgstr "确定要删除\"%(title)s\"吗？此操作不可恢复。"
-
+#: .\templates\blog\manage\post_list.html:193
+#: .\templates\blog\profile\posts.html:104
 msgid "Delete revision"
 msgstr "删除修订版"
 
+#: .\templates\blog\manage\post_list.html:193
+#: .\templates\blog\profile\posts.html:104
 msgid "Delete draft"
 msgstr "删除草稿"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete revision \"%(title)s\"? This action "
-#| "cannot be undone."
+#: .\templates\blog\manage\post_list.html:194
+#: .\templates\blog\profile\posts.html:105
 msgid ""
-"Are you sure you want to delete revision \\\"%(title)s\\\"? This action "
-"cannot be undone."
-msgstr "确定要删除修订版\"%(title)s\"吗？此操作不可恢复。"
+"Are you sure you want to delete revision %(title)s? This action cannot be "
+"undone."
+msgstr ""
+"确定要删除修订版 %(title)s 吗？此操作无法撤销。"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete draft \"%(title)s\"? This action cannot "
-#| "be undone."
+#: .\templates\blog\manage\post_list.html:194
+#: .\templates\blog\profile\posts.html:105
 msgid ""
-"Are you sure you want to delete draft \\\"%(title)s\\\"? This action cannot "
-"be undone."
-msgstr "确定要删除草稿\"%(title)s\"吗？此操作不可恢复。"
+"Are you sure you want to delete draft %(title)s? This action cannot be "
+"undone."
+msgstr ""
+"确定要删除草稿 %(title)s 吗？此操作无法撤销。"
 
+#: .\templates\blog\manage\post_list.html:207
+#: .\templates\blog\profile\posts.html:118
 msgid "No published articles found."
 msgstr "暂无已发布文章。"
 
+#: .\templates\blog\manage\post_list.html:207
+#: .\templates\blog\profile\posts.html:118
 msgid "No drafts or revisions found."
 msgstr "暂无草稿或修订版。"
 
+#: .\templates\blog\manage\post_list.html:207
 msgid "No external links found."
 msgstr "暂无外链。"
 
+#: .\templates\blog\manage\sidebar.html:4
 msgid "Workspace"
 msgstr "工作区"
 
-msgid "Website"
-msgstr "网站"
+#: .\templates\blog\manage\site_settings.html:34
+#: .\templates\blog\manage\site_settings.html:47
+#: .\templates\blog\manage\site_settings.html:69
+#: .\templates\blog\manage\site_settings.html:91
+#: .\templates\blog\manage\site_settings.html:113
+#: .\templates\blog\manage\site_settings.html:120
+#: .\templates\blog\manage\site_settings.html:134
+#: .\templates\blog\manage\site_settings.html:139
+#: .\templates\blog\manage\site_settings.html:144
+#: .\templates\blog\manage\site_settings.html:153
+#: .\templates\blog\manage\site_settings.html:183
+#: .\templates\blog\manage\site_settings.html:214
+#: .\templates\blog\manage\site_settings.html:221
+#: .\templates\blog\manage\site_settings.html:310
+#: .\templates\blog\manage\site_settings.html:317
+#: .\templates\blog\manage\site_settings.html:377
+#: .\templates\blog\manage\site_settings.html:391
+#: .\templates\blog\manage\site_settings.html:397
+#: .\templates\blog\manage\site_settings.html:402
+#: .\templates\blog\manage\site_settings.html:407
+#: .\templates\blog\manage\site_settings.html:412
+#: .\templates\blog\manage\site_settings.html:425
+#: .\templates\blog\manage\site_settings.html:441
+#: .\templates\blog\manage\site_settings.html:446
+#: .\templates\blog\manage\site_settings.html:451
+#: .\templates\blog\manage\site_settings.html:456
+#: .\templates\blog\manage\site_settings.html:461
+#: .\templates\blog\manage\site_settings.html:466
+#: .\templates\blog\manage\site_settings.html:471
+#: .\templates\blog\manage\site_settings.html:476
+#: .\templates\blog\manage\site_settings.html:481
+#: .\templates\blog\manage\site_settings.html:500
+#: .\templates\blog\manage\site_settings.html:507
+#: .\templates\blog\manage\site_settings.html:513
+#: .\templates\blog\manage\site_settings.html:521
+#: .\templates\blog\manage\site_settings.html:528
+#: .\templates\blog\manage\site_settings.html:534
+#: .\templates\blog\manage\site_settings.html:539
+#: .\templates\blog\manage\site_settings.html:553
+#: .\templates\blog\manage\site_settings.html:560
+#: .\templates\blog\manage\site_settings.html:566
+#: .\templates\blog\manage\site_settings.html:573
+#: .\templates\blog\manage\site_settings.html:578
+#: .\templates\blog\manage\site_settings.html:592
+#: .\templates\blog\manage\site_settings.html:600
+#: .\templates\blog\manage\site_settings.html:607
+#: .\templates\blog\manage\site_settings.html:612
+#: .\templates\blog\manage\site_settings.html:617
+#: .\templates\blog\manage\site_settings.html:631
+#: .\templates\blog\manage\site_settings.html:639
+#: .\templates\blog\manage\site_settings.html:646
+#: .\templates\blog\manage\site_settings.html:660
+#: .\templates\blog\manage\site_settings.html:668
+#: .\templates\blog\manage\site_settings.html:675
+#: .\templates\blog\manage\site_settings.html:680
+#: .\templates\blog\manage\site_settings.html:694
+#: .\templates\blog\manage\site_settings.html:701
+msgid "Help"
+msgstr "帮助"
 
+#: .\templates\blog\manage\site_settings.html:43
 msgid "Appearance assets"
 msgstr "外观资源"
 
+#: .\templates\blog\manage\site_settings.html:53
 msgid "Website icon preview"
 msgstr "网站图标预览"
 
+#: .\templates\blog\manage\site_settings.html:55
 msgid "Remove icon"
 msgstr "移除图标"
 
+#: .\templates\blog\manage\site_settings.html:62
+#: .\templates\blog\manage\site_settings.html:84
+#: .\templates\blog\manage\site_settings.html:106
+#: .\templates\blog\manage\site_settings.html:175
+#: .\templates\blog\manage\site_settings.html:205
 msgid "Undo remove"
 msgstr "撤销删除"
 
+#: .\templates\blog\manage\site_settings.html:75
 msgid "Login page background preview"
 msgstr "登录页背景预览"
 
+#: .\templates\blog\manage\site_settings.html:77
+#: .\templates\blog\manage\site_settings.html:99
 msgid "Remove background"
 msgstr "移除背景"
 
+#: .\templates\blog\manage\site_settings.html:97
 msgid "Authenticated page background preview"
 msgstr "登录后页面背景预览"
 
-#, fuzzy
-#| msgid "Audit Logs"
+#: .\templates\blog\manage\site_settings.html:126
+msgid "CDN configuration"
+msgstr "CDN 配置"
+
+#: .\templates\blog\manage\site_settings.html:127
+msgid "Expand CDN configuration"
+msgstr "展开 CDN 配置"
+
+#: .\templates\blog\manage\site_settings.html:162
+#: .\templates\blog\manage\site_settings.html:192
+msgid "No bundle uploaded"
+msgstr "尚未上传资源包"
+
+#: .\templates\blog\manage\site_settings.html:164
+#: .\templates\blog\manage\site_settings.html:194
+msgid "Models:"
+msgstr "模型："
+
+#: .\templates\blog\manage\site_settings.html:168
+#: .\templates\blog\manage\site_settings.html:198
+msgid "Remove bundle"
+msgstr "移除资源包"
+
+#: .\templates\blog\manage\site_settings.html:224
+msgid "Available bundle models:"
+msgstr "可用资源包模型："
+
+#: .\templates\blog\manage\site_settings.html:238
+msgid "Display pages"
+msgstr "显示页面"
+
+#: .\templates\blog\manage\site_settings.html:239
+msgid "Expand display page settings"
+msgstr "展开显示页面设置"
+
+#: .\templates\blog\manage\site_settings.html:373
+msgid "Dashboard"
+msgstr "仪表盘"
+
+#: .\templates\blog\manage\site_settings.html:435
+msgid "Expand VIP %(level)s settings"
+msgstr "展开 VIP %(level)s 设置"
+
+#: .\templates\blog\manage\site_settings.html:495
+#: .\templates\blog\profile\comments.html:36
+msgid "Article"
+msgstr "文章"
+
+#: .\templates\blog\manage\site_settings.html:626
+msgid "Video"
+msgstr "视频"
+
+#: .\templates\blog\manage\site_settings.html:689
 msgid "Audit logs"
 msgstr "审计日志"
 
-#, fuzzy
-#| msgid "Site settings"
-msgid "VIP settings"
-msgstr "站点设置"
+#: .\templates\blog\manage\site_settings.html:713
+#: .\templates\blog\manage\site_settings.html:717
+msgid "Restore defaults"
+msgstr "恢复默认"
 
-msgid "Dashboard"
-msgstr ""
+#: .\templates\blog\manage\site_settings.html:714
+msgid "Are you sure you want to restore all settings to their defaults?"
+msgstr "确定要恢复所有默认设置吗？"
 
-msgid "Article editor"
-msgstr "文章编辑器"
-
-#, fuzzy
-#| msgid "Edit user"
+#: .\templates\blog\manage\user_form.html:4
+#: .\templates\blog\manage\user_form.html:25
 msgid "Edit User"
-msgstr "用户编辑"
+msgstr "编辑用户"
 
+#: .\templates\blog\manage\user_form.html:45
+#: .\templates\blog\profile\overview.html:63
 msgid "Delete avatar"
 msgstr "删除头像"
 
+#: .\templates\blog\manage\user_form.html:87
+msgid "Social information"
+msgstr "社交信息"
+
+#: .\templates\blog\manage\user_form.html:137
 msgid "User groups"
 msgstr "用户组"
 
+#: .\templates\blog\manage\user_form.html:148
 msgid "Administrator permissions"
 msgstr "管理员权限"
 
+#: .\templates\blog\manage\user_form.html:178
 msgid "Virtual assets"
-msgstr ""
+msgstr "虚拟资产"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "Are you sure you want to delete user \"%(username)s\"? This action cannot "
-#| "be undone."
+#: .\templates\blog\manage\user_form.html:202
 msgid ""
-"Are you sure you want to delete user \\\"%(username)s\\\"? This action "
-"cannot be undone."
-msgstr "确定要删除用户\"%(username)s\"吗？此操作不可恢复。"
+"Are you sure you want to delete user %(username)s? This action cannot be "
+"undone."
+msgstr ""
+"确定要删除用户 %(username)s 吗？此操作无法撤销。"
 
+#: .\templates\blog\manage\user_list.html:4
 msgid "Manage Users"
 msgstr "用户管理"
 
+#: .\templates\blog\manage\user_list.html:21
+msgid "Add user"
+msgstr "添加用户"
+
+#: .\templates\blog\manage\user_list.html:24
 msgid "Search users..."
 msgstr "搜索用户..."
 
+#: .\templates\blog\manage\user_list.html:24
 msgid "Search users"
 msgstr "搜索用户"
 
+#: .\templates\blog\manage\user_list.html:37
 msgid "Roles"
 msgstr "角色"
 
+#: .\templates\blog\manage\user_list.html:38
 msgid "State"
 msgstr "状态"
 
+#: .\templates\blog\manage\user_list.html:55
 msgid "Disabled"
 msgstr "禁用"
 
+#: .\templates\blog\manage\user_list.html:67
 msgid "No users found."
 msgstr "暂无用户。"
 
-#, fuzzy
-#| msgid "Username"
+#: .\templates\blog\namecard.html:4
 msgid "User Namecard"
-msgstr "用户名"
+msgstr "用户名片"
 
-#, fuzzy
-#| msgid "Chapter actions"
+#: .\templates\blog\namecard.html:19
 msgid "Namecard sections"
-msgstr "章节操作"
+msgstr "名片分区"
 
-#, fuzzy
-#| msgid "Name"
+#: .\templates\blog\namecard.html:32
 msgid "Namecard"
-msgstr "名称"
+msgstr "名片"
 
-#, fuzzy
-#| msgid "Personal settings"
+#: .\templates\blog\namecard.html:72 .\templates\blog\namecard.html:80
+msgid "Not specified"
+msgstr "未填写"
+
+#: .\templates\blog\namecard.html:86
 msgid "Personal description"
-msgstr "个人设置"
+msgstr "个人简介"
 
+#: .\templates\blog\namecard.html:90
 msgid "No personal description yet."
-msgstr ""
+msgstr "还没有个人简介。"
 
-#, fuzzy
-#| msgid "No drafts yet"
+#: .\templates\blog\namecard.html:96
+msgid "Social links"
+msgstr "社交链接"
+
+#: .\templates\blog\namecard.html:143
 msgid "No posts yet"
-msgstr "暂无草稿"
+msgstr "还没有文章"
 
+#: .\templates\blog\namecard.html:144
 msgid "This user hasn't published any non-private articles yet."
-msgstr ""
+msgstr "该用户还没有发布任何非私密文章。"
 
+#: .\templates\blog\namecard.html:189
 msgid "This user hasn't published any non-private books yet."
-msgstr ""
+msgstr "该用户还没有发布任何非私密图书。"
 
-#, fuzzy
-#| msgid "Profile updated"
+#: .\templates\blog\profile\attachments.html:20
+#: .\templates\blog\profile\books.html:20
+#: .\templates\blog\profile\comments.html:20
+#: .\templates\blog\profile\comments.html:102
+#: .\templates\blog\profile\money_history.html:20
+#: .\templates\blog\profile\overview.html:4
+#: .\templates\blog\profile\overview.html:21
+#: .\templates\blog\profile\points_history.html:20
+#: .\templates\blog\profile\posts.html:20
 msgid "Profile"
-msgstr "个人资料已更新"
+msgstr "个人资料"
 
+#: .\templates\blog\profile\attachments.html:25
+msgid "Search attachments by title or file..."
+msgstr "按标题或文件名搜索附件..."
+
+#: .\templates\blog\profile\comments.html:25
+msgid "Search comments..."
+msgstr "搜索评论..."
+
+#: .\templates\blog\profile\includes\sidebar.html:4
+msgid "Profile sections"
+msgstr "个人设置导航"
+
+#: .\templates\blog\profile\money_history.html:29
+#: .\templates\blog\profile\points_history.html:29
+msgid "Amount"
+msgstr "变动"
+
+#: .\templates\blog\profile\money_history.html:30
+#: .\templates\blog\profile\points_history.html:30
+msgid "Balance after"
+msgstr "变动后数值"
+
+#: .\templates\blog\profile\money_history.html:31
+#: .\templates\blog\profile\points_history.html:31
+msgid "Reason"
+msgstr "原因"
+
+#: .\templates\blog\profile\money_history.html:44
+msgid "No money history found."
+msgstr "未找到金额记录。"
+
+#: .\templates\blog\profile\overview.html:67
 msgid "Click avatar to upload"
 msgstr "点击头像上传"
 
+#: .\templates\blog\profile\overview.html:100
+msgid "Public links"
+msgstr "公开链接"
+
+#: .\templates\blog\profile\overview.html:135
+msgid "Save changes"
+msgstr "保存更改"
+
+#: .\templates\blog\profile\overview.html:167
+msgid "Please enter an email address first."
+msgstr "请先输入邮箱地址。"
+
+#: .\templates\blog\profile\overview.html:168
+msgid "Please enter a valid email address."
+msgstr "请输入有效的邮箱地址。"
+
+#: .\templates\blog\profile\overview.html:169
+msgid "Sending..."
+msgstr "发送中..."
+
+#: .\templates\blog\profile\overview.html:181
+msgid "Save email"
+msgstr "保存邮箱"
+
+#: .\templates\blog\profile\overview.html:220
 msgid "Update password"
 msgstr "更新密码"
 
-#, fuzzy
-#| msgid "Search posts"
+#: .\templates\blog\profile\overview.html:229
+msgid "Feature"
+msgstr "功能"
+
+#: .\templates\blog\profile\points_history.html:44
+msgid "No points history found."
+msgstr "未找到积分记录。"
+
+#: .\templates\blog\search.html:16
 msgid "Search results"
-msgstr "搜索文章"
+msgstr "搜索结果"
 
-#, python-format
+#: .\templates\blog\search.html:19
 msgid "Results for \"%(query)s\""
-msgstr ""
+msgstr "“%(query)s”的搜索结果"
 
+#: .\templates\blog\search.html:21
 msgid "Enter a keyword from the top search bar."
-msgstr ""
+msgstr "请在顶部搜索栏输入关键词。"
 
-#, fuzzy
-#| msgid "No posts found."
+#: .\templates\blog\search.html:31
 msgid "No results found"
-msgstr "暂无文章。"
+msgstr "未找到结果"
 
+#: .\templates\blog\search.html:32
 msgid "Try another keyword, book, tag, or author name."
 msgstr "试试其他关键词、图书、标签或作者名。"
 
-#, fuzzy
-#| msgid "Tags"
+#: .\templates\blog\tag_detail.html:14
 msgid "Tag"
 msgstr "标签"
 
-#, fuzzy, python-format
-#| msgid "%(total)s Comment"
-#| msgid_plural "%(total)s Comments"
+#: .\templates\blog\tag_detail.html:19
 msgid "%(total)s post"
 msgid_plural "%(total)s posts"
-msgstr[0] "%(total)s 条评论"
+msgstr[0] "%(total)s 篇文章"
 
-#, fuzzy
-#| msgid "No posts found."
+#: .\templates\blog\tag_detail.html:28
 msgid "No posts found for this tag"
-msgstr "暂无文章。"
+msgstr "该标签下暂无文章"
 
-#, fuzzy
-#| msgid "Articles you can access will appear here once they are published."
+#: .\templates\blog\tag_detail.html:29
 msgid ""
 "Posts assigned to this tag will appear here once they are visible to you."
-msgstr "你可访问的文章在发布后会显示在这里。"
+msgstr "该标签下的文章在对你可见后会显示在这里。"
 
+#: .\templates\blog\tags.html:16
 msgid "All tags"
-msgstr ""
+msgstr "全部标签"
 
+#: .\templates\blog\tags.html:17
 msgid "Browse every tag that currently has visible posts."
-msgstr ""
+msgstr "浏览当前所有包含可见文章的标签。"
 
-#, fuzzy
-#| msgid "No drafts yet"
+#: .\templates\blog\tags.html:25
 msgid "No tags yet"
-msgstr "暂无草稿"
+msgstr "还没有标签"
 
+#: .\templates\blog\tags.html:26
 msgid "Tags with visible posts will appear here once content is categorized."
-msgstr ""
+msgstr "内容完成分类后，包含可见文章的标签会显示在这里。"
 
+#: .\templates\emails\email_change_code.html:17
 msgid "Verify New Email"
 msgstr "验证新邮箱"
 
+#: .\templates\emails\email_change_code.html:18
+#: .\templates\emails\email_change_code.txt:4
 msgid "Use the verification code below to confirm your new email address."
 msgstr "请使用下方验证码确认您的新邮箱地址。"
 
-#, python-format
+#: .\templates\emails\email_change_code.html:23
 msgid ""
 "You are receiving this email because an email change verification code was "
 "requested for %(app_name)s."
 msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了邮箱变更验证码。"
 
+#: .\templates\emails\email_change_code.html:25
+#: .\templates\emails\register_code.html:25
 msgid "One-time code"
 msgstr "一次性验证码"
 
-#, python-format
+#: .\templates\emails\email_change_code.html:29
+#: .\templates\emails\email_change_code.txt:8
+#: .\templates\emails\register_code.html:29
+#: .\templates\emails\register_code.txt:8
 msgid "This code will expire in %(minutes)s minutes."
 msgstr "该验证码将在 %(minutes)s 分钟后失效。"
 
+#: .\templates\emails\email_change_code.html:30
+#: .\templates\emails\email_change_code.txt:9
+#: .\templates\emails\register_code.html:30
+#: .\templates\emails\register_code.txt:9
 msgid ""
 "For your security, do not forward this email or share the code with anyone."
 msgstr "为保障您的账号安全，请勿转发此邮件或向任何人透露验证码。"
 
+#: .\templates\emails\email_change_code.html:31
+#: .\templates\emails\email_change_code.txt:10
 msgid "If you did not request this email change, you can safely ignore it."
 msgstr "如果这次邮箱变更不是您本人发起的，您可以安全地忽略这封邮件。"
 
-#, python-format
+#: .\templates\emails\email_change_code.html:37
+#: .\templates\emails\email_change_code.txt:12
+#: .\templates\emails\email_changed.html:35
+#: .\templates\emails\email_changed.txt:11
+#: .\templates\emails\password_changed.html:36
+#: .\templates\emails\password_changed.txt:12
+#: .\templates\emails\register_code.html:37
+#: .\templates\emails\register_code.txt:12
+#: .\templates\emails\reset_password.html:36
+#: .\templates\emails\reset_password.txt:11
 msgid ""
 "This is an automated email from %(app_name)s. Please do not reply directly "
 "to this message."
 msgstr "这是一封由 %(app_name)s 自动发送的邮件，请勿直接回复。"
 
-#, fuzzy, python-format
-#| msgid "[%(app_name)s] Your email verification code"
+#: .\templates\emails\email_change_code.txt:2
 msgid "%(app_name)s email verification code"
-msgstr "【%(app_name)s】邮箱验证码"
+msgstr "%(app_name)s 邮箱验证码"
 
+#: .\templates\emails\email_change_code.txt:6
+#: .\templates\emails\register_code.html:17
+#: .\templates\emails\register_code.txt:6
 msgid "Verification Code"
 msgstr "验证码"
 
+#: .\templates\emails\email_changed.html:17
 msgid "Email Address Updated"
 msgstr "邮箱地址已更新"
 
+#: .\templates\emails\email_changed.html:18
+#: .\templates\emails\email_changed.txt:4
 msgid "Your account email address has been updated by an administrator."
 msgstr "您的账号邮箱地址已被管理员更新。"
 
-#, python-format
+#: .\templates\emails\email_changed.html:23
+#: .\templates\emails\email_changed.txt:6
+#: .\templates\emails\password_changed.html:23
+#: .\templates\emails\password_changed.txt:6
 msgid "This change was applied to the account for %(username)s."
 msgstr "此次变更已应用到 %(username)s 账号。"
 
+#: .\templates\emails\email_changed.html:25
+#: .\templates\emails\email_changed.txt:7
 msgid "New email address"
 msgstr "新邮箱地址"
 
+#: .\templates\emails\email_changed.html:29
+#: .\templates\emails\email_changed.txt:9
+#: .\templates\emails\password_changed.html:30
+#: .\templates\emails\password_changed.txt:10
 msgid ""
 "If you did not expect this change, please contact an administrator "
 "immediately."
 msgstr "如果这不是您预期的操作，请立即联系管理员。"
 
+#: .\templates\emails\password_changed.html:17
 msgid "Password Updated"
 msgstr "密码已更新"
 
+#: .\templates\emails\password_changed.html:18
+#: .\templates\emails\password_changed.txt:4
 msgid "An administrator has updated your account password."
 msgstr "管理员已更新您的账号密码。"
 
+#: .\templates\emails\password_changed.html:29
+#: .\templates\emails\password_changed.txt:9
 msgid ""
-"For security, please sign in as soon as possible and change this password if "
-"needed."
+"For security, please sign in as soon as possible and change this password if"
+" needed."
 msgstr "为了账号安全，请尽快登录，并在需要时再次修改该密码。"
 
+#: .\templates\emails\register_code.html:18
+#: .\templates\emails\register_code.txt:4
 msgid "Use the verification code below to complete your registration."
 msgstr "请使用下方验证码完成注册。"
 
-#, python-format
+#: .\templates\emails\register_code.html:23
 msgid ""
 "You are receiving this email because a registration verification code was "
 "requested for %(app_name)s."
 msgstr "您收到这封邮件，是因为有人为 %(app_name)s 请求了注册验证码。"
 
+#: .\templates\emails\register_code.html:31
+#: .\templates\emails\register_code.txt:10
 msgid "If you did not request this email, you can safely ignore it."
 msgstr "如果这不是您的操作，您可以直接忽略这封邮件。"
 
-#, python-format
+#: .\templates\emails\register_code.txt:2
 msgid "%(app_name)s verification code"
 msgstr "%(app_name)s 验证码"
 
+#: .\templates\emails\reset_password.html:17
+#: .\templates\emails\reset_password.txt:6
 msgid "Temporary Password"
 msgstr "临时密码"
 
+#: .\templates\emails\reset_password.html:18
+#: .\templates\emails\reset_password.txt:4
 msgid "Use the temporary password below to sign in to your account."
 msgstr "请使用下方临时密码登录您的账号。"
 
-#, python-format
+#: .\templates\emails\reset_password.html:23
 msgid "A password reset request was processed for your %(app_name)s account."
 msgstr "系统已为您的 %(app_name)s 账号处理了一次密码重置请求。"
 
+#: .\templates\emails\reset_password.html:25
 msgid "Temporary password"
 msgstr "临时密码"
 
+#: .\templates\emails\reset_password.html:29
+#: .\templates\emails\reset_password.txt:8
 msgid ""
 "For security, please sign in as soon as possible and change this password "
 "immediately."
 msgstr "为了您的账号安全，请尽快登录并立即修改该密码。"
 
+#: .\templates\emails\reset_password.html:30
+#: .\templates\emails\reset_password.txt:9
 msgid ""
 "If you did not request this reset, please contact an administrator after "
 "signing in."
 msgstr "如果这不是您的操作，请在登录后尽快联系管理员。"
 
-#, python-format
+#: .\templates\emails\reset_password.txt:2
 msgid "%(app_name)s temporary password"
 msgstr "%(app_name)s 临时密码"
-
-msgid "Allow reprint"
-msgstr "允许转载"
-
-msgid "Allow quote"
-msgstr "允许引用"

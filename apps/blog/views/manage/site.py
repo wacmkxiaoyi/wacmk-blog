@@ -14,6 +14,8 @@ from apps.blog.forms.site import SiteSettingForm
 from apps.blog.models import Attachment, AuditLog, Book, ContentViewLog, Post, PostDraft, Tag
 from apps.blog.utils import (
     DASHBOARD_VISIT_TREND_DAYS_7,
+    delete_live2d_cubism_bundle,
+    delete_live2d_widget_bundle,
     get_normalized_vip_configs,
     build_visit_trend,
     delete_setting_file,
@@ -99,6 +101,14 @@ class ManageSiteSettingView(ManageBaseMixin, TemplateView):
         context["site_icon_url"] = get_setting_file_url("site_icon")
         context["auth_background_url"] = get_setting_file_url("auth_background")
         context["app_background_url"] = get_setting_file_url("app_background")
+        context["live2d_widget_bundle_manifest"] = site_setting.get("live2d_widget_bundle_manifest", {})
+        context["live2d_widget_bundle_models"] = form.live2d_widget_bundle_models if hasattr(form, "live2d_widget_bundle_models") else []
+        context["live2d_widget_bundle_exists"] = bool(site_setting.get("live2d_widget_bundle_file"))
+        context["live2d_widget_bundle_file_name"] = (site_setting.get("live2d_widget_bundle_file") or "").split("/")[-1]
+        context["live2d_cubism_bundle_manifest"] = site_setting.get("live2d_cubism_bundle_manifest", {})
+        context["live2d_cubism_bundle_models"] = form.live2d_cubism_bundle_models if hasattr(form, "live2d_cubism_bundle_models") else []
+        context["live2d_cubism_bundle_exists"] = bool(site_setting.get("live2d_cubism_bundle_file"))
+        context["live2d_cubism_bundle_file_name"] = (site_setting.get("live2d_cubism_bundle_file") or "").split("/")[-1]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -125,6 +135,30 @@ class ManageSiteSettingView(ManageBaseMixin, TemplateView):
             if marked_for_removal and not uploaded_replacement and site_setting.get(field_name):
                 delete_setting_file(field_name)
                 removed_labels.append(field_name)
+
+        remove_live2d_widget_bundle_requested = (request.POST.get("remove_live2d_widget_bundle") or "0").strip() == "1"
+        if remove_live2d_widget_bundle_requested and not request.FILES.get("live2d_widget_bundle_file") and form.cleaned_data.get("live2d_enabled") and form.cleaned_data.get("live2d_source_type") == "widget_bundle":
+            form.add_error("live2d_widget_bundle_file", _("Upload a replacement bundle before keeping widget-bundle mode enabled."))
+            return self.render_to_response(self.get_context_data(form=form, site_setting=site_setting))
+
+        remove_live2d_cubism_bundle_requested = (request.POST.get("remove_live2d_cubism_bundle") or "0").strip() == "1"
+        if remove_live2d_cubism_bundle_requested and not request.FILES.get("live2d_cubism_bundle_file") and form.cleaned_data.get("live2d_enabled") and form.cleaned_data.get("live2d_source_type") == "cubism_bundle":
+            form.add_error("live2d_cubism_bundle_file", _("Upload a replacement bundle before keeping cubism-bundle mode enabled."))
+            return self.render_to_response(self.get_context_data(form=form, site_setting=site_setting))
+
+        if remove_live2d_widget_bundle_requested:
+            delete_live2d_widget_bundle()
+            form.settings["live2d_widget_bundle_file"] = ""
+            form.settings["live2d_widget_bundle_manifest"] = {}
+            form.settings["live2d_widget_bundle_extract_root"] = ""
+            removed_labels.append("live2d_widget_bundle")
+
+        if remove_live2d_cubism_bundle_requested:
+            delete_live2d_cubism_bundle()
+            form.settings["live2d_cubism_bundle_file"] = ""
+            form.settings["live2d_cubism_bundle_manifest"] = {}
+            form.settings["live2d_cubism_bundle_extract_root"] = ""
+            removed_labels.append("live2d_cubism_bundle")
 
         form.save()
         write_audit_log(request, AuditLog.ACTION_POST_UPDATE, str(_("Basic site settings updated")), user=request.user)

@@ -7,11 +7,13 @@ from pygments.formatters.html import HtmlFormatter
 ALLOWED_MARKDOWN_TAGS = [
     "a", "abbr", "acronym", "b", "blockquote", "code", "div", "em", "i", "li", "ol", "strong", "ul",
     "p", "h1", "h2", "h3", "h4", "h5", "h6", "pre", "table", "thead", "tbody", "tr", "th", "td",
-    "img", "hr", "br", "details", "summary", "button", "section", "span",
+    "img", "hr", "br", "details", "summary", "button", "section", "span", "video", "source",
 ]
 ALLOWED_MARKDOWN_ATTRIBUTES = {
     "a": ["href", "title", "target", "rel"],
     "img": ["src", "alt", "title"],
+    "video": ["src", "controls", "preload", "poster", "width", "height"],
+    "source": ["src", "type"],
     "th": ["align"],
     "td": ["align"],
     "blockquote": ["class"],

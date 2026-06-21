@@ -4,10 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.blog.auth import get as get_evaluator
 from apps.blog.auth.constants import (
     ACCESS_STATUS_GRANTED,
-    ACCESS_STATUS_INSUFFICIENT_MONEY,
-    ACCESS_STATUS_INSUFFICIENT_POINTS,
-    ACCESS_STATUS_INVALID_CONDITION,
-    ACCESS_STATUS_PURCHASE_REQUIRED,
+    ACCESS_STATUS_INVALID_CONDITION
 )
 from apps.blog.models import ArticlePurchaseRecord, Attachment, AttachmentPurchaseRecord, BookPurchaseRecord, UserMoneyHistory
 from apps.blog.permissions import (

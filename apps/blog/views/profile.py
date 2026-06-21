@@ -34,6 +34,11 @@ def _format_discount_value(value):
     return f"-{int((normalized_value * Decimal('100')).quantize(Decimal('1')))}%"
 
 
+def _format_bonus_value(value):
+    normalized_value = value if isinstance(value, Decimal) else Decimal(str(value or 0))
+    return f"+{int((normalized_value * Decimal('100')).quantize(Decimal('1')))}%"
+
+
 def _build_group_capability_table(user, site_setting=None):
     setting = site_setting or get_site_setting()
     identity = build_user_business_identity_summary(user, setting)
@@ -107,9 +112,12 @@ def _build_group_capability_table(user, site_setting=None):
         {"label": str(_("Post comments")), "cells": permission_cells("allow_user_comment", "vip_only_comment")},
         {"label": str(_("Publish books")), "cells": permission_cells("allow_non_admin_create_book", "vip_only_create_book")},
         {"label": str(_("Upload attachments")), "cells": permission_cells("allow_user_upload_attachment", "vip_only_upload_attachment")},
+        {"label": str(_("Upload videos")), "cells": permission_cells("allow_user_upload_video", "vip_only_upload_video")},
         {"label": str(_("VIP special resources")), "cells": vip_boolean_cells()},
         {"label": str(_("VIP money resource discount")), "cells": vip_value_cells("money_discount", _format_discount_value)},
         {"label": str(_("VIP points resource reduction")), "cells": vip_value_cells("points_discount", _format_discount_value)},
+        {"label": str(_("VIP author money reward bonus")), "cells": vip_value_cells("money_reward", _format_bonus_value)},
+        {"label": str(_("VIP author points reward bonus")), "cells": vip_value_cells("points_reward", _format_bonus_value)},
         {"label": str(_("VIP daily login extra money")), "cells": vip_value_cells("daily_login_bonus_money")},
         {"label": str(_("VIP daily login extra points")), "cells": vip_value_cells("daily_login_bonus_points")},
         {"label": str(_("VIP first article comment extra money")), "cells": vip_value_cells("first_comment_bonus_money")},
@@ -123,7 +131,7 @@ def _build_group_capability_table(user, site_setting=None):
 
 
 class ProfileView(TemplateView):
-    template_name = "blog/profile.html"
+    template_name = "blog/profile/overview.html"
     SECTION_BASIC = "basic"
     SECTION_SECURITY = "security"
     SECTION_USER_GROUP = "user-group"
@@ -197,6 +205,8 @@ class ProfileView(TemplateView):
             profile.avatar = ""
 
         if avatar_file:
+            if profile.avatar:
+                profile.avatar.delete(save=False)
             profile.avatar = avatar_file
 
         if remove_avatar and not avatar_file and not profile.avatar:

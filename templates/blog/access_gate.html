@@ -57,11 +57,11 @@
                                 </span>
                                 {% elif condition.action == "password" %}
                                 <button type="button" class="app-modal-action-open access-gate-action-btn access-gate-verify-btn" data-action="password">
-                                    Verify
+                                    {% trans "Verify" %}
                                 </button>
                                 {% elif condition.action == "purchase" %}
                                 <button type="button" class="app-modal-action-open access-gate-action-btn access-gate-purchase-btn" data-action="purchase">
-                                    Purchase
+                                    {% trans "Purchase" %}
                                 </button>
                                 {% else %}
                                 <span class="access-gate-status-denied" title="{% trans 'Cannot satisfy' %}">

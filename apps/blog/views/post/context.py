@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.forms.comment import CommentForm
@@ -6,6 +7,7 @@ from apps.blog.models import Post
 from apps.blog.presentation import decorate_post_tags_for_display
 from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import build_share_expiry_options, check_comment_permission
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.access import object_has_vip_standalone
 
 post_has_vip_standalone = object_has_vip_standalone
@@ -99,28 +101,28 @@ def build_post_detail_context(
         if reply_form is not None and active_reply_parent_id == str(comment.pk):
             current_reply_form = reply_form
         else:
-            current_reply_form = CommentForm(prefix=f"reply-{comment.pk}", user=user)
+            current_reply_form = CommentForm(prefix=f"reply-{comment.pk}", user=user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
         current_reply_form.fields["content"].label = _("Reply")
         current_reply_form.fields["content"].widget.attrs["placeholder"] = _("Write a reply")
         comment.reply_form = current_reply_form
         if edit_form is not None and active_edit_comment_id == str(comment.pk):
             comment.edit_form = edit_form
         else:
-            comment.edit_form = CommentForm(instance=comment, prefix=f"edit-{comment.pk}", user=user)
+            comment.edit_form = CommentForm(instance=comment, prefix=f"edit-{comment.pk}", user=user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
         comment.edit_form.fields["content"].label = _("Edit comment")
         comment.edit_form.fields["content"].widget.attrs["placeholder"] = _("Update your comment")
         for reply in comment.replies_list:
             if reply_form is not None and active_reply_parent_id == str(reply.pk):
                 nested_reply_form = reply_form
             else:
-                nested_reply_form = CommentForm(prefix=f"reply-{reply.pk}", user=user)
+                nested_reply_form = CommentForm(prefix=f"reply-{reply.pk}", user=user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
             nested_reply_form.fields["content"].label = _("Reply")
             nested_reply_form.fields["content"].widget.attrs["placeholder"] = _("Write a reply")
             reply.reply_form = nested_reply_form
             if edit_form is not None and active_edit_comment_id == str(reply.pk):
                 reply.edit_form = edit_form
             else:
-                reply.edit_form = CommentForm(instance=reply, prefix=f"edit-{reply.pk}", user=user)
+                reply.edit_form = CommentForm(instance=reply, prefix=f"edit-{reply.pk}", user=user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image"))
             reply.edit_form.fields["content"].label = _("Edit comment")
             reply.edit_form.fields["content"].widget.attrs["placeholder"] = _("Update your comment")
 

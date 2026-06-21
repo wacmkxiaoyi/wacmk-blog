@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.media_paths import post_cover_upload_to
+
 from .base import TimeStampedModel
 
 
@@ -38,7 +40,7 @@ class Post(TimeStampedModel):
     slug = models.SlugField(max_length=220, unique=True)
     summary = models.TextField(blank=True)
     content = models.TextField()
-    cover_image = models.ImageField(upload_to="blog/covers/", blank=True)
+    cover_image = models.ImageField(upload_to=post_cover_upload_to, blank=True)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_DRAFT)
     visibility = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
@@ -94,7 +96,7 @@ class PostDraft(TimeStampedModel):
     slug = models.SlugField(max_length=220)
     summary = models.TextField(blank=True)
     content = models.TextField()
-    cover_image = models.ImageField(upload_to="blog/covers/", blank=True)
+    cover_image = models.ImageField(upload_to=post_cover_upload_to, blank=True)
     visibility = models.CharField(max_length=16, choices=Post.VISIBILITY_CHOICES, default=Post.VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
     access_scope = models.CharField(max_length=16, choices=Post.ACCESS_SCOPE_CHOICES, default=Post.ACCESS_SCOPE_UNIFIED)

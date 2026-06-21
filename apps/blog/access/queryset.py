@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from apps.blog.models import Book, Post
+from apps.blog.models import Book
 from .vip_check import check_is_vip_user
 
 

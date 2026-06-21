@@ -80,7 +80,7 @@
                     </thead>
                     <tbody>
                         {% for item in items %}
-                        <tr>
+                        <tr data-row-action-menu>
                             {% if active_tab == 'external-links' %}
                             <td>{{ item.post.title }}</td>
                             <td>{{ item.created_by.first_name|default:item.created_by.username }}</td>

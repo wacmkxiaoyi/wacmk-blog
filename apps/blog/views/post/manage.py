@@ -3,6 +3,7 @@ from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.base import File
 from django.core.files.storage import default_storage
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Case, IntegerField, Q, Value, When
@@ -10,7 +11,6 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import Resolver404, resolve, reverse, reverse_lazy
-from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -19,9 +19,10 @@ from django.views.generic import CreateView, DetailView, TemplateView, UpdateVie
 from apps.blog.forms.post import PostDraftForm, PostForm, PostMarkdownImportForm
 from apps.blog.models import AuditLog, Book, BookShareLink, Post, PostDraft, PostShareLink
 from apps.blog.presentation import decorate_post_tags_for_display
-from apps.blog.utils import get_or_create_site_setting, is_ajax_request, write_audit_log
+from apps.blog.utils import editor_image_upload_path, get_or_create_site_setting, is_ajax_request, post_cover_upload_to, write_audit_log
 from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_POST
 from apps.blog.visibility import (
     get_post_access_display,
     get_post_access_icon_presentation,
@@ -320,21 +321,23 @@ class ManagePostListView(ManageBaseMixin, TemplateView):
             context["search_label"] = _("Search articles")
         context["post_tabs"] = [
             {"key": "published", "label": _("Published articles"), "url": f"?{self.build_manage_query(tab='published', page=None)}"},
-            {"key": "drafts", "label": "Drafts / Revisions", "url": f"?{self.build_manage_query(tab='drafts', page=None)}"},
-            {"key": "external-links", "label": "External links", "url": f"?{self.build_manage_query(tab='external-links', page=None)}"},
+            {"key": "drafts", "label": _("Drafts") + " / " + _("Revisions"), "url": f"?{self.build_manage_query(tab='drafts', page=None)}"},
+            {"key": "external-links", "label": _("External links"), "url": f"?{self.build_manage_query(tab='external-links', page=None)}"},
         ]
         context["share_expiry_options"] = [{"value": key, "label": str(option["label"])} for key, option in SHARE_LINK_EXPIRY_OPTIONS.items()]
         return context
 
 
 class ManagePostCreateView(ManageBaseMixin, CreateView):
-    template_name = "blog/manage/post_form.html"
+    template_name = "blog/editor/post_form.html"
     form_class = PostDraftForm
     success_url = reverse_lazy("manage-posts")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs["editor_context"] = MEDIA_UPLOAD_CONTEXT_POST
+        kwargs["image_upload_url"] = reverse("manage-upload-image")
         return kwargs
 
     def form_valid(self, form):
@@ -369,7 +372,7 @@ class ManagePostCreateView(ManageBaseMixin, CreateView):
 
 
 class ManagePostUpdateView(ManageBaseMixin, UpdateView):
-    template_name = "blog/manage/post_form.html"
+    template_name = "blog/editor/post_form.html"
     form_class = PostForm
     queryset = Post.objects.prefetch_related("tags", "books")
     success_url = reverse_lazy("manage-posts")
@@ -377,6 +380,8 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs["editor_context"] = MEDIA_UPLOAD_CONTEXT_POST
+        kwargs["image_upload_url"] = reverse("manage-upload-image")
         return kwargs
 
     def get_object(self, queryset=None):
@@ -388,7 +393,7 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
         self.object = self.get_object()
         if (request.POST.get("status") or "").strip() == Post.STATUS_DRAFT:
             draft = self.revision_draft or clone_post_to_draft(self.object, request.user)
-            saved_draft_form = PostDraftForm(request.POST, request.FILES, instance=draft, user=request.user)
+            saved_draft_form = PostDraftForm(request.POST, request.FILES, instance=draft, user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_POST, image_upload_url=reverse("manage-upload-image"))
             if not saved_draft_form.is_valid():
                 return self.render_to_response(self.get_context_data(form=saved_draft_form))
             saved_draft_form.instance.author = request.user
@@ -425,13 +430,15 @@ class ManagePostUpdateView(ManageBaseMixin, UpdateView):
 
 
 class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
-    template_name = "blog/manage/post_form.html"
+    template_name = "blog/editor/post_form.html"
     form_class = PostDraftForm
     queryset = PostDraft.objects.select_related("source_post").prefetch_related("tags", "books")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs["editor_context"] = MEDIA_UPLOAD_CONTEXT_POST
+        kwargs["image_upload_url"] = reverse("manage-upload-image")
         return kwargs
 
     def form_valid(self, form):
@@ -473,7 +480,7 @@ class ManagePostDraftUpdateView(ManageBaseMixin, UpdateView):
 
 
 class ManagePostImportView(ManageBaseMixin, TemplateView):
-    template_name = "blog/manage/post_import.html"
+    template_name = "blog/editor/post_import_manage.html"
     paginate_by = 12
 
     def get_queryset(self):
@@ -506,8 +513,8 @@ class ManagePostImportView(ManageBaseMixin, TemplateView):
             author=request.user,
         )
         if source_post.cover_image:
-            draft.cover_image = source_post.cover_image.name
-            draft.save(update_fields=["cover_image", "updated_at"])
+            with source_post.cover_image.open("rb") as source_handle:
+                draft.cover_image.save(post_cover_upload_to(draft, source_post.cover_image.name), File(source_handle), save=True)
         draft.tags.set(source_post.tags.all())
         write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from article: %(title)s")) % {"title": source_post.title}, user=request.user)
         messages.success(request, _("Article imported as draft successfully."))
@@ -682,7 +689,7 @@ class ImageUploadView(ManageBaseMixin, View):
         if image is None:
             return JsonResponse({"success": 0, "message": str(_("No image uploaded."))}, status=400)
 
-        image_name = default_storage.save(os.path.join("blog", "uploads", image.name), image)
+        image_name = default_storage.save(editor_image_upload_path(request.user, image.name), image)
         image_url = default_storage.url(image_name)
         return JsonResponse({"success": 1, "file": {"url": image_url}})
 

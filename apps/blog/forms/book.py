@@ -351,6 +351,7 @@ class BookForm(AccessScopeFormMixin, forms.ModelForm):
     def save(self, commit=True):
         existing_cover_name = self.instance.cover_image.name if getattr(self.instance, "cover_image", None) else ""
         instance = super().save(commit=False)
+        uploaded_cover = self.files.get("cover_image")
         instance.structure = self.cleaned_data.get("structure") or []
         if self._remove_cover_image and not self.files.get("cover_image"):
             instance.cover_image = ""
@@ -358,6 +359,8 @@ class BookForm(AccessScopeFormMixin, forms.ModelForm):
             if self._remove_cover_image and not self.files.get("cover_image") and existing_cover_name:
                 self.instance.cover_image.delete(save=False)
             instance.save()
+            if uploaded_cover and existing_cover_name and existing_cover_name != instance.cover_image.name:
+                instance.cover_image.storage.delete(existing_cover_name)
             instance.posts.set(self.cleaned_data.get("post_selection") or [])
         else:
             self._pending_posts = self.cleaned_data.get("post_selection") or []

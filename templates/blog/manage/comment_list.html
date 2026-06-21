@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         {% for comment in comments %}
-                        <tr>
+                        <tr data-row-action-menu>
                             <td>{{ comment.author.first_name|default:comment.author.username }}</td>
                             <td>
                                 <span class="comment-content-preview">{{ comment.content|truncatechars:80 }}</span>
@@ -81,7 +81,7 @@
         <form method="post" action="" id="comment-edit-form" class="comment-edit-dialog-form">
             {% csrf_token %}
             <div class="field-group">
-                <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, direct image and video upload, side-by-side preview, table insertion, and GitHub-style callouts." %}</div>
                 {% if edit_form.content.errors %}<div class="field-error">{{ edit_form.content.errors|striptags }}</div>{% endif %}
             </div>
             {{ edit_form.content }}

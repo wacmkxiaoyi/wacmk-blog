@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.media_paths import book_cover_upload_to
+
 from .base import TimeStampedModel
 
 
@@ -27,7 +29,7 @@ class Book(TimeStampedModel):
     name = models.CharField(max_length=64, unique=True)
     slug = models.SlugField(max_length=80, unique=True)
     summary = models.TextField(blank=True)
-    cover_image = models.ImageField(upload_to="blog/book-covers/", blank=True)
+    cover_image = models.ImageField(upload_to=book_cover_upload_to, blank=True)
     visibility = models.CharField(max_length=16, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC)
     condition_rules = models.JSONField(default=list, blank=True)
     access_scope = models.CharField(max_length=16, choices=ACCESS_SCOPE_CHOICES, default=ACCESS_SCOPE_UNIFIED)

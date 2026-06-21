@@ -1,7 +1,7 @@
 from apps.blog.models import Attachment, Book, Post
 from apps.blog.permissions import build_condition_summary_items, get_access_presentation
 
-from .resolver import object_has_vip_standalone, get_access_handler
+from .resolver import object_has_vip_standalone
 
 
 def get_post_vip_condition_summary_items(post):

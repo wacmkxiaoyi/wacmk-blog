@@ -35,3 +35,12 @@ class MarkdownRenderingTests(SimpleTestCase):
         self.assertIn("<pre>", rendered)
         self.assertIn("<code>", rendered)
         self.assertIn("EMAIL_SERVER_PROVIDER", rendered)
+
+    def test_video_tags_are_preserved(self):
+        content = '<video controls src="https://example.com/demo.mp4"></video>'
+
+        rendered = render_markdown(content)
+
+        self.assertIn("<video", rendered)
+        self.assertIn('src="https://example.com/demo.mp4"', rendered)
+        self.assertIn("controls", rendered)

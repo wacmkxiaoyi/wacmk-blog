@@ -878,6 +878,8 @@ function isDeleteSemanticButton(button) {
     var buttonText = button ? normalizeText(button.textContent) : "";
     var className = button && typeof button.className === "string" ? button.className.toLowerCase() : "";
     if (button && (
+        button.hasAttribute("data-live2d-bundle-remove-toggle") ||
+        button.hasAttribute("data-live2d-bundle-undo") ||
         button.hasAttribute("data-site-setting-remove-toggle") ||
         button.hasAttribute("data-site-setting-undo") ||
         button.hasAttribute("data-post-cover-remove") ||
@@ -933,12 +935,21 @@ function getDeleteConfirmationText(button, form) {
 }
 
 function submitDeleteAction(button, form) {
+    var canSubmitWithButton = false;
     if (!form) {
         return;
     }
     form.setAttribute("data-delete-confirm-approved", "true");
     if (typeof form.requestSubmit === "function") {
-        if (button) {
+        canSubmitWithButton = Boolean(
+            button &&
+            button.form === form &&
+            (
+                (button.tagName === "BUTTON" && String(button.type || "submit").toLowerCase() === "submit") ||
+                (button.tagName === "INPUT" && String(button.type || "").toLowerCase() === "submit")
+            )
+        );
+        if (canSubmitWithButton) {
             form.requestSubmit(button);
         } else {
             form.requestSubmit();
@@ -1139,6 +1150,7 @@ export function closeActionMenu() {
     }
     actionMenu.hidden = true;
     actionMenu.innerHTML = "";
+    document.dispatchEvent(new CustomEvent("actionmenu:close"));
 }
 
 export function openActionMenu(event, actions) {

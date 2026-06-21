@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/bundles/blog.css' %}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="{% static 'vendor/katex/katex.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -191,7 +191,7 @@
                             <label for="{{ comment_form.content.id_for_label }}">{{ comment_form.content.label }}</label>
                         </div>
                         {{ comment_form.content }}
-                        <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, side-by-side preview, direct image upload, table insertion, and GitHub-style callouts." %}</div>
+                        <div class="field-help">{% trans "Supports Markdown, colored text, emoji insertion, direct image and video upload, side-by-side preview, table insertion, and GitHub-style callouts." %}</div>
                         {% if comment_form.content.errors %}<div class="field-error">{{ comment_form.content.errors|striptags }}</div>{% endif %}
                     </div>
                     <div class="panel-actions comment-form-actions">
@@ -213,8 +213,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="{% static 'vendor/katex/katex.min.js' %}"></script>
+<script defer src="{% static 'vendor/katex/contrib/auto-render.min.js' %}"></script>
 <script type="module" src="{% static 'js/entrypoints/blog-book-detail.js' %}"></script>
 {% endblock %}
 

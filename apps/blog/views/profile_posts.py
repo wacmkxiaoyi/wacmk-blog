@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.base import File
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import EmptyPage, Paginator
 from django.db.models import Case, IntegerField, Q, Value, When
@@ -13,7 +14,8 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 
 from apps.blog.forms.post import PostDraftForm, PostMarkdownImportForm
 from apps.blog.models import AuditLog, Post, PostDraft
-from apps.blog.utils import build_user_business_identity_summary, get_or_create_site_setting, is_ajax_request, write_audit_log
+from apps.blog.utils import build_user_business_identity_summary, get_or_create_site_setting, is_ajax_request, post_cover_upload_to, write_audit_log
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_POST
 from apps.blog.views.post.utils import (
     can_access_post,
     create_markdown_import_draft,
@@ -68,7 +70,7 @@ class ProfilePostWriteMixin(ProfilePostAccessMixin):
 
 
 class ProfilePostListView(ProfilePostAccessMixin, TemplateView):
-    template_name = "blog/profile_posts.html"
+    template_name = "blog/profile/posts.html"
     paginate_by = 15
     default_sort = "updated_at"
     published_sortable_fields = {
@@ -231,12 +233,14 @@ class ProfilePostListView(ProfilePostAccessMixin, TemplateView):
 
 
 class ProfilePostCreateView(ProfilePostWriteMixin, CreateView):
-    template_name = "blog/manage/post_form.html"
+    template_name = "blog/editor/post_form.html"
     form_class = PostDraftForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs["editor_context"] = MEDIA_UPLOAD_CONTEXT_POST
+        kwargs["image_upload_url"] = reverse("frontend-upload-image")
         return kwargs
 
     def form_valid(self, form):
@@ -269,13 +273,15 @@ class ProfilePostCreateView(ProfilePostWriteMixin, CreateView):
 
 class ProfilePostDraftUpdateView(ProfilePostWriteMixin, UpdateView):
     enforce_post_limit = False
-    template_name = "blog/manage/post_form.html"
+    template_name = "blog/editor/post_form.html"
     form_class = PostDraftForm
     queryset = PostDraft.objects.select_related("source_post").prefetch_related("tags", "books")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs["editor_context"] = MEDIA_UPLOAD_CONTEXT_POST
+        kwargs["image_upload_url"] = reverse("frontend-upload-image")
         return kwargs
 
     def get_queryset(self):
@@ -323,7 +329,7 @@ class ProfilePostDraftDeleteView(ProfilePostWriteMixin, View):
 
 
 class ProfilePostImportView(ProfilePostWriteMixin, TemplateView):
-    template_name = "blog/profile_post_import.html"
+    template_name = "blog/editor/post_import_profile.html"
     paginate_by = 12
 
     def get_queryset(self):
@@ -370,8 +376,8 @@ class ProfilePostImportView(ProfilePostWriteMixin, TemplateView):
             author=request.user,
         )
         if source_post.cover_image:
-            draft.cover_image = source_post.cover_image.name
-            draft.save(update_fields=["cover_image", "updated_at"])
+            with source_post.cover_image.open("rb") as source_handle:
+                draft.cover_image.save(post_cover_upload_to(draft, source_post.cover_image.name), File(source_handle), save=True)
         draft.tags.set(source_post.tags.all())
         write_audit_log(request, AuditLog.ACTION_POST_CREATE, str(_("Draft imported from article: %(title)s")) % {"title": source_post.title}, user=request.user)
         messages.success(request, _("Article imported as draft successfully."))

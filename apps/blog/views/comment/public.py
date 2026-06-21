@@ -5,6 +5,7 @@ from django.db import transaction
 from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
@@ -14,6 +15,7 @@ from apps.blog.services.comment_rewards import grant_first_comment_reward_once
 from apps.blog.utils import get_safe_next_url, with_fragment, write_audit_log
 from apps.blog.utils.request import get_feedback_value_from_request
 from apps.blog.utils.site import check_comment_permission
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.views.post.utils import can_access_post, get_detail_post_queryset
 
 from .utils import get_comment_delete_allowed, get_comment_edit_allowed, is_comment_rate_limited, toggle_feedback
@@ -71,21 +73,34 @@ class CommentCreateView(LoginRequiredMixin, View):
             parent = target_comment if target_comment.parent_id is None else target_comment.parent
             form_prefix = f"reply-{target_comment.pk}"
 
-        form = CommentForm(request.POST, prefix=form_prefix, user=request.user)
+        form = CommentForm(
+            request.POST,
+            prefix=form_prefix,
+            user=request.user,
+            editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT,
+            image_upload_url=reverse("frontend-upload-image"),
+        )
 
         if not form.is_valid():
             detail_view = get_comment_detail_view(post, request)
             return detail_view.render_to_response(
                 detail_view.get_context_data(
-                    comment_form=form if parent is None else CommentForm(user=request.user),
+                    comment_form=form if parent is None else CommentForm(user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image")),
                     reply_parent_id=parent_id,
                     reply_form=form if parent is not None else None,
                 )
             )
 
         if is_comment_rate_limited(request.user, post):
-            messages.error(request, _("You are commenting too frequently. Please try again later."))
-            return redirect(f"{post.get_absolute_url()}#comments")
+            form.add_error(None, _("You are commenting too frequently. Please try again later."))
+            detail_view = get_comment_detail_view(post, request)
+            return detail_view.render_to_response(
+                detail_view.get_context_data(
+                    comment_form=form if parent is None else CommentForm(user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image")),
+                    reply_parent_id=parent_id,
+                    reply_form=form if parent is not None else None,
+                )
+            )
 
         comment = form.save(commit=False)
         comment.post = post
@@ -161,12 +176,19 @@ class CommentUpdateView(LoginRequiredMixin, View):
             messages.error(request, _("You do not have permission to edit comments."))
             return redirect(with_fragment(get_safe_next_url(request) or comment.post.get_absolute_url(), f"comment-{comment.pk}"))
 
-        form = CommentForm(request.POST, instance=comment, prefix=f"edit-{comment.pk}", user=request.user)
+        form = CommentForm(
+            request.POST,
+            instance=comment,
+            prefix=f"edit-{comment.pk}",
+            user=request.user,
+            editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT,
+            image_upload_url=reverse("frontend-upload-image"),
+        )
         if not form.is_valid():
             detail_view = get_comment_detail_view(comment.post, request)
             return detail_view.render_to_response(
                 detail_view.get_context_data(
-                    comment_form=CommentForm(user=request.user),
+                    comment_form=CommentForm(user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image")),
                     reply_parent_id="",
                     edit_comment_id=comment.pk,
                     edit_form=form,

@@ -1,9 +1,11 @@
 from urllib.parse import urlencode
 
+from django.core.files.base import File
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from apps.blog.models import Post, PostDraft
+from apps.blog.utils import post_cover_upload_to
 from apps.blog.utils.attachments import render_markdown_with_attachments
 from apps.blog.utils.site import build_share_expiry_options
 
@@ -35,8 +37,8 @@ def clone_post_to_draft(post, author):
         author=author,
     )
     if post.cover_image:
-        draft.cover_image = post.cover_image.name
-        draft.save(update_fields=["cover_image", "updated_at"])
+        with post.cover_image.open("rb") as source_handle:
+            draft.cover_image.save(post_cover_upload_to(draft, post.cover_image.name), File(source_handle), save=True)
     draft.tags.set(post.tags.all())
     draft.books.set(post.books.all())
     return draft
@@ -69,8 +71,11 @@ def publish_post_draft(draft):
         post.books.set(draft.books.all())
 
     if draft.cover_image:
-        post.cover_image = draft.cover_image.name
-        post.save(update_fields=["cover_image", "updated_at"])
+        existing_cover_name = post.cover_image.name if post.cover_image else ""
+        with draft.cover_image.open("rb") as source_handle:
+            post.cover_image.save(post_cover_upload_to(post, draft.cover_image.name), File(source_handle), save=True)
+        if existing_cover_name and existing_cover_name != post.cover_image.name:
+            post.cover_image.storage.delete(existing_cover_name)
     elif post.cover_image:
         post.cover_image = ""
         post.save(update_fields=["cover_image", "updated_at"])

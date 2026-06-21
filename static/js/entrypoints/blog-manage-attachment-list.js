@@ -77,6 +77,182 @@ function renderAccessCell(payload) {
     return html;
 }
 
+function parseCleanupJob() {
+    var node = document.getElementById("media-cleanup-latest-job");
+    if (!node) {
+        return null;
+    }
+    try {
+        return JSON.parse(node.textContent || "null");
+    } catch (_error) {
+        return null;
+    }
+}
+
+var MEDIA_CLEANUP_STORAGE_KEY = "manage-attachments-media-cleanup-job";
+
+function formatCleanupResultMessage(job) {
+    if (!job) {
+        return "";
+    }
+    return job.resultSummary || [
+        "Scanned " + String(job.scannedFileCount || 0) + " files",
+        "kept " + String(job.keptFileCount || 0),
+        "deleted " + String(job.deletedFileCount || 0),
+        "removed " + String(job.deletedDirectoryCount || 0) + " directories."
+    ].join(", ");
+}
+
+function loadStoredCleanupJob() {
+    try {
+        var raw = window.sessionStorage.getItem(MEDIA_CLEANUP_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch (_error) {
+        return null;
+    }
+}
+
+function storeCleanupJob(job) {
+    try {
+        if (!job) {
+            window.sessionStorage.removeItem(MEDIA_CLEANUP_STORAGE_KEY);
+            return;
+        }
+        window.sessionStorage.setItem(MEDIA_CLEANUP_STORAGE_KEY, JSON.stringify(job));
+    } catch (_error) {
+        return;
+    }
+}
+
+function bindMediaCleanupControls() {
+    var button = document.querySelector("[data-media-cleanup-start-button]");
+    if (!button) {
+        return;
+    }
+
+    var currentJob = loadStoredCleanupJob() || parseCleanupJob();
+    if (currentJob && currentJob.isFinished) {
+        currentJob = null;
+        storeCleanupJob(null);
+    }
+    var pollTimer = 0;
+
+    function setButtonBusy(isBusy) {
+        button.disabled = Boolean(isBusy);
+    }
+
+    function updateJob(job) {
+        currentJob = job || null;
+        setButtonBusy(Boolean(job && job.isRunning));
+        storeCleanupJob(job && job.isRunning ? job : null);
+    }
+
+    function stopPolling() {
+        if (pollTimer) {
+            window.clearTimeout(pollTimer);
+            pollTimer = 0;
+        }
+    }
+
+    function schedulePoll() {
+        stopPolling();
+        if (!currentJob || !currentJob.isRunning || !currentJob.statusUrl) {
+            return;
+        }
+        pollTimer = window.setTimeout(fetchStatus, 3000);
+    }
+
+    function fetchStatus() {
+        if (!currentJob || !currentJob.statusUrl) {
+            return;
+        }
+        fetch(currentJob.statusUrl, {
+            method: "GET",
+            credentials: "same-origin",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        }).then(function (response) {
+            return response.json().catch(function () {
+                return { ok: false };
+            });
+        }).then(function (payload) {
+            if (!payload.ok || !payload.job) {
+                schedulePoll();
+                return;
+            }
+            payload.job.statusUrl = currentJob.statusUrl;
+            updateJob(payload.job);
+            if (payload.job.isRunning) {
+                schedulePoll();
+                return;
+            }
+            if (payload.job.status === "succeeded") {
+                showInlineFlash(
+                    getText("[data-media-cleanup-success-title]", "Media cleanup succeeded.") + " " + formatCleanupResultMessage(payload.job),
+                    true
+                );
+                return;
+            }
+            showInlineFlash(
+                getText("[data-media-cleanup-failed-title]", "Media cleanup failed.") + " " + (payload.job.errorMessage || formatCleanupResultMessage(payload.job) || getText("[data-media-cleanup-start-error]", "Unable to start media cleanup right now.")),
+                false
+            );
+        }).catch(function () {
+            schedulePoll();
+        });
+    }
+
+    if (currentJob && currentJob.id) {
+        currentJob.statusUrl = currentJob.statusUrl || ("/manage/attachments/cleanup/" + currentJob.id + "/status/");
+    }
+    updateJob(currentJob);
+    if (currentJob && currentJob.isRunning) {
+        schedulePoll();
+    }
+
+    button.addEventListener("click", function () {
+        var startUrl = button.getAttribute("data-media-cleanup-start-url") || "";
+        var container = document.createElement("div");
+        var message = document.createElement("p");
+        message.textContent = getText("[data-media-cleanup-confirm-message]", "This scans the database and media folder in the background, then deletes files that are no longer referenced. Continue?");
+        container.appendChild(message);
+        openModal({
+            kicker: getText("[data-attachment-modal-kicker]", "Attachment"),
+            title: getText("[data-media-cleanup-confirm-title]", "Clean up unused media"),
+            contentNode: container,
+            cancelText: getText("[data-attachment-modal-cancel]", "Cancel"),
+            confirmText: getText("[data-media-cleanup-confirm-button]", "Start cleanup"),
+            onConfirm: function () {
+                setButtonBusy(true);
+                return fetch(startUrl, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken": getCsrfToken(),
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }).then(function (response) {
+                    return response.json().catch(function () {
+                        return { ok: false, message: getText("[data-media-cleanup-start-error]", "Unable to start media cleanup right now.") };
+                    });
+                }).then(function (payload) {
+                    if (!payload.ok || !payload.job) {
+                        updateJob(null);
+                        showInlineFlash(payload.message || getText("[data-media-cleanup-start-error]", "Unable to start media cleanup right now."), false);
+                        return;
+                    }
+                    payload.job.statusUrl = payload.job.statusUrl || ("/manage/attachments/cleanup/" + payload.job.id + "/status/");
+                    updateJob(payload.job);
+                    schedulePoll();
+                    showInlineFlash(payload.message || getText("[data-media-cleanup-start-success]", "Media cleanup has started in the background."), true);
+                }).catch(function () {
+                    updateJob(null);
+                    showInlineFlash(getText("[data-media-cleanup-start-error]", "Unable to start media cleanup right now."), false);
+                });
+            }
+        });
+    });
+}
+
 function bindAttachmentEditButtons() {
     Array.prototype.forEach.call(document.querySelectorAll("[data-attachment-edit-btn]"), function (button) {
         if (button.getAttribute("data-attachment-edit-bound") === "true") {
@@ -375,5 +551,6 @@ onReady(function () {
     initBlogShared();
     initBlogManage();
     bindAttachmentEditButtons();
+    bindMediaCleanupControls();
     bindConditionTooltips(document);
 });

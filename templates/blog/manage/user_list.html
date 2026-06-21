@@ -41,7 +41,7 @@
                     </thead>
                     <tbody>
                         {% for user_item in users %}
-                        <tr>
+                        <tr data-row-action-menu>
                             <td>{{ user_item.first_name|default:user_item.username }}</td>
                             <td>{{ user_item.email }}</td>
                             <td>

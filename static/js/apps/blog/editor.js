@@ -1,12 +1,9 @@
 import {
-    closeModal,
     closeActionMenu,
     copyTextToClipboard,
     escapeHtml,
     getCsrfToken,
-    openActionMenu,
     openModal,
-    showInlineFlash
 } from "../../core/app.js";
 import { initializeConditionEditorsWithin } from "./manage.js";
 import { bindConditionTooltips, bindInternalPostLinkPreviews, bindStarWidgets } from "./shared.js";
@@ -25,7 +22,9 @@ var markdownEmojis = ["😀", "😁", "😂", "😉", "😍", "🤔", "😎", "�
 var markdownPreviewCounter = 0;
 var markdownPreviewRequestId = 0;
 var markdownImageInput = null;
+var markdownVideoInput = null;
 var activeImageEditor = null;
+var activeVideoEditor = null;
 var activeAttachmentEditor = null;
 var markdownTableImportInput = null;
 var activeTableImportEditor = null;
@@ -84,6 +83,15 @@ function insertMarkdownImage(editor, altText, url) {
         return;
     }
     editor.codemirror.replaceSelection("![" + label + "](" + href + ")");
+    editor.codemirror.focus();
+}
+
+function insertMarkdownVideo(editor, url) {
+    var href = (url || "").trim();
+    if (!editor || !editor.codemirror || !href) {
+        return;
+    }
+    editor.codemirror.replaceSelection('<video controls src="' + href.replace(/"/g, "&quot;") + '"></video>');
     editor.codemirror.focus();
 }
 
@@ -734,7 +742,7 @@ function openInternalReferenceDialog(editor) {
         var targetPage = page || 1;
         latestQuery = queryText;
 
-        fetch(searchUrl + "?q=" + encodeURIComponent(queryText) + "&page=" + encodeURIComponent(String(targetPage)), { credentials: "same-origin" })
+        fetch(buildRequestUrl(searchUrl, { q: queryText, page: targetPage }), { credentials: "same-origin" })
             .then(function (response) {
                 return response.json().catch(function () {
                     return { ok: false, items: [], pagination: null };
@@ -983,7 +991,7 @@ function openUploadedAttachmentDialog(editor) {
         var targetPage = page || 1;
         latestQuery = queryText;
 
-        fetch(searchUrl + "?q=" + encodeURIComponent(queryText) + "&page=" + encodeURIComponent(String(targetPage)), { credentials: "same-origin" })
+        fetch(buildRequestUrl(searchUrl, { q: queryText, page: targetPage }), { credentials: "same-origin" })
             .then(function (response) {
                 return response.json().catch(function () {
                     return { ok: false, attachments: [], pagination: null };
@@ -1102,6 +1110,35 @@ function openImageDialog(editor) {
 
     window.setTimeout(function () {
         altInput.focus();
+    }, 0);
+}
+
+function openVideoDialog(editor) {
+    var container = document.createElement("div");
+    var urlInput = document.createElement("input");
+    var hint = document.createElement("p");
+
+    container.className = "editor-modal-form";
+    urlInput.className = "input-control";
+    urlInput.placeholder = getEditorString(editor, "data-video-url-label", "Video URL");
+    hint.className = "field-help";
+    hint.textContent = getEditorString(editor, "data-video-help", "Enter the video URL to insert an embedded player.");
+    container.appendChild(urlInput);
+    container.appendChild(hint);
+
+    openModal({
+        kicker: getEditorString(editor, "data-video-kicker", "Markdown"),
+        title: getEditorString(editor, "data-video-title", "Insert video"),
+        contentNode: container,
+        cancelText: getEditorString(editor, "data-link-cancel-label", "Cancel"),
+        confirmText: getEditorString(editor, "data-video-confirm-label", "Insert"),
+        onConfirm: function () {
+            insertMarkdownVideo(editor, urlInput.value);
+        }
+    });
+
+    window.setTimeout(function () {
+        urlInput.focus();
     }, 0);
 }
 
@@ -1854,6 +1891,19 @@ function getOverflowText(rootNode, attributeName, fallbackValue) {
     return value || fallbackValue;
 }
 
+function buildRequestUrl(url, params) {
+    var resolvedUrl = new URL(url, window.location.origin);
+    Object.keys(params || {}).forEach(function (key) {
+        var value = params[key];
+        if (value == null || value === "") {
+            resolvedUrl.searchParams.delete(key);
+            return;
+        }
+        resolvedUrl.searchParams.set(key, String(value));
+    });
+    return resolvedUrl.toString();
+}
+
 function buildOverflowToggle(rootNode, hiddenCount, buttonClassName) {
     var overlay = document.createElement("div");
     var hint = document.createElement("span");
@@ -2399,6 +2449,7 @@ function ensureMarkdownImageInput() {
 
         requestBody = new FormData();
         requestBody.append("image", selectedFile);
+        requestBody.append("context", editor.element.getAttribute("data-media-upload-context") || "");
         if (csrfToken) {
             requestBody.append("csrfmiddlewaretoken", csrfToken);
         }
@@ -2454,8 +2505,99 @@ function ensureMarkdownImageInput() {
     return markdownImageInput;
 }
 
+function ensureMarkdownVideoInput() {
+    if (markdownVideoInput) {
+        return markdownVideoInput;
+    }
+    markdownVideoInput = document.createElement("input");
+    markdownVideoInput.type = "file";
+    markdownVideoInput.accept = "video/*";
+    markdownVideoInput.hidden = true;
+    markdownVideoInput.addEventListener("change", function () {
+        var selectedFile = this.files && this.files[0] ? this.files[0] : null;
+        var editor = activeVideoEditor;
+        var uploadUrl = editor && editor.element ? (editor.element.getAttribute("data-video-upload-url") || "") : "";
+        var csrfToken = getCsrfToken();
+        var requestBody = null;
+        var requestUrl = uploadUrl;
+
+        if (!selectedFile || !uploadUrl || !editor || !editor.codemirror) {
+            this.value = "";
+            activeVideoEditor = null;
+            return;
+        }
+
+        requestBody = new FormData();
+        requestBody.append("video", selectedFile);
+        requestBody.append("context", editor.element.getAttribute("data-media-upload-context") || "");
+        if (csrfToken) {
+            requestBody.append("csrfmiddlewaretoken", csrfToken);
+        }
+
+        fetch(requestUrl, {
+            method: "POST",
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            body: requestBody,
+            credentials: "same-origin"
+        })
+            .then(function (response) {
+                return response.json().catch(function () {
+                    return { ok: false, message: "Video upload failed." };
+                }).then(function (data) {
+                    return {
+                        ok: response.ok && data.ok && data.file && data.file.url,
+                        message: data.message || "",
+                        url: data.file && data.file.url ? data.file.url : ""
+                    };
+                });
+            })
+            .then(function (result) {
+                if (!result.ok) {
+                    openModal({
+                        tone: "error",
+                        kicker: "Video upload",
+                        title: getEditorString(editor, "data-video-upload-error-title", "Video upload failed"),
+                        message: result.message || getEditorString(editor, "data-video-upload-error-message", "Please try again."),
+                        confirmText: "OK"
+                    });
+                    return;
+                }
+                insertMarkdownVideo(editor, result.url);
+            })
+            .catch(function () {
+                openModal({
+                    tone: "error",
+                    kicker: "Video upload",
+                    title: getEditorString(editor, "data-video-upload-error-title", "Video upload failed"),
+                    message: getEditorString(editor, "data-video-upload-error-message", "Please try again."),
+                    confirmText: "OK"
+                });
+            })
+            .finally(function () {
+                markdownVideoInput.value = "";
+                activeVideoEditor = null;
+            });
+    });
+    document.body.appendChild(markdownVideoInput);
+    return markdownVideoInput;
+}
+
 function openMarkdownImagePicker(editor) {
     openImageDialog(editor);
+}
+
+function openMarkdownVideoPicker(editor) {
+    openVideoDialog(editor);
+}
+
+function openMarkdownVideoUpload(editor) {
+    var videoInput = ensureMarkdownVideoInput();
+    if (!videoInput) {
+        return;
+    }
+    restoreActiveContextEditorSelection(editor);
+    activeVideoEditor = editor;
+    videoInput.click();
 }
 
 function openAttachmentDialog(editor) {
@@ -2775,6 +2917,7 @@ function openMarkdownTableImport(editor, delimiter, accept) {
 
 function attachEditorHoverMenus(editor) {
     var attachmentBrowserUrl = getEditorString(editor, "data-attachment-browser-url", "");
+    var videoUploadUrl = getEditorString(editor, "data-video-upload-url", "");
     bindToolbarHoverMenu(editor, "link", [
         {
             label: getEditorString(editor, "data-link-reference-label", "Reference internal post"),
@@ -2794,6 +2937,18 @@ function attachEditorHoverMenus(editor) {
             }
         }
     ]);
+
+    if (videoUploadUrl) {
+        bindToolbarHoverMenu(editor, "video-insert", [
+            {
+                label: getEditorString(editor, "data-video-upload-label", "Upload video"),
+                iconClass: "fa-solid fa-cloud-arrow-up",
+                onClick: function () {
+                    openMarkdownVideoUpload(editor);
+                }
+            }
+        ]);
+    }
 
     if (attachmentBrowserUrl) {
         bindToolbarHoverMenu(editor, "attachment-upload", [
@@ -2816,12 +2971,15 @@ function attachEditorHoverMenus(editor) {
 function openEditorContextToolbar(event, editor) {
     var menu = ensureEditorContextToolbar();
     var actions = [];
+    var beforeTableActions = [];
+    var tableAndUtilityActions = [];
     var attachmentUploadUrl = getEditorString(editor, "data-attachment-upload-url", "");
     var attachmentBrowserUrl = getEditorString(editor, "data-attachment-browser-url", "");
+    var videoUploadUrl = getEditorString(editor, "data-video-upload-url", "");
     if (!menu || !editor || !editor.codemirror) {
         return;
     }
-    actions = [
+    beforeTableActions = [
         {
             label: getEditorString(editor, "data-link-title", "Insert link"),
             iconClass: "fa-solid fa-link",
@@ -2857,6 +3015,17 @@ function openEditorContextToolbar(event, editor) {
                 openMarkdownImageUpload(editor);
             }
         },
+        {
+            label: getEditorString(editor, "data-video-title", "Insert video"),
+            iconClass: "fa-solid fa-video",
+            onClick: function () {
+                restoreActiveContextEditorSelection(editor);
+                openVideoDialog(editor);
+            }
+        }
+    ];
+
+    tableAndUtilityActions = [
         {
             type: "separator"
         },
@@ -2907,10 +3076,24 @@ function openEditorContextToolbar(event, editor) {
         }
     ];
 
+    if (videoUploadUrl) {
+        beforeTableActions.splice(5, 0, {
+            type: "separator"
+        });
+        beforeTableActions.push({
+            label: getEditorString(editor, "data-video-upload-label", "Upload video"),
+            iconClass: "fa-solid fa-cloud-arrow-up",
+            onClick: function () {
+                restoreActiveContextEditorSelection(editor);
+                openMarkdownVideoUpload(editor);
+            }
+        });
+    }
+
     if (attachmentUploadUrl || attachmentBrowserUrl) {
-        actions.splice(6, 0, { type: "separator" });
+        beforeTableActions.push({ type: "separator" });
         if (attachmentUploadUrl) {
-            actions.splice(7, 0, {
+            beforeTableActions.push({
                 label: getEditorString(editor, "data-attachment-upload-label", "Upload attachment"),
                 iconClass: "fa-solid fa-paperclip",
                 onClick: function () {
@@ -2920,7 +3103,7 @@ function openEditorContextToolbar(event, editor) {
             });
         }
         if (attachmentBrowserUrl) {
-            actions.splice(attachmentUploadUrl ? 8 : 7, 0, {
+            beforeTableActions.push({
                 label: getEditorString(editor, "data-attachment-insert-uploaded-label", "My attachments"),
                 iconClass: "fa-solid fa-box-archive",
                 onClick: function () {
@@ -2929,8 +3112,9 @@ function openEditorContextToolbar(event, editor) {
                 }
             });
         }
-        actions.splice(attachmentUploadUrl && attachmentBrowserUrl ? 9 : 8, 0, { type: "separator" });
     }
+
+    actions = beforeTableActions.concat(tableAndUtilityActions);
 
     event.preventDefault();
     event.stopPropagation();
@@ -3070,6 +3254,12 @@ function initializeMarkdownEditor(node) {
             title: "Insert Image"
         },
         {
+            name: "video-insert",
+            action: openMarkdownVideoPicker,
+            className: "fa fa-video no-disable",
+            title: "Insert Video"
+        },
+        {
             name: "emoji-picker",
             action: openEmojiPicker,
             className: "fa fa-face-smile no-disable",
@@ -3085,14 +3275,16 @@ function initializeMarkdownEditor(node) {
             name: "attachment-upload",
             action: openMarkdownAttachmentPicker,
             className: "fa fa-paperclip no-disable",
-            title: "Insert Attachment"
+            title: "Upload Attachment"
         });
     }
 
     editor = new EasyMDE({
         element: node,
         autoDownloadFontAwesome: false,
+        autoRefresh: { delay: 100 },
         forceSync: true,
+        lineWrapping: true,
         spellChecker: false,
         sideBySideFullscreen: false,
         status: ["lines", "words"],

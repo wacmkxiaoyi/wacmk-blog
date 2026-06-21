@@ -1,0 +1,17 @@
+Live2D Cubism Core
+
+Source URL:
+https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js
+
+Managed Version:
+5.1.0
+
+License:
+This file is proprietary Live2D redistributable code. Keep the original header
+inside live2dcubismcore.min.js intact and review the Live2D proprietary software
+license agreement before updating or redistributing it:
+https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html
+
+Maintenance:
+This file is managed by scripts/update_vendor_assets.py using the pinned version
+from scripts/vendor_assets_state.json.

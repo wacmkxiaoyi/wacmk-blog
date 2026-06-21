@@ -28,6 +28,10 @@ class SiteSettingFormTests(TestCase):
             "enable_register": "",
             "code_expire_seconds": 600,
             "code_resend_seconds": 60,
+            "live2d_source_type": "cdn",
+            "live2d_model_id": 0,
+            "live2d_random_model": "on",
+            "live2d_tips_mode": "builtin",
             "post_editor_autosave_enabled": "on",
             "post_editor_autosave_interval_minutes": 5,
             "audit_log_cleanup_enabled": "on",
@@ -37,6 +41,7 @@ class SiteSettingFormTests(TestCase):
             "non_admin_max_post_count": 10,
             "non_admin_max_book_count": 3,
             "attachment_max_size_mb": 1,
+            "video_max_size_mb": 100,
             "allow_user_comment": "on",
             "comment_first_reward_money": "1",
             "comment_first_reward_points": "1",
@@ -49,6 +54,8 @@ class SiteSettingFormTests(TestCase):
             "vip_level_display_name_1": "VIP 1",
             "vip_level_money_discount_1": "0.10",
             "vip_level_points_discount_1": "0.05",
+            "vip_level_money_reward_1": "0.10",
+            "vip_level_points_reward_1": "0.05",
             "vip_level_daily_login_bonus_money_1": "5",
             "vip_level_daily_login_bonus_points_1": "5",
             "vip_level_first_comment_bonus_money_1": "2",
@@ -56,6 +63,8 @@ class SiteSettingFormTests(TestCase):
             "vip_level_display_name_2": "VIP 2",
             "vip_level_money_discount_2": "0.20",
             "vip_level_points_discount_2": "0.10",
+            "vip_level_money_reward_2": "0.20",
+            "vip_level_points_reward_2": "0.10",
             "vip_level_daily_login_bonus_money_2": "10",
             "vip_level_daily_login_bonus_points_2": "10",
             "vip_level_first_comment_bonus_money_2": "4",
@@ -63,6 +72,8 @@ class SiteSettingFormTests(TestCase):
             "vip_level_display_name_3": "VIP 3",
             "vip_level_money_discount_3": "0.30",
             "vip_level_points_discount_3": "0.15",
+            "vip_level_money_reward_3": "0.30",
+            "vip_level_points_reward_3": "0.15",
             "vip_level_daily_login_bonus_money_3": "15",
             "vip_level_daily_login_bonus_points_3": "15",
             "vip_level_first_comment_bonus_money_3": "6",
@@ -88,9 +99,9 @@ class SiteSettingFormTests(TestCase):
         self.assertEqual(
             saved_setting["vip_configs"],
             [
-                {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
-                {"display_name": "Gold", "money_discount": "0.20", "points_discount": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
-                {"display_name": "VIP 3", "money_discount": "0.30", "points_discount": "0.15", "daily_login_bonus_money": 15, "daily_login_bonus_points": 15, "first_comment_bonus_money": 6, "first_comment_bonus_points": 6},
+                {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "money_reward": "0.10", "points_reward": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
+                {"display_name": "Gold", "money_discount": "0.20", "points_discount": "0.10", "money_reward": "0.20", "points_reward": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
+                {"display_name": "VIP 3", "money_discount": "0.30", "points_discount": "0.15", "money_reward": "0.30", "points_reward": "0.15", "daily_login_bonus_money": 15, "daily_login_bonus_points": 15, "first_comment_bonus_money": 6, "first_comment_bonus_points": 6},
             ],
         )
 
@@ -99,9 +110,9 @@ class SiteSettingFormTests(TestCase):
             {
                 "vip_max_level": 3,
                 "vip_configs": [
-                    {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
-                    {"display_name": "Gold", "money_discount": "0.20", "points_discount": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
-                    {"display_name": "VIP 3", "money_discount": "0.30", "points_discount": "0.15", "daily_login_bonus_money": 15, "daily_login_bonus_points": 15, "first_comment_bonus_money": 6, "first_comment_bonus_points": 6},
+                {"display_name": "VIP 1", "money_discount": "0.10", "points_discount": "0.05", "money_reward": "0.10", "points_reward": "0.05", "daily_login_bonus_money": 5, "daily_login_bonus_points": 5, "first_comment_bonus_money": 2, "first_comment_bonus_points": 2},
+                {"display_name": "Gold", "money_discount": "0.20", "points_discount": "0.10", "money_reward": "0.20", "points_reward": "0.10", "daily_login_bonus_money": 10, "daily_login_bonus_points": 10, "first_comment_bonus_money": 4, "first_comment_bonus_points": 4},
+                {"display_name": "VIP 3", "money_discount": "0.30", "points_discount": "0.15", "money_reward": "0.30", "points_reward": "0.15", "daily_login_bonus_money": 15, "daily_login_bonus_points": 15, "first_comment_bonus_money": 6, "first_comment_bonus_points": 6},
                 ],
             }
         )
@@ -131,6 +142,14 @@ class SiteSettingFormTests(TestCase):
         self.assertEqual(form.fields["vip_level_daily_login_bonus_money_2"].initial, 10)
         self.assertEqual(form.fields["vip_level_daily_login_bonus_points_2"].initial, 10)
 
+    def test_vip_author_reward_defaults_to_discount_progression(self):
+        form = self.form_class()
+
+        self.assertEqual(form.fields["vip_level_money_reward_1"].initial, Decimal("0.10"))
+        self.assertEqual(form.fields["vip_level_points_reward_1"].initial, Decimal("0.05"))
+        self.assertEqual(form.fields["vip_level_money_reward_2"].initial, Decimal("0.20"))
+        self.assertEqual(form.fields["vip_level_points_reward_2"].initial, Decimal("0.10"))
+
     def test_vip_first_comment_bonus_defaults_to_level_times_two(self):
         form = self.form_class()
 
@@ -146,6 +165,8 @@ class SiteSettingFormTests(TestCase):
                 vip_level_display_name_1="Silver",
                 vip_level_money_discount_1="0.25",
                 vip_level_points_discount_1="0.15",
+                vip_level_money_reward_1="0.35",
+                vip_level_points_reward_1="0.12",
                 vip_level_daily_login_bonus_money_1="9",
                 vip_level_daily_login_bonus_points_1="8",
                 vip_level_first_comment_bonus_money_1="7",
@@ -153,6 +174,8 @@ class SiteSettingFormTests(TestCase):
                 vip_level_display_name_2="Gold",
                 vip_level_money_discount_2="0.40",
                 vip_level_points_discount_2="0.30",
+                vip_level_money_reward_2="0.45",
+                vip_level_points_reward_2="0.22",
                 vip_level_daily_login_bonus_money_2="20",
                 vip_level_daily_login_bonus_points_2="18",
                 vip_level_first_comment_bonus_money_2="13",
@@ -166,8 +189,8 @@ class SiteSettingFormTests(TestCase):
         self.assertEqual(
             saved_setting["vip_configs"],
             [
-                {"display_name": "Silver", "money_discount": "0.25", "points_discount": "0.15", "daily_login_bonus_money": 9, "daily_login_bonus_points": 8, "first_comment_bonus_money": 7, "first_comment_bonus_points": 6},
-                {"display_name": "Gold", "money_discount": "0.40", "points_discount": "0.30", "daily_login_bonus_money": 20, "daily_login_bonus_points": 18, "first_comment_bonus_money": 13, "first_comment_bonus_points": 12},
+                {"display_name": "Silver", "money_discount": "0.25", "points_discount": "0.15", "money_reward": "0.35", "points_reward": "0.12", "daily_login_bonus_money": 9, "daily_login_bonus_points": 8, "first_comment_bonus_money": 7, "first_comment_bonus_points": 6},
+                {"display_name": "Gold", "money_discount": "0.40", "points_discount": "0.30", "money_reward": "0.45", "points_reward": "0.22", "daily_login_bonus_money": 20, "daily_login_bonus_points": 18, "first_comment_bonus_money": 13, "first_comment_bonus_points": 12},
             ],
         )
 
@@ -192,6 +215,10 @@ class SiteSettingFormTests(TestCase):
         self.assertEqual(form.fields["vip_level_first_comment_bonus_points_1"].initial, 2)
         self.assertEqual(form.fields["vip_level_first_comment_bonus_money_2"].initial, 4)
         self.assertEqual(form.fields["vip_level_first_comment_bonus_points_2"].initial, 4)
+        self.assertEqual(form.fields["vip_level_money_reward_1"].initial, Decimal("0.10"))
+        self.assertEqual(form.fields["vip_level_points_reward_1"].initial, Decimal("0.05"))
+        self.assertEqual(form.fields["vip_level_money_reward_2"].initial, Decimal("0.20"))
+        self.assertEqual(form.fields["vip_level_points_reward_2"].initial, Decimal("0.10"))
 
     def test_author_reward_ratios_default_to_expected_values(self):
         form = self.form_class()
@@ -535,6 +562,8 @@ class ManageSiteSettingViewTests(TestCase):
         self.assertIn(str(form.fields["vip_level_display_name_1"].label), content)
         self.assertIn(str(form.fields["vip_level_money_discount_1"].label), content)
         self.assertIn(str(form.fields["vip_level_points_discount_1"].label), content)
+        self.assertIn(str(form.fields["vip_level_money_reward_1"].label), content)
+        self.assertIn(str(form.fields["vip_level_points_reward_1"].label), content)
         self.assertIn(str(form.fields["vip_level_daily_login_bonus_money_1"].label), content)
         self.assertIn(str(form.fields["vip_level_daily_login_bonus_points_1"].label), content)
         self.assertIn(str(form.fields["vip_level_first_comment_bonus_money_1"].label), content)
@@ -543,22 +572,21 @@ class ManageSiteSettingViewTests(TestCase):
         self.assertIn(str(form.fields["daily_login_reward_money"].label), content)
         self.assertIn(str(form.fields["daily_login_reward_points"].label), content)
 
-        basic_index = content.index('<h2>Basic information</h2>')
-        dashboard_index = content.index('<h2>Dashboard</h2>')
-        user_index = content.index('<h2>User</h2>')
+        basic_index = content.index(str(form.fields["site_title"].label))
+        dashboard_index = content.index(str(form.fields["dashboard_visit_trend_days"].label))
+        user_index = content.index(str(form.fields["allow_user_comment"].label))
         daily_login_money_index = content.index(str(form.fields["daily_login_reward_money"].label))
         daily_login_points_index = content.index(str(form.fields["daily_login_reward_points"].label))
-        vip_index = content.index('<h2>VIP</h2>')
+        vip_index = content.index('data-vip-settings-section')
         vip_max_index = content.index(str(form.fields["vip_max_level"].label))
         vip_name_index = content.index(str(form.fields["vip_level_display_name_1"].label))
-        article_index = content.index('<h2>Article</h2>')
+        article_index = content.index(str(form.fields["allow_non_admin_create_post"].label))
         autosave_index = content.index(str(form.fields["post_editor_autosave_enabled"].label))
-        audit_index = content.index('<h2>Audit logs</h2>')
+        audit_index = content.index(str(form.fields["audit_log_cleanup_enabled"].label))
         retention_index = content.index(str(form.fields["audit_log_retention_days"].label))
 
         self.assertLess(basic_index, dashboard_index)
-        self.assertLess(dashboard_index, user_index)
-        self.assertLess(user_index, daily_login_money_index)
+        self.assertLess(dashboard_index, daily_login_money_index)
         self.assertLess(daily_login_money_index, daily_login_points_index)
         self.assertLess(daily_login_points_index, vip_index)
         self.assertLess(vip_index, vip_max_index)
@@ -568,6 +596,8 @@ class ManageSiteSettingViewTests(TestCase):
         self.assertLess(audit_index, retention_index)
         self.assertIn('<div class="user-manage-toggle-row">', content)
         self.assertIn('for="id_non_admin_max_post_count"', content)
+        self.assertIn(str(form.fields["allow_user_upload_video"].label), content)
+        self.assertIn(str(form.fields["video_max_size_mb"].label), content)
 
 
 class ProfileUserGroupSectionTests(TestCase):
@@ -585,11 +615,15 @@ class ProfileUserGroupSectionTests(TestCase):
                 "vip_only_create_book": False,
                 "allow_user_upload_attachment": True,
                 "vip_only_upload_attachment": True,
+                "allow_user_upload_video": True,
+                "vip_only_upload_video": False,
                 "vip_configs": [
                     {
                         "display_name": "Silver",
                         "money_discount": "0.10",
                         "points_discount": "0.05",
+                        "money_reward": "0.10",
+                        "points_reward": "0.05",
                         "daily_login_bonus_money": 5,
                         "daily_login_bonus_points": 0,
                         "first_comment_bonus_money": 2,
@@ -599,6 +633,8 @@ class ProfileUserGroupSectionTests(TestCase):
                         "display_name": "Gold",
                         "money_discount": "0.25",
                         "points_discount": "0.15",
+                        "money_reward": "0.30",
+                        "points_reward": "0.20",
                         "daily_login_bonus_money": 10,
                         "daily_login_bonus_points": 8,
                         "first_comment_bonus_money": 4,
@@ -659,14 +695,16 @@ class ProfileUserGroupSectionTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         content = response.content.decode("utf-8")
-        self.assertIn(f'<h1>{str(_("User group"))}</h1>', content)
+        self.assertIn(str(_("User group")), content)
         self.assertIn("profile-user-group-table-wrap", content)
         self.assertIn('class="profile-user-group-heading is-vip">Silver</span>', content)
         self.assertIn('class="profile-user-group-heading is-vip">Gold</span>', content)
         self.assertIn('-25%', content)
+        self.assertIn('+30%', content)
+        self.assertIn('+20%', content)
         self.assertIn('>8<', content)
         self.assertIn('>3<', content)
-        self.assertIn('class="is-current"><span class="profile-user-group-heading is-vip">Gold</span>', content)
+        self.assertIn('<th scope="col" class="is-current">', content)
         self.assertNotIn("profile-user-group-indicator", content)
 
     def test_user_group_page_shows_only_normal_user_column_when_vip_disabled(self):

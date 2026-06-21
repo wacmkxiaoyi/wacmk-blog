@@ -16,7 +16,8 @@ from apps.blog.forms.comment import CommentForm
 from apps.blog.forms.common import SearchForm
 from apps.blog.models import Post, PostFeedback, PostStar
 from apps.blog.services.author_rewards import grant_author_reward_once
-from apps.blog.utils import get_safe_next_url, record_post_view
+from apps.blog.utils import record_post_view
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.views.post.context import annotate_post_feedback, build_post_detail_context
 from apps.blog.views.post.utils import (
     get_detail_post_queryset,
@@ -67,7 +68,7 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
             build_post_detail_context(
                 self.object,
                 self.request.user,
-                comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user),
+                comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image")),
                 reply_parent_id=kwargs.get("reply_parent_id"),
                 reply_form=kwargs.get("reply_form"),
                 edit_comment_id=kwargs.get("edit_comment_id"),

@@ -4,7 +4,7 @@ from .base import TimeStampedModel
 from .book import Book, BookPurchaseRecord, BookShareLink, BookStar
 from .comment import Comment, CommentFeedback, CommentRewardRecord
 from .post import ArticlePurchaseRecord, Post, PostDraft, PostFeedback, PostShareLink, PostStar
-from .site import SiteSetting
+from .site import MediaCleanupJob, SiteSetting
 from .tag import Tag
 
 __all__ = [
@@ -22,6 +22,7 @@ __all__ = [
     "CommentFeedback",
     "CommentRewardRecord",
     "ContentViewLog",
+    "MediaCleanupJob",
     "Post",
     "PostDraft",
     "PostFeedback",

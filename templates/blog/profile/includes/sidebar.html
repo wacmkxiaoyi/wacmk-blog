@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<aside class="manage-sidebar section-panel profile-sidebar">
+    <nav class="manage-sidebar-nav profile-sidebar-nav" aria-label="{% trans 'Profile sections' %}">
+        {% for item in profile_nav %}
+        <a href="{{ item.url }}" class="{% if current_section == item.section %}is-active{% endif %}">{{ item.label }}</a>
+        {% endfor %}
+    </nav>
+</aside>

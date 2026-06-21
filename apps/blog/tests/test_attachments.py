@@ -1,13 +1,19 @@
+from tempfile import TemporaryDirectory
+from pathlib import Path
+from unittest.mock import patch
+from urllib.parse import quote
+
+from django.core.management import call_command
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.blog.constants import get_default_business_group_name
 from apps.blog.forms import AttachmentUploadForm, CommentForm, PostForm, SiteSettingForm
-from apps.blog.models import Attachment
-from apps.blog.utils import DASHBOARD_VISIT_TREND_DAYS_7, set_settings
+from apps.blog.models import Attachment, Book, Comment, MediaCleanupJob, Post, PostDraft
+from apps.blog.utils import DASHBOARD_VISIT_TREND_DAYS_7, build_media_url, resolve_media_path, set_settings
 from apps.blog.utils.attachments import build_attachment_placeholder, render_markdown_with_attachments
 from apps.users.models import UserProfile
 
@@ -84,6 +90,7 @@ class AttachmentFlowTests(TestCase):
             "vip_access_permission": "public",
             "vip_condition_rules": "[]",
             "file": SimpleUploadedFile("brief.pdf", b"%PDF-demo", content_type="application/pdf"),
+            "context": "post",
         }
         payload.update(overrides)
         return self.client.post(reverse("attachment-upload"), payload)
@@ -97,6 +104,9 @@ class AttachmentFlowTests(TestCase):
         self.assertTrue(payload["ok"])
         self.assertTrue(payload["attachment"]["placeholder"].startswith("{{attachment:"))
         self.assertEqual(Attachment.objects.count(), 1)
+        attachment = Attachment.objects.get()
+        self.assertIn(f"users/{self.author.pk}/", attachment.file.name)
+        self.assertIn("/attachment/", attachment.file.name)
 
     def test_attachment_upload_requires_login_for_ajax_requests(self):
         response = self.client.post(
@@ -109,6 +119,7 @@ class AttachmentFlowTests(TestCase):
                 "vip_access_permission": "public",
                 "vip_condition_rules": "[]",
                 "file": SimpleUploadedFile("brief.pdf", b"%PDF-demo", content_type="application/pdf"),
+                "context": "post",
             },
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
@@ -131,6 +142,7 @@ class AttachmentFlowTests(TestCase):
                 "vip_access_permission": "public",
                 "vip_condition_rules": "[]",
                 "file": SimpleUploadedFile("brief.pdf", b"%PDF-demo", content_type="application/pdf"),
+                "context": "post",
             },
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
@@ -550,21 +562,21 @@ class EditorAttachmentBrowserMetadataTests(TestCase):
         })
 
     def test_comment_form_exposes_uploaded_attachment_browser_metadata(self):
-        set_settings({"allow_user_upload_attachment": True})
-        form = CommentForm(user=self.author)
+        set_settings({"allow_user_upload_attachment": True, "allow_user_comment": True})
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
         attrs = form.fields["content"].widget.attrs
 
-        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine") + "?context=comment")
         self.assertEqual(str(attrs["data-attachment-insert-uploaded-label"]), "My attachments")
         self.assertEqual(str(attrs["data-attachment-browser-title"]), "My attachments")
         self.assertEqual(str(attrs["data-attachment-browser-kicker"]), "My attachments")
 
     def test_post_form_exposes_uploaded_attachment_browser_metadata(self):
         set_settings({"allow_user_upload_attachment": True})
-        form = PostForm(user=self.author)
+        form = PostForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
         attrs = form.fields["content"].widget.attrs
 
-        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine") + "?context=post")
         self.assertEqual(str(attrs["data-attachment-browser-empty-label"]), "No attachments found.")
         self.assertEqual(str(attrs["data-attachment-browser-insert-label"]), "插入")
         self.assertEqual(str(attrs["data-attachment-browser-title-column-label"]), "标题")
@@ -574,7 +586,7 @@ class EditorAttachmentBrowserMetadataTests(TestCase):
         self.assertTrue(str(attrs["data-browser-page-label"]))
 
     def test_comment_form_hides_attachment_metadata_when_upload_disabled(self):
-        form = CommentForm(user=self.author)
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
         attrs = form.fields["content"].widget.attrs
 
         self.assertNotIn("data-attachment-upload-url", attrs)
@@ -582,7 +594,7 @@ class EditorAttachmentBrowserMetadataTests(TestCase):
 
     def test_post_form_hides_attachment_metadata_for_non_vip_when_vip_only_enabled(self):
         set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
-        form = PostForm(user=self.reader)
+        form = PostForm(user=self.reader, image_upload_url=reverse("frontend-upload-image"))
         attrs = form.fields["content"].widget.attrs
 
         self.assertNotIn("data-attachment-upload-url", attrs)
@@ -590,10 +602,114 @@ class EditorAttachmentBrowserMetadataTests(TestCase):
 
     def test_post_form_exposes_attachment_metadata_for_vip_when_vip_only_enabled(self):
         set_settings({"allow_user_upload_attachment": True, "vip_only_upload_attachment": True})
-        form = PostForm(user=self.vip_reader)
+        form = PostForm(user=self.vip_reader, image_upload_url=reverse("frontend-upload-image"))
         attrs = form.fields["content"].widget.attrs
 
-        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine"))
+        self.assertEqual(attrs["data-attachment-browser-url"], reverse("attachment-mine") + "?context=post")
+
+    def test_comment_form_uses_frontend_image_upload_url(self):
+        set_settings({"allow_user_comment": True})
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+
+        self.assertEqual(form.fields["content"].widget.attrs["data-upload-url"], reverse("frontend-upload-image"))
+
+    def test_comment_form_exposes_image_upload_context_metadata(self):
+        set_settings({"allow_user_comment": True})
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+
+        self.assertEqual(form.fields["content"].widget.attrs["data-media-upload-context"], "comment")
+
+    def test_post_form_exposes_image_upload_context_metadata(self):
+        form = PostForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+
+        self.assertEqual(form.fields["content"].widget.attrs["data-media-upload-context"], "post")
+
+    def test_comment_form_hides_image_upload_url_without_comment_permission(self):
+        set_settings({"allow_user_comment": False})
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+
+        self.assertNotIn("data-upload-url", form.fields["content"].widget.attrs)
+
+    def test_post_form_exposes_video_upload_metadata_when_enabled(self):
+        set_settings({"allow_user_upload_video": True})
+        form = PostForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+        attrs = form.fields["content"].widget.attrs
+
+        self.assertEqual(attrs["data-video-upload-url"], reverse("frontend-upload-video") + "?context=post")
+
+    def test_comment_form_hides_video_upload_metadata_without_comment_permission(self):
+        set_settings({"allow_user_comment": False, "allow_user_upload_video": True})
+        form = CommentForm(user=self.author, image_upload_url=reverse("frontend-upload-image"))
+
+        self.assertNotIn("data-video-upload-url", form.fields["content"].widget.attrs)
+
+
+class FrontendMediaUploadTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(username="media-author", password="pass12345")
+        self.reader = User.objects.create_user(username="media-reader", password="pass12345")
+        self.post = Post.objects.create(title="Post", slug="post", content="hello", author=self.author, status=Post.STATUS_PUBLISHED)
+        set_settings({"allow_user_comment": True, "allow_user_upload_video": True, "vip_only_upload_video": False})
+
+    def test_frontend_image_upload_succeeds_for_comment_context(self):
+        self.client.force_login(self.author)
+        response = self.client.post(
+            reverse("frontend-upload-image"),
+            {
+                "context": "comment",
+                "image": SimpleUploadedFile("demo.png", b"png-demo", content_type="image/png"),
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["success"], 1)
+        self.assertIn(f"/media/users/{self.author.pk}/", response.json()["file"]["url"])
+        self.assertIn("/image/", response.json()["file"]["url"])
+
+    def test_frontend_image_upload_forbidden_without_comment_permission(self):
+        set_settings({"allow_user_comment": False})
+        self.client.force_login(self.author)
+        response = self.client.post(
+            reverse("frontend-upload-image"),
+            {
+                "context": "comment",
+                "image": SimpleUploadedFile("demo.png", b"png-demo", content_type="image/png"),
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_frontend_video_upload_succeeds_when_enabled(self):
+        self.client.force_login(self.author)
+        response = self.client.post(
+            reverse("frontend-upload-video"),
+            {
+                "context": "post",
+                "video": SimpleUploadedFile("demo.mp4", b"video-demo", content_type="video/mp4"),
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["ok"])
+        self.assertIn(f"/media/users/{self.author.pk}/", response.json()["file"]["url"])
+        self.assertIn("/video/", response.json()["file"]["url"])
+
+    def test_frontend_video_upload_forbidden_when_disabled(self):
+        set_settings({"allow_user_upload_video": False})
+        self.client.force_login(self.author)
+        response = self.client.post(
+            reverse("frontend-upload-video"),
+            {
+                "context": "post",
+                "video": SimpleUploadedFile("demo.mp4", b"video-demo", content_type="video/mp4"),
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 403)
 
     def test_attachment_update_can_change_metadata_without_reupload(self):
         attachment = Attachment.objects.create(
@@ -729,8 +845,11 @@ class SiteSettingAttachmentFieldTests(TestCase):
                 "non_admin_max_post_count": 10,
                 "non_admin_max_book_count": 3,
                 "attachment_max_size_mb": 8,
+                "video_max_size_mb": 120,
                 "allow_user_upload_attachment": "on",
                 "vip_only_upload_attachment": "on",
+                "allow_user_upload_video": "on",
+                "vip_only_upload_video": "on",
                 "allow_user_comment": "on",
                 "comment_first_reward_money": "1",
                 "comment_first_reward_points": "1",
@@ -746,5 +865,285 @@ class SiteSettingAttachmentFieldTests(TestCase):
         self.assertTrue(form.is_valid(), form.errors)
         saved = form.save()
         self.assertEqual(saved["attachment_max_size_mb"], 8)
+        self.assertEqual(saved["video_max_size_mb"], 120)
         self.assertTrue(saved["allow_user_upload_attachment"])
         self.assertTrue(saved["vip_only_upload_attachment"])
+        self.assertTrue(saved["allow_user_upload_video"])
+        self.assertTrue(saved["vip_only_upload_video"])
+
+
+class UserMediaMigrationCommandTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser(username="administrator", email="admin@example.com", password="pass12345")
+        self.author = User.objects.create_user(username="legacy-author", password="pass12345")
+        self.other = User.objects.create_user(username="legacy-other", password="pass12345")
+        self.profile = UserProfile.objects.get_or_create(user=self.author)[0]
+
+    def test_command_migrates_legacy_media_into_new_structure(self):
+        with TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root, MEDIA_URL="/media/"):
+                self.profile.avatar = SimpleUploadedFile("avatar.jpg", b"avatar-bytes", content_type="image/jpeg")
+                self.profile.save(update_fields=["avatar"])
+
+                post = Post.objects.create(
+                    title="Legacy post",
+                    slug="legacy-post",
+                    content=f'<img src="{build_media_url("blog/uploads/legacy-post.png")}">',
+                    author=self.author,
+                    status=Post.STATUS_PUBLISHED,
+                )
+                post.cover_image = SimpleUploadedFile("cover.png", b"cover-bytes", content_type="image/png")
+                post.save(update_fields=["cover_image"])
+
+                draft = PostDraft.objects.create(
+                    title="Legacy draft",
+                    slug="legacy-draft",
+                    content=f'<video src="{build_media_url("blog/videos/legacy-draft.mp4")}"></video>',
+                    author=self.author,
+                )
+                draft.cover_image = SimpleUploadedFile("draft-cover.png", b"draft-cover", content_type="image/png")
+                draft.save(update_fields=["cover_image"])
+
+                book = Book.objects.create(name="Legacy book", slug="legacy-book", created_by=self.author)
+                book.cover_image = SimpleUploadedFile("book-cover.png", b"book-cover", content_type="image/png")
+                book.save(update_fields=["cover_image"])
+
+                attachment = Attachment.objects.create(
+                    title="Legacy attachment",
+                    uploaded_by=self.other,
+                    file=SimpleUploadedFile("legacy.pdf", b"legacy-attachment", content_type="application/pdf"),
+                )
+
+                comment = Comment.objects.create(
+                    post=post,
+                    author=self.author,
+                    content=f'<img src="{build_media_url("blog/uploads/comment-image.png")}">',
+                )
+
+                for relative_path, payload in {
+                    "blog/uploads/legacy-post.png": b"legacy-post-image",
+                    "blog/uploads/comment-image.png": b"comment-image",
+                    "blog/uploads/unclaimed.png": b"unclaimed-image",
+                    "blog/videos/legacy-draft.mp4": b"legacy-video",
+                    "blog/videos/unclaimed.mp4": b"unclaimed-video",
+                }.items():
+                    target_path = resolve_media_path(relative_path)
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    target_path.write_bytes(payload)
+
+                call_command("migrate_user_media")
+
+                self.profile.refresh_from_db()
+                post.refresh_from_db()
+                draft.refresh_from_db()
+                book.refresh_from_db()
+                attachment.refresh_from_db()
+                comment.refresh_from_db()
+
+                self.assertIn(f"users/{self.author.pk}/avatar/", self.profile.avatar.name)
+                self.assertIn(f"users/{self.author.pk}/post-cover/", post.cover_image.name)
+                self.assertIn(f"users/{self.author.pk}/post-cover/", draft.cover_image.name)
+                self.assertIn(f"users/{self.author.pk}/book-cover/", book.cover_image.name)
+                self.assertIn("users/1/attachment/", attachment.file.name)
+                self.assertIn("users/1/image/", post.content)
+                self.assertIn("users/1/image/", comment.content)
+                self.assertIn("users/1/video/", draft.content)
+                self.assertFalse(resolve_media_path("blog/uploads/legacy-post.png").exists())
+                self.assertFalse(resolve_media_path("blog/videos/legacy-draft.mp4").exists())
+                self.assertFalse(resolve_media_path("blog/uploads/unclaimed.png").exists())
+                self.assertFalse(resolve_media_path("blog/videos/unclaimed.mp4").exists())
+
+
+class ManageAttachmentCleanupTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser(username="cleanup-admin", email="cleanup-admin@example.com", password="pass12345")
+        self.user = User.objects.create_user(username="cleanup-user", password="pass12345")
+
+    @patch("apps.blog.views.manage.attachments.subprocess.Popen")
+    def test_staff_can_start_media_cleanup_job(self, popen_mock):
+        self.client.force_login(self.admin)
+
+        response = self.client.post(reverse("manage-attachment-cleanup-start"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(MediaCleanupJob.objects.count(), 1)
+        job = MediaCleanupJob.objects.get()
+        self.assertEqual(job.status, MediaCleanupJob.STATUS_PENDING)
+        popen_mock.assert_called_once()
+        args = popen_mock.call_args.args[0]
+        self.assertIn("cleanup_unused_media", args)
+        self.assertIn(str(job.pk), args)
+
+    @patch("apps.blog.views.manage.attachments.subprocess.Popen")
+    def test_start_media_cleanup_rejects_when_job_running(self, popen_mock):
+        MediaCleanupJob.objects.create(requested_by=self.admin, status=MediaCleanupJob.STATUS_RUNNING)
+        self.client.force_login(self.admin)
+
+        response = self.client.post(reverse("manage-attachment-cleanup-start"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 409)
+        payload = response.json()
+        self.assertFalse(payload["ok"])
+        self.assertEqual(MediaCleanupJob.objects.count(), 1)
+        popen_mock.assert_not_called()
+
+    def test_cleanup_status_returns_job_payload(self):
+        job = MediaCleanupJob.objects.create(
+            requested_by=self.admin,
+            status=MediaCleanupJob.STATUS_SUCCEEDED,
+            scanned_file_count=10,
+            kept_file_count=7,
+            deleted_file_count=3,
+            deleted_directory_count=2,
+            referenced_path_count=5,
+            result_summary="Scanned 10 files.",
+        )
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse("manage-attachment-cleanup-status", kwargs={"pk": job.pk}), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["job"]["id"], job.pk)
+        self.assertEqual(payload["job"]["deletedFileCount"], 3)
+        self.assertTrue(payload["job"]["isFinished"])
+
+    def test_non_staff_cannot_start_media_cleanup(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(reverse("manage-attachment-cleanup-start"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response.status_code, 403)
+
+
+class CleanupUnusedMediaCommandTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser(username="cleanup-command-admin", email="cleanup-command-admin@example.com", password="pass12345")
+        self.author = User.objects.create_user(username="cleanup-command-author", password="pass12345")
+        self.profile = UserProfile.objects.get_or_create(user=self.author)[0]
+
+    def test_command_deletes_only_unreferenced_media_files(self):
+        with TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=Path(media_root), MEDIA_URL="/media/"):
+                attachment = Attachment.objects.create(
+                    title="Command attachment",
+                    uploaded_by=self.author,
+                    file=SimpleUploadedFile("command.pdf", b"attachment", content_type="application/pdf"),
+                )
+                post = Post.objects.create(
+                    title="Cleanup post",
+                    slug="cleanup-post",
+                    summary=f'<img src="{build_media_url("users/9/image/summary-keep.png")}">',
+                    content=f'{build_attachment_placeholder(attachment.pk)} <img src="{build_media_url("users/9/image/content-keep.png")}">',
+                    author=self.author,
+                    status=Post.STATUS_PUBLISHED,
+                )
+                post.cover_image = SimpleUploadedFile("cover-keep.png", b"cover", content_type="image/png")
+                post.save(update_fields=["cover_image"])
+                book = Book.objects.create(
+                    name="Cleanup book",
+                    slug="cleanup-book",
+                    summary=f'<img src="{build_media_url("users/9/image/book-summary-keep.png")}">',
+                    created_by=self.author,
+                )
+                book.cover_image = SimpleUploadedFile("book-cover-keep.png", b"book-cover", content_type="image/png")
+                book.save(update_fields=["cover_image"])
+                self.profile.avatar = SimpleUploadedFile("avatar-keep.png", b"avatar", content_type="image/png")
+                self.profile.save(update_fields=["avatar"])
+                Comment.objects.create(
+                    post=post,
+                    author=self.author,
+                    content=f'<video src="{build_media_url("users/9/video/comment-keep.mp4")}"></video>',
+                )
+
+                keep_paths = {
+                    "users/9/image/summary-keep.png": b"summary",
+                    "users/9/image/content-keep.png": b"content",
+                    "users/9/image/book-summary-keep.png": b"book-summary",
+                    "users/9/video/comment-keep.mp4": b"comment-video",
+                }
+                delete_paths = {
+                    "users/9/image/unused.png": b"unused",
+                    "users/9/video/unused.mp4": b"unused-video",
+                }
+                for relative_path, payload in {**keep_paths, **delete_paths}.items():
+                    target_path = resolve_media_path(relative_path)
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    target_path.write_bytes(payload)
+
+                job = MediaCleanupJob.objects.create(requested_by=self.admin)
+
+                call_command("cleanup_unused_media", "--job-id", str(job.pk))
+
+                job.refresh_from_db()
+                self.assertEqual(job.status, MediaCleanupJob.STATUS_SUCCEEDED)
+                self.assertEqual(job.deleted_file_count, len(delete_paths))
+                self.assertGreaterEqual(job.kept_file_count, len(keep_paths))
+                for relative_path in keep_paths:
+                    self.assertTrue(resolve_media_path(relative_path).exists(), relative_path)
+                for relative_path in delete_paths:
+                    self.assertFalse(resolve_media_path(relative_path).exists(), relative_path)
+                self.assertTrue(resolve_media_path(attachment.file.name).exists())
+                self.assertTrue(resolve_media_path(post.cover_image.name).exists())
+                self.assertTrue(resolve_media_path(book.cover_image.name).exists())
+                self.assertTrue(resolve_media_path(self.profile.avatar.name).exists())
+
+    def test_command_dry_run_keeps_unreferenced_files(self):
+        with TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=Path(media_root), MEDIA_URL="/media/"):
+                unused_path = resolve_media_path("users/3/image/dry-run-unused.png")
+                unused_path.parent.mkdir(parents=True, exist_ok=True)
+                unused_path.write_bytes(b"unused")
+                job = MediaCleanupJob.objects.create(requested_by=self.admin)
+
+                call_command("cleanup_unused_media", "--job-id", str(job.pk), "--dry-run")
+
+                job.refresh_from_db()
+                self.assertEqual(job.status, MediaCleanupJob.STATUS_SUCCEEDED)
+                self.assertTrue(unused_path.exists())
+                self.assertEqual(job.deleted_file_count, 1)
+                self.assertIn("Dry run", job.result_summary)
+
+    def test_command_keeps_files_referenced_by_encoded_media_urls(self):
+        with TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=Path(media_root), MEDIA_URL="/media/"):
+                image_relative_path = "users/1/image/2025-12-18-04h10m49s_seed52254536_Realistic Photography Style, full-body shot. One A.jpg"
+                video_relative_path = "users/2/video/2025-11-08-22h46m15s_seed87557498_可爱的猫猫，手和耳朵悠闲地动.mp4"
+                encoded_image_url = "/media/" + quote(image_relative_path, safe="/")
+                encoded_video_url = "/media/" + quote(video_relative_path, safe="/")
+
+                post = Post.objects.create(
+                    title="Encoded media post",
+                    slug="encoded-media-post",
+                    content=f'<p><img src="{encoded_image_url}"></p>',
+                    author=self.author,
+                    status=Post.STATUS_PUBLISHED,
+                )
+                Comment.objects.create(
+                    post=post,
+                    author=self.author,
+                    content=f'<video src="{encoded_video_url}"></video>',
+                )
+
+                image_path = resolve_media_path(image_relative_path)
+                image_path.parent.mkdir(parents=True, exist_ok=True)
+                image_path.write_bytes(b"encoded-image")
+                video_path = resolve_media_path(video_relative_path)
+                video_path.parent.mkdir(parents=True, exist_ok=True)
+                video_path.write_bytes(b"encoded-video")
+                unused_path = resolve_media_path("users/2/video/unused-encoded-check.mp4")
+                unused_path.parent.mkdir(parents=True, exist_ok=True)
+                unused_path.write_bytes(b"unused-video")
+
+                job = MediaCleanupJob.objects.create(requested_by=self.admin)
+
+                call_command("cleanup_unused_media", "--job-id", str(job.pk))
+
+                job.refresh_from_db()
+                self.assertEqual(job.status, MediaCleanupJob.STATUS_SUCCEEDED)
+                self.assertTrue(image_path.exists())
+                self.assertTrue(video_path.exists())
+                self.assertFalse(unused_path.exists())

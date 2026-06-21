@@ -9,6 +9,7 @@ from django.views.generic import ListView
 from apps.blog.forms.comment import CommentForm
 from apps.blog.models import AuditLog, Comment
 from apps.blog.utils import write_audit_log
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.views.comment.utils import get_comment_edit_allowed
 from apps.blog.views.manage.base import ManageBaseMixin
 
@@ -38,7 +39,7 @@ class ManageCommentListView(ManageBaseMixin, ListView):
         context = super().get_context_data(**kwargs)
         query = (self.request.GET.get("q") or "").strip()
         context.update(self.get_manage_context(section="comments", query=query))
-        context["edit_form"] = CommentForm(user=self.request.user)
+        context["edit_form"] = CommentForm(user=self.request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("manage-upload-image"))
         return context
 
 
@@ -51,7 +52,7 @@ class ManageCommentUpdateView(ManageBaseMixin, View):
             messages.error(request, _("You do not have permission to edit this comment."))
             return redirect("manage-comments")
 
-        form = CommentForm(request.POST, instance=comment, user=request.user)
+        form = CommentForm(request.POST, instance=comment, user=request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("manage-upload-image"))
         if not form.is_valid():
             messages.error(request, _("Comment content cannot be empty."))
             return redirect("manage-comments")

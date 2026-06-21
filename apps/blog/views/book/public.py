@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -14,8 +14,9 @@ from apps.blog.access import build_access_check
 from apps.blog.forms.comment import CommentForm
 from apps.blog.models import Book, BookStar, Post
 from apps.blog.services.author_rewards import grant_author_reward_once
-from apps.blog.utils import get_safe_next_url, record_book_view
+from apps.blog.utils import record_book_view
 from apps.blog.utils.site import SHARE_LINK_EXPIRY_OPTIONS
+from apps.blog.views.media import MEDIA_UPLOAD_CONTEXT_COMMENT
 from apps.blog.visibility import (
     book_has_vip_standalone,
     get_book_access_icon_presentation,
@@ -132,7 +133,7 @@ class BookDetailView(LoginRequiredMixin, DetailView):
                     build_post_detail_context(
                         post,
                         self.request.user,
-                        comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user),
+                        comment_form=kwargs.get("comment_form") or CommentForm(user=self.request.user, editor_context=MEDIA_UPLOAD_CONTEXT_COMMENT, image_upload_url=reverse("frontend-upload-image")),
                         reply_parent_id=kwargs.get("reply_parent_id"),
                         reply_form=kwargs.get("reply_form"),
                         edit_comment_id=kwargs.get("edit_comment_id"),

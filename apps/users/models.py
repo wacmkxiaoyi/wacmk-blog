@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.blog.media_paths import avatar_upload_to
+
 
 class EmailVerificationCode(models.Model):
     PURPOSE_REGISTER = "register"
@@ -43,7 +45,7 @@ GENDER_CHOICES = [
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-    avatar = models.ImageField(upload_to="avatars/", blank=True)
+    avatar = models.ImageField(upload_to=avatar_upload_to, blank=True)
     description = models.TextField(blank=True, default="", max_length=500)
     money = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
