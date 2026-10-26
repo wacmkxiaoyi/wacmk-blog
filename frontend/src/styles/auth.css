@@ -1,0 +1,307 @@
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 20% 30%,
+      rgba(255, 160, 200, 0.18),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 80% 70%,
+      rgba(168, 160, 255, 0.18),
+      transparent
+    ),
+    linear-gradient(160deg, #fff6fb 0%, #f7f4ff 48%, #f2fbff 100%);
+}
+
+.auth-layout::before,
+.auth-layout::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.auth-layout::before {
+  width: 380px;
+  height: 380px;
+  background: rgba(255, 160, 200, 0.22);
+  top: -100px;
+  left: -80px;
+}
+
+.auth-layout::after {
+  width: 320px;
+  height: 320px;
+  background: rgba(168, 160, 255, 0.2);
+  bottom: -80px;
+  right: -60px;
+}
+
+/* ---- Auth Card ---- */
+.auth-card {
+  position: relative;
+  width: min(460px, 94vw);
+  padding: 48px 40px;
+  background: var(--bg-card-solid);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(20px);
+  z-index: 1;
+}
+
+.auth-card--wide {
+  width: min(560px, 94vw);
+}
+
+/* Card decorative blobs */
+.auth-card::before,
+.auth-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.auth-card::before {
+  width: 160px;
+  height: 160px;
+  background: var(--accent);
+  top: -40px;
+  right: -30px;
+}
+
+.auth-card::after {
+  width: 120px;
+  height: 120px;
+  background: var(--accent-secondary);
+  bottom: -30px;
+  left: -20px;
+}
+
+/* ---- Decorative Elements ---- */
+.card-spark {
+  position: absolute;
+  top: -18px;
+  right: 48px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #ffadcb, #ffe0a0);
+  border-radius: 4px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 16px rgba(255, 160, 200, 0.4);
+  z-index: 2;
+}
+
+.card-heart {
+  position: absolute;
+  top: -14px;
+  right: 22px;
+  width: 24px;
+  height: 24px;
+  z-index: 3;
+}
+
+.card-heart::before,
+.card-heart::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 22px;
+  background: linear-gradient(180deg, #ffb0ce, #ff8cbc);
+  border-radius: 14px 14px 0 0;
+}
+
+.card-heart::before {
+  left: 6px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.card-heart::after {
+  left: 4px;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+/* ---- Auth Panel Header ---- */
+.auth-panel-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.auth-title-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* Title decor: dots and star */
+.auth-title-decor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.decor-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+.decor-dot--pink {
+  background: var(--accent);
+  animation-delay: 0s;
+}
+
+.decor-dot--blue {
+  background: var(--accent-secondary);
+  animation-delay: 0.4s;
+}
+
+.decor-star {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #ffb866, #ff8cbc);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: rotate(15deg) scale(1.2);
+    opacity: 1;
+  }
+}
+
+.auth-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: #5c4678;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(151, 121, 198, 0.12);
+}
+
+/* Side link (e.g. "No account? Sign up") */
+.auth-side-link {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.auth-side-link a {
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+.auth-side-link a:hover {
+  color: var(--accent-deep);
+}
+
+/* ---- Form ---- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---- Field row (remember me + forgot password) ---- */
+.auth-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+}
+
+.auth-field-row a {
+  color: var(--accent-secondary);
+  font-weight: 500;
+}
+
+.auth-field-row a:hover {
+  color: var(--accent-deep);
+}
+
+/* ---- Actions ---- */
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* ---- Toast / Message Area ---- */
+.auth-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 36px 24px;
+    border-radius: var(--radius-xl);
+    width: min(420px, 96vw);
+  }
+
+  .auth-card--wide {
+    width: min(520px, 96vw);
+  }
+
+  .auth-field-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .card-spark,
+  .card-heart {
+    display: none;
+  }
+}

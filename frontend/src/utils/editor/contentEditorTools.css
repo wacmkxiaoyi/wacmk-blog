@@ -1,0 +1,187 @@
+.resource-modal {
+  display: grid;
+  gap: 16px;
+}
+.resource-modal label {
+  display: grid;
+  gap: 7px;
+  color: #565066;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+.resource-modal input,
+.resource-modal select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d9d1e7;
+  border-radius: 10px;
+  color: #282338;
+  background: #fff;
+  font: inherit;
+}
+.resource-modal__two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.resource-modal__attachment-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e1d9ed;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fcfbff, #f7f4ff);
+}
+.resource-modal__attachment-panel-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.resource-modal__attachment-panel-head > div {
+  display: grid;
+  gap: 3px;
+}
+.resource-modal__attachment-panel-head strong {
+  color: #403651;
+  font-size: 0.86rem;
+}
+.resource-modal__attachment-panel-head span {
+  color: #756c84;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.resource-modal__attachment-panel-head select {
+  width: auto;
+  min-width: 200px;
+}
+.resource-modal__access,
+.resource-modal__conditions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 15px;
+  border: 1px solid #e1d9ed;
+  border-radius: 14px;
+}
+.resource-modal__access legend,
+.resource-modal__conditions legend {
+  padding: 0 6px;
+  color: #62537b;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+.resource-modal__error {
+  margin: 0;
+  color: #b4425e;
+}
+.resource-modal__article-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  max-height: 600px;
+  overflow: auto;
+}
+.resource-modal__attachment-file {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.resource-modal__attachment-file strong,
+.resource-modal__attachment-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.resource-modal__attachment-file span {
+  color: #625b72;
+  font-size: 0.82rem;
+}
+.resource-modal__attachment-file small {
+  color: #837b93;
+  font-size: 0.75rem;
+}
+.resource-modal__access-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+.resource-modal__insert-row {
+  padding: 7px 12px;
+  border: 1px solid #bda9e6;
+  border-radius: 999px;
+  background: #f8f5ff;
+  color: #5d3c9e;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.resource-modal__choose-attachment {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid #d9d1e7;
+  border-radius: 10px;
+  color: #282338;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.resource-modal__choose-attachment input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.resource-modal__selected-attachment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  box-sizing: border-box;
+  padding: 8px 10px 8px 12px;
+  border: 1px solid #d9d1e7;
+  border-radius: 10px;
+  background: #fbfaff;
+}
+.resource-modal__selected-attachment > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+.resource-modal__selected-attachment strong,
+.resource-modal__selected-attachment span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.resource-modal__selected-attachment span {
+  color: #625b72;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+@media (max-width: 960px) {
+  .resource-modal__article-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .resource-modal__two-columns,
+  .resource-modal__access,
+  .resource-modal__conditions,
+  .resource-modal__article-grid {
+    grid-template-columns: 1fr;
+  }
+  .resource-modal__attachment-panel-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .resource-modal__attachment-panel-head select {
+    width: 100%;
+  }
+}

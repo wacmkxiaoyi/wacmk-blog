@@ -1,0 +1,16 @@
+.namecard-balances .namecard-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.namecard-balance svg {
+  filter: drop-shadow(0 2px 3px currentColor);
+}
+
+.namecard-balances .namecard-balance--money {
+  color: #d19124;
+}
+.namecard-balances .namecard-balance--points {
+  color: #706dde;
+}

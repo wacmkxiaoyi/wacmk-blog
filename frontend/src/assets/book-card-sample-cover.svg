@@ -1,0 +1,16 @@
+<svg width="600" height="800" viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="800" fill="#352556"/>
+  <rect x="38" y="38" width="524" height="724" rx="22" fill="url(#paint0_linear)" stroke="#FCE6EF" stroke-opacity=".62" stroke-width="2"/>
+  <path d="M154 238C212 210 276 218 300 248V578C262 541 201 526 154 552V238Z" fill="#FFF8FC" fill-opacity=".9"/>
+  <path d="M446 238C388 210 324 218 300 248V578C338 541 399 526 446 552V238Z" fill="#FFF8FC" fill-opacity=".9"/>
+  <path d="M194 326H267M194 362H252M406 326H333M406 362H348" stroke="#8C68B7" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="300" cy="164" r="38" fill="#FFD568"/>
+  <text x="300" y="676" fill="#FFF8FC" font-family="sans-serif" font-size="29" font-weight="700" letter-spacing="7" text-anchor="middle">READING NOTES</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="71" y1="84" x2="540" y2="719" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8C68B7"/>
+      <stop offset=".5" stop-color="#C67AAA"/>
+      <stop offset="1" stop-color="#5A8FC9"/>
+    </linearGradient>
+  </defs>
+</svg>

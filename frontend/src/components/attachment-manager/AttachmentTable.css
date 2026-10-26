@@ -1,0 +1,23 @@
+.attachment-table-title {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.attachment-table-title strong,
+.attachment-table-title small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-table-title small {
+  color: var(--text-soft);
+}
+
+.attachment-table-access {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 148px;
+}

@@ -1,0 +1,21 @@
+.managed-user-permissions {
+  display: grid;
+  gap: 10px;
+}
+
+.managed-user-permissions label {
+  min-height: 48px;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 11px 12px;
+}
+
+.managed-user-permissions label:has(input[type="number"]) {
+  grid-template-columns: 1fr 120px;
+}
+
+@media (max-width: 560px) {
+  .managed-user-permissions label:has(input[type="number"]) {
+    grid-template-columns: 1fr;
+  }
+}
