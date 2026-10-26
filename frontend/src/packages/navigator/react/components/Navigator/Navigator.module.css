@@ -1,0 +1,200 @@
+.root {
+  position: fixed;
+  z-index: var(--navigator-z-root, 160);
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+}
+
+.root.embedded {
+  position: relative;
+  z-index: auto;
+  width: 100%;
+}
+
+.root.compact {
+  width: auto;
+  height: auto;
+}
+
+.root.anchorRight .toggleDetached {
+  right: 0;
+  left: auto;
+}
+
+/* ---------- toggle ---------- */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--navigator-toggle-size, 3rem);
+  height: var(--navigator-toggle-size, 3rem);
+  border: 1px solid var(--navigator-toggle-border, rgba(121, 89, 198, 0.28));
+  border-radius: 999px;
+  background: var(
+    --navigator-toggle-bg,
+    linear-gradient(
+      180deg,
+      rgba(250, 246, 255, 0.98) 0%,
+      rgba(238, 245, 255, 0.96) 100%
+    )
+  );
+  box-shadow: var(
+    --navigator-toggle-shadow,
+    0 14px 30px rgba(95, 72, 173, 0.18)
+  );
+  color: var(--navigator-toggle-color, #5a3ea4);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  position: relative;
+  z-index: var(--navigator-z-toggle, 162);
+  transition:
+    transform var(--navigator-transition, 0.18s ease),
+    box-shadow var(--navigator-transition, 0.18s ease);
+}
+
+.toggleVisible {
+  display: inline-flex;
+}
+
+.toggleHidden {
+  display: none;
+}
+
+.toggleDetached {
+  position: absolute;
+  top: calc(var(--navigator-toggle-size, 3rem) * -1 - 0.75rem);
+  left: 0;
+  right: auto;
+}
+
+.toggle:hover,
+.toggle:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(
+    --navigator-toggle-shadow-hover,
+    0 18px 34px rgba(95, 72, 173, 0.22)
+  );
+}
+
+.root.dragging .toggle {
+  cursor: grabbing;
+  transform: none;
+  box-shadow: var(
+    --navigator-toggle-shadow-hover,
+    0 18px 34px rgba(95, 72, 173, 0.22)
+  );
+}
+
+/* ---------- panel ---------- */
+.panel {
+  position: relative;
+  z-index: var(--navigator-z-panel, 161);
+  border-radius: var(--navigator-radius, 28px);
+  border: 1px solid var(--navigator-border, rgba(255, 255, 255, 0.66));
+  background: var(--navigator-bg, rgba(255, 255, 255, 0.82));
+  backdrop-filter: blur(var(--navigator-blur, 18px));
+  box-shadow: var(--navigator-shadow, 0 18px 44px rgba(70, 41, 114, 0.16));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: 100%;
+  max-height: var(--navigator-max-height, min(calc(100vh - 8rem), 40rem));
+}
+
+.panelVisible {
+  display: flex;
+}
+
+.panelHidden {
+  display: none;
+}
+
+.panelCompact {
+  position: absolute;
+  top: calc(var(--navigator-toggle-size, 3rem) + 0.5rem);
+  left: 0;
+  min-width: 16rem;
+  max-width: min(280px, calc(100vw - 2rem));
+  max-height: min(calc(100vh - 8rem), 24rem);
+  cursor: default;
+}
+
+.panelExpanded {
+  position: relative;
+  min-width: var(--navigator-width, min(300px, calc(100vw - 2rem)));
+}
+
+.panelLeft {
+  right: 0;
+  left: auto;
+}
+
+.root.anchorRight .panelCompact {
+  right: 0;
+  left: auto;
+}
+
+.panelRight {
+  left: 0;
+  right: auto;
+}
+
+.panelEmbedded {
+  max-height: none;
+  position: static;
+  cursor: default;
+}
+
+.root:not(.compact):not(.embedded) .panelCompact {
+  position: static;
+  min-width: 0;
+  max-height: var(--navigator-max-height, min(calc(100vh - 8rem), 40rem));
+}
+
+/* ---------- heading row ---------- */
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: var(--navigator-padding, 1rem 0.95rem);
+  padding-bottom: 0.5rem;
+}
+
+.heading {
+  color: var(--navigator-heading-color, #4e366d);
+  font-size: var(--navigator-heading-font-size, 0.98rem);
+  font-weight: var(--navigator-heading-font-weight, 700);
+}
+
+/* ---------- scroll area ---------- */
+.scrollArea {
+  overflow: auto;
+  padding: var(--navigator-padding, 1rem 0.95rem);
+  padding-top: 0;
+  text-align: left;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Scrollbar styling */
+.scrollArea::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: var(--navigator-scrollbar-track, transparent);
+  border-radius: 3px;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background: var(--navigator-scrollbar-thumb, rgba(147, 127, 180, 0.25));
+  border-radius: 3px;
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 127, 180, 0.4);
+}

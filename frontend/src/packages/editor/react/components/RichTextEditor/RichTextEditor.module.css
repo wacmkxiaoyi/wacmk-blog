@@ -1,0 +1,1297 @@
+.root {
+  position: relative;
+  border: 1px solid rgba(166, 170, 210, 0.42);
+  border-radius: 1.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(247, 248, 255, 0.96) 100%
+  );
+  box-shadow: 0 1.2rem 2.5rem rgba(80, 83, 136, 0.1);
+  overflow: visible;
+  min-width: 0;
+}
+
+.rootFillHeight {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.fullscreenEditorModal {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-height: 0;
+}
+
+.fullscreenEditorInstance {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-height: 0;
+}
+
+.surfaceShell {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+.surfaceShellFillHeight {
+  min-height: 0;
+}
+
+.surface {
+  height: 100%;
+  overflow: auto;
+  padding: 1rem 1.5rem 1.65rem 1.1rem;
+  scrollbar-gutter: stable;
+}
+
+.surfaceNavigationMode {
+  overflow: hidden;
+  padding: 0;
+}
+
+.navigationLayout {
+  display: grid;
+  grid-template-columns: 18rem 1px minmax(0, 1fr);
+  gap: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
+.navigationSidebar {
+  width: 18rem;
+  min-width: 18rem;
+  max-width: 18rem;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding: 1rem 0.8rem 1rem 0.7rem;
+}
+
+.navigationList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navigationListItem + .navigationListItem {
+  margin-top: 0.3rem;
+}
+
+.navigationButton {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: #49436f;
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.navigationButton:hover,
+.navigationButton:focus-visible {
+  background: rgba(141, 139, 255, 0.1);
+  outline: none;
+}
+
+.navigationButtonActive {
+  background: linear-gradient(
+    135deg,
+    rgba(111, 103, 255, 0.16) 0%,
+    rgba(77, 141, 255, 0.12) 100%
+  );
+  color: #2f2d6b;
+  font-weight: 700;
+}
+
+.navigationButtonLevel1 {
+  padding-left: 0.75rem;
+}
+
+.navigationButtonLevel2 {
+  padding-left: 1.95rem;
+}
+
+.navigationButtonLevel3 {
+  padding-left: 3.15rem;
+}
+
+.navigationContentViewport {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 1rem 1.5rem 1.65rem 1rem;
+}
+
+.navigationDivider {
+  width: 1px;
+  min-height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(169, 176, 220, 0.18) 0%,
+    rgba(169, 176, 220, 0.72) 18%,
+    rgba(169, 176, 220, 0.72) 82%,
+    rgba(169, 176, 220, 0.18) 100%
+  );
+}
+
+.navigationEmpty {
+  padding: 0.45rem 0.7rem;
+  color: rgba(73, 67, 111, 0.72);
+  line-height: 1.6;
+}
+
+.surface::-webkit-resizer {
+  background:
+    linear-gradient(
+      135deg,
+      transparent 0 56%,
+      rgba(122, 133, 194, 0.18) 56% 64%,
+      transparent 64% 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0 70%,
+      rgba(122, 133, 194, 0.32) 70% 78%,
+      transparent 78% 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0 84%,
+      rgba(122, 133, 194, 0.48) 84% 92%,
+      transparent 92% 100%
+    );
+}
+
+.visualEditor {
+  height: 100%;
+  min-height: 100%;
+  cursor: text;
+}
+
+.editorContentBody {
+  min-height: 100%;
+  outline: none;
+}
+
+.editorContentBody:global(.ProseMirror) {
+  min-height: 100%;
+  outline: none;
+  padding-left: 0.1rem;
+}
+
+.editorContentBody:global(.ProseMirror) h1,
+.editorContentBody:global(.ProseMirror) h2,
+.editorContentBody:global(.ProseMirror) h3,
+.editorContentBody:global(.ProseMirror) h4,
+.editorContentBody:global(.ProseMirror) h5,
+.editorContentBody:global(.ProseMirror) h6 {
+  margin: 1.5rem 0 0.75rem;
+  line-height: 1.25;
+}
+
+.editorContentBody:global(.ProseMirror) > :first-child {
+  margin-top: 0;
+}
+
+.editorContentBody:global(.ProseMirror) > :last-child {
+  margin-bottom: 0;
+}
+
+.editorContentBody:global(.ProseMirror) p {
+  margin: 0.9rem 0;
+}
+
+.editorContentBody:global(.ProseMirror) ul:not([data-type="taskList"]),
+.editorContentBody:global(.ProseMirror) ol {
+  margin: 0.9rem 0;
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.editorContentBody:global(.ProseMirror) ul:not([data-type="taskList"]) li,
+.editorContentBody:global(.ProseMirror) ol li {
+  margin: 0.35rem 0;
+  padding-left: 0;
+}
+
+.editorContentBody:global(.ProseMirror) ul:not([data-type="taskList"]) li > p,
+.editorContentBody:global(.ProseMirror) ol li > p {
+  margin: 0;
+}
+
+.editorContentBody:global(.ProseMirror) p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgba(94, 104, 146, 0.56);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.editorContentBody:global(.ProseMirror) ul[data-type="taskList"] {
+  list-style: none;
+  margin: 0.9rem 0;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.editorContentBody:global(.ProseMirror) ul[data-type="taskList"] li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.editorContentBody:global(.ProseMirror) ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  margin-top: 0.18rem;
+}
+
+.editorContentBody:global(.ProseMirror) ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.editorContentBody:global(.ProseMirror) ul[data-type="taskList"] li > div > p {
+  margin: 0;
+}
+
+.editorContentBody:global(.ProseMirror) pre {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #f7ebff;
+  white-space: pre-wrap;
+}
+
+.editorContentBody:global(.ProseMirror) pre code {
+  display: block;
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(
+    --cr-font-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace
+  );
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.editorContentBody:global(.ProseMirror) code {
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--cr-inline-code-bg, rgba(15, 23, 42, 0.08));
+  font-family: var(
+    --cr-font-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace
+  );
+  font-size: 0.92em;
+}
+
+.editorContentBody:global(.ProseMirror) pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.editorContentBody:global(.ProseMirror) blockquote {
+  margin: 1.35rem 0;
+  padding: 1rem 1.15rem 1rem 1.25rem;
+  border-left: 5px solid rgba(141, 139, 255, 0.75);
+  border-radius: 0 1.25rem 1.25rem 0;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 240, 255, 0.96) 0%,
+    rgba(236, 244, 255, 0.92) 100%
+  );
+  box-shadow: 0 1rem 1.875rem rgba(151, 121, 198, 0.08);
+  color: #514468;
+}
+
+.editorContentBody:global(.ProseMirror) blockquote > :first-child {
+  margin-top: 0;
+}
+.editorContentBody:global(.ProseMirror) blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.editorContentBody:global(.ProseMirror) table {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  margin: 1.15rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  overflow: hidden;
+  border: 1px solid rgba(176, 178, 205, 0.72);
+  border-radius: 1.125rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0.875rem 1.75rem rgba(68, 66, 110, 0.08);
+}
+
+.editorContentBody:global(.ProseMirror) table thead {
+  background: linear-gradient(
+    180deg,
+    rgba(246, 242, 255, 0.98) 0%,
+    rgba(240, 245, 255, 0.96) 100%
+  );
+}
+
+.editorContentBody:global(.ProseMirror) table th,
+.editorContentBody:global(.ProseMirror) table td {
+  min-width: 6rem;
+  padding: 0.78rem 0.95rem;
+  border-right: 1px solid rgba(176, 178, 205, 0.45);
+  border-bottom: 1px solid rgba(176, 178, 205, 0.45);
+  vertical-align: top;
+  text-align: left;
+  word-break: break-word;
+}
+
+.editorContentBody:global(.ProseMirror) table th:last-child,
+.editorContentBody:global(.ProseMirror) table td:last-child {
+  border-right: 0;
+}
+
+.editorContentBody:global(.ProseMirror) table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.editorContentBody:global(.ProseMirror) table tbody tr:nth-child(odd) td {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.editorContentBody:global(.ProseMirror) table tbody tr:nth-child(even) td {
+  background: rgba(244, 246, 255, 0.92);
+}
+
+.editorContentBody:global(.ProseMirror) table th {
+  font-weight: 700;
+  color: #40376d;
+}
+
+.editorContentBody:global(.ProseMirror) hr {
+  margin: 1.6rem 0;
+  border: 0;
+  border-top: 1px solid var(--cr-border, rgba(148, 163, 184, 0.3));
+}
+
+.customBlockFallback {
+  padding: 1rem 1.1rem;
+  border: 1px dashed rgba(124, 134, 197, 0.52);
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(243, 245, 255, 0.92) 0%,
+    rgba(251, 252, 255, 0.96) 100%
+  );
+  color: #4b4372;
+  font-weight: 600;
+}
+
+.anchorBlockPreview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px dashed rgba(109, 117, 198, 0.48);
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(241, 244, 255, 0.96) 0%,
+    rgba(251, 252, 255, 0.98) 100%
+  );
+  color: #3e4270;
+}
+
+.anchorBlockLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.anchorBlockCode {
+  margin: 0;
+  color: #2c3b74;
+  font: 600 0.9rem/1.4
+    var(--cr-font-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+}
+
+.markdownTextarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 100%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: #23304f;
+  font:
+    500 0.97rem/1.7 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  outline: none;
+  resize: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  tab-size: 2;
+}
+
+.markdownTextarea::placeholder {
+  color: rgba(94, 104, 146, 0.56);
+}
+
+.markdownEditorShell {
+  position: relative;
+  min-height: 100%;
+}
+
+.markdownHighlight {
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: #23304f;
+  pointer-events: none;
+}
+
+.markdownHighlight,
+.markdownHighlightCode {
+  font:
+    500 0.97rem/1.7 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  tab-size: 2;
+}
+
+.markdownHighlightCode {
+  display: block;
+  min-height: 100%;
+}
+
+.markdownHighlightCode:global(.language-markdown),
+.markdownHighlightCode:global(.language-markdown .token) {
+  text-shadow: none;
+}
+
+.markdownEditorShell :global(.token.title),
+.markdownEditorShell :global(.token.title .punctuation) {
+  color: #6f3ef6;
+}
+
+.markdownEditorShell :global(.token.hr),
+.markdownEditorShell :global(.token.blockquote),
+.markdownEditorShell :global(.token.url),
+.markdownEditorShell :global(.token.variable) {
+  color: #2563eb;
+}
+
+.markdownEditorShell :global(.token.bold),
+.markdownEditorShell :global(.token.important) {
+  color: #7c2d12;
+  font-weight: 700;
+}
+
+.markdownEditorShell :global(.token.italic) {
+  color: #8b5cf6;
+  font-style: italic;
+}
+
+.markdownEditorShell :global(.token.code-snippet),
+.markdownEditorShell :global(.token.code-block),
+.markdownEditorShell :global(.token.code.keyword) {
+  color: #0f766e;
+}
+
+.markdownEditorShell :global(.token.list.punctuation),
+.markdownEditorShell :global(.token.punctuation) {
+  color: #64748b;
+}
+
+.markdownEditorShell :global(.token.link) {
+  color: #0f766e;
+}
+
+.markdownEditorShell :global(.token.admonition-marker) {
+  color: #7c3aed;
+  font-weight: 800;
+}
+
+.markdownEditorShell :global(.token.admonition-variant) {
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+.markdownEditorShell :global(.token.admonition-variant.error) {
+  color: #dc2626;
+}
+
+.markdownEditorShell :global(.token.admonition-variant.warning) {
+  color: #d97706;
+}
+
+.markdownEditorShell :global(.token.admonition-variant.tip) {
+  color: #059669;
+}
+
+.markdownEditorShell :global(.token.admonition-variant.note) {
+  color: #2563eb;
+}
+
+.markdownEditorShell :global(.token.admonition-title),
+.markdownEditorShell :global(.token.tabs-label) {
+  color: #0f766e;
+}
+
+.markdownEditorShell :global(.token.tabs-marker) {
+  color: #db2777;
+  font-weight: 800;
+}
+
+.markdownEditorShell :global(.token.directive-name) {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.markdownEditorShell :global(.token.directive-brace),
+.markdownEditorShell :global(.token.directive-equals) {
+  color: #64748b;
+}
+
+.markdownEditorShell :global(.token.directive-attr-name) {
+  color: #7c3aed;
+}
+
+.markdownEditorShell
+  :global(.token.directive-kind-value .token.directive-attr-value),
+.markdownEditorShell :global(.token.directive-attr-value) {
+  color: #b45309;
+}
+
+.markdownEditorShell :global(.token.color-text-label) {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.markdownEditorShell :global(.token.color-text-class-prefix) {
+  color: #64748b;
+}
+
+.markdownEditorShell :global(.token.color-text-token) {
+  font-weight: 700;
+}
+
+.markdownEditorShell :global(.token.color-text-token.berry) {
+  color: #a21caf;
+}
+
+.markdownEditorShell :global(.token.color-text-token.rose) {
+  color: #e11d48;
+}
+
+.markdownEditorShell :global(.token.color-text-token.orange) {
+  color: #ea580c;
+}
+
+.markdownEditorShell :global(.token.color-text-token.gold) {
+  color: #ca8a04;
+}
+
+.markdownEditorShell :global(.token.color-text-token.green) {
+  color: #059669;
+}
+
+.markdownEditorShell :global(.token.color-text-token.cyan) {
+  color: #0891b2;
+}
+
+.markdownEditorShell :global(.token.color-text-token.blue) {
+  color: #2563eb;
+}
+
+.markdownEditorShell :global(.token.color-text-token.purple) {
+  color: #7c3aed;
+}
+
+.resizeHandle {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.45rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.2rem;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 0 52%,
+      rgba(122, 133, 194, 0.18) 52% 62%,
+      transparent 62% 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0 68%,
+      rgba(122, 133, 194, 0.32) 68% 78%,
+      transparent 78% 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0 84%,
+      rgba(122, 133, 194, 0.48) 84% 94%,
+      transparent 94% 100%
+    );
+  cursor: ns-resize;
+  touch-action: none;
+  z-index: 2;
+}
+
+.blockNodeShell {
+  position: relative;
+  margin: 0.95rem 0;
+  padding: 0.08rem 0;
+}
+
+.assetPlaceholder {
+  display: grid;
+  min-height: 9rem;
+  place-items: center;
+  padding: 1rem;
+  border: 1px dashed rgba(117, 107, 162, 0.48);
+  border-radius: 0.8rem;
+  color: #665d80;
+  background: rgba(246, 244, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.assetStatus {
+  margin-top: 0.45rem;
+  color: #665d80;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.inlineMathNode {
+  display: inline-flex;
+  padding: 0.15rem 0.3rem;
+  border-radius: 0.5rem;
+  background: rgba(236, 239, 255, 0.86);
+}
+
+.inlineMathNode :global(.renderer) {
+  line-height: 1;
+}
+
+.inlineBlockTitleText {
+  font-weight: 700;
+  color: inherit;
+}
+
+.nestedEditorContent {
+  min-height: 1.6rem;
+}
+
+.nestedEditorContent > :first-child {
+  margin-top: 0;
+}
+
+.nestedEditorContent > :last-child {
+  margin-bottom: 0;
+}
+
+.tabsContentHost {
+  display: grid;
+  gap: 0;
+}
+
+.tabPanelActive {
+  display: block;
+}
+
+.tabPanelHidden {
+  display: none;
+}
+
+.tabLabelPreview {
+  display: block;
+  width: 100%;
+  min-width: 3rem;
+  max-width: 8rem;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rendererTabInput,
+.rendererTitleInput {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  outline: none;
+}
+
+.rendererTitleInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+.rendererTabInput {
+  display: block;
+  min-width: 3rem;
+  width: 100%;
+  max-width: 8rem;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: inherit;
+}
+
+.inlineBlockTitleInput,
+.inlineBlockTextarea,
+.codeBlockTextarea {
+  width: 100%;
+  border: 1px solid rgba(174, 178, 215, 0.62);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #22304a;
+  font: inherit;
+}
+
+.inlineBlockTitleInput {
+  min-height: 2.5rem;
+  padding: 0.7rem 0.85rem;
+  font-weight: 700;
+}
+
+.inlineBlockTextarea {
+  min-height: 8rem;
+  padding: 0.85rem 0.95rem;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.codeBlockNode {
+  margin: 0.95rem 0;
+  padding: 0.08rem 0;
+}
+
+.codeBlockEditorShell {
+  padding: 0;
+}
+
+.codeBlockPre {
+  position: relative;
+  margin: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #f7ebff;
+  padding: 1rem;
+  white-space: pre;
+}
+
+.codeBlockLayout {
+  display: block;
+}
+
+.codeBlockCanvas {
+  position: relative;
+  min-width: 0;
+  --editor-code-gutter-width: calc(2.5rem + 0.85rem + 0.85rem + 1px);
+}
+
+.codeBlockMirror,
+.codeBlockContent {
+  display: block;
+  min-width: max-content;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  font: 500 0.92rem/1.6
+    var(--cr-font-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+  tab-size: 2;
+}
+
+.codeBlockMirror {
+  pointer-events: none;
+  user-select: none;
+}
+
+.codeBlockMirror :global(.cr-code-line-content) {
+  display: block;
+  min-width: 0;
+  white-space: pre;
+}
+
+.codeBlockMirror :global(.cr-code-line-number) {
+  min-width: 2.5rem;
+  width: 2.5rem;
+  box-sizing: content-box;
+}
+
+.codeBlockContentEditable {
+  display: block;
+  outline: none;
+  font: inherit;
+  line-height: inherit;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  tab-size: 2;
+}
+
+.codeBlockCanvas > .codeBlockContent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: var(--editor-code-gutter-width);
+  color: transparent;
+  caret-color: #f7ebff;
+}
+
+.codeBlockContentEditable:global([data-node-view-content]) {
+  white-space: pre;
+}
+
+.codeBlockContentEditable:global(.ProseMirror) {
+  outline: none;
+  font: inherit;
+  line-height: inherit;
+  white-space: pre;
+}
+
+.codeBlockContentEditable:global(.ProseMirror-focused) {
+  outline: none;
+}
+
+.codeBlockContentEditable :global(*) {
+  white-space: inherit;
+}
+
+.codeBlockContentEditable :global(br) {
+  display: block;
+}
+
+.codeBlockContentEditable:global(.ProseMirror) *::selection {
+  color: transparent;
+  background: rgba(167, 139, 250, 0.35);
+}
+
+.codeBlockContentEditable:global(.ProseMirror) ::selection {
+  color: transparent;
+  background: rgba(167, 139, 250, 0.35);
+}
+
+.codeBlockTextarea {
+  min-height: 12rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #f7ebff;
+  font: 500 0.92rem/1.6
+    var(--cr-font-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+  resize: vertical;
+  outline: none;
+}
+
+.admonitionShell :global(.cr-admonition),
+.blockNodeShell :global(.cr-callout),
+.blockNodeShell :global(.cr-media-card),
+.blockNodeShell :global(.cr-tabs),
+.blockNodeShell :global(.cr-image-block),
+.blockNodeShell :global(.cr-video-block),
+.blockNodeShell :global(.cr-html-block),
+.blockNodeShell :global(.cr-math-block-shell),
+.blockNodeShell :global(.cr-math-block),
+.blockNodeShell :global(.cr-anchor-block),
+.blockNodeShell :global(.cr-custom-fallback) {
+  margin: 0;
+}
+
+.blockNodeShell :global(.cr-html-block-frame) {
+  pointer-events: none;
+}
+
+.modalBody {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+.modalField {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.modalLabel {
+  color: #4e4a72;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.modalTextarea {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(174, 178, 215, 0.62);
+  border-radius: 0.95rem;
+  background: #fff;
+  color: #22304a;
+  font: inherit;
+}
+
+.modalTextarea {
+  resize: vertical;
+}
+
+.htmlModalLayout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(16rem, 1fr);
+  gap: 1.25rem;
+  min-height: 38rem;
+  height: 100%;
+}
+
+.htmlContentPanel {
+  display: grid;
+  grid-template-rows: minmax(15rem, 1fr) minmax(15rem, 1fr);
+  gap: 1rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.htmlContentPanel .modalField,
+.htmlPreviewPanel {
+  min-height: 0;
+}
+
+.htmlContentPanel .modalTextarea {
+  min-height: 0;
+  height: 100%;
+  resize: none;
+}
+
+.htmlPreviewPanel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.45rem;
+}
+
+.htmlPreviewFrame {
+  width: 100%;
+  display: block;
+  min-height: 0;
+  height: 100% !important;
+  border: 1px solid rgba(174, 178, 215, 0.62);
+  border-radius: 0.95rem;
+  background: #fff;
+}
+
+.htmlTemplatePanel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0.45rem;
+  min-width: 0;
+  min-height: 0;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(174, 178, 215, 0.48);
+}
+
+.htmlTemplateHelp {
+  margin: 0;
+  color: #6b6686;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.htmlTemplateList {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.1rem 0.4rem 0.1rem 0.1rem;
+  scrollbar-gutter: stable;
+}
+
+.htmlTemplateButton {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid rgba(174, 178, 215, 0.58);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: #2f2d52;
+  text-align: left;
+  cursor: pointer;
+}
+
+.htmlTemplateButton:hover,
+.htmlTemplateButton:focus-visible,
+.htmlTemplateButtonSelected {
+  border-color: rgba(104, 91, 234, 0.78);
+  background: rgba(240, 239, 255, 0.88);
+  box-shadow: 0 0.5rem 1.2rem rgba(92, 83, 185, 0.13);
+  outline: none;
+}
+
+.htmlTemplateText {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.htmlTemplateName {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.htmlTemplateDescription {
+  color: #716c8c;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.htmlTemplateThumbnail {
+  position: relative;
+  display: block;
+  height: 5.9rem;
+  overflow: hidden;
+  border-radius: 0.55rem;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(123, 135, 175, 0.18);
+}
+
+.htmlTemplateThumbnail > span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+}
+
+.htmlTemplateThumbnailAccent {
+  top: 13%;
+  left: 11%;
+  width: 18%;
+  height: 8%;
+  background: #7c6cf2;
+}
+.htmlTemplateThumbnailTitle {
+  top: 30%;
+  left: 11%;
+  width: 51%;
+  height: 10%;
+  background: #333257;
+}
+.htmlTemplateThumbnailCopy {
+  top: 48%;
+  left: 11%;
+  width: 68%;
+  height: 5%;
+  background: #c2c4d6;
+}
+.htmlTemplateThumbnailCopyShort {
+  top: 59%;
+  width: 45%;
+}
+.htmlTemplateThumbnailBlock {
+  background: #dfe3f4;
+}
+.htmlTemplateThumbnailBlockFirst {
+  left: 11%;
+  right: 11%;
+  bottom: 10%;
+  height: 12%;
+}
+.htmlTemplateThumbnailBlockSecond,
+.htmlTemplateThumbnailBlockThird {
+  display: none !important;
+}
+
+.htmlTemplateThumbnailHero {
+  background: linear-gradient(135deg, #332c72, #0f766e);
+}
+.htmlTemplateThumbnailHero .htmlTemplateThumbnailTitle {
+  width: 46%;
+  background: #fff;
+}
+.htmlTemplateThumbnailHero .htmlTemplateThumbnailCopy {
+  width: 39%;
+  background: #c4b5fd;
+}
+.htmlTemplateThumbnailHero .htmlTemplateThumbnailBlockFirst {
+  top: 13%;
+  right: 10%;
+  left: auto;
+  bottom: auto;
+  width: 32%;
+  height: 74%;
+  border-radius: 0.4rem;
+  background: #99f6e4;
+}
+.htmlTemplateThumbnailTwoColumn .htmlTemplateThumbnailBlockFirst {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  height: auto;
+  border-radius: 0;
+  background: #93c5fd;
+}
+.htmlTemplateThumbnailTwoColumn .htmlTemplateThumbnailAccent,
+.htmlTemplateThumbnailTwoColumn .htmlTemplateThumbnailTitle,
+.htmlTemplateThumbnailTwoColumn .htmlTemplateThumbnailCopy {
+  left: 54%;
+}
+.htmlTemplateThumbnailProjects {
+  background: #f1f5f9;
+}
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockFirst,
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockSecond,
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockThird {
+  display: block !important;
+  bottom: 12%;
+  width: 24%;
+  height: 36%;
+  border-radius: 0.25rem;
+}
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockFirst {
+  left: 11%;
+  background: #c4b5fd;
+}
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockSecond {
+  left: 38%;
+  background: #93c5fd;
+}
+.htmlTemplateThumbnailProjects .htmlTemplateThumbnailBlockThird {
+  left: 65%;
+  background: #99f6e4;
+}
+.htmlTemplateThumbnailResume .htmlTemplateThumbnailBlockFirst {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 34%;
+  height: auto;
+  border-radius: 0;
+  background: #1e3a5f;
+}
+.htmlTemplateThumbnailResume .htmlTemplateThumbnailAccent,
+.htmlTemplateThumbnailResume .htmlTemplateThumbnailTitle,
+.htmlTemplateThumbnailResume .htmlTemplateThumbnailCopy {
+  left: 43%;
+}
+.htmlTemplateThumbnailNamecard {
+  background: linear-gradient(135deg, #fff7ed, #fdf2f8);
+}
+.htmlTemplateThumbnailNamecard .htmlTemplateThumbnailBlockFirst {
+  top: 20%;
+  bottom: auto;
+  left: 11%;
+  width: 27%;
+  height: 53%;
+  border-radius: 50%;
+  background: #fed7aa;
+}
+.htmlTemplateThumbnailNamecard .htmlTemplateThumbnailAccent,
+.htmlTemplateThumbnailNamecard .htmlTemplateThumbnailTitle,
+.htmlTemplateThumbnailNamecard .htmlTemplateThumbnailCopy {
+  left: 46%;
+}
+
+.modalSelect {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(174, 178, 215, 0.62);
+  border-radius: 0.95rem;
+  background: #fff;
+  color: #22304a;
+  font: inherit;
+}
+
+@media (max-width: 900px) {
+  .navigationLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .navigationSidebar {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    max-height: 14rem;
+  }
+
+  .navigationDivider {
+    display: none;
+  }
+
+  .navigationContentViewport {
+    padding: 0.9rem 1rem 1.45rem;
+  }
+
+  .htmlModalLayout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
+  }
+
+  .htmlContentPanel {
+    grid-template-rows: minmax(15rem, 1fr) minmax(15rem, 1fr);
+  }
+
+  .htmlTemplatePanel {
+    max-height: 23rem;
+    padding-top: 1rem;
+    padding-left: 0;
+    border-top: 1px solid rgba(174, 178, 215, 0.48);
+    border-left: 0;
+  }
+}

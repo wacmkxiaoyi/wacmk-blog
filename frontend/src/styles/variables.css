@@ -1,0 +1,49 @@
+:root {
+  --bg-main: linear-gradient(135deg, #fff0fa 0%, #f4f3ff 48%, #e6f5ff 100%);
+  --bg-card: rgba(255, 255, 255, 0.72);
+  --bg-card-strong: rgba(255, 255, 255, 0.88);
+  --bg-card-solid: rgba(255, 255, 255, 0.96);
+  --text-main: #5b4b73;
+  --text-soft: #8d80a5;
+  --text-muted: #b4a9c7;
+  --accent: #ff7fb4;
+  --accent-deep: #ff5e9f;
+  --accent-secondary: #8d8bff;
+  --accent-gradient: linear-gradient(
+    135deg,
+    #ff8cbc 0%,
+    #ff72b3 50%,
+    #8e8cff 100%
+  );
+  --line-soft: rgba(147, 127, 180, 0.15);
+  --line-medium: rgba(147, 127, 180, 0.25);
+  --shadow-main: 0 24px 60px rgba(151, 121, 198, 0.18);
+  --shadow-soft: 0 12px 30px rgba(151, 121, 198, 0.12);
+  --shadow-card: 0 8px 32px rgba(151, 121, 198, 0.16);
+  --shadow-elevated: 0 16px 48px rgba(151, 121, 198, 0.22);
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-2xl: 36px;
+  --font-heading: "Baloo 2", "Noto Sans SC", sans-serif;
+  --font-body: "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --focus-ring: 0 0 0 3px rgba(255, 127, 180, 0.25);
+  --app-content-width: min(100% - 48px, 1280px);
+  --app-header-top-gap: 16px;
+  --error: #e85d75;
+  --error-bg: rgba(232, 93, 117, 0.08);
+  --success: #6bcb8e;
+  --success-bg: rgba(107, 203, 142, 0.08);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --app-content-width: min(100% - 28px, 760px);
+    --app-header-top-gap: 10px;
+  }
+}

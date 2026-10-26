@@ -1,0 +1,36 @@
+export interface NavigatorTheme {
+  "--navigator-z-root": string;
+  "--navigator-z-panel": string;
+  "--navigator-z-toggle": string;
+  "--navigator-radius": string;
+  "--navigator-bg": string;
+  "--navigator-border": string;
+  "--navigator-shadow": string;
+  "--navigator-blur": string;
+  "--navigator-padding": string;
+  "--navigator-toggle-size": string;
+  "--navigator-toggle-bg": string;
+  "--navigator-toggle-border": string;
+  "--navigator-toggle-color": string;
+  "--navigator-toggle-shadow": string;
+  "--navigator-toggle-shadow-hover": string;
+  "--navigator-link-color": string;
+  "--navigator-link-active-color": string;
+  "--navigator-link-active-weight": string;
+  "--navigator-heading-color": string;
+  "--navigator-heading-font-weight": string;
+  "--navigator-heading-font-size": string;
+  "--navigator-indent-level2": string;
+  "--navigator-indent-level3": string;
+  "--navigator-indent-level4": string;
+  "--navigator-font-size": string;
+  "--navigator-line-height": string;
+  "--navigator-gap": string;
+  "--navigator-transition": string;
+  "--navigator-chevron-color": string;
+  "--navigator-chevron-hover-color": string;
+  "--navigator-scrollbar-thumb": string;
+  "--navigator-scrollbar-track": string;
+  "--navigator-max-height": string;
+  "--navigator-width": string;
+}

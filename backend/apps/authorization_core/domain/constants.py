@@ -1,0 +1,1 @@
+VIP_GROUP_PREFIX = "vip_"

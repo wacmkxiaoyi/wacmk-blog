@@ -1,0 +1,35 @@
+:root {
+  --card-radius: 26px;
+  --card-padding: 20px;
+  --card-gap: 16px;
+  --card-border: rgba(147, 127, 180, 0.16);
+  --card-shadow: 0 14px 34px rgba(151, 121, 198, 0.14);
+  --card-shadow-hover: 0 22px 48px rgba(151, 121, 198, 0.2);
+  --card-surface-default: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(247, 244, 255, 0.94) 50%,
+    rgba(239, 246, 255, 0.94) 100%
+  );
+  --card-surface-soft: linear-gradient(
+    160deg,
+    rgba(255, 247, 252, 0.96) 0%,
+    rgba(244, 242, 255, 0.96) 52%,
+    rgba(236, 246, 255, 0.96) 100%
+  );
+  --card-surface-cover:
+    linear-gradient(
+      180deg,
+      rgba(38, 22, 57, 0.32) 0%,
+      rgba(48, 22, 78, 0.56) 48%,
+      rgba(23, 12, 40, 0.82) 100%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 167, 196, 0.2) 0%,
+      rgba(139, 92, 246, 0.16) 100%
+    );
+  --card-title-color: #3c2458;
+  --card-text-color: #665c82;
+  --card-cover-text-color: #ffffff;
+}

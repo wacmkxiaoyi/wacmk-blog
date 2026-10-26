@@ -1,0 +1,78 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+/* ---- Primary (gradient) ---- */
+.btn--primary {
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(255, 114, 179, 0.35);
+}
+
+.btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 114, 179, 0.45);
+}
+
+/* ---- Secondary outline ---- */
+.btn--secondary {
+  background: transparent;
+  color: var(--accent-secondary);
+  border: 1.5px solid rgba(141, 139, 255, 0.35);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: rgba(141, 139, 255, 0.08);
+  border-color: var(--accent-secondary);
+}
+
+/* ---- Full width ---- */
+.btn--full {
+  width: 100%;
+}
+
+/* ---- Loading spinner ---- */
+.btn--loading .btn__label {
+  opacity: 0.7;
+}
+
+.btn__spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

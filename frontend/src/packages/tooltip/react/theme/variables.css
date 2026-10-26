@@ -1,0 +1,9 @@
+:root {
+  --tooltip-z-base: 2600;
+  --tooltip-bg: #111111;
+  --tooltip-color: #ffffff;
+  --tooltip-radius: 16px;
+  --tooltip-padding: 14px 16px;
+  --tooltip-shadow: 0 18px 48px rgba(15, 23, 42, 0.28);
+  --tooltip-border: rgba(255, 255, 255, 0.1);
+}

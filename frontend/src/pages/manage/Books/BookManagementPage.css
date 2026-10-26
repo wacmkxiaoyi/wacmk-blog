@@ -1,0 +1,71 @@
+.managed-books-shell {
+  min-height: 620px;
+}
+.managed-books-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.managed-books-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 4px;
+}
+.managed-books-tabs button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  color: var(--text-main);
+  background: rgba(255, 245, 250, 0.68);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.managed-books-tabs button.is-active {
+  border-color: rgba(224, 107, 160, 0.3);
+  color: var(--accent-deep);
+  background: rgba(224, 107, 160, 0.12);
+}
+
+.managed-book-name {
+  display: grid;
+  gap: 4px;
+}
+
+.managed-book-name strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.managed-book-name small {
+  color: var(--text-soft);
+}
+
+.managed-book-access {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.managed-book-link-status {
+  font-weight: 700;
+}
+.managed-book-link-status--active {
+  color: var(--success, #27855a);
+}
+.managed-book-link-status--expired {
+  color: var(--warning, #9b6500);
+}
+.managed-book-link-status--inactive {
+  color: var(--text-soft);
+}
+@media (max-width: 560px) {
+  .managed-books-heading {
+    flex-direction: column;
+  }
+  .managed-books-heading .btn {
+    width: 100%;
+  }
+}

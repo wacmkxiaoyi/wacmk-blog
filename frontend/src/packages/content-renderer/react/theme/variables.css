@@ -1,0 +1,9 @@
+:root {
+  --cr-text: #1e293b;
+  --cr-text-muted: rgba(30, 41, 59, 0.72);
+  --cr-border: rgba(148, 163, 184, 0.25);
+  --cr-border-strong: #7c93ff;
+  --cr-panel-bg: rgba(255, 255, 255, 0.72);
+  --cr-code-bg: #0f172a;
+  --cr-code-text: #e2e8f0;
+}

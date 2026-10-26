@@ -1,0 +1,424 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-top: var(--app-header-top-gap);
+}
+
+.app-header__inner {
+  width: var(--app-content-width);
+  min-height: 58px;
+  margin: 0 auto;
+  padding: 8px 10px 8px 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 12px 32px rgba(128, 102, 169, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.app-header__nav {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.app-header__nav-item {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  color: var(--text-soft);
+  background: rgba(255, 236, 246, 0.72);
+  transition:
+    width var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.app-header__nav-item:hover,
+.app-header__nav-item:focus-visible {
+  width: 94px;
+  color: var(--accent-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(255, 127, 180, 0.18);
+}
+
+.app-header__nav-item.is-active {
+  color: var(--accent-deep);
+  background: rgba(255, 207, 228, 0.88);
+}
+
+.app-header__nav-item:focus-visible,
+.app-header__avatar-button:focus-visible,
+.app-header__repository:focus-visible,
+.app-header__search input:focus-visible,
+.app-header__search button:focus-visible,
+.app-header__account-menu a:focus-visible,
+.app-header__logout:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.app-header__nav-item--placeholder {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.app-header__nav-icon {
+  width: 38px;
+  min-width: 38px;
+  display: grid;
+  place-items: center;
+}
+
+.app-header__nav-label {
+  width: 0;
+  padding-right: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-4px);
+  transition:
+    width var(--transition-fast),
+    padding var(--transition-fast),
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.app-header__nav-item:hover .app-header__nav-label,
+.app-header__nav-item:focus-visible .app-header__nav-label {
+  width: auto;
+  padding-right: 12px;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  font-weight: 700;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.app-header__center {
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-header__controls {
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-header__search-form {
+  width: 360px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.app-header__search-form:focus-within {
+  border-color: var(--line-medium);
+  box-shadow: 0 5px 14px rgba(141, 139, 255, 0.12);
+}
+
+.app-header__search-form input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  padding: 0 11px;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.app-header__search-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.app-header__search-form button {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  display: grid;
+  place-items: center;
+  margin-right: 4px;
+  border: 1px solid rgba(255, 127, 180, 0.16);
+  border-radius: 50%;
+  color: var(--accent-deep);
+  background: rgba(255, 236, 246, 0.82);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.app-header__search-form button:hover,
+.app-header__search-form button:focus-visible {
+  background: rgba(255, 255, 255, 0.96);
+  transform: scale(1.04);
+}
+
+.app-header__repository {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #725d8d;
+  background: rgba(238, 233, 255, 0.82);
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.app-header__repository:hover {
+  color: var(--accent-deep);
+}
+
+.app-header__account {
+  position: relative;
+}
+
+.app-header__avatar-button,
+.app-header__avatar {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--accent-gradient);
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(255, 127, 180, 0.24);
+}
+
+.app-header__avatar-button img,
+.app-header__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app-header__account-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 290px;
+  padding: 16px;
+  display: grid;
+  gap: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(18px);
+}
+
+.app-header__account-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-header__avatar--large {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+}
+
+.app-header__account-summary div {
+  min-width: 0;
+  display: grid;
+}
+
+.app-header__account-summary strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-header__account-summary span {
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-header__account-summary p {
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.app-header__balances {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.app-header__balances span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding-left: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.app-header__balances span:first-child {
+  color: #c68a38;
+}
+
+.app-header__balances span:last-child {
+  color: #7775d8;
+}
+
+.app-header__menu-links {
+  display: grid;
+  gap: 3px;
+}
+
+.app-header__menu-links a,
+.app-header__menu-link,
+.app-header__logout {
+  min-height: 37px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 9px;
+  padding: 0 9px;
+  color: var(--text-main);
+  background: transparent;
+  font: inherit;
+  font-size: 0.83rem;
+  text-align: left;
+}
+
+.app-header__menu-links a:hover,
+.app-header__logout:hover {
+  color: var(--accent-deep);
+  background: rgba(255, 127, 180, 0.09);
+}
+
+.app-header__menu-link--placeholder {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app-header__logout {
+  color: var(--error);
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  padding-top: 10px;
+}
+
+@media (max-width: 760px) {
+  .app-header {
+    padding-top: var(--app-header-top-gap);
+  }
+
+  .app-header__inner {
+    gap: 8px;
+    padding: 7px;
+  }
+
+  .app-header__nav {
+    overflow-x: auto;
+  }
+
+  .app-header__nav-item {
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .app-header__nav-icon {
+    width: 36px;
+    min-width: 36px;
+  }
+
+  .app-header__repository {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .app-header__repository span {
+    display: none;
+  }
+
+  .app-header__center {
+    justify-content: center;
+  }
+
+  .app-header__search-form {
+    width: 150px;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-header__nav-item:hover,
+  .app-header__nav-item:focus-visible {
+    width: 36px;
+  }
+
+  .app-header__nav-label {
+    display: none;
+  }
+
+  .app-header__search-form {
+    width: 36px;
+  }
+
+  .app-header__search-form input {
+    display: none;
+  }
+
+  .app-header__search-form button {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .app-header__account-menu {
+    width: min(290px, calc(100vw - 24px));
+  }
+
+  .app-header__nav {
+    gap: 2px;
+  }
+}

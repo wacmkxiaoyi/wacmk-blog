@@ -1,0 +1,374 @@
+.tooltip-test-page {
+  min-height: 100vh;
+  padding: 40px 24px 56px;
+}
+
+.tooltip-test-hero {
+  max-width: 1320px;
+  margin: 0 auto 24px;
+  padding: 32px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-2xl);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255, 140, 188, 0.18),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(141, 139, 255, 0.16),
+      transparent 28%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(244, 246, 255, 0.86) 100%
+    );
+  box-shadow: var(--shadow-main);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.tooltip-test-eyebrow {
+  margin-bottom: 8px;
+  color: var(--accent-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tooltip-test-hero h1 {
+  margin-bottom: 14px;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  line-height: 1.04;
+}
+
+.tooltip-test-lead {
+  max-width: 820px;
+  color: var(--text-soft);
+}
+
+.tooltip-test-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.tooltip-test-layout {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.72fr) minmax(300px, 0.82fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.tooltip-test-main,
+.tooltip-test-sidebar {
+  display: grid;
+  gap: 20px;
+}
+
+.tooltip-test-card,
+.tooltip-test-panel {
+  padding: 24px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.tooltip-test-card {
+  background: var(--bg-card-strong);
+  backdrop-filter: blur(14px);
+}
+
+.tooltip-test-panel {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.tooltip-test-card--wide {
+  min-height: 540px;
+}
+
+.tooltip-test-card__header {
+  margin-bottom: 18px;
+}
+
+.tooltip-test-card__header h2,
+.tooltip-test-panel h2 {
+  margin-bottom: 8px;
+  font-size: 1.24rem;
+}
+
+.tooltip-test-card__header p,
+.tooltip-test-panel p {
+  color: var(--text-soft);
+}
+
+.tooltip-test-inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.tooltip-test-chip,
+.tooltip-test-card-button,
+.tooltip-test-swatch,
+.tooltip-test-edge {
+  border: 1px solid rgba(141, 139, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-main);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.tooltip-test-chip,
+.tooltip-test-swatch {
+  min-height: 48px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 600;
+}
+
+.tooltip-test-card-button {
+  min-height: 52px;
+  padding: 0 20px;
+  font: inherit;
+  font-weight: 700;
+}
+
+.tooltip-test-chip:hover,
+.tooltip-test-card-button:hover,
+.tooltip-test-swatch:hover,
+.tooltip-test-edge:hover {
+  transform: translateY(-1px);
+  border-color: rgba(141, 139, 255, 0.36);
+  box-shadow: 0 16px 40px rgba(123, 96, 168, 0.16);
+}
+
+.tooltip-test-chip--soft {
+  background: rgba(245, 245, 255, 0.94);
+}
+
+.tooltip-test-chip--accent {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 140, 188, 0.16) 0%,
+    rgba(141, 139, 255, 0.14) 100%
+  );
+}
+
+.tooltip-test-chip--dark {
+  background: rgba(27, 31, 59, 0.94);
+  color: #f8f8ff;
+}
+
+.tooltip-test-chip--outline {
+  background: transparent;
+  border-style: dashed;
+}
+
+.tooltip-test-style-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  gap: 16px;
+}
+
+.tooltip-test-overflow-shell {
+  min-height: 220px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    rgba(20, 50, 61, 0.08) 0%,
+    rgba(79, 29, 63, 0.14) 100%
+  );
+  border: 1px solid rgba(141, 139, 255, 0.16);
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+}
+
+.tooltip-test-overflow-banner {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.08);
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.tooltip-test-palette-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.tooltip-test-swatch--cyan {
+  background: rgba(20, 50, 61, 0.1);
+}
+
+.tooltip-test-swatch--berry {
+  background: rgba(79, 29, 63, 0.12);
+}
+
+.tooltip-test-release-card,
+.tooltip-test-color-card,
+.tooltip-test-interactive-card,
+.tooltip-test-form-card {
+  display: grid;
+  gap: 12px;
+}
+
+.tooltip-test-release-card p,
+.tooltip-test-color-card p,
+.tooltip-test-interactive-text {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.tooltip-test-release-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.tooltip-test-release-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tooltip-test-release-row span {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.tooltip-test-interactive-title {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.tooltip-test-interactive-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.tooltip-test-form-card .field-label {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tooltip-test-form-card .input-control {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.tooltip-test-inline-feedback {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.tooltip-test-edge-stage {
+  min-height: 420px;
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(141, 139, 255, 0.24);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(247, 247, 255, 0.7) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(141, 139, 255, 0.06) 0,
+      rgba(141, 139, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 32px
+    );
+}
+
+.tooltip-test-edge {
+  position: absolute;
+  min-width: 130px;
+  min-height: 46px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 700;
+}
+
+.tooltip-test-edge--top {
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-test-edge--bottom {
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-test-checklist,
+.tooltip-test-status-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.tooltip-test-checklist__item,
+.tooltip-test-status-item {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(141, 139, 255, 0.14);
+  background: rgba(247, 247, 255, 0.88);
+  color: var(--text-soft);
+}
+
+.tooltip-test-status-item {
+  display: grid;
+  gap: 4px;
+}
+
+.tooltip-test-status-item strong {
+  color: var(--text-main);
+  word-break: break-word;
+}
+
+@media (max-width: 1100px) {
+  .tooltip-test-layout,
+  .tooltip-test-style-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .tooltip-test-page {
+    padding-inline: 16px;
+  }
+
+  .tooltip-test-hero {
+    padding: 24px;
+    flex-direction: column;
+  }
+
+  .tooltip-test-hero__actions {
+    justify-content: flex-start;
+  }
+
+  .tooltip-test-edge-stage {
+    min-height: 360px;
+  }
+}

@@ -1,0 +1,371 @@
+.thread {
+  --comments-border: var(--line-soft, rgba(147, 127, 180, 0.15));
+  --comments-muted: var(--text-soft, #8d80a5);
+  --comments-text: var(--text-main, #5b4b73);
+  --comments-accent: var(--accent-secondary, #8d8bff);
+  color: var(--comments-text);
+}
+
+.threadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  min-height: 2.35rem;
+  margin-bottom: 1rem;
+}
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+.threadHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+}
+.threadHeader span {
+  display: inline-grid;
+  min-width: 1.55rem;
+  min-height: 1.55rem;
+  place-items: center;
+  padding: 0 0.38rem;
+  border-radius: 999px;
+  background: color-mix(
+    in srgb,
+    var(--accent-secondary, #8d8bff) 13%,
+    transparent
+  );
+  color: var(--accent-deep, #ff5e9f);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.createArea {
+  margin-bottom: 1.25rem;
+}
+.startButton,
+.loadMoreButton,
+.primaryButton,
+.secondaryButton,
+.actionButton,
+.replyButton,
+.moreButton {
+  font: inherit;
+  cursor: pointer;
+}
+.startButton {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--line-medium, rgba(147, 127, 180, 0.25));
+  border-radius: 0.7rem;
+  background: var(--bg-card-solid, rgba(255, 255, 255, 0.96));
+  color: var(--accent-deep, #ff5e9f);
+  font-size: 0.86rem;
+  font-weight: 750;
+  white-space: nowrap;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease;
+}
+.startButton:hover,
+.startButton:focus-visible {
+  border-color: var(--comments-accent);
+  background: color-mix(in srgb, var(--accent, #ff7fb4) 9%, white);
+  outline: none;
+}
+.list {
+  display: grid;
+  gap: 0.7rem;
+}
+.comment {
+  position: relative;
+  padding: 0.9rem 0 0.8rem;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid var(--comments-border);
+  transition:
+    border-color 140ms ease,
+    background 140ms ease;
+}
+.comment:hover {
+  border-top-color: var(--line-soft, rgba(147, 127, 180, 0.15));
+  border-bottom-color: var(--line-medium, rgba(147, 127, 180, 0.25));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent, #ff7fb4) 5%, transparent),
+    transparent
+  );
+}
+.identity {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.65rem;
+}
+.authorLine {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.45rem;
+}
+.author {
+  min-width: 0;
+  font-size: 0.94rem;
+}
+.moreButton {
+  width: 1.8rem;
+  height: 1.8rem;
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 0.55rem;
+  background: transparent;
+  color: var(--comments-muted);
+  opacity: 0;
+  transition:
+    opacity 140ms ease,
+    background 140ms ease;
+}
+.comment:hover .moreButton,
+.moreButton:focus-visible {
+  opacity: 1;
+}
+.moreButton:hover,
+.moreButton:focus-visible {
+  background: color-mix(
+    in srgb,
+    var(--accent-secondary, #8d8bff) 10%,
+    transparent
+  );
+  outline: none;
+}
+.moreButton svg {
+  width: 1.1rem;
+  fill: currentColor;
+}
+.content,
+.meta {
+  margin-left: 1.15rem;
+}
+.content {
+  padding: 0.65rem 0 0.75rem;
+  color: var(--comments-text);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.content :global(.renderer) {
+  color: inherit;
+}
+.content :global(.renderer p) {
+  margin: 0;
+}
+.content :global(.renderer p + p) {
+  margin-top: 0.55rem;
+}
+.replyTo {
+  display: inline-flex;
+  min-width: 0;
+  gap: 0.28rem;
+  align-items: center;
+  color: var(--accent-secondary, #8d8bff);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+.replyTo > span {
+  color: var(--text-muted, #b4a9c7);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--comments-muted);
+  font-size: 0.8rem;
+}
+.metaStart {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.45rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem;
+}
+.actionButton,
+.replyButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-height: 1.9rem;
+  padding: 0.25rem 0.42rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font-size: 0.8rem;
+}
+.actionButton:hover:not(:disabled),
+.replyButton:hover {
+  background: color-mix(
+    in srgb,
+    var(--accent-secondary, #8d8bff) 10%,
+    transparent
+  );
+  color: var(--accent-deep, #ff5e9f);
+}
+.actionButton:focus-visible,
+.replyButton:focus-visible {
+  outline: 2px solid rgba(255, 127, 180, 0.36);
+  outline-offset: 1px;
+}
+.actionButton:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+.actionButton svg,
+.replyButton svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+.activeVote {
+  color: var(--accent-secondary, #8d8bff);
+  background: color-mix(
+    in srgb,
+    var(--accent-secondary, #8d8bff) 13%,
+    transparent
+  );
+}
+.activeVoteDown {
+  color: var(--accent-deep, #ff5e9f);
+  background: color-mix(in srgb, var(--accent, #ff7fb4) 13%, transparent);
+}
+.replyButton {
+  color: var(--accent-deep, #ff5e9f);
+  font-weight: 700;
+}
+.replies {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.25rem 0 0.15rem 1.35rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line-medium, rgba(147, 127, 180, 0.25));
+}
+.repliesToggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.25rem 0.42rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--accent-secondary, #8d8bff);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+.repliesToggle:hover,
+.repliesToggle:focus-visible {
+  color: var(--accent-deep, #ff5e9f);
+  text-decoration: underline;
+  outline: none;
+}
+.reply {
+  padding-left: 0.15rem;
+}
+.composer {
+  margin: 0.65rem 0 0.95rem 1.15rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line-medium, rgba(147, 127, 180, 0.25));
+  border-radius: 1rem;
+  background: var(--bg-card-solid, rgba(255, 255, 255, 0.96));
+  box-shadow: var(--shadow-soft, 0 0.65rem 1.5rem rgba(151, 121, 198, 0.12));
+}
+.composerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+}
+.primaryButton,
+.secondaryButton {
+  min-height: 2.3rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.65rem;
+  font-weight: 700;
+}
+.primaryButton {
+  border: 0;
+  background: var(--accent-gradient);
+  color: #fff;
+}
+.primaryButton:hover:not(:disabled) {
+  background: var(--accent-deep);
+}
+.secondaryButton {
+  border: 1px solid color-mix(in srgb, var(--accent-secondary) 42%, transparent);
+  background: var(--bg-card-solid, rgba(255, 255, 255, 0.96));
+  color: var(--accent-deep);
+}
+.secondaryButton:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 9%, white);
+}
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+.loadMoreButton {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--line-medium, rgba(147, 127, 180, 0.25));
+  border-radius: 999px;
+  background: var(--bg-card-solid, rgba(255, 255, 255, 0.96));
+  color: var(--accent-deep, #ff5e9f);
+  font-weight: 750;
+}
+.loadMoreButton:hover:not(:disabled),
+.loadMoreButton:focus-visible {
+  background: color-mix(in srgb, var(--accent, #ff7fb4) 9%, white);
+  outline: none;
+}
+.empty {
+  margin: 0;
+  padding: 1.2rem;
+  border: 1px dashed var(--comments-border);
+  border-radius: 0.9rem;
+  color: var(--comments-muted);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .content,
+  .meta,
+  .composer {
+    margin-left: 0.55rem;
+  }
+  .meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .replies {
+    margin-left: 0.5rem;
+    padding-left: 0.65rem;
+  }
+  .moreButton {
+    opacity: 1;
+  }
+}

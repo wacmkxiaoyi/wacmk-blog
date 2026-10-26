@@ -1,0 +1,43 @@
+:root {
+  --modal-z-base: 1000;
+  --modal-z-step: 10;
+  --modal-radius: 30px;
+  --modal-radius-button: 18px;
+  --modal-backdrop-bg: rgba(87, 74, 110, 0.34);
+  --modal-backdrop-blur: 10px;
+  --modal-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 251, 255, 0.94) 100%
+  );
+  --modal-border: rgba(255, 255, 255, 0.94);
+  --modal-shadow: 0 28px 90px rgba(123, 96, 168, 0.25);
+  --modal-title-color: #5c4678;
+  --modal-text-color: var(--text-soft, #8d80a5);
+  --modal-kicker-bg: rgba(255, 240, 247, 0.95);
+  --modal-kicker-color: var(--accent-deep, #ff5e9f);
+  --modal-close-bg: rgba(255, 240, 247, 0.82);
+  --modal-close-hover-bg: rgba(255, 227, 240, 0.96);
+  --modal-button-secondary-bg: rgba(255, 250, 253, 0.95);
+  --modal-button-secondary-border: rgba(220, 186, 228, 0.8);
+  --modal-button-secondary-color: var(--accent-deep, #ff5e9f);
+  --modal-button-primary-bg: var(
+    --accent-gradient,
+    linear-gradient(135deg, #ff8cbc 0%, #ff72b3 50%, #8e8cff 100%)
+  );
+  --modal-button-primary-color: #fff;
+  --modal-button-danger-bg: linear-gradient(
+    180deg,
+    rgba(226, 74, 112, 0.98) 0%,
+    rgba(194, 43, 84, 0.98) 100%
+  );
+  --modal-button-danger-color: #fff;
+  --modal-tone-info: #0f7893;
+  --modal-tone-info-bg: rgba(217, 247, 252, 0.96);
+  --modal-tone-success: #3f9b6c;
+  --modal-tone-success-bg: rgba(229, 250, 238, 0.96);
+  --modal-tone-warning: #ad7a00;
+  --modal-tone-warning-bg: rgba(255, 244, 214, 0.95);
+  --modal-tone-error: #c44b7d;
+  --modal-tone-error-bg: rgba(255, 225, 236, 0.95);
+}

@@ -1,0 +1,4 @@
+.namecard-page {
+  width: var(--app-content-width);
+  grid-template-columns: 230px minmax(0, 1fr);
+}
