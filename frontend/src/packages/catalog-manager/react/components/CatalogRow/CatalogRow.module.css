@@ -1,0 +1,219 @@
+.rowShell {
+  position: relative;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--catalog-radius-row);
+  background: transparent;
+  cursor: grab;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    opacity 140ms ease;
+  position: relative;
+}
+
+.row:hover {
+  background: var(--catalog-row-hover);
+  border-color: var(--catalog-border);
+}
+
+.row:focus-within {
+  background: var(--catalog-row-hover);
+  border-color: var(--catalog-border);
+}
+
+.row:global(.is-dragging) {
+  opacity: var(--catalog-row-dragging-opacity);
+}
+
+.row:global(.is-drop-before)::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--catalog-drag-indicator);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.row:global(.is-drop-after)::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 12px;
+  right: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--catalog-drag-indicator);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.row:global(.is-drop-inside) {
+  outline: 2px solid var(--catalog-drag-indicator);
+  outline-offset: -2px;
+  background: var(--catalog-drop-inside-bg);
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--catalog-text-soft);
+  cursor: grab;
+}
+
+.dragHandleIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.kindIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  flex: 0 0 auto;
+  color: var(--catalog-text-soft);
+}
+
+.kindIcon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--catalog-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.groupTitleWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.inlineToggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--catalog-text-soft);
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.inlineToggleButton svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.inlineToggleButton:hover,
+.inlineToggleButton:focus-visible {
+  border-color: var(--line-medium, rgba(147, 127, 180, 0.25));
+  background: rgba(141, 139, 255, 0.08);
+  color: #5a537d;
+  outline: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 0 0 auto;
+  opacity: var(--catalog-action-opacity-hidden);
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.row:hover .actions,
+.row:focus-within .actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0.7rem;
+  background: transparent;
+  color: #5a537d;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.actionButton svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.actionButton:hover,
+.actionButton:focus-visible {
+  border-color: var(--line-medium, rgba(147, 127, 180, 0.25));
+  background: rgba(141, 139, 255, 0.1);
+  outline: none;
+}
+
+.actionButton:disabled {
+  color: rgba(90, 83, 125, 0.36);
+  cursor: not-allowed;
+  background: transparent;
+  border-color: transparent;
+}
+
+@media (max-width: 900px) {
+  .actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-wrap: wrap;
+  }
+}

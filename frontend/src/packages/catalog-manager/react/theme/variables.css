@@ -1,0 +1,35 @@
+:root {
+  --catalog-indent: 24px;
+  --catalog-radius: 18px;
+  --catalog-radius-row: 14px;
+  --catalog-bg: rgba(255, 255, 255, 0.82);
+  --catalog-border: rgba(147, 127, 180, 0.22);
+  --catalog-text: #5b4b73;
+  --catalog-text-soft: #8d80a5;
+  --catalog-accent: #ff7fb4;
+  --catalog-accent-light: rgba(255, 127, 180, 0.12);
+  --catalog-accent-gradient: linear-gradient(
+    135deg,
+    #ff8cbc 0%,
+    #ff72b3 50%,
+    #8e8cff 100%
+  );
+  --catalog-shadow: 0 8px 32px rgba(151, 121, 198, 0.16);
+  --catalog-shadow-soft: 0 4px 16px rgba(151, 121, 198, 0.08);
+  --catalog-drag-indicator: rgba(141, 139, 255, 0.9);
+  --catalog-drop-before-bg: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(141, 139, 255, 0.12) 50%,
+    transparent 100%
+  );
+  --catalog-drop-inside-bg: rgba(141, 139, 255, 0.08);
+  --catalog-group-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(247, 247, 255, 0.78) 100%
+  );
+  --catalog-row-hover: rgba(141, 139, 255, 0.06);
+  --catalog-row-dragging-opacity: 0.5;
+  --catalog-action-opacity-hidden: 0;
+}

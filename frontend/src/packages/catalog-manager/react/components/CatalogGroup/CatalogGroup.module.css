@@ -1,0 +1,23 @@
+.groupWrapper {
+  display: grid;
+}
+
+.groupChildren {
+  display: grid;
+  margin-left: 0;
+  gap: 0.15rem;
+  min-height: 18px;
+  position: relative;
+}
+
+.groupChildrenAppend::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--catalog-drag-indicator);
+  pointer-events: none;
+}
