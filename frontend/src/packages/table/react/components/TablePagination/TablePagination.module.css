@@ -1,0 +1,84 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.25rem;
+}
+
+.status {
+  color: var(--table-text-muted);
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(141, 139, 255, 0.35);
+  border-radius: calc(var(--table-radius) - 4px);
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--accent-secondary, #8d8bff);
+  font: inherit;
+  font-weight: 600;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: rgba(141, 139, 255, 0.08);
+  border-color: var(--accent-secondary, #8d8bff);
+  outline: none;
+}
+
+.buttonDisabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.jumpForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.input,
+.select {
+  min-height: 42px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--table-border);
+  border-radius: calc(var(--table-radius) - 4px);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--table-header-text);
+  font: inherit;
+}
+
+.input {
+  width: 6.5rem;
+}
+
+.label {
+  color: var(--table-text-muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 720px) {
+  .root {
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+}

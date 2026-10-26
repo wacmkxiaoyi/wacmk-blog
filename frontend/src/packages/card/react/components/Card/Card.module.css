@@ -1,0 +1,193 @@
+.card {
+  position: relative;
+  min-width: 0;
+  width: var(--card-root-width, auto);
+  max-width: 100%;
+  padding: var(--card-padding);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-surface-default);
+  box-shadow: var(--card-shadow);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+  overflow: hidden;
+}
+
+.interactive:hover,
+.interactive:focus-within {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: rgba(154, 119, 212, 0.3);
+}
+
+.toneSoft {
+  background: var(--card-surface-soft);
+}
+
+.toneCover {
+  background: var(--card-surface-cover);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    var(--card-shadow);
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  gap: var(--card-layout-gap, var(--card-gap));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "content";
+  align-items: stretch;
+}
+
+.content,
+.bottom,
+.side {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+}
+
+.toneCover .content,
+.toneCover .bottom,
+.toneCover .side {
+  color: var(--card-cover-text-color);
+}
+
+.toneCover :global(h1),
+.toneCover :global(h2),
+.toneCover :global(h3),
+.toneCover :global(h4),
+.toneCover :global(strong),
+.toneCover :global(p),
+.toneCover :global(span),
+.toneCover :global(li) {
+  color: inherit;
+}
+
+.withSide {
+  width: 100%;
+  grid-template-columns: minmax(0, var(--card-content-width, 1fr)) minmax(
+      0,
+      var(--card-side-width, 220px)
+    );
+  grid-template-areas: "content side";
+}
+
+.sideLeft {
+  grid-template-columns: minmax(0, var(--card-side-width, 220px)) minmax(
+      0,
+      var(--card-content-width, 1fr)
+    );
+  grid-template-areas: "side content";
+}
+
+.withBottom {
+  grid-template-areas:
+    "content"
+    "bottom";
+}
+
+.withBottom.withSide {
+  grid-template-areas:
+    "content side"
+    "bottom bottom";
+}
+
+.withBottom.withSide.sideLeft {
+  grid-template-areas:
+    "side content"
+    "bottom bottom";
+}
+
+.side {
+  grid-area: side;
+  display: grid;
+  gap: 10px;
+  align-content: stretch;
+  align-self: stretch;
+  height: 100%;
+}
+
+.bottom {
+  grid-area: bottom;
+  padding-top: 14px;
+  border-top: 1px solid rgba(147, 127, 180, 0.16);
+  height: 100%;
+}
+
+.content {
+  grid-area: content;
+}
+
+.topAligned {
+  align-self: stretch;
+  height: 100%;
+}
+
+.slotInner {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.toneCover .bottom {
+  border-top-color: rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 800px) {
+  .withSide,
+  .withBottom.withSide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "content"
+      "side"
+      "bottom";
+  }
+
+  .sideLeft,
+  .withBottom.withSide.sideLeft {
+    grid-template-areas:
+      "side"
+      "content"
+      "bottom";
+  }
+
+  .side {
+    padding-top: 14px;
+    border-top: 1px solid rgba(147, 127, 180, 0.16);
+    height: auto;
+  }
+
+  .sideLeft .side {
+    padding-top: 0;
+    padding-bottom: 14px;
+    border-top: 0;
+    border-bottom: 1px solid rgba(147, 127, 180, 0.16);
+  }
+
+  .toneCover .side {
+    border-top-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .toneCover.sideLeft .side {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .topAligned {
+    height: auto;
+  }
+}

@@ -1,11 +1,23 @@
+# Python
 .venv/
 venv/
 __pycache__/
 *.py[cod]
 *.sqlite3
-.env
+*.log
+
+# Django
+backend/.env
 media/
 staticfiles/
-*.log
-db.sqlite3
-static/css/base.css.bak
+
+# Node / Vite
+node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

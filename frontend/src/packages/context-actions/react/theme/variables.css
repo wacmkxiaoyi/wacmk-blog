@@ -1,0 +1,16 @@
+:root {
+  --context-actions-z-index: 1200;
+  --context-actions-radius: 16px;
+  --context-actions-bg: rgba(255, 252, 254, 0.98);
+  --context-actions-border: rgba(220, 186, 228, 0.72);
+  --context-actions-shadow: 0 18px 44px rgba(112, 88, 150, 0.22);
+  --context-actions-backdrop-blur: 16px;
+  --context-actions-text: var(--text-main, #4f415f);
+  --context-actions-text-muted: var(--text-soft, #8d80a5);
+  --context-actions-hover-bg: rgba(255, 236, 245, 0.95);
+  --context-actions-hover-border: rgba(255, 114, 179, 0.22);
+  --context-actions-hover-text: var(--accent-deep, #ff5e9f);
+  --context-actions-danger: #b43767;
+  --context-actions-danger-hover-bg: rgba(255, 239, 244, 0.98);
+  --context-actions-danger-hover-text: #a42d5b;
+}

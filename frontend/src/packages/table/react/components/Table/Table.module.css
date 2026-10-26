@@ -1,0 +1,229 @@
+.root {
+  display: grid;
+  gap: 1rem;
+}
+
+.surface {
+  border: 1px solid var(--table-border);
+  border-radius: var(--table-radius);
+  background: var(--table-surface-bg);
+  box-shadow: var(--table-surface-shadow);
+  overflow: hidden;
+}
+
+.scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table {
+  --table-row-bg: var(--table-row-odd-bg);
+  --table-cell-bg: var(--table-cell-bg-odd);
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+.headCell,
+.cell {
+  padding: 1rem 0.9rem;
+  border-bottom: 1px solid var(--table-border);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.headCell {
+  color: var(--table-header-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--table-head-bg);
+}
+
+.bodyRowOdd {
+  --table-row-bg: var(--table-row-odd-bg);
+  --table-cell-bg: var(--table-cell-bg-odd);
+  background: var(--table-row-odd-bg);
+}
+
+.bodyRowEven {
+  --table-row-bg: var(--table-row-even-bg);
+  --table-cell-bg: var(--table-cell-bg-even);
+  background: var(--table-row-even-bg);
+}
+
+.bodyRowHover:hover {
+  --table-row-bg: var(--table-row-hover-bg);
+  --table-cell-bg: var(--table-cell-bg-hover);
+  background: var(--table-row-hover-bg);
+}
+
+.bodyRowActive {
+  --table-row-bg: var(--table-row-active-bg);
+  --table-cell-bg: var(--table-cell-bg-active);
+  background: var(--table-row-active-bg);
+}
+
+.bodyRowActive .cell {
+  box-shadow: var(--table-row-active-shadow);
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.sortButton:hover,
+.sortButton:focus-visible {
+  color: var(--table-sort-active);
+  outline: none;
+}
+
+.sortButtonActive {
+  color: var(--table-sort-active);
+}
+
+.sortIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.9rem;
+  color: var(--table-text-muted);
+  font-size: 0.82rem;
+}
+
+.sortButtonActive .sortIndicator {
+  color: currentColor;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.stickyFirstHeadCell {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--table-sticky-head-bg);
+  box-shadow: 10px 0 18px var(--table-sticky-shadow);
+}
+
+.stickyFirstCell {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--table-cell-bg);
+  box-shadow: 10px 0 18px var(--table-sticky-shadow-soft);
+}
+
+.highlightHeadCell,
+.highlightCell {
+  background: var(
+    --table-column-highlight-odd-bg,
+    var(--table-column-highlight-default)
+  );
+}
+
+.highlightHeadCell {
+  background: var(
+    --table-column-highlight-head-bg,
+    var(--table-column-highlight-default)
+  );
+}
+
+.bodyRowEven .highlightCell {
+  background: var(
+    --table-column-highlight-even-bg,
+    var(
+      --table-column-highlight-odd-bg,
+      var(--table-column-highlight-default-even)
+    )
+  );
+}
+
+.bodyRowHover:hover .highlightCell {
+  background: var(--table-cell-bg-hover);
+}
+
+.bodyRowActive .highlightCell {
+  background: var(--table-cell-bg-active);
+}
+
+.stickyFirstHeadCell.highlightHeadCell,
+.stickyFirstCell.highlightCell {
+  background: var(
+    --table-column-highlight-odd-bg,
+    var(--table-column-highlight-default)
+  );
+}
+
+.stickyFirstHeadCell.highlightHeadCell {
+  background: var(
+    --table-column-highlight-head-bg,
+    var(--table-column-highlight-default)
+  );
+}
+
+.bodyRowEven .stickyFirstCell.highlightCell {
+  background: var(
+    --table-column-highlight-even-bg,
+    var(
+      --table-column-highlight-odd-bg,
+      var(--table-column-highlight-default-even)
+    )
+  );
+}
+
+.bodyRowHover:hover .stickyFirstCell.highlightCell {
+  background: var(--table-cell-bg-hover);
+}
+
+.bodyRowActive .stickyFirstCell.highlightCell {
+  background: var(--table-cell-bg-active);
+}
+
+.wrap {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.ellipsis {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ellipsisInner {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.messageRow {
+  background: var(--table-row-odd-bg);
+}
+
+.messageCell {
+  padding: 1.2rem 1rem;
+  color: var(--table-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .headCell,
+  .cell {
+    padding: 0.9rem 0.75rem;
+  }
+}
