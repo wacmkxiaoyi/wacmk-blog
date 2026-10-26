@@ -1,0 +1,56 @@
+import {
+  AdmonitionRenderer,
+  AnchorRenderer,
+  BlockquoteRenderer,
+  CalloutRenderer,
+  CodeBlockRenderer,
+  CustomRenderer,
+  HeadingRenderer,
+  HorizontalRuleRenderer,
+  ImageRenderer,
+  ListRenderer,
+  MathBlockRenderer,
+  ParagraphRenderer,
+  TableRenderer,
+  TabsRenderer,
+  VideoRenderer,
+} from "../renderers/blocks";
+import {
+  CheckboxRenderer,
+  EmojiRenderer,
+  InlineCodeRenderer,
+  InlineMathRenderer,
+  LineBreakRenderer,
+  LinkRenderer,
+  TextRenderer,
+} from "../renderers/inlines";
+import "../theme/variables.css";
+
+export const defaultRenderers = {
+  blocks: {
+    paragraph: ParagraphRenderer,
+    heading: HeadingRenderer,
+    blockquote: BlockquoteRenderer,
+    list: ListRenderer,
+    codeBlock: CodeBlockRenderer,
+    table: TableRenderer,
+    horizontalRule: HorizontalRuleRenderer,
+    anchor: AnchorRenderer,
+    callout: CalloutRenderer,
+    admonition: AdmonitionRenderer,
+    tabs: TabsRenderer,
+    mathBlock: MathBlockRenderer,
+    image: ImageRenderer,
+    video: VideoRenderer,
+    custom: CustomRenderer,
+  },
+  inlines: {
+    text: TextRenderer,
+    link: LinkRenderer,
+    inlineCode: InlineCodeRenderer,
+    inlineMath: InlineMathRenderer,
+    emoji: EmojiRenderer,
+    checkbox: CheckboxRenderer,
+    lineBreak: LineBreakRenderer,
+  },
+};

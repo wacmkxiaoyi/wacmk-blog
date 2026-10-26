@@ -1,0 +1,2 @@
+export const DEFAULT_MIN_HEADING_LEVEL = 1;
+export const DEFAULT_MAX_HEADING_LEVEL = 6;
